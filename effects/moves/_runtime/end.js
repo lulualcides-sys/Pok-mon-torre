@@ -21,8 +21,13 @@ BattleEngine.prototype.useMove=function(i){
  const before=this.v359Attacks?.length||0,energy=battle?.energy,oldCd=Number.isInteger(i)?cooldowns[i]:0,when=performance.now();
  const result=previousUse.apply(this,arguments);
  if(!k||!battle?.active)return result;
- const added=(this.v359Attacks||[]).slice(before).some(f=>f?.move?.name===mv.name);
- if(added)return result;
+ const addedFx=(this.v359Attacks||[]).slice(before).find(f=>f?.move?.name===mv.name);
+ if(addedFx){
+  // Only the four new beams rescale their existing attack; engine still owns ONE hit.
+  const timing={hyperbeam:[1230,.72],aurorabeam:[1010,.65],icebeam:[1130,.69],solarbeam:[1370,.77]}[k];
+  if(timing){addedFx.duration=timing[0];addedFx.end=addedFx.at+timing[0];addedFx.times=[timing[1]];}
+  return result;
+ }
  const accepted=result!==false && (((cooldowns[i]||0)>when&&(cooldowns[i]||0)!==oldCd)||(battle.energy<energy));
  if(!accepted)return result;
  const duration=registry.get(k).duration;
@@ -39,5 +44,14 @@ BattleEngine.prototype.draw=function(now){
  for(const fx of this.v3580Visuals){const k=pick(fx.move?.name);if(k)paint(this.ctx,fx,now,this,k);}
  return result;
 };
-window.PokemonTorreMewtwo4FX=()=>({version:'35.82',animatedMoves:['Psíquico','Confusion','Lança-Chamas','Telecinese'],modules:[...registry.keys()],renderedFrames:{...counts},engine:'Canvas 2D + atlas DS',activeStatus:(engine?.v3580Visuals||[]).length,activeAttacks:(engine?.v359Attacks||[]).filter(f=>!!pick(f?.move?.name)).length});
+window.PokemonTorreMewtwo4FX=()=>({version:'35.83',animatedMoves:['Psíquico','Confusion','Lança-Chamas','Telecinese'],modules:['psychic','confusion','flame','telekinesis'],renderedFrames:{...counts},engine:'Canvas 2D + atlas DS',activeStatus:(engine?.v3580Visuals||[]).length,activeAttacks:(engine?.v359Attacks||[]).filter(f=>!!pick(f?.move?.name)).length});
+window.PokemonTorreBeamFX=()=>({
+ version:'35.83',modules:['hyperbeam','aurorabeam','icebeam','solarbeam'],
+ names:['Hyper Beam','Aurora Beam','Ice Beam','Solar Beam'],
+ registered:['hyperbeam','aurorabeam','icebeam','solarbeam'].every(key=>registry.has(key)),
+ renderedFrames:Object.fromEntries(['hyperbeam','aurorabeam','icebeam','solarbeam'].map(key=>[key,counts[key]||0])),
+ activeAttacks:(engine?.v359Attacks||[]).filter(f=>['hyperbeam','aurorabeam','icebeam','solarbeam'].includes(pick(f?.move?.name))).length,
+ engine:'Canvas 2D + existing DS atlas'
+});
+
 })();
