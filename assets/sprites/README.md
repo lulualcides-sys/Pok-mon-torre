@@ -38,3 +38,9 @@ Backup completo: `Pacote_21_sprites_originais_2026-10-13.zip`.
 | Vários / mistos | 7 |
 
 Para adicionar novos envios, manter o mesmo padrão de nomes e acrescentar entradas ao catálogo, sem substituir as imagens originais.
+
+## Lote mais recente — 2026-10-13
+
+Agora **9 arquivos binários originais adicionais estão no próprio GitHub** em [originals/2026-10-13](./originals/2026-10-13/) (6 novos + 3 reenvios, 3 GIFs animados preservados). O índice detalhado é [LOTE_3_2026_10_13.json](./LOTE_3_2026_10_13.json). O comentário acima sobre *21 originais não hospedados* se refere exclusivamente àquele primeiro lote. Os arquivos com marca d'água são apenas referências e não foram usados como sprites do jogo nesta atualização.
+
+Golpes atuais aceitos/salvos no arquivo [STATUS_APROVADOS.json](../../effects/moves/STATUS_APROVADOS.json).

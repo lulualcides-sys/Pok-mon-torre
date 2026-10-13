@@ -1,0 +1,117 @@
+{
+  "collection": "Pokemon Torre original sprite library",
+  "date": "2026-10-13",
+  "files": [
+    {
+      "original_upload_name": "1000981208.gif",
+      "github_path": "assets/sprites/originals/2026-10-13/fogo/1000981208.gif",
+      "github_blob": "7cb3a205d4d3c28daed73e123e3943972c85b52d",
+      "size_bytes": 871710,
+      "animation_frames": 16,
+      "width": 1920,
+      "height": 1080,
+      "original_sha256": "bd7971939e6176fac77c56c344f9dad91925f8253f86af1da7803f1b3e953e2f",
+      "already_saved_to_chatgpt_library": true,
+      "reference_only": true
+    },
+    {
+      "original_upload_name": "1000981207.gif",
+      "github_path": "assets/sprites/originals/2026-10-13/fogo/1000981207.gif",
+      "github_blob": "ebc5650a8ba444bba83d87cf2c4f05ebdad21771",
+      "size_bytes": 612177,
+      "animation_frames": 14,
+      "width": 1920,
+      "height": 1080,
+      "original_sha256": "5ade05bd8bbdd36e61e72fb259a02028f933b4d1d49529f31d608c9dff5f6380",
+      "already_saved_to_chatgpt_library": true,
+      "reference_only": true
+    },
+    {
+      "original_upload_name": "1000981206.gif",
+      "github_path": "assets/sprites/originals/2026-10-13/terra/1000981206.png",
+      "github_blob": "c9400fb065b182de2bc6658dd80f0db94a61144c",
+      "size_bytes": 278803,
+      "animation_frames": 1,
+      "width": 1920,
+      "height": 1080,
+      "original_sha256": "314b6f48c238c9b4bf82f01079d5f6bdf131ee3ec740c89353407fedbb7ed5cd",
+      "already_saved_to_chatgpt_library": true,
+      "reference_only": true
+    },
+    {
+      "original_upload_name": "1000981201.gif",
+      "github_path": "assets/sprites/originals/2026-10-13/terra/1000981201.png",
+      "github_blob": "109dbb6fa95945439e0f82957fcaee6b8adb56ce",
+      "size_bytes": 235140,
+      "animation_frames": 1,
+      "width": 1920,
+      "height": 1080,
+      "original_sha256": "ab1360377fb6fcdc8f031acdad261cb816f0f0c6449ef78ab28b581459a412d7",
+      "already_saved_to_chatgpt_library": false,
+      "reference_only": true
+    },
+    {
+      "original_upload_name": "1000981200.gif",
+      "github_path": "assets/sprites/originals/2026-10-13/terra/1000981200.png",
+      "github_blob": "49b6bf13d1bffdc02631681d63bf541572d5817c",
+      "size_bytes": 244976,
+      "animation_frames": 1,
+      "width": 1920,
+      "height": 1080,
+      "original_sha256": "c222aeb628b7b77650a410d30a315ec591b68962aafc409800cc0a79f286624b",
+      "already_saved_to_chatgpt_library": false,
+      "reference_only": true
+    },
+    {
+      "original_upload_name": "1000981199.webp",
+      "github_path": "assets/sprites/originals/2026-10-13/terra/1000981199.webp",
+      "github_blob": "a0b5ca0423681f117386ee7f22ae1473da43f61d",
+      "size_bytes": 32578,
+      "animation_frames": 1,
+      "width": 720,
+      "height": 480,
+      "original_sha256": "d9cd16fb5e817800c5e89ec0c9572833a52abe6decf7be507e3342be4a157ac8",
+      "already_saved_to_chatgpt_library": false,
+      "reference_only": true
+    },
+    {
+      "original_upload_name": "1000981198.jpg",
+      "github_path": "assets/sprites/originals/2026-10-13/terra/1000981198.jpg",
+      "github_blob": "6df83a4d3ef9f29605f29211929f974e36307e6d",
+      "size_bytes": 105558,
+      "animation_frames": 1,
+      "width": 1800,
+      "height": 1200,
+      "original_sha256": "de956b8200397b11b9e3eb2331a9d14a3cdb818688a2dd9f4a6c7e09e1d7eaed",
+      "already_saved_to_chatgpt_library": false,
+      "reference_only": true
+    },
+    {
+      "original_upload_name": "1000981191.gif",
+      "github_path": "assets/sprites/originals/2026-10-13/psiquico-eletrico/1000981191.gif",
+      "github_blob": "d8b90d4d5513364c071a3713b4cf324072681253",
+      "size_bytes": 586283,
+      "animation_frames": 9,
+      "width": 1280,
+      "height": 640,
+      "original_sha256": "4ec038a8300e29f1d037af3e0ac9c960bd844d8fc7dacae52c8c5a07f8ddb87a",
+      "already_saved_to_chatgpt_library": false,
+      "reference_only": true
+    },
+    {
+      "original_upload_name": "1000981190.gif",
+      "github_path": "assets/sprites/originals/2026-10-13/fogo/1000981190.png",
+      "github_blob": "42fbbb4c81d2380dda34ef6c8b76104e83db10d8",
+      "size_bytes": 48908,
+      "animation_frames": 1,
+      "width": 700,
+      "height": 400,
+      "original_sha256": "266d16bf97f57049cac8898d4c5a621fafa734155d6e2d49b77365e510e01fe9",
+      "already_saved_to_chatgpt_library": false,
+      "reference_only": true
+    }
+  ],
+  "preserve_originals": true,
+  "readme": "Some assets include third-party credits, watermarks, and unknown licenses. Catalog for private reference and personal offline game workflow. Do not use watermarked images as in-game asset without rights clearance.",
+  "note": "Files with .gif upload names that are actually PNG content are committed as .png under GitHub to avoid incorrect media types. Library holds original upload names and unchanged bytes."
+}

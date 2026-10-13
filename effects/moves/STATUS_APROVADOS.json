@@ -1,0 +1,49 @@
+{
+  "saved_at": "2026-10-13",
+  "description": "User accepted current move animations as usable; only Tri Attack previously had strong approval. Keep these versions unchanged until user requests improving a specific move.",
+  "version_info": {
+    "renderer": "effects/moves/_runtime/original-gba-vfx.js",
+    "psychic": "original4v3",
+    "other": "original4v2"
+  },
+  "moves": [
+    {
+      "move": "Tri Attack",
+      "aliases": [
+        "Tri Ataque"
+      ],
+      "status": "aprovado",
+      "protect": true,
+      "effect_file": "effects/moves/tri-attack/index.js",
+      "notes": "Aprovado anteriormente; NÃO modificar sem pedido explícito."
+    },
+    {
+      "move": "Tempestade Psíquica",
+      "status": "salvo",
+      "protect": true,
+      "effect_file": "effects/moves/_runtime/original-gba-vfx.js",
+      "notes": "Usuário disse que ficou aproveitável e que pode salvar."
+    },
+    {
+      "move": "Chicote de Vinha",
+      "status": "salvo",
+      "protect": true,
+      "effect_file": "effects/moves/_runtime/original-gba-vfx.js",
+      "notes": "Usuário disse que ficou aproveitável e que pode salvar."
+    },
+    {
+      "move": "Confusion",
+      "status": "salvo_provisorio",
+      "protect": true,
+      "effect_file": "effects/moves/_runtime/original-gba-vfx.js",
+      "notes": "Usuário disse: ficou mais ou menos, mas dá para salvar."
+    },
+    {
+      "move": "Psybeam",
+      "status": "salvo_provisorio",
+      "protect": true,
+      "effect_file": "effects/moves/_runtime/original-gba-vfx.js",
+      "notes": "Usuário disse: ficou mais ou menos, mas dá para salvar."
+    }
+  ]
+}
