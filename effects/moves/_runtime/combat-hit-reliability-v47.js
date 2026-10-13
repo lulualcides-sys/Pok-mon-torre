@@ -27,6 +27,10 @@
  const savedCast=BattleEngine.prototype.useMove;
  BattleEngine.prototype.useMove=function(slot){
   const active=battle?.active&&!battle.paused;
+  // Some battle transitions leave the battle active while the animation
+  // loop is stopped. A registered attack then has no update() and never hits.
+  // Restart only after an actual unpaused player input; never bypass pause.
+  if(active&&!this.running&&typeof this.start==='function')this.start();
   const owner=active?current():null;
   const selected=owner&&Number.isInteger(slot)?skillSet(owner)?.[slot]:null;
   const now=performance.now();
