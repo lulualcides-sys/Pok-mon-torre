@@ -166,11 +166,11 @@
  };
  // Only the recovered basic physical dash needs a synchronized visual
  // follow-through. The original approved sprite attack painters are untouched.
- const savedDraw=BattleEngine.prototype.draw;
+ const v475BasicDashDraw=BattleEngine.prototype.draw;
  BattleEngine.prototype.draw=function(now){
   const dash=this.v475RecoveredDash,actor=this.player,target=this.enemy;
   if(!dash||dash.b!==battle||dash.owner!==current()||now>=dash.until||
-     !actor||!target)return savedDraw.apply(this,arguments);
+     !actor||!target)return v475BasicDashDraw.apply(this,arguments);
   const ox=actor.x,oy=actor.y;
   const t=Math.max(0,Math.min(1,(now-dash.at)/680));
   const motion=Math.max(0,Math.min(1,(t-.10)/.30))*
@@ -178,7 +178,7 @@
   const dx=target.x-ox,dy=target.y-oy,dist=Math.hypot(dx,dy)||1;
   const travel=Math.max(0,dist-(this.h||560)*.087)*motion;
   actor.x+=dx/dist*travel;actor.y+=dy/dist*travel;
-  try{return savedDraw.apply(this,arguments)}
+  try{return v475BasicDashDraw.apply(this,arguments)}
   finally{actor.x=ox;actor.y=oy}
  };
  const savedUpdate=BattleEngine.prototype.update;
@@ -276,17 +276,17 @@
  // Visible version marker makes cached/older game builds unmistakable on phone.
  const gameVersion=document.getElementById('ptFireSpriteV41Badge');
  if(gameVersion){
-  gameVersion.textContent='ACERTO REAL V47.3 · ELÉTRICOS V47 · ÁGUA V45';
-  gameVersion.title='Colisões reais verificadas. Ativos: sprite e acerto V47.3';
+  gameVersion.textContent='ACERTO REAL V47.5 · ELÉTRICOS V47 · ÁGUA V45';
+  gameVersion.title='Motor de colisão V47.5 ativo. Sprites originais mantidos';
  }
  // Only for a RECOVERED old zero-cost physical move. The Pokémon really
  // approaches the enemy on screen during its contact animation; physics still
  // deals damage via the original hitTarget() in update() (never in draw).
- const savedDraw=BattleEngine.prototype.draw;
+ const v473PhysicalDashDraw=BattleEngine.prototype.draw;
  BattleEngine.prototype.draw=function(now){
   const fx=(this.v47RecoveredDashes||[]).findLast?.(x=>
    x.until>now&&x.owner===current()&&x.victim===foe()&&battle?.active);
-  if(!fx||!this.player||!this.enemy)return savedDraw.call(this,now);
+  if(!fx||!this.player||!this.enemy)return v473PhysicalDashDraw.call(this,now);
   const p=this.player,originalX=p.x,originalY=p.y;
   const t=Math.max(0,Math.min(1,(now-fx.at)/860));
   const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)};
@@ -295,7 +295,7 @@
   const len=Math.hypot(dx,dy)||1,reach=Math.max(0,len-Math.max(37,this.h*.08));
   p.x=fx.start[0]+dx/len*reach*approach;
   p.y=fx.start[1]+dy/len*reach*approach;
-  try{return savedDraw.call(this,now)}
+  try{return v473PhysicalDashDraw.call(this,now)}
   finally{p.x=originalX;p.y=originalY}
  };
  window.PokemonTorreCombatV47=()=>({
