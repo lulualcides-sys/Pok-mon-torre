@@ -16,7 +16,7 @@ fireSpriteV41.add('fireblast',{
   ];
   function glyph(cx,cy,growth,alpha,phase){
    if(alpha<=.008)return;
-   const w=100*s*growth,h=110*s*growth;
+   const w=91*s*growth,h=98*s*growth;
    for(let k=0;k<strokes.length;k++){
     const [a,b]=strokes[k],vx=b[0]-a[0],vy=b[1]-a[1];
     const count=k===0?12:k===1?9:12;
@@ -26,7 +26,7 @@ fireSpriteV41.add('fireblast',{
      const x=cx+rx*w,y=cy+ry*h;
      // Stagger frame timing for animated blazing strokes; stable glyph outline.
      const frame=Math.floor(ms/76)+k*3+j*2;
-     const bw=(30+(k===0?5:3))*s*growth,bh=39*s*growth;
+     const bw=(35+(k===0?5:3))*s*growth,bh=43*s*growth;
      draw(g,'firebolt',frame,x,y,bw,bh,
       {alpha:alpha*(.82+.12*Math.sin(ms*.012+j)),rotation:angle});
      if(j%2===0)draw(g,'flame',0,x,y-4*s*growth,
@@ -58,7 +58,7 @@ fireSpriteV41.add('fireblast',{
   if(t>=.58){
    const enter=ease((t-.58)/.12),fade=1-ease((t-.86)/.13);
    const impact=clamp(enter*fade);
-   glyph(B[0],B[1],.67+.19*enter,impact,'impact');
+   glyph(B[0],B[1],.69+.17*enter,impact,'impact');
    if(t>.77&&t<.96){
     const scatter=ease((t-.77)/.18);
     const tips=[[-.43,-.23],[.43,-.23],[-.43,.49],[.43,.49],[0,-.52]];
