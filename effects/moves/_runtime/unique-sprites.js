@@ -13,8 +13,56 @@ const uniqueMoveFX=(()=>{
  }
  function preload(paths){if(!window.PIXI?.Texture)return;for(const p of paths)texture(p)}
  function register(names,fn){for(const name of names){const k=key(name);if(scenes.has(k)){if(scenes.get(k)!==fn)throw Error('Duplicated scene: '+name);continue;}scenes.set(k,fn)}}
- function create(opts){return scenes.get(key(opts?.name||opts?.f?.move?.name))?.(opts)||null}
- return {register,create,sprite,preload,key,clamp,smooth,lerp,TAU:Math.PI*2,registered:()=>[...scenes.keys()]};
+ // Clone the ORIGINAL illustrated sprite silhouette: one dark blurred depth
+ // layer below and one restrained tinted bloom above. Never draw a generic
+ // circle, polygon or transparent shader rectangle as a replacement attack.
+ function light(root,sp,{hue=0xcaa4ef,shade=0x160b34,blur=3.2,strength=.40,dx=3,dy=4}={}){
+  const back=new PIXI.Sprite(sp.texture);
+  back.anchor.copyFrom(sp.anchor);back.tint=shade;back.alpha=0;
+  const bloom=new PIXI.Sprite(sp.texture);
+  bloom.anchor.copyFrom(sp.anchor);bloom.tint=hue;bloom.alpha=0;
+  bloom.blendMode=PIXI.BLEND_MODES.ADD;
+  const index=root.getChildIndex(sp);
+  root.addChildAt(back,index);root.addChildAt(bloom,index+1);
+  const Filter=PIXI.BlurFilter||PIXI.filters?.BlurFilter;
+  if(Filter){back.filters=[new Filter(blur)];bloom.filters=[new Filter(blur*1.16)];}
+  (root.__ptDepth||=[]).push({sp,back,bloom,strength,dx,dy});
+  return sp;
+ }
+ function sync(root){
+  for(const {sp,back,bloom,strength,dx,dy} of root.__ptDepth||[]){
+   for(const e of [back,bloom]){
+    if(e.texture!==sp.texture)e.texture=sp.texture;
+    e.anchor.copyFrom(sp.anchor);
+    e.rotation=sp.rotation;
+    e.scale.copyFrom(sp.scale);
+   }
+   back.position.set(sp.position.x+dx,sp.position.y+dy);
+   back.alpha=Math.min(.8,Math.max(0,sp.alpha*.61));
+   bloom.position.copyFrom(sp.position);
+   bloom.alpha=Math.min(.50,Math.max(0,sp.alpha*strength));
+  }
+ }
+ function frameSet(prefix,count){
+  const paths=Array.from({length:count},(_,i)=>prefix+i+'.svg');
+  return paths.map(texture);
+ }
+ function updateFrame(sp,frames,clock,shift=0,period=86){
+  if(!frames?.length)return;
+  const idx=(Math.floor(clock/period)+shift)%frames.length;
+  if(sp.texture!==frames[idx])sp.texture=frames[idx];
+ }
+ function create(opts){
+  const fn=scenes.get(key(opts?.name||opts?.f?.move?.name));
+  if(!fn)return null;
+  const scene=fn(opts);
+  if(scene&&typeof scene.draw==='function'){
+   const draw=scene.draw;
+   scene.draw=function(now,t,dt){draw(now,t,dt);sync(opts.root);};
+  }
+  return scene;
+ }
+ return {register,create,sprite,preload,light,frameSet,updateFrame,key,clamp,smooth,lerp,TAU:Math.PI*2,registered:()=>[...scenes.keys()]};
 })();
 const previousUniqueCreate=cinematicVFX.create;
 cinematicVFX.create=function(opts){return uniqueMoveFX.create(opts)||previousUniqueCreate(opts)};

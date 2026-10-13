@@ -1,12 +1,15 @@
 /* Psychic Storm: whirling psychic ribbons and crystal blades around the target. */
 uniqueMoveFX.register(['Tempestade Psíquica'],({root,f})=>{
  const U=uniqueMoveFX,B=f.to,R='tempestade-psiquica/assets/';
- const bands=Array.from({length:5},()=>U.sprite(root,R+'storm-ribbon.svg',88,38));
+ const frames=U.frameSet(R+'frames/storm-',6);
+ const bands=Array.from({length:5},()=>U.sprite(root,R+'frames/storm-0.svg',87,41));
  const shards=Array.from({length:14},()=>U.sprite(root,R+'storm-shard.svg',23,27));
- const hit=U.sprite(root,R+'storm-impact.svg',118,115);
+ const hit=U.sprite(root,R+'storm-impact.svg',113,110);
+ bands.forEach((sp,i)=>U.light(root,sp,{hue:i%2?0xa1adff:0xf5a4ff,shade:0x12092f,blur:3.8,strength:.34}));
+ U.light(root,hit,{hue:0xd7a0ff,shade:0x160b40,blur:4.5,strength:.37});
  function draw(now,t){
   const power=U.smooth((t-.09)/.55),fade=1-U.smooth((t-.83)/.17);
-  bands.forEach((sp,i)=>{const a=i*U.TAU/5+now*.003*(i%2?1:-1),r=21+power*20+(i%2)*8;
+  bands.forEach((sp,i)=>{U.updateFrame(sp,frames,now,i,85);const a=i*U.TAU/5+now*.003*(i%2?1:-1),r=21+power*20+(i%2)*8;
    sp.position.set(B[0]+Math.cos(a)*r,B[1]+Math.sin(a)*r*.68);
    sp.rotation=a;sp.alpha=power*fade*.76;
   });
