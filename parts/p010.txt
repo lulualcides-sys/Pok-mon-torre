@@ -438,7 +438,10 @@ function statusAura(ctx,type,x,y,h,now){const t=now*.001,r=h*.045;for(let j=0;j<
 function contactMotion(fx,now){const t=clamp01((now-fx.at)/(fx.end-fx.at));const approach=clamp01((t-.06)/.39),returnT=clamp01((t-.57)/.39);
  const move=lerp(0,1,ease(approach))*(1-ease(returnT));
  const distance=Math.hypot(fx.toward[0]-fx.start[0],fx.toward[1]-fx.start[1])||1;
- const near=Math.max(0,distance-64);
+ // Punho de Fogo is a contact strike: stop just 28px from target center.
+ // Preserve 64px for all other melee moves.
+ const moveId=String(fx.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+ const near=Math.max(0,distance-((moveId==='punhodefogo'||moveId==='firepunch')?28:64));
  return {x:(fx.toward[0]-fx.start[0])/distance*near*move,y:(fx.toward[1]-fx.start[1])/distance*near*move-Math.sin(Math.PI*t)*8};
 }
 // Somente visuais de frente: os sprites PMD de 8 direções terão sido ajustados

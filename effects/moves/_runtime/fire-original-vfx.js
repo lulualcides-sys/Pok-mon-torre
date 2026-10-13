@@ -64,8 +64,8 @@ const originalFireFX=(()=>{
    draw('flame',0,A[0]+nx*10,A[1]+ny*10,27,34,charge*.78,angle);
    const step=ease((t-motionStart)/.39);
    const recoil=1-ease((t-.57)/.33);
-   // The attacker's movement stops 64px before the enemy.
-   const dist=Math.max(0,len-64),pos=dist*step*recoil/Math.max(1,len);
+   // Fire Punch reaches actual fist-contact distance, synced with sprite dash.
+   const dist=Math.max(0,len-28),pos=dist*step*recoil/Math.max(1,len);
    const x=lerp(A[0],B[0],pos)+Math.cos(angle)*17;
    const y=lerp(A[1],B[1],pos)+Math.sin(angle)*17;
    const active=ease((t-.11)/.13)*(1-ease((t-.57)/.27));
