@@ -32,7 +32,7 @@ assert.match(tsunami,/perspectiveFront:true/,'Tsunami must use three-quarter per
 assert.match(tsunami,/edgeDepth=/,'Original crest needs depth projection');
 assert.match(tsunami,/tsunamiFrontV443\.src/,'Tsunami front sprite must be loaded independently');
 assert.match(read('effects/moves/tsunami/front.svg'),/<svg[^>]+shape-rendering="crispEdges"/,
- 'Tsunami's front-facing foam must remain real pixel art');
+ 'Frontal pixel-art wave must remain a genuine crisp sprite');
 assert.match(tsunami,/Math\.sin\(ms\*\.007\+i\*\.46\)/,'Wave crest columns must have temporal deformation');
 assert.match(read('effects/moves/tsunami/wave.svg'),/<svg[^>]+shape-rendering="crispEdges"/,'Wave must be pixel art');
 assert.match(pump,/pressureStream:true/,'Hydro Pump has its own continuous jet');
