@@ -54,7 +54,7 @@ const waterSpriteV43=(()=>{
  const moveAlias={
   'aguajet':'aquajet','pulsodeagua':'pulsodagua','waterpulse':'pulsodagua',
   'aquatail':'caudadeagua','watergun':'jatodagua',
-  'pistoladagua':'jatodagua','jatodeagua':'jatodagua'
+  'jatodeagua':'jatodagua'
  };
  function resolve(fx){
   const name=norm(fx?.move?.name||fx?.name);
