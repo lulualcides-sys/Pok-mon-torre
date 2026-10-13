@@ -1,65 +1,97 @@
-/* HYDRO PUMP V44.1 — a SINGLE uninterrupted high-pressure water cannon.
- * The central stream is a crisp pixel-art sprite, NOT disconnected water
- * circles. Splash animations come from the user's actual original water sheet.
+/* HYDRO PUMP V44.2 — TWO MATCHING THIN JETS that visibly JOIN before impact.
+ * The water is drawn solely by repeated ORIGINAL-style pixel-art sprite frames,
+ * with animated water flecks from the user's source water atlas. Never a line,
+ * gradient, CSS laser, thick single beam or unrelated bubble cloud.
+ * Damage, cooldowns and enemy AI remain controlled by the battle engine.
  */
-const hydroJetV441=new Image();
-hydroJetV441.decoding='async';
-hydroJetV441.src='effects/moves/hydro-pump/jet.svg?v=44.1';
+const hydroJetV442=new Image();
+hydroJetV442.decoding='async';
+hydroJetV442.src='effects/moves/hydro-pump/jet.svg?v=44.2';
 waterSpriteV43.add('hydropump',{
- key:'hydroPump',duration:1610,beam:true,contact:false,pressureStream:true,
+ key:'hydroPump',duration:1610,beam:true,contact:false,
+ twinStream:true,followTarget:true,pressureStream:true,
  paint(g,f,t,ms,s,K){
   const {draw,ease,lerp,clamp}=K,A=f.from,B=f.to;
-  const dx=B[0]-A[0],dy=B[1]-A[1],dist=Math.hypot(dx,dy)||1;
-  const ux=dx/dist,uy=dy/dist,nx=-uy,ny=ux;
-  const angle=Math.atan2(dy,dx),head=ease((t-.10)/.38);
-  const fade=1-ease((t-.86)/.13);
-  // Pressure gathers at the attacker's muzzle.
-  if(t<.25){
-   const warm=ease(t/.15)*(1-ease((t-.19)/.06));
-   draw(g,7,A[0]+ux*16*s,A[1]+uy*16*s,
-        (31+17*warm)*s,(36+12*warm)*s,
-        {alpha:warm*.88,rotation:angle+.7});
+  const dx=B[0]-A[0],dy=B[1]-A[1],distance=Math.hypot(dx,dy)||1;
+  const ux=dx/distance,uy=dy/distance,nx=-uy,ny=ux;
+  const head=ease((t-.09)/.40);
+  const fade=1-ease((t-.86)/.14);
+  const TAU=Math.PI*2,joinAt=.84;
+  const thickness=(16+1.6*Math.sin(ms*.012))*s;
+  if(!hydroJetV442.naturalWidth)return;
+  // Symmetric start points around the attacking Pokemon; both jets are
+  // IDENTICAL size. Their separation decreases smoothly to ZERO at joinAt.
+  function point(u,side){
+   const converge=1-ease((u-.47)/(.84-.47));
+   const sway=Math.sin(ms*.014-u*TAU*2.1)*2.7*s;
+   const offset=side*converge*(19*s+sway);
+   return [lerp(A[0],B[0],u)+nx*offset,
+           lerp(A[1],B[1],u)+ny*offset];
   }
-  if(t>.10&&t<.97&&hydroJetV441.naturalWidth){
-   const offset=24*s,total=Math.max(1,dist-offset);
-   const reach=total*head;
-   const width=(49+5*Math.sin(ms*.016))*s;
-   const waterA=[A[0]+ux*offset,A[1]+uy*offset];
+  function stampSegment(a,b,width,alpha,phase){
+   const vx=b[0]-a[0],vy=b[1]-a[1],len=Math.hypot(vx,vy);
+   if(len<.25)return;
    g.save();
-   g.translate(waterA[0],waterA[1]);
-   g.rotate(angle);
+   g.translate(a[0],a[1]);
+   g.rotate(Math.atan2(vy,vx));
    g.imageSmoothingEnabled=false;
-   g.globalAlpha=fade*.98;
-   // Crop the sprite in sync with travel, so the tip actually advances.
-   g.drawImage(hydroJetV441,0,0,Math.max(1,160*head),58,
-     0,-width*.5,Math.max(1,reach),width);
+   g.globalAlpha=clamp(alpha);
+   const sx=(Math.floor(phase)+160)%32;
+   // Each sprite strip overlaps the next, so each jet is CONTINUOUS.
+   g.drawImage(hydroJetV442,sx,0,128,58,
+     -2*s,-width*.5,len+4*s,width);
    g.restore();
-   // Tiny original-source droplets run in the SAME direction as the flow.
-   for(let j=0;j<5;j++){
-    const u=((ms*.00077+j*.20)%1)*head;
-    const x=waterA[0]+ux*total*u,y=waterA[1]+uy*total*u;
-    const side=(j%2?1:-1)*(22+5*Math.sin(ms*.012+j))*s;
-    draw(g,13+((Math.floor(ms/103)+j)%5),
-      x+nx*side,y+ny*side,
-      (16+j%2*4)*s,(23+j%2*5)*s,
-      {alpha:fade*.57,rotation:angle});
-   }
-   draw(g,6,waterA[0],waterA[1],
-     43*s,43*s,{alpha:fade*.76,rotation:angle});
   }
-  // Impact spreads around the TARGET, not all across the screen.
-  if(t>.46){
-   const impact=ease((t-.46)/.14)*(1-ease((t-.88)/.12));
-   if(impact>.012){
-    draw(g,7,B[0],B[1]-16*s,112*s,112*s,
-      {alpha:impact*.97,rotation:angle+.75});
+  if(t<.25){
+   const pulse=ease(t/.16)*(1-ease((t-.19)/.06));
+   for(const side of [-1,1]){
+    const p=point(0,side);
+    draw(g,7,p[0],p[1],(23+12*pulse)*s,(26+9*pulse)*s,
+      {alpha:pulse*.70,rotation:Math.atan2(dy,dx)+.7});
+   }
+  }
+  if(t>.09&&t<.98){
+   const ends=Math.min(joinAt,head);
+   const sections=13;
+   // TWO separate thin streams, mirrored but synchronized, that CONVERGE.
+   for(const side of [-1,1]){
+    for(let i=0;i<sections;i++){
+     const a=joinAt*i/sections,b=Math.min(joinAt*(i+1)/sections,ends);
+     if(a>=ends||b<=a)break;
+     const p0=point(a,side),p1=point(b,side);
+     const alpha=fade*(.91+.07*Math.sin(ms*.014-i));
+     stampSegment(p0,p1,thickness,alpha,ms*.12+i*19);
+    }
+    // Tiny source-sheet water flecks travel ALONG each individual stream.
+    for(let j=0;j<4;j++){
+     const u=((ms*.00055+j*.25)%1)*ends;
+     const p=point(u,side);
+     draw(g,13+((Math.floor(ms/105)+j)%5),p[0],p[1],
+       11*s,15*s,{alpha:fade*.43,rotation:Math.atan2(dy,dx)});
+    }
+   }
+   // From the connection point to the enemy they form ONE short shared jet.
+   // There is no duplicated thick beam across the battlefield.
+   if(head>joinAt){
+    const common=point(joinAt,1),end=point(head,1);
+    stampSegment(common,end,(19+2*Math.sin(ms*.009))*s,
+      fade*.96,ms*.15+47);
+    draw(g,7,common[0],common[1],23*s,23*s,
+      {alpha:fade*.75,rotation:Math.atan2(dy,dx)});
+   }
+  }
+  // Shared water collision at the enemy. Never fire/explosion art.
+  if(t>.48){
+   const impact=ease((t-.48)/.12)*(1-ease((t-.88)/.12));
+   if(impact>.01){
+    draw(g,7,B[0],B[1]-11*s,76*s,79*s,
+      {alpha:impact*.90,rotation:Math.atan2(dy,dx)+.5});
     for(let j=0;j<5;j++){
-     const across=(j-2)*21*s;
-     draw(g,5+((Math.floor(ms/92)+j)%5),
-       B[0]+nx*across+ux*(j%2*7)*s,
-       B[1]+ny*across-(18+(j%2)*12)*s,
-       (43+j%2*11)*s,(49+j%3*9)*s,
-       {alpha:impact*(.84-j*.10),flipX:j%2===1});
+     const spread=(j-2)*17*s;
+     draw(g,5+((Math.floor(ms/83)+j)%5),
+       B[0]+nx*spread,B[1]+ny*spread-10*s-(j%2)*11*s,
+       (34+j%2*11)*s,(42+j%2*10)*s,
+       {alpha:impact*(.78-j*.10),flipX:j%2===0});
     }
    }
   }
