@@ -28,12 +28,7 @@ fireSpriteV41.add('sunnyday',{
    draw(g,'flame',0,x,y,11*s,17*s,
      {rotation:a+Math.PI/2,alpha:alpha*(.28+.04*Math.sin(ms*.002+i))});
   }
-  // Tiny persistent shimmer on ground; no flash on enemy.
-  for(let i=0;i<5;i++){
-   const x=lerp(A[0]-27*s,B[0]+27*s,i/4);
-   const floorY=Math.max(A[1],B[1])+15*s;
-   draw(g,'spinRing',Math.floor(ms/200)+i,x,floorY,
-       27*s,10*s,{alpha:alpha*.08});
-  }
+  // Stable daytime illumination only — no ground impact rings or shockwaves.
+
  }
 });
