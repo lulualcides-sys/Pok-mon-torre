@@ -31,7 +31,7 @@ assert.match(index,/fireSpriteSections\.slice\(0,-1\)/,'Additional moves must re
 const fullPaths=[...oldFiles.slice(0,-1),...newFiles,oldFiles.at(-1)];
 const source=fullPaths.map(read).join('\n');
 assert.equal((source.match(/fireSpriteV41\.add\(/g)||[]).length,8,'All eight moves registered independently');
-assert.ok(index.includes('sprite-fire-v42-2'),'Loader cache must refresh');
+assert.ok(index.includes('sprite-fire-v42-3'),'Loader cache must refresh');
 for(const p of newFiles){
  const c=read(p);
  assert.doesNotMatch(c,/\.(?:fillRect|arc|lineTo|stroke|createRadialGradient)\s*\(/,
