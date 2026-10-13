@@ -2,6 +2,12 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const html=read('index.html');
+const realCombatScript=read('effects/moves/_runtime/combat-hit-reliability-v47.js');
+new vm.Script(realCombatScript,{filename:'V47.5RealHitEngine'});
+assert.match(realCombatScript,/version:'47\.5'/,'Current hit engine version');
+assert.match(html,/combat-hit-reliability-v47\.js/,'Real hit module must load');
+assert.equal((realCombatScript.match(/const savedDraw=/g)||[]).length,0,
+ 'Physical movement code must avoid duplicate draw declarations');
 const mustGet=(label,re)=>{const m=html.match(re);assert.ok(m,label);return JSON.parse(m[1])};
 const oldfx=mustGet('Existing original V35 FX',/const fxFiles=(\[[^;]+?\]);let plugin=/);
 const fire=mustGet('Approved fire V41',/const fireSpriteFiles=(\[[\s\S]*?\]);\s*const fireSpriteSections=/);
