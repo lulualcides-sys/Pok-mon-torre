@@ -6,12 +6,12 @@
  */
 (function(){
  'use strict';
- const report={version:'47.7',casts:0,projectileCorrections:0,beamsAligned:0,
+ const report={version:'47.8',casts:0,projectileCorrections:0,beamsAligned:0,
   contactFollowThrough:0,missingCollisionRecovered:0,realHits:0,
   ignoredOldShots:0,waitedForInvincibility:0,zeroCostRecognized:0,
   queuedDuringWindup:0,replayedQueued:0,discardedQueued:0,
   recoveredBasicDashes:0,timerContactHits:0,contactConfirmedByUpdate:0,
-  contactAttemptFailures:0,lastContactAttempt:null,updateTicks:0,drawTicks:0,contactChecks:0,lastContactCheck:null,
+  contactAttemptFailures:0,lastContactAttempt:null,meleeRangeAligned:0,updateTicks:0,drawTicks:0,contactChecks:0,lastContactCheck:null,
   hitAttempts:0,hitAttemptsNoHP:0,lastZeroHit:null,
   lastHit:null,lastCast:null};
  const savedHit=BattleEngine.prototype.hitTarget;
@@ -48,6 +48,32 @@
  // the actual enemy at the collision moment, and ALWAYS uses the original
  // hitTarget() logic; neither visuals nor CSS calculate or fabricate damage.
  // Every cast has one settled token shared by the update loop and this timer.
+ // V35.54 rejects Fighting damage when PHYSICS coordinates are far apart.
+ // Yet approved melee VFX move the rendered Pokémon toward the foe without
+ // updating persistent actor coordinates. For a REGISTERED melee cast only,
+ // synchronize the physical hit position with the visible contact frame,
+ // then restore it immediately. Preserve all existing immunity/accuracy rules.
+ function landPhysicalContact(engine,event){
+  if(event.settled||!battle?.active||event.owner!==current()||
+     event.victim!==foe()||event.power<=0)return;
+  const p=engine.player,e=engine.enemy;
+  const reposition=event.type==='fighting'&&p&&e;
+  const oldX=p?.x,oldY=p?.y;
+  if(reposition){
+   const dx=p.x-e.x,dy=p.y-e.y,length=Math.hypot(dx,dy)||1;
+   const limit=Math.max(56,(engine.h||560)*.19);
+   if(length>limit){
+    const gap=limit*.64;
+    p.x=e.x+dx/length*gap;
+    p.y=e.y+dy/length*gap;
+    report.meleeRangeAligned++;
+   }
+  }
+  try{return engine.hitTarget('enemy',event.type,event.power)}
+  finally{
+   if(reposition){p.x=oldX;p.y=oldY}
+  }
+ }
  function confirmRealContact(engine,event){
   if(typeof setTimeout!=='function')return;
   const check=()=>{
@@ -63,7 +89,7 @@
     return;
    }
    const before=Number(event.victim.hp),inv=Number(engine.enemy?.inv||0);
-   engine.hitTarget('enemy',event.type,event.power);
+   landPhysicalContact(engine,event);
    const after=Number(event.victim.hp);
    event.attempts=(event.attempts||0)+1;
    report.lastContactAttempt={source:'timer',name:event.name,at:now,before,after,
@@ -267,7 +293,7 @@
      pending.push(fx);continue;
     }
     const hp=Number(fx.victim.hp),inv=Number(this.enemy?.inv||0);
-    this.hitTarget('enemy',fx.type,fx.power);
+    landPhysicalContact(this,fx);
     const after=Number(fx.victim.hp);
     fx.attempts=(fx.attempts||0)+1;
     report.lastContactAttempt={source:'update',name:fx.name,at:time,before:hp,
