@@ -1,4 +1,4 @@
-/* Pokémon Torre V44.3 — independent Tsunami, Amnesia, Hydro Pump VFX.
+/* Pokémon Torre V45 — independent Tsunami, Amnesia, Hydro Pump VFX.
  * Preserves all Fire V42.5 effects, hit calculations, real projectiles,
  * cooldowns, status buffs, enemy attacks and the existing sprite renderer.
  */
@@ -76,12 +76,22 @@
   const hit=visible.findLast?.(f=>W.resolve(f)?.contact)||
    [...visible].reverse().find(f=>W.resolve(f)?.contact);
   if(hit&&p&&q){
+   const moveDesc=W.resolve(hit);
    const t=W.clamp((now-hit.at)/hit.duration);
-   const approach=W.ease((t-.24)/.23)*(1-W.ease((t-.64)/.20));
+   // Approved Skull Bash remains byte-for-byte the same motion when style absent.
+   const approach=moveDesc?.contactStyle==='surge'
+    ?W.ease((t-.18)/.24)*(1-W.ease((t-.59)/.20))
+    :moveDesc?.contactStyle==='tail'
+     ?W.ease((t-.24)/.22)*(1-W.ease((t-.67)/.18))
+     :W.ease((t-.24)/.23)*(1-W.ease((t-.64)/.20));
    const dx=q.x-p.x,dy=q.y-p.y,len=Math.hypot(dx,dy)||1;
-   const stop=Math.max(42,(this.h||560)*.091);
+   const stop=moveDesc?.contactStyle==='surge'?Math.max(35,(this.h||560)*.068):
+    moveDesc?.contactStyle==='tail'?Math.max(49,(this.h||560)*.09):
+    Math.max(42,(this.h||560)*.091);
    const dist=Math.max(0,len-stop)*approach;
    p.x+=dx/len*dist;p.y+=dy/len*dist;
+   // Water cloak/tail remains attached to the ACTUAL moving actor.
+   hit.actor=[p.x,p.y-(this.h||560)*.13];
    stats.contactFrames++;
   }
   // Draw all game mechanics through existing renderer, including foe damage;
@@ -115,7 +125,7 @@
  });
  function versionTag(){
   const tag=document.getElementById('ptFireSpriteV41Badge');
-  if(tag)tag.textContent='SPRITES ÁGUA V44.3 · FOGO V42.5';
+  if(tag)tag.textContent='SPRITES ÁGUA V45 · FOGO V42.5';
  }
  versionTag();
 })();
