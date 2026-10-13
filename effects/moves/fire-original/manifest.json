@@ -1,0 +1,63 @@
+{
+  "build": "fire4v1",
+  "format": "PNG atlas, 96x96 frame grid, 8 columns, 75 frames, nearest neighbor, dark pixel outline",
+  "sprites": {
+    "punch": [
+      0,
+      7
+    ],
+    "punchFlame": [
+      7,
+      7
+    ],
+    "funnel": [
+      14,
+      1
+    ],
+    "spinRing": [
+      15,
+      11
+    ],
+    "explosion": [
+      26,
+      11
+    ],
+    "explosionBurst": [
+      37,
+      13
+    ],
+    "firebolt": [
+      50,
+      12
+    ],
+    "fireburst": [
+      62,
+      12
+    ],
+    "flame": [
+      74,
+      1
+    ]
+  },
+  "sourceImages": [
+    "1000981207.gif",
+    "1000981208.gif",
+    "1000981209.gif",
+    "1000981210.gif",
+    "1000981215.gif"
+  ],
+  "attacks": [
+    "Punho de Fogo",
+    "Giro de Fogo",
+    "Explosão de Fogo",
+    "Rajada Ígnea"
+  ],
+  "notes": "Only pixel sprites supplied by the user, no constructed geometric VFX. Personal noncommercial use. The 4 fire moves remain to be visually evaluated.",
+  "preserve": [
+    "Tri Attack",
+    "Confusion",
+    "Psybeam",
+    "Tempestade Psíquica",
+    "Chicote de Vinha"
+  ]
+}
