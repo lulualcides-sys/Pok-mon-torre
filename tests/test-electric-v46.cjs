@@ -120,10 +120,10 @@ const tester={id:150,level:50,v3566MewtwoTest:true,v32Slots:[
 const corrected=env.v32Catalogue(tester);
 assert.equal(corrected.length,8,'Mewtwo test editor collapses wrong-type duplicate Drill Peck');
 assert.equal(new Set(corrected.map(x=>x.move.name)).size,8,'One canonical type per move name');
-assert.deepEqual(tester.v32Slots,[
+assert.equal(JSON.stringify(tester.v32Slots),JSON.stringify([
  'Drill Peck|flying|bolt','Quick Attack|normal|bolt',
  'Skull Bash|normal|bolt','Amnesia|psychic|status'
-],'All four existing equipped slots migrated instead of being lost');
+]),'All four existing equipped slots migrated instead of being lost');
 assert.equal(persisted,1,'Migration persists once');
 const drill=corrected.find(x=>x.move.name==='Drill Peck');
 assert.equal(drill.move.cat,'physical');
