@@ -1,4 +1,4 @@
-/* Pokemon Torre V43 — water/status sprite renderer.
+/* Pokemon Torre V44 — improved original-frame water/status sprite renderer.
  * Source tiles isolated from ORIGINAL water images supplied by the player:
  * water_pixel_splash_sheet.png and large_water_elemental_and_waves_spritesheet.png.
  * 20 original-source pixel frames of 48x48, five columns. No procedural Canvas circles/CSS.
@@ -60,7 +60,7 @@ const waterSpriteV43=(()=>{
   return true;
  }
  return {add,resolve,paint,draw,mind,clamp,ease,lerp,source,psychic,
-  diagnostics:()=>({version:'43.1',mode:'original sprites + isolated casts',
+  diagnostics:()=>({version:'44.0',mode:'original sprites + isolated casts',
    waterReady:!!source.naturalWidth,psychicReady:!!psychic.naturalWidth,
    registered:[...sprites.keys()],casts:{...counters},frames:{...frames},error})};
 })();
