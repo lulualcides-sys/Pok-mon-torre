@@ -1,7 +1,7 @@
 /* Pokemon Torre V43 — water/status sprite renderer.
  * Source tiles isolated from ORIGINAL water images supplied by the player:
  * water_pixel_splash_sheet.png and large_water_elemental_and_waves_spritesheet.png.
- * 20 real frames of 64x64, five columns. No procedural Canvas circles/CSS.
+ * 20 original-source pixel frames of 48x48, five columns. No procedural Canvas circles/CSS.
  */
 const waterSpriteV43=(()=>{
  'use strict';
@@ -12,7 +12,7 @@ const waterSpriteV43=(()=>{
  const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
  const source=new Image(),psychic=new Image();
  source.decoding='async';
- source.src=waterSpriteV43AtlasData;
+ source.src='effects/moves/water-original/water-original-v43-atlas.png?v=43.1';
  psychic.decoding='async';
  psychic.src='effects/moves/gba-assets/psychic-original-v3.png?v=water43';
  let error='';
@@ -26,7 +26,7 @@ const waterSpriteV43=(()=>{
   g.save();g.globalAlpha=alpha;g.imageSmoothingEnabled=false;
   g.translate(x,y);g.rotate(opt.rotation||0);
   if(opt.flipX)g.scale(-1,1);
-  g.drawImage(source,(frame%5)*64,Math.floor(frame/5)*64,64,64,-w/2,-h/2,w,h);
+  g.drawImage(source,(frame%5)*48,Math.floor(frame/5)*48,48,48,-w/2,-h/2,w,h);
   g.restore();frames[frame]=(frames[frame]||0)+1;return true;
  }
  function mind(g,id,x,y,w,h,opt={}){
@@ -54,7 +54,7 @@ const waterSpriteV43=(()=>{
   return true;
  }
  return {add,resolve,paint,draw,mind,clamp,ease,lerp,source,psychic,
-  diagnostics:()=>({version:'43.0',mode:'original sprites + isolated casts',
+  diagnostics:()=>({version:'43.1',mode:'original sprites + isolated casts',
    waterReady:!!source.naturalWidth,psychicReady:!!psychic.naturalWidth,
    registered:[...sprites.keys()],casts:{...counters},frames:{...frames},error})};
 })();
