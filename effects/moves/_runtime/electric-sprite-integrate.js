@@ -6,7 +6,7 @@
 (function(){
  'use strict';
  const K=electricSpriteV46;
- const stats={accepted:0,painted:0,contactFrames:0,legacySuppressed:0,lastMove:''};
+ const stats={accepted:0,painted:0,contactFrames:0,legacySuppressed:0,hiddenGeneric:0,lastMove:''};
  const queues=['v359Attacks','v3580Visuals','v3568StatusFX','v352FX',
   'v352OtherFX','v356FX','v351Effects','v346Attacks','v354SpecialAttacks',
   'v343Named','v344Fx','v344StatusFX','v348StatusFX','v342StatusFx'];
@@ -26,6 +26,15 @@
    }
   }
  }
+ // Hide old Canvas projectile art ONLY; projectiles remain in the engine's
+ // arrays and keep real velocity, collision and HP damage in update().
+ const oldProjectilePainter=BattleEngine.prototype.drawProjectile;
+ if(typeof oldProjectilePainter==='function'){
+  BattleEngine.prototype.drawProjectile=function(shot){
+   if(shot?.ptElectricSpriteV47){stats.hiddenGeneric++;return;}
+   return oldProjectilePainter.apply(this,arguments);
+  };
+ }
  const oldUse=BattleEngine.prototype.useMove;
  BattleEngine.prototype.useMove=function(slot){
   const b=battle,m=b?.active?current():null;
@@ -34,6 +43,8 @@
   if(!d)return oldUse.apply(this,arguments);
   const now=performance.now(),beforeEnergy=b.energy,beforeCd=cooldowns[slot]||0;
   const beforeAttacks=this.v359Attacks?.length||0;
+  const projectileBefore=this.projectiles?.length||0;
+  const particleBefore=this.particles?.length||0;
   const lightningBefore=this.v342Lightning?.length||0;
   const result=oldUse.apply(this,arguments);
   const accepted=result!==false&&b===battle&&b?.active&&(
@@ -49,6 +60,10 @@
    this.v342Lightning.length=lightningBefore;
   }
   suppress(this);
+  for(const p of (this.projectiles||[]).slice(projectileBefore))
+   if(p.from==='player'&&p.type==='electric')p.ptElectricSpriteV47=true;
+  for(const p of (this.particles||[]).slice(particleBefore))
+   p.ptElectricGenericV47=true;
   const fx={at:now,end:now+d.duration,duration:d.duration,battle:b,
    owner:m,target:foe(),move:{name:move.name},
    from:[this.player.x,this.player.y-(this.h||560)*.13],
@@ -66,6 +81,14 @@
    x.end>now&&x.battle===b&&x.owner===actor&&x.target===enemy):[];
   this.v46ElectricFX=fx;
   if(fx.length)suppress(this);
+  // Prevent old yellow Canvas bubbles and straight beam guide from painting
+  // on top of pixel-art sprites. Restore the arrays after every frame.
+  const oldParticles=this.particles;
+  const oldTelegraph=this.telegraph;
+  const hideBeam=fx.length&&oldTelegraph?.from==='player'&&oldTelegraph.kind==='beam';
+  if(fx.length&&oldParticles?.some(p=>p.ptElectricGenericV47))
+   this.particles=oldParticles.filter(p=>!p.ptElectricGenericV47);
+  if(hideBeam)this.telegraph=null;
   const player=this.player,target=this.enemy;
   const base=player?[player.x,player.y]:null;
   const dash=[...fx].reverse().find(x=>K.resolve(x)?.contact);
@@ -83,6 +106,8 @@
   try{result=oldDraw.call(this,now);}
   finally{
    if(dash&&player&&base){player.x=base[0];player.y=base[1];}
+   if(this.particles!==oldParticles)this.particles=oldParticles;
+   if(hideBeam)this.telegraph=oldTelegraph;
    if(fx.length)suppress(this);
   }
   for(const v of fx){
