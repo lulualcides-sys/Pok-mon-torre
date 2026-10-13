@@ -84,7 +84,10 @@ async function browserCase(port,query){
   return {query:query||'default',ok,result,errors:errors.slice(0,7)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
-  child.kill('SIGKILL');fs.rmSync(tmp,{recursive:true,force:true});
+  child.kill('SIGKILL');
+  // Chrome's helpers may still be shutting down; cleanup is best-effort.
+  try{fs.rmSync(tmp,{recursive:true,force:true,maxRetries:4,retryDelay:200})}
+  catch(e){console.warn('Temp Chrome profile will be cleaned by runner:',e.code)}
  }
 }
 server.listen(0,'127.0.0.1',async()=>{
