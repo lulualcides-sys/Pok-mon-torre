@@ -1,0 +1,1000 @@
+ if(action==='Walk')dy-=Math.abs(Math.sin(now*.024))*2.4*(engine.h||600)/600;
+ if(action==='Attack'){
+   const t=Math.min(1,elapsed/460);
+   const advance=Math.sin(t*Math.PI)*9*(engine.h||600)/600;
+   dx+=Math.sign(towardX)*advance;
+   dy-=Math.sin(t*Math.PI)*3;
+ }
+ if(action==='Hurt')dx+=Math.sin(now*.08)*2.6;
+ ctx.save();
+ ctx.globalAlpha=actor.inv>0&&Math.floor(now/80)%2===0?.68:1;
+ ctx.translate(actor.x+dx,actor.y+dy+bob);
+ if(mirror)ctx.scale(-1,1);
+ if(action==='Idle')ctx.rotate(Math.sin(now*.006)*.025);
+ ctx.imageSmoothingEnabled=false;
+ ctx.drawImage(img,crop.x,crop.y,crop.w,crop.h,-width/2,-height*.64,width,height);
+ ctx.restore();
+ shinyActualFrames[action]++;
+ engine.v3559ShinyLast={id:engine.v3559CurrentId,side:engine.v3559EnemyFlag?'enemy':'ally',action,frame:index,frameCount:frames,durationMs:frameDuration,now};
+ return index;
+}
+BattleEngine.prototype.drawMon=function(actor,id,isEnemy,now){
+ const mon=isEnemy?foe():current(),entry=this.assets?.get(id);
+ if(!mon?.shiny || !entry || !actor || !this.ctx)return shinyPreviousDrawMon.call(this,actor,id,isEnemy,now);
+ const imgs=shinyProtectedImages(id);
+ if(!imgs?.Idle?.complete || !imgs.Idle.naturalHeight)return shinyPreviousDrawMon.call(this,actor,id,isEnemy,now);
+ const action=shinySelectAction(actor,this,isEnemy,id);
+ const img=(imgs[action]?.complete&&imgs[action]?.naturalHeight)?imgs[action]:imgs.Idle;
+ const ctx=this.ctx;
+ this.v3559CurrentId=id;this.v3559EnemyFlag=isEnemy;
+ shinyBlitFrame(ctx,img,action,actor,isEnemy?this.player:this.enemy,this,now);
+ shinyProtectedFrames++;
+ // Proteção e flash mantidos sem alterar a animação original do sprite.
+ if(actor.guard>0){
+  ctx.save();ctx.globalAlpha=.55;ctx.strokeStyle='#a5f7ff';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(actor.x,actor.y-(this.h||600)*.05,(this.h||600)*.052,0,Math.PI*2);ctx.stroke();ctx.restore();
+ }
+ // Estrelas APENAS por 2,2 segundos após entrada/switch, nunca num loop infinito.
+ if(battle?.active){
+    const idField=isEnemy?'v3559EnemyIdentity':'v3559PlayerIdentity';
+    const untilField=isEnemy?'v3559EnemyEntryUntil':'v3559PlayerEntryUntil';
+    if(battle[idField]!==mon){battle[idField]=mon;battle[untilField]=now+2200;}
+    const rem=Math.max(0,(battle[untilField]||0)-now);
+    if(rem>0){
+      const progress=1-rem/2200,fade=Math.min(1,rem/340)*Math.min(1,(progress+.03)*6);
+      const sc=(this.h||500)/500, spread=(14+10*Math.sin(progress*Math.PI))*sc;
+      const cx=actor.x,cy=actor.y-(this.h||500)*.105;
+      for(let i=0;i<7;i++){
+        const a=i*Math.PI*2/7+now*.003;
+        shinyVectorStar(ctx,cx+Math.cos(a)*spread,cy+Math.sin(a)*spread*.84,(i%3===0?5:3.3)*sc,fade*(.56+(i%2)*.12),a+now*.003);
+      }
+      shinyProtectedStars++;
+    }
+ }
+ return true;
+};
+function shinyProtectedPortraits(){
+ document.querySelectorAll('.moncard').forEach((card,i)=>{
+   const mon=(save?.team||[])[i],pic=card.querySelector('.spritewrap img.sprite');
+   const uri=mon?.shiny?SHINY_PROTEGIDO_SPRITES[mon.id]?.Portrait:null;
+   if(pic&&uri && pic.dataset.v3559Portrait!=='yes'){
+     pic.dataset.v3559Portrait='yes';pic.src=uri;pic.style.imageRendering='pixelated';
+   }
+ });
+}
+
+/* FIM 01_shiny_animado.js */
+/* INICIO 02_ia_contato.js */
+/* V35.58: inteligencia para lutadores e impactos fisicos, sem editar sprites/efeitos de golpes aprovados */
+(function(){
+ const previousUpdate=BattleEngine.prototype.update;
+ BattleEngine.prototype.update=function(dt,now){
+   const res=previousUpdate.call(this,dt,now);
+   if(!battle?.active||battle.paused||!this.enemy||!this.player)return res;
+   const mon=foe(),inf=D[mon?.id];
+   if(!inf)return res;
+   const fighting=(inf.type==='fighting'||inf.type2==='fighting');
+   // Adversarios lutadores aproximam-se para poder acertar, sem teleporte.
+   if(fighting){
+     const dx=this.player.x-this.enemy.x,dy=this.player.y-this.enemy.y;
+     const dist=Math.hypot(dx,dy)||1,ideal=Math.max(56,this.h*.18);
+     if(dist>ideal+3){
+       const advance=Math.min(dist-ideal,(this.h*.25)*Math.min(dt,.04));
+       this.enemy.x+=dx/dist*advance;
+       this.enemy.y+=dy/dist*advance;
+       if(typeof this.collideRocks==='function')this.collideRocks(this.enemy);
+       if(typeof this.bounds==='function')this.bounds(this.enemy);
+     }
+   }
+   return res;
+ };
+ const previousDraw=BattleEngine.prototype.draw;
+ BattleEngine.prototype.draw=function(now){
+   const result=previousDraw.call(this,now);
+   if(!battle?.active||!this.ctx)return result;
+   const ctx=this.ctx, effects=this.v359Attacks||[];
+   const recent=effects.findLast?.(fx=>fx&&fx.kind==='contact'&&fx.move?.type==='fighting'&&now>=fx.at&&now<fx.at+fx.duration)
+     || [...effects].reverse().find(fx=>fx&&fx.kind==='contact'&&fx.move?.type==='fighting'&&now>=fx.at&&now<fx.at+fx.duration);
+   if(!recent)return result;
+   const progress=(now-recent.at)/Math.max(1,recent.duration);
+   if(progress<.25||progress>.76)return result;
+   const fade=Math.max(0,Math.sin(Math.PI*(progress-.25)/.51));
+   const tx=recent.to?.[0]||this.enemy.x,ty=recent.to?.[1]||this.enemy.y;
+   ctx.save();ctx.globalAlpha=fade*.76;ctx.translate(tx,ty);
+   for(let i=0;i<6;i++){
+     const ang=i*Math.PI/3+now*.002,rad=(9+fade*16)*(this.h/560);
+     ctx.strokeStyle=i%2?'#ffe5b9':'#e49e78';ctx.lineWidth=(i%2?1.8:2.4)*(this.h/560);
+     ctx.beginPath();ctx.moveTo(Math.cos(ang)*rad*.55,Math.sin(ang)*rad*.55);
+     ctx.lineTo(Math.cos(ang)*rad,Math.sin(ang)*rad);ctx.stroke();
+   }
+   ctx.restore();
+   return result;
+ };
+})();
+
+/* FIM 02_ia_contato.js */
+/* INICIO 03_cabecalho.js */
+/* V35.59: elimina chips de versão repetidos, preserva as telas e o progresso */
+(function(){
+ const V='V35.59';
+ function cleanHeader(){
+   const brand=document.querySelector('.brand');
+   const strong=brand?.querySelector('strong');
+   if(strong){
+     const first=[...strong.childNodes].find(node=>node.nodeType===3&&node.textContent.trim());
+     if(first&&/V35\.11|SPRITES ORIGINAIS/.test(first.textContent))first.textContent='ARENA DE AÇÃO ';
+   }
+   const badges=[...document.querySelectorAll('#v3520VersionHome')];
+   for(const el of badges.slice(1))el.remove();
+   if(badges[0]){badges[0].textContent=V;badges[0].style.cssText='font-size:12px;color:#b3fff2;padding:3px 8px;margin-left:8px;border:1px solid #77c4bc;border-radius:8px;display:inline-block;';}
+   // Corrige quaisquer selos duplicados com a mesma classe no topo.
+   const versions=[...document.querySelectorAll('#v30VersionTag')];
+   for(const el of versions.slice(1))el.remove();
+   if(versions[0])versions[0].textContent=V+' · EFEITOS APROVADOS PROTEGIDOS';
+   document.title='Pokémon Torre '+V+' — golpes protegidos';
+   shinyProtectedPortraits();
+ }
+ const prevRender=render;
+ render=function(){const result=prevRender.apply(this,arguments);cleanHeader();return result;};
+ const prevBattle=renderBattle;
+ renderBattle=function(){const result=prevBattle.apply(this,arguments);cleanHeader();return result;};
+ cleanHeader();
+ window.PokemonTorreVersion=V;
+})();
+
+/* FIM 03_cabecalho.js */
+/* INICIO 05_ia_tatica.js */
+/* V35.60 — IA: combate justo, perseguicao fisica, esquivas com cooldown, variacao por chefe. */
+(function(){
+ const oldUpdate=BattleEngine.prototype.update;
+ let decisions=0,dodges=0,retreats=0;
+ BattleEngine.prototype.update=function(dt,now){
+   const alive=!!battle?.active&&!battle.paused;
+   const foeBefore=alive?foe():null;
+   const previousEnemy=alive&&this.enemy?{x:this.enemy.x,y:this.enemy.y}:null;
+   const result=oldUpdate.call(this,dt,now);
+   if(!alive||!battle?.active||!foeBefore||!this.enemy||!this.player)return result;
+   const stats=D[foe()?.id];if(!stats)return result;
+   const boss=(!battle.wild)&&(battle.v32Mode==='tower'&&battle.v32Floor%5===0 || /chefe|campe[aã]o|l[ií]der|blue|rival/i.test(battle.label||''));
+   const isFighter=stats.type==='fighting'||stats.type2==='fighting';
+   const dist=Math.hypot(this.enemy.x-this.player.x,this.enemy.y-this.player.y)||1;
+   // Permite decisoes mais frequentes sem zerar o cooldown a cada quadro.
+   if(Number.isFinite(this.enemyAttackCD)&&this.enemyAttackCD>0){
+      const cap=boss?1.48:(battle.wild?2.10:1.78);
+      this.enemyAttackCD=Math.min(cap,this.enemyAttackCD);
+   }
+   if(!this.v3560AiTick||now>=this.v3560AiTick){
+      this.v3560AiTick=now+(boss?410:620);decisions++;
+      const hp=(foe()?.hp||0)/Math.max(1,foe()?.maxHp||1);
+      if(!isFighter && hp<.25 && dist<this.h*.26 && !this.telegraph){
+        const dx=(this.enemy.x-this.player.x)/dist,dy=(this.enemy.y-this.player.y)/dist;
+        this.enemy.x+=dx*this.h*.042;this.enemy.y+=dy*this.h*.042;
+        this.collideRocks(this.enemy);this.bounds(this.enemy);retreats++;
+      }
+      // Desvio legivel e limitado; o inimigo nao ganha invulnerabilidade eterna.
+      const projectile=(this.projectiles||[]).find(p=>p.from==='player'&&p.life>.1 && Math.hypot(p.x-this.enemy.x,p.y-this.enemy.y)<this.h*.20);
+      if(projectile && (!this.v3560LastDodge || now-this.v3560LastDodge>(boss?2600:3700)) && this.enemy.inv<=0 && Math.random()<(boss?.48:.25)){
+        const dx=projectile.vx,dy=projectile.vy,ll=Math.hypot(dx,dy)||1;
+        const side=(Math.floor(now/700)%2)?1:-1;
+        this.enemy.x+=(-dy/ll)*this.h*.067*side;this.enemy.y+=(dx/ll)*this.h*.067*side;
+        this.bounds(this.enemy);this.collideRocks(this.enemy);
+        this.v3560LastDodge=now;dodges++;this.particlesAt(this.enemy.x,this.enemy.y,'#adddea',5,42);
+      }
+   }
+   return result;
+ };
+ window.PokemonTorreV3560AIDiagnostics=()=>({decisions,dodges,retreats,cooldown:engine?.enemyAttackCD,enemy:foe()?.id});
+})();
+/* FIM 05_ia_tatica.js */
+/* INICIO 06_contato.js */
+/* V35.60 — contato corporal: recuo temporario e poeira de impacto sem alterar efeitos nomeados. */
+(function(){
+ const oldHit=BattleEngine.prototype.hitTarget;
+ const oldDraw=BattleEngine.prototype.draw;
+ let impacts=0;
+ BattleEngine.prototype.hitTarget=function(who,type,power){
+   const before=who==='enemy'?foe()?.hp:current()?.hp;
+   const result=oldHit.call(this,who,type,power);
+   const after=who==='enemy'?foe()?.hp:current()?.hp;
+   if(before!=null&&after!=null&&before>after && ['normal','fighting'].includes(type)){
+      const target=who==='enemy'?this.enemy:this.player;
+      this.v3560Contact||(this.v3560Contact=[]);
+      this.v3560Contact.push({x:target.x,y:target.y-this.h*.12,at:performance.now(),duration:250});
+      this.v3560Contact=this.v3560Contact.slice(-12);
+      if(target){target.flash=Math.max(target.flash||0,.13);}
+      impacts++;
+   }
+   return result;
+ };
+ BattleEngine.prototype.draw=function(now){
+   const result=oldDraw.call(this,now);
+   if(!battle?.active||!this.ctx)return result;
+   const c=this.ctx;
+   this.v3560Contact=(this.v3560Contact||[]).filter(v=>now-v.at<v.duration);
+   c.save();
+   for(const fx of this.v3560Contact){
+     const t=Math.max(0,Math.min(1,(now-fx.at)/fx.duration)),a=(1-t)*.75;
+     c.globalAlpha=a;c.lineWidth=1.9;
+     for(let i=0;i<5;i++){
+       const ang=i*Math.PI*2/5+fx.at*.001,rad=(9+t*15)*(this.h/560);
+       c.strokeStyle=i%2?'#fff0c7':'#ceac85';c.beginPath();
+       c.moveTo(fx.x+Math.cos(ang)*rad*.65,fx.y+Math.sin(ang)*rad*.48);
+       c.lineTo(fx.x+Math.cos(ang)*rad,fx.y+Math.sin(ang)*rad*.75);c.stroke();
+     }
+   }
+   c.restore();return result;
+ };
+ window.PokemonTorreV3560ContactDiagnostics=()=>({impacts,active:engine?.v3560Contact?.length||0});
+})();
+/* FIM 06_contato.js */
+/* INICIO 07_arena.js */
+/* V35.60 — terreno interativo: clima visivel e efeitos de movimento/calor graduais. */
+(function(){
+ const oldUpdate=BattleEngine.prototype.update,oldDraw=BattleEngine.prototype.draw;
+ let heatTicks=0,iceSlips=0;
+ function weather(){return String(battle?.v32Weather||'clear').toLowerCase();}
+ function isVolcano(){return weather()==='volcano'||(save.gym===6 && /vulc[aã]o|blaine/i.test((GYMS[6]?.name||'')+' '+(battle?.label||'')));}
+ BattleEngine.prototype.update=function(dt,now){
+   const active=!!battle?.active&&!battle.paused,py=active?this.player?.y:0,px=active?this.player?.x:0;
+   const result=oldUpdate.call(this,dt,now);
+   if(!active||!battle?.active)return result;
+   const state=weather();
+   if(state==='snow'||state==='hail'){
+      // Solo gelado: velocidade reduzida cerca de 8%, sem mexer na esquiva.
+      const changed=Math.hypot(this.player.x-px,this.player.y-py);
+      if(changed>0.1){this.player.x=px+(this.player.x-px)*.92;this.player.y=py+(this.player.y-py)*.92;iceSlips++;}
+   }
+   if(isVolcano() && battle.v32Mode!=='lab'){
+      if(!this.v3560HeatNext)this.v3560HeatNext=now+6000;
+      if(now>=this.v3560HeatNext){this.v3560HeatNext=now+6000;heatTicks++;
+        const p=current(),e=foe();
+        for(const m of [p,e]){if(!m||m.hp<=1)continue;const d=D[m.id];if(d?.type==='fire'||d?.type2==='fire')continue;
+          m.hp=Math.max(1,m.hp-Math.max(1,Math.floor(m.maxHp*.012)));
+        }
+        this.particlesAt(this.w*.5,this.h*.72,'#ffae58',12,38);
+        log('🔥 Calor da lava: pequena perda de PV para tipos sem resistência.');
+      }
+   }else this.v3560HeatNext=0;
+   return result;
+ };
+ BattleEngine.prototype.draw=function(now){
+   const result=oldDraw.call(this,now);if(!battle?.active||!this.ctx)return result;
+   const st=weather(),c=this.ctx,w=this.w,h=this.h;
+   if(st==='clear')return result;
+   c.save();
+   // Particulas animadas discretas, criadas em Canvas (sem PNG estatico).
+   if(st==='rain'||st==='storm'){
+     c.lineWidth=1;c.strokeStyle='rgba(185,223,250,.23)';
+     for(let i=0;i<16;i++){const x=((i*97+now*.15)%(w+40))-20,y=((i*71+now*.31)%(h*.63))+h*.28;
+       c.beginPath();c.moveTo(x,y);c.lineTo(x-3,y+12);c.stroke();}
+   }else if(st==='snow'||st==='hail'){
+     c.fillStyle='rgba(232,248,255,.47)';for(let i=0;i<17;i++){const x=(i*73+now*.015*(1+i%3))%w,y=(i*43+now*.023)%h;c.beginPath();c.arc(x,y,1.2+(i%2),0,Math.PI*2);c.fill();}
+   }else if(isVolcano()){
+     c.fillStyle='rgba(255,122,43,.27)';for(let i=0;i<9;i++){const x=(i*101+now*.004)%w,y=h*.9-(i*32+now*.013)%(h*.39);c.fillRect(x,y,2,3);}
+   }
+   c.restore();return result;
+ };
+ window.PokemonTorreV3560ArenaDiagnostics=()=>({weather:weather(),volcano:isVolcano(),heatTicks,iceSlips,breakableRocks:engine?.rocks?.filter(r=>r.hp>0).length||0});
+})();
+/* FIM 07_arena.js */
+/* INICIO 09_mobile.js */
+/* V35.60 — limpeza de cabecalho, controles acessiveis e menus sem overflow no celular. */
+(function(){
+ // Restaurar a seleção legal após rotinas antigas que forçam quatro golpes no lutador ósseo.
+ const previousLegacySkills=skillSet;
+ window.PokemonTorreV3560PreferredLegacy=m=>Number(m?.id)===105 && !Array.isArray(m?.v32Slots) ? previousLegacySkills(m):null;
+ if(typeof window.PokemonTorreV3560SafeSkills==='function')window.skillSet=skillSet=window.PokemonTorreV3560SafeSkills;
+ const css=document.createElement('style');css.id='v3560_mobile';
+ css.textContent=`
+  .modal.combatModal{overflow-x:hidden!important}
+  .modal.combatModal .battleFooter{overflow-x:hidden;max-width:100%}
+  .modal.combatModal .skillgridV8{min-width:0;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+  .modal.combatModal .skillV8{min-width:0;touch-action:manipulation}
+  .modal.combatModal .battleActions{display:flex;flex-wrap:wrap;gap:5px}
+  .modal.combatModal .battleActions>*{min-width:0;flex:1 1 75px}
+  .v331MoveList{overscroll-behavior:contain;scrollbar-width:thin}
+  .v331Choice{touch-action:manipulation}
+  .v331Choice:disabled{opacity:.44}
+  .v32TowerCard{max-width:min(100%,580px)}
+  #v3560VersionChip{font-size:10px}
+  @media(max-width:440px){
+   #main .teamrow{gap:6px!important}
+   .modal.combatModal .skillV8 .skillName b{font-size:10.5px!important}
+   .modal.combatModal .skillV8 .skillMeta{flex-shrink:0}
+   .modal.combatModal .battleActions .miniBtn{font-size:10px;padding:6px}
+   .modal.combatModal .hudPro{max-width:45%}
+   .v331Slots{grid-template-columns:repeat(2,minmax(0,1fr))}
+   .v331Slot{min-width:0}
+  }`;
+ document.head.appendChild(css);
+ const prevRender=render;
+ const prevBattleV3560=renderBattle;
+ function version3560(){
+   const heading=document.querySelector('.brand strong');
+   if(heading && /V35\.11|SPRITES ORIGINAIS/i.test(heading.textContent||''))heading.textContent='POKÉMON TORRE · V35.60';
+   const home=document.getElementById('v3520VersionHome');if(home)home.textContent='V35.60';
+   const label=document.getElementById('v30VersionTag');if(label)label.textContent='V35.60 · PROGRESSÃO POR NÍVEL';
+   document.title='Pokémon Torre V35.60 · Progressão e Torre Infinita';
+ }
+ renderBattle=function(){const r=prevBattleV3560.apply(this,arguments);version3560();return r;};
+ render=function(){
+   const result=prevRender.apply(this,arguments);
+   version3560();
+   return result;
+ };
+ // Corrige a legenda na primeira carga sem duplicar chips.
+ document.title='Pokémon Torre V35.60 · Progressão e Torre Infinita';
+ window.PokemonTorreVersion='V35.60';
+})();
+/* FIM 09_mobile.js */
+/* INICIO 10_terreno_contato_status.js */
+/* V35.62: mudanças ambientais e regras de contato/status; renderizadores aprovados intactos. */
+(function(){
+ 'use strict';
+ const earlierUpdate=BattleEngine.prototype.update;
+ const earlierDraw=BattleEngine.prototype.draw;
+ const earlierUse=BattleEngine.prototype.useMove;
+ const earlierHit=BattleEngine.prototype.hitTarget;
+ const terrains={grass:{name:'GRAMADO',color:'#7cbe75'},water:{name:'MOLHADO',color:'#73cbec'},electric:{name:'ENERGIZADO',color:'#d7ca66'},rock:{name:'ROCHOSO',color:'#b4a48a'},ghost:{name:'SOMBRIO',color:'#9176c0'},normal:{name:'NEUTRO',color:'#b5bcc7'}};
+ const typeOf=m=>D[m?.id]?.type||'normal';
+ function terrain(){
+   const weather=String(battle?.v32Weather||'clear').toLowerCase();
+   if(['rain','storm'].includes(weather))return 'water';
+   if(['sand','snow','hail'].includes(weather))return 'rock';
+   if(weather==='fog')return 'ghost';
+   const t=String(GYMS[Math.min(save.gym,GYMS.length-1)]?.type||'normal').toLowerCase();
+   return ['grass','electric','rock','ground','water','ghost','dark'].includes(t)?({ground:'rock',dark:'ghost'}[t]||t):'normal';
+ }
+ const info={ticks:0,poisonTicks:0,blockedWhileSleeping:0,paralysisDelays:0,contactMisses:0,contactHits:0};
+ function conditionList(engine,side){return engine?.v25?.stats?.[side]?.conditions||[];}
+ function motilityFactor(engine,side){
+   const list=conditionList(engine,side);
+   return list.includes('sleep')?.0:list.includes('paralysis')?.66:list.includes('freeze')?.45:list.includes('slow')?.70:1;
+ }
+ function note(engine,actor,label,color){
+   if(typeof engine.v25Popup==='function')engine.v25Popup(actor.x,actor.y-engine.h*.22,label,color);
+ }
+ // Alcance verdadeiro apenas para movimentos básicos de contato. Não toca em golpes assinados.
+ function isBasicContact(move){const n=String(move?.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();return /^(investida|arranhao|tackle|scratch)$/.test(n);}
+ BattleEngine.prototype.useMove=function(i){
+   const move=battle?.active&&current()?skillSet(current())?.[i]:null;
+   if(move&&isBasicContact(move)&&this.player&&this.enemy){
+     const dist=Math.hypot(this.player.x-this.enemy.x,this.player.y-this.enemy.y);
+     const reach=Math.max(62,this.h*.27); // investimento de movimento curto; sem atingir do outro lado.
+     if(dist>reach){info.contactMisses++;note(this,this.player,'APROXIME-SE','#ffdcae');return false;}
+   }
+   // Dormência e paralisia do jogador afetam também ações, em vez de serem só etiquetas.
+   if(battle?.active&&this.v25?.stats?.player){
+     const list=conditionList(this,'player'),now=performance.now();
+     if(list.includes('sleep')||list.includes('freeze')){
+       if(now>(this.v3562NoMoveLabel||0)){note(this,this.player,list.includes('sleep')?'DORMINDO':'CONGELADO','#d9eaff');this.v3562NoMoveLabel=now+700;}
+       info.blockedWhileSleeping++;return false;
+     }
+     if(list.includes('paralysis')&& now>(this.v3562ParaCheck||0)){
+       this.v3562ParaCheck=now+1200;
+       if(Math.random()<.15){note(this,this.player,'PARALISADO','#fff2a3');return false;}
+     }
+   }
+   return earlierUse.call(this,i);
+ };
+ BattleEngine.prototype.hitTarget=function(side,type,power){
+   const target=side==='enemy'?this.enemy:this.player;
+   const source=side==='enemy'?this.player:this.enemy;
+   const before=(side==='enemy'?foe():current())?.hp??0;
+   const move=side==='enemy'?this.v351MovePreview:null;
+   if(move&&isBasicContact(move)&&source&&target){
+     const dist=Math.hypot(source.x-target.x,source.y-target.y);
+     if(dist>Math.max(62,this.h*.28)){info.contactMisses++;return false;}
+   }
+   // Rocha absorve parte de impactos básicos, sem mudar os efeitos visuais aprovados.
+   const t=terrain();
+   if(t==='rock'&&target&&type==='normal'&&power>0)power=Math.max(1,power*.94);
+   const result=earlierHit.call(this,side,type,power);
+   const after=(side==='enemy'?foe():current())?.hp??before;
+   if(before>after&&source&&target&&['normal','fighting'].includes(type)){
+     // Recuo curto e físico (não altera sprites de ataque).
+     const dx=target.x-source.x,dy=target.y-source.y,dist=Math.hypot(dx,dy)||1;
+     const push=Math.min(9,this.h*.0105);
+     target.x+=dx/dist*push;target.y+=dy/dist*push;
+     this.bounds(target);this.collideRocks(target);info.contactHits++;
+     this.particlesAt(target.x,target.y-this.h*.1,'#f0d2a1',5,37);
+   }
+   return result;
+ };
+ BattleEngine.prototype.update=function(dt,now){
+   const active=!!battle?.active&&!battle.paused;
+   const pre=active?{pX:this.player.x,pY:this.player.y,eX:this.enemy.x,eY:this.enemy.y}:null;
+   const result=earlierUpdate.call(this,dt,now);
+   if(!active||!battle?.active||!this.player||!this.enemy)return result;
+   const sideP=conditionList(this,'player'),sideE=conditionList(this,'enemy');
+   const pm=motilityFactor(this,'player'),em=motilityFactor(this,'enemy');
+   if(pm<1){this.player.x=pre.pX+(this.player.x-pre.pX)*pm;this.player.y=pre.pY+(this.player.y-pre.pY)*pm;this.bounds(this.player);}
+   if(em<1){this.enemy.x=pre.eX+(this.enemy.x-pre.eX)*em;this.enemy.y=pre.eY+(this.enemy.y-pre.eY)*em;this.bounds(this.enemy);}
+   if(sideE.includes('sleep')||sideE.includes('freeze')){
+     // O turno de preparação não pode chegar a 0 enquanto dorme.
+     this.enemyAttackCD=Math.max(.36,this.enemyAttackCD||0);
+     if(this.telegraph?.from==='enemy')this.telegraph=null;
+   }
+   if(sideE.includes('paralysis')&& now>(this.v3562ParaEnemy||0)){
+     this.v3562ParaEnemy=now+1800;
+     if(Math.random()<.22){this.enemyAttackCD=Math.max(.55,this.enemyAttackCD||0);info.paralysisDelays++;note(this,this.enemy,'PARALISADO','#ffeb91');}
+   }
+   // Não duplicar veneno, queimadura ou sementes: já possuem tick próprio na base.
+   const tile=terrain();this.v3562Terrain=tile;
+   if(!this.v3562GroundTick)this.v3562GroundTick=now+3500;
+   if(now>=this.v3562GroundTick){
+     this.v3562GroundTick=now+3500;info.ticks++;
+     if(tile==='grass'){
+       for(const m of [current(),foe()])if(m?.hp>0&&m.hp<m.maxHp && typeOf(m)==='grass')m.hp=Math.min(m.maxHp,m.hp+Math.max(1,Math.round(m.maxHp*.009)));
+     }
+     if(tile==='electric'){
+       for(const [side,m,a] of [['player',current(),this.player],['enemy',foe(),this.enemy]]){
+         const st=conditionList(this,side);if(typeOf(m)==='electric'&&st.includes('paralysis')){
+           this.v25.stats[side].conditions=st.filter(x=>x!=='paralysis');note(this,a,'ELETRICIDADE ABSORVIDA','#ffec9b');
+         }
+       }
+     }
+   }
+   return result;
+ };
+ BattleEngine.prototype.draw=function(now){
+   const res=earlierDraw.call(this,now);if(!battle?.active||!this.ctx)return res;
+   const c=this.ctx,w=this.w,h=this.h,t=this.v3562Terrain||terrain();
+   if(t==='normal')return res;
+   const quality=this.fps>0&&this.fps<26?.5:1;
+   const count=Math.round(8*quality);
+   c.save();c.lineWidth=1.1;
+   for(let i=0;i<count;i++){
+     const x=(.13+i*.104)*w, y=(.78+Math.sin(i*3.4)*.13)*h,phase=now*.0008+i*1.9;
+     if(t==='grass'){
+       c.strokeStyle='rgba(124,220,120,.27)';c.beginPath();c.moveTo(x,y+3);c.quadraticCurveTo(x-5+Math.sin(phase)*4,y-6,x+Math.cos(phase)*4,y-12);c.stroke();
+     }else if(t==='water'){
+       c.strokeStyle='rgba(156,225,248,.24)';c.beginPath();c.ellipse(x,y,8+Math.sin(phase)*2,3.8,0,0,Math.PI*2);c.stroke();
+     }else if(t==='electric'){
+       c.strokeStyle='rgba(250,227,116,.24)';const s=Math.sin(phase)*3;c.beginPath();c.moveTo(x-4,y-2);c.lineTo(x+s,y+1);c.lineTo(x+4,y-2);c.stroke();
+     }else if(t==='rock'){
+       c.strokeStyle='rgba(185,151,114,.19)';c.beginPath();c.moveTo(x-6,y);c.lineTo(x-2,y-3);c.lineTo(x+2,y+1);c.lineTo(x+6,y-2);c.stroke();
+     }else if(t==='ghost'){
+       c.fillStyle='rgba(149,125,202,.10)';c.beginPath();c.ellipse(x+Math.cos(phase)*3,y-8,9,3,0,0,Math.PI*2);c.fill();
+     }
+   }
+   c.restore();return res;
+ };
+ window.PokemonTorreV3562TerrainDiagnostics=()=>({terrain:engine?.v3562Terrain||terrain(),...info,conditions:engine?.v25?.stats?.enemy?.conditions||[],protected:window.PokemonTorreGolpesProtegidos?.total||25});
+})();
+
+/* FIM 10_terreno_contato_status.js */
+/* INICIO 11_planta_inimigos.js */
+/* V35.62: dois golpes iniciais de Planta e ataques genéricos inimigos em Canvas 2D. */
+(function(){
+ 'use strict';
+ const oldUse=BattleEngine.prototype.useMove;
+ const oldUpdate=BattleEngine.prototype.update;
+ const oldDraw=BattleEngine.prototype.draw;
+ const oldProjectile=BattleEngine.prototype.drawProjectile;
+ const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+ const cap=(x,a,b)=>Math.min(b,Math.max(a,x));
+ let vines=0,drains=0,enemyFrames=0,healedTotal=0;
+ function curve(c,x,y,tx,ty,shift,phase){
+   const dx=tx-x,dy=ty-y,len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len;
+   c.beginPath();for(let j=0;j<=14;j++){
+      const q=j/14,wiggle=Math.sin(q*9.4+phase)*(4+shift)*Math.sin(Math.PI*q),off=(shift+wiggle);
+      const px=x+dx*q+nx*off,py=y+dy*q+ny*off*.55;
+      if(j===0)c.moveTo(px,py);else c.lineTo(px,py);
+   }
+ }
+ BattleEngine.prototype.useMove=function(i){
+   const s=battle?.active&&current()?skillSet(current())?.[i]:null,key=norm(s?.name);
+   if(!s||!['chicotedevinha','vinewhip','absorver','absorb'].includes(key))return oldUse.call(this,i);
+   const now=performance.now();if(battle.paused||current().hp<=0||(cooldowns[i]||0)>now||battle.energy<(s.cost||0))return false;
+   battle.energy-=(s.cost||0);cooldowns[i]=now+(s.cd||1750);
+   this.attackActs.player=this.time+.35;
+   const kind=['chicotedevinha','vinewhip'].includes(key)?'vine':'drain';
+   const fx={kind,at:now,hit:now+(kind==='vine'?230:290),end:now+(kind==='vine'?640:950),power:s.power,done:false,healed:false,from:{x:this.player.x,y:this.player.y-this.h*.10},to:{x:this.enemy.x,y:this.enemy.y-this.h*.11},target:foe()};
+   (this.v3562PlantFx||(this.v3562PlantFx=[])).push(fx);
+   if(kind==='vine')vines++;else drains++;
+   this.particlesAt(this.player.x,this.player.y-this.h*.11,'#b9ff92',8,42);
+   log(D[current().id].name+' usou '+s.name+'!');playSound('move');return true;
+ };
+ BattleEngine.prototype.update=function(dt,now){
+   const r=oldUpdate.call(this,dt,now),list=this.v3562PlantFx||[];
+   if(!battle?.active){list.length=0;return r;}
+   for(let i=list.length-1;i>=0;i--){
+     const fx=list[i];
+     if(!fx.done&&now>=fx.hit){
+       const before=fx.target?.hp??0;
+       if(foe()===fx.target)this.hitTarget('enemy','grass',fx.power);
+       const loss=Math.max(0,before-(fx.target?.hp??before));fx.loss=loss;
+       fx.done=true;
+       if(fx.kind==='drain'){
+         const own=current();const hp=own?Math.min(own.maxHp-own.hp,Math.ceil(loss*.5)):0;
+         fx.healAmount=Math.max(0,hp);fx.healTime=now+190;
+       }
+       if(fx.kind==='vine')this.particlesAt(fx.to.x,fx.to.y,'#b8f8a4',10,52);
+     }
+     if(fx.kind==='drain'&&fx.done&&!fx.healed&&now>=(fx.healTime||Infinity)){
+       fx.healed=true;
+       if(fx.healAmount&&current()){current().hp=Math.min(current().maxHp,current().hp+fx.healAmount);healedTotal+=fx.healAmount;
+         this.particlesAt(this.player.x,this.player.y-this.h*.1,'#c8ff8c',13,52);
+         log(D[current().id].name+' absorveu '+fx.healAmount+' PV!');}
+     }
+     if(now>fx.end)list.splice(i,1);
+   }
+   return r;
+ };
+ // Projéteis inimigos usam traços vetoriais e formas sem texturas quadradas.
+ BattleEngine.prototype.drawProjectile=function(p){
+   if(p?.from!=='enemy')return oldProjectile.call(this,p);
+   const c=this.ctx,type=p.type||'normal',r=Math.max(5,p.r||5),x=p.x,y=p.y,ang=Math.atan2(p.vy||0,p.vx||1);
+   const pts=p.tail?.length?p.tail:[{x:x-(p.vx||0)*.03,y:y-(p.vy||0)*.03},{x,y}];
+   c.save();c.lineCap='round';c.lineJoin='round';
+   const path=(color,w,a)=>{c.globalAlpha=a;c.strokeStyle=color;c.lineWidth=w;c.beginPath();pts.forEach((pt,i)=>i?c.lineTo(pt.x,pt.y):c.moveTo(pt.x,pt.y));c.stroke();};
+   if(type==='electric'){
+     const a=pts[0];c.strokeStyle='#ffe87c';c.lineWidth=2.8;c.beginPath();c.moveTo(a.x,a.y);const n=6;
+     for(let i=1;i<n;i++){const t=i/n;c.lineTo(a.x+(x-a.x)*t+(i%2?4:-4),a.y+(y-a.y)*t+(i%2?-3:3));}c.lineTo(x,y);c.stroke();
+     path('#fffad0',.9,.90);
+   }else if(type==='grass'){
+     path('#428c50',4,.70);path('#befa94',1.4,.84);
+   }else if(type==='water'){
+     path('#5bc4ea',4.5,.72);path('#d0f8ff',1.6,.9);
+   }else if(type==='fire'){
+     path('#e97942',5,.55);path('#ffe8a4',1.5,.88);
+   }else{path(TYPE_COLOR[type]||'#abd3db',3.5,.65);path('#f2f6fc',1.2,.65);}
+   c.translate(x,y);c.rotate(ang);c.globalAlpha=.95;
+   if(type==='grass'){
+     c.fillStyle='#8dd56b';c.beginPath();c.ellipse(0,0,r*1.2,r*.47,0,0,Math.PI*2);c.fill();
+     c.strokeStyle='#ebffd4';c.lineWidth=1.1;c.beginPath();c.moveTo(-r,0);c.lineTo(r,0);c.stroke();
+   }else if(type==='fire'){
+     c.fillStyle='#ffc57d';c.beginPath();c.moveTo(-r,0);c.quadraticCurveTo(0,-r*1.45,r*.8,0);c.quadraticCurveTo(0,r*1.12,-r,0);c.fill();
+     c.fillStyle='#f66b37';c.beginPath();c.ellipse(-r*.08,r*.14,r*.44,r*.5,0,0,Math.PI*2);c.fill();
+   }else if(type==='water'){
+     c.fillStyle='#9cecff';c.beginPath();c.moveTo(-r*.55,0);c.quadraticCurveTo(0,-r*1.2,r*.82,0);c.quadraticCurveTo(0,r,-r*.55,0);c.fill();
+   }else if(type==='electric'){
+     c.strokeStyle='#fff3ae';c.lineWidth=2.5;c.beginPath();c.moveTo(-r,-r*.18);c.lineTo(-r*.08,-r*.5);c.lineTo(-r*.22,r*.08);c.lineTo(r*.3,-r*.05);c.lineTo(0,r*.75);c.lineTo(r,0);c.stroke();
+   }else{
+     c.fillStyle=TYPE_COLOR[type]||'#d3e9ee';c.beginPath();c.arc(0,0,r*.80,0,Math.PI*2);c.fill();
+     c.strokeStyle='#fff8';c.lineWidth=1.2;c.beginPath();c.arc(0,0,r*.46,0,Math.PI*2);c.stroke();
+   }
+   c.restore();enemyFrames++;
+ };
+ BattleEngine.prototype.draw=function(now){
+   const ret=oldDraw.call(this,now),list=this.v3562PlantFx||[];if(!battle?.active||!list.length||!this.ctx)return ret;
+   const c=this.ctx;
+   c.save();c.lineCap='round';c.lineJoin='round';
+   for(const fx of list){
+     const tt=cap((now-fx.at)/Math.max(1,fx.end-fx.at),0,1);
+     const sx=fx.from.x,sy=fx.from.y,tx=fx.to.x,ty=fx.to.y;
+     if(fx.kind==='vine'){
+       const growth=cap((now-fx.at)/(fx.hit-fx.at),0,1), retract=cap((now-fx.hit)/(fx.end-fx.hit),0,1);
+       const progress=Math.max(0,growth*(1-retract*.97));
+       const ex=sx+(tx-sx)*progress,ey=sy+(ty-sy)*progress;
+       for(const s of [-1,1]){
+         c.globalAlpha=.92*(1-retract*.68);c.strokeStyle='#307b38';c.lineWidth=5.5;c.beginPath();curve(c,sx,sy,ex,ey,s*4,now*.016+s);c.stroke();
+         c.strokeStyle='#a4f583';c.lineWidth=2;c.beginPath();curve(c,sx,sy,ex,ey,s*4,now*.016+s);c.stroke();
+       }
+       if(!fx.done){c.fillStyle='#e0ffb6';c.globalAlpha=.70;c.beginPath();c.arc(ex,ey,3.4,0,Math.PI*2);c.fill();}
+     }else{
+       const start=fx.done?fx.hit:fx.at, travel=cap((now-start)/(fx.end-start),0,1);
+       const vx=fx.done?tx:sx,vy=fx.done?ty:sy,wx=fx.done?sx:tx,wy=fx.done?sy:ty;
+       c.globalAlpha=.65*(1-tt*.42);c.strokeStyle='#7bcf77';c.lineWidth=2.4;c.beginPath();curve(c,tx,ty,sx,sy,0,now*.01);c.stroke();
+       for(let k=0;k<9;k++){
+         const t=cap(travel+(k-4)*.075,0,1),xx=vx+(wx-vx)*t,yy=vy+(wy-vy)*t+Math.sin(k*1.2+now*.019)*5;
+         c.globalAlpha=.28+.56*(1-t*.35);c.fillStyle=k%2?'#b9ff8e':'#62c369';c.beginPath();c.arc(xx,yy,2.3+(k%3)*.7,0,Math.PI*2);c.fill();
+       }
+     }
+   }
+   c.restore();return ret;
+ };
+ window.PokemonTorreV3562VisualDiagnostics=()=>({vines,drains,enemyFrames,healedTotal,active:engine?.v3562PlantFx?.map(x=>x.kind)||[]});
+})();
+
+/* FIM 11_planta_inimigos.js */
+/* INICIO 12_versao.js */
+/* V35.62: branding + metadados de módulos atualizados. */
+(function(){
+ const previousRender=render,previousBattle=renderBattle;
+ function mark(){
+   const header=document.querySelector('.brand strong');if(header)header.textContent='POKÉMON TORRE · V35.62';
+   const home=document.getElementById('v3520VersionHome');if(home)home.textContent='V35.62';
+   const tag=document.getElementById('v30VersionTag');if(tag)tag.textContent='V35.62 · COMBATE E TERRENO';
+   document.title='Pokémon Torre V35.62 — Terreno, Contato e Condições';
+ }
+ render=function(){const r=previousRender.apply(this,arguments);mark();return r;};
+ renderBattle=function(){const r=previousBattle.apply(this,arguments);mark();return r;};
+ window.PokemonTorreVersion='V35.62';
+ mark();
+})();
+
+/* FIM 12_versao.js */
+/* INICIO 15_chefes_clash.js */
+/* V35.63 — IA de chefes por perfil e Clash de contato sem alterar visuais dos golpes aprovados. */
+(function(){
+ const oldUpdate=BattleEngine.prototype.update,oldHit=BattleEngine.prototype.hitTarget,oldDraw=BattleEngine.prototype.draw;
+ let phaseEvents=0,clashes=0,brainTicks=0;
+ const personas=[['brock','guardiao'],['misty','agil'],['lt. surge','eletrico'],['erika','distancia'],['koga','esquiva'],['sabrina','controle'],['blaine','agressivo'],['giovanni','guardiao'],['blue','adaptativo'],['bruno','agressivo'],['lorelei','distancia'],['agatha','esquiva'],['lance','agil']];
+ function bossInfo(){if(!battle?.active||battle.wild)return null;const label=String(battle.label||'').toLowerCase(),gym=String(GYMS[Math.min(save.gym,12)]?.leader||'').toLowerCase();
+  const leader=personas.find(([name])=>label.includes(name)||gym.includes(name)&&/l[ií]der|chefe|rival|blue/i.test(label));
+  const flag=/chefe|campe[aã]o|l[ií]der|blue|rival|final/i.test(label)||(battle.v32Mode==='tower'&&battle.v32Floor%5===0);
+  return flag?{style:leader?.[1]||'adaptativo',label:leader?.[0]||'chefe'}:null;
+ }
+ function contactClash(engine,side,type){
+  if(!['normal','fighting','bug','dark','steel'].includes(type)||!engine.player||!engine.enemy||!battle?.active)return false;
+  const dist=Math.hypot(engine.player.x-engine.enemy.x,engine.player.y-engine.enemy.y);
+  const both=(engine.attackActs?.player||0)>engine.time&&(engine.attackActs?.enemy||0)>engine.time;
+  return both&&dist<Math.max(56,engine.h*.23)&&(performance.now()-(engine.v3563ClashLast||0))>2400;
+ }
+ BattleEngine.prototype.hitTarget=function(side,type,power){
+  if(contactClash(this,side,type)){
+   const now=performance.now(),rng=Math.random();
+   this.v3563ClashLast=now;
+   this.v3563Clash={at:now,until:now+420,x:(this.player.x+this.enemy.x)/2,y:(this.player.y+this.enemy.y)/2-this.h*.08};
+   clashes++;
+   const dx=this.enemy.x-this.player.x,dy=this.enemy.y-this.player.y,l=Math.hypot(dx,dy)||1;
+   const shift=Math.min(14,this.h*.026);
+   this.enemy.x+=dx/l*shift;this.enemy.y+=dy/l*shift;
+   this.player.x-=dx/l*shift*.55;this.player.y-=dy/l*shift*.55;
+   this.bounds(this.enemy);this.bounds(this.player);
+   this.particlesAt(this.v3563Clash.x,this.v3563Clash.y,'#fff0bc',12,95);
+   if(typeof this.v25Popup==='function')this.v25Popup(this.v3563Clash.x,this.v3563Clash.y-this.h*.05,'CLASH!','#ffe1a3');
+   power=power*.72; // choque reduz impacto de ambos, não modifica sprite nem catálogo
+  }
+  return oldHit.call(this,side,type,power);
+ };
+ BattleEngine.prototype.update=function(dt,now){
+  const wasActive=battle?.active;const res=oldUpdate.call(this,dt,now);
+  if(!wasActive||!battle?.active||battle.paused||!this.enemy||!this.player)return res;
+  const b=bossInfo();if(!b)return res;
+  const hp=foe()?.hp||0,max=foe()?.maxHp||1,phase=hp/max<=.5?2:1;
+  if(this.v3563BossId!==foe()){this.v3563BossId=foe();this.v3563BossPhase=1;this.v3563BrainAt=0;}
+  if(phase===2&&this.v3563BossPhase!==2){this.v3563BossPhase=2;phaseEvents++;this.enemy.focus=Math.max(this.enemy.focus||0,.8);if(typeof this.v25Popup==='function')this.v25Popup(this.enemy.x,this.enemy.y-this.h*.24,'FASE 2 · ESTRATÉGIA','#ffe2a2');}
+  if(now<(this.v3563BrainAt||0))return res;
+  this.v3563BrainAt=now+(phase===2?900:1400);brainTicks++;
+  const e=this.enemy,p=this.player,d=Math.hypot(e.x-p.x,e.y-p.y)||1,nx=(e.x-p.x)/d,ny=(e.y-p.y)/d,speed=this.h*(phase===2?.052:.036);
+  if(b.style==='guardiao'){
+    if(d<this.h*.28){e.x+=nx*speed;e.y+=ny*speed;}
+    e.guard=Math.max(e.guard||0,phase===2?.35:.18);
+  }else if(b.style==='agil'||b.style==='esquiva'){
+    const sg=Math.sin(now*.003+e.x*.02)>0?1:-1;
+    e.x+=-ny*speed*sg;e.y+=nx*speed*sg;
+  }else if(b.style==='distancia'||b.style==='controle'){
+    if(d<this.h*.32){e.x+=nx*speed;e.y+=ny*speed;}else if(d>this.h*.50){e.x-=nx*speed*.55;e.y-=ny*speed*.55;}
+  }else if(b.style==='agressivo'){
+    if(d>this.h*.16){e.x-=nx*speed*1.30;e.y-=ny*speed*1.30;}
+  }else{
+    if(d<this.h*.23){e.x+=nx*speed*.72;e.y+=ny*speed*.72;}
+    else if(d>this.h*.43){e.x-=nx*speed*.70;e.y-=ny*speed*.70;}
+    else{e.x-=ny*speed*.6;e.y+=nx*speed*.6;}
+  }
+  this.bounds(e);this.collideRocks(e);
+  if(Number.isFinite(this.enemyAttackCD))this.enemyAttackCD=Math.min(this.enemyAttackCD,phase===2?1.0:1.4);
+  return res;
+ };
+ BattleEngine.prototype.draw=function(now){const res=oldDraw.call(this,now);const fx=this.v3563Clash;
+  if(!fx||now>fx.until||!this.ctx)return res;
+  const c=this.ctx,p=Math.min(1,(now-fx.at)/(fx.until-fx.at)),a=1-p;
+  c.save();c.globalAlpha=a;c.translate(fx.x,fx.y);c.strokeStyle='#ffefb4';c.lineWidth=2.4;c.beginPath();c.arc(0,0,5+p*28,0,Math.PI*2);c.stroke();
+  for(let i=0;i<10;i++){const ang=i*Math.PI/5+now*.002,r=8+p*33;c.strokeStyle=i%2?'#fff9df':'#f8b67b';c.beginPath();c.moveTo(Math.cos(ang)*r*.42,Math.sin(ang)*r*.42);c.lineTo(Math.cos(ang)*r,Math.sin(ang)*r);c.stroke();}c.restore();return res;
+ };
+ window.PokemonTorreV3563BossDiagnostics=()=>({phaseEvents,clashes,brainTicks,activeBoss:bossInfo(),phase:engine?.v3563BossPhase||0});
+})();
+
+/* FIM 15_chefes_clash.js */
+/* INICIO 16_marcas_arenas.js */
+/* V35.63 — Marcas temporárias no piso; não substitui efeitos originais de golpes. */
+(function(){
+ const oldHit=BattleEngine.prototype.hitTarget,oldDraw=BattleEngine.prototype.draw,oldEnemy=BattleEngine.prototype.newEnemy;
+ let footprints=0,blocked=0;
+ const kinds={fire:['#ee8140','scorch'],ground:['#a88a60','crack'],rock:['#aa9f85','chip'],water:['#77cfe3','ripple'],ice:['#caeefa','frost'],grass:['#80c483','leaf'],electric:['#e6d273','spark']};
+ BattleEngine.prototype.hitTarget=function(side,type,power){
+  const enemy=side==='enemy',before=enemy?foe()?.hp:current()?.hp;
+  const target=enemy?this.enemy:this.player;
+  const result=oldHit.call(this,side,type,power);
+  const after=enemy?foe()?.hp:current()?.hp;
+  if(before>after&&target){
+    const tile=kinds[type];if(tile){
+      this.v3563Marks||(this.v3563Marks=[]);
+      this.v3563Marks.push({x:target.x,y:target.y+this.h*.014,at:performance.now(),until:performance.now()+4500,type,seed:Math.random()*25});
+      this.v3563Marks=this.v3563Marks.slice(-24);footprints++;
+    }
+  }
+  return result;
+ };
+ BattleEngine.prototype.draw=function(now){const out=oldDraw.call(this,now);if(!battle?.active||!this.ctx)return out;
+  const c=this.ctx,marks=this.v3563Marks||[];c.save();
+  for(const m of marks){const p=(now-m.at)/(m.until-m.at);if(p<0||p>1)continue;
+    const [col,shape]=kinds[m.type]||['#e2e2e2','chip'];const a=Math.min(.24,(1-p)*.34);
+    c.save();c.globalAlpha=a;c.strokeStyle=col;c.fillStyle=col;c.lineWidth=1.8;c.translate(m.x,m.y);c.rotate(m.seed*.08);
+    const s=(.82+Math.sin(m.seed)*.10)*this.h/500;
+    if(shape==='crack'||shape==='scorch'){
+      c.beginPath();c.moveTo(-20*s,-3*s);c.lineTo(-6*s,2*s);c.lineTo(3*s,-7*s);c.lineTo(9*s,7*s);c.lineTo(18*s,3*s);c.stroke();
+      if(shape==='scorch'){c.beginPath();c.ellipse(0,4*s,17*s,5*s,0,0,Math.PI*2);c.stroke();}
+    }else if(shape==='ripple'||shape==='frost'){
+      for(let j=0;j<2;j++){c.beginPath();c.ellipse(0,0,(11+j*8)*s,(4+j*3)*s,0,0,Math.PI*2);c.stroke();}
+    }else if(shape==='leaf'){
+      for(let j=0;j<3;j++){c.beginPath();c.ellipse((j-1)*10*s,-(j%2)*3*s,6*s,2.4*s,j*.5,0,Math.PI*2);c.fill();}
+    }else{for(let j=0;j<4;j++){c.beginPath();c.moveTo(Math.cos(j*1.57)*9*s,Math.sin(j*1.57)*5*s);c.lineTo(Math.cos(j*1.57)*17*s,Math.sin(j*1.57)*9*s);c.stroke();}}
+    c.restore();
+  }c.restore();this.v3563Marks=marks.filter(x=>x.until>now);
+  return out;
+ };
+ BattleEngine.prototype.newEnemy=function(){const r=oldEnemy.apply(this,arguments);this.v3563Marks=[];return r;};
+ window.PokemonTorreV3563MarksDiagnostics=()=>({created:footprints,active:engine?.v3563Marks?.length||0,blocked});
+})();
+
+/* FIM 16_marcas_arenas.js */
+/* INICIO 17_maestria_status.js */
+/* V35.63 — Progressão prática de golpes e estado de batalha legível no HUD. */
+(function(){
+ const oldUse=BattleEngine.prototype.useMove,oldDamage=damage,oldHud=BattleEngine.prototype.updateHud;
+ let tracked=0,bonusHits=0,statusUpdates=0;
+ function counts(){return save.v3563UseCounts||(save.v3563UseCounts={});}
+ function moveMastery(m,s){const uses=counts()[m?.id]?.[s?.name]||0,lv=m?.level||1;
+  // Domínio aumenta progressivamente, sem ultrapassar 6% e sem mudar o efeito visual.
+  return Math.min(.06,Math.max(0,Math.floor((lv-5)/15))*.01 + Math.floor(uses/20)*.01);
+ }
+ BattleEngine.prototype.useMove=function(i){
+  const m=battle?.active?current():null,s=m&&skillSet(m)?.[i];
+  const was=battle?.energy,oldCooldown=cooldowns[i]||0;
+  const result=oldUse.call(this,i);
+  if(m&&s&&battle?.active&&(battle.energy<was||(cooldowns[i]||0)>oldCooldown)){
+    const all=counts(),entry=all[m.id]||(all[m.id]={});entry[s.name]=(entry[s.name]||0)+1;tracked++;
+    this.v3563Cast={pokemon:m,name:s.name,bonus:moveMastery(m,s),until:performance.now()+1300};
+    if(tracked%4===0)persist();
+  }
+  return result;
+ };
+ damage=function(attacker,defender,type,power){
+  const d=oldDamage.call(this,attacker,defender,type,power);
+  if(d?.hit>0&&battle?.active&&attacker===current()&&engine?.v3563Cast?.pokemon===attacker&&performance.now()<engine.v3563Cast.until){
+    const bonus=engine.v3563Cast.bonus||0;
+    if(bonus){d.hit=Math.max(1,Math.round(d.hit*(1+bonus)));bonusHits++;}
+  }
+  return d;
+ };
+ const ICONS={poison:'☠️',burn:'🔥',paralysis:'⚡',sleep:'💤',confusion:'🌀',freeze:'❄️',slow:'🐢',seed:'🌱',flinch:'💫'};
+ BattleEngine.prototype.updateHud=function(now){const r=oldHud.call(this,now);
+  if(!battle?.active||!document.getElementById('arenaPro')||now<(this.v3563StatusNext||0))return r;
+  this.v3563StatusNext=now+240;statusUpdates++;
+  for(const [who,side] of [['ally','player'],['enemy','enemy']]){
+    const hud=document.querySelector('.hudPro.'+who);if(!hud)continue;
+    let container=hud.querySelector('.v3563StatusRow');
+    if(!container){container=document.createElement('div');container.className='v3563StatusRow';hud.appendChild(container);}
+    const conditions=this.v25?.stats?.[side]?.conditions||[];
+    container.textContent='';
+    for(const key of conditions.slice(0,3)){
+      const el=document.createElement('span');el.className='v3563Cond';el.textContent=ICONS[key]||'✦';el.title=key.toUpperCase();container.appendChild(el);
+    }
+    if(who==='ally'&&this.player?.guard>0){const badge=document.createElement('span');badge.className='v3563Cond';badge.textContent='🛡️';badge.title='Proteção';container.appendChild(badge);}
+  }
+  return r;
+ };
+ window.PokemonTorreV3563MasteryDiagnostics=()=>({tracked,bonusHits,statusUpdates,counts:counts(),active:engine?.v3563Cast?.name||null});
+})();
+
+/* FIM 17_maestria_status.js */
+/* INICIO 18_esquiva_ui.js */
+/* V35.63 — Esquiva justa, feedback de contra-ataque e polimento do celular. */
+(function(){
+ const oldDodge=BattleEngine.prototype.dodge,oldUpdate=BattleEngine.prototype.update,oldHud=BattleEngine.prototype.updateHud,oldUse=BattleEngine.prototype.useMove,oldDamage=damage;
+ let perfect=0,failed=0,enemyDodges=0,counterHits=0;
+ BattleEngine.prototype.dodge=function(){
+  if(!battle?.active||battle.paused||this.player.dodgeCd>0||battle.energy<14){failed++;return false;}
+  const near=(this.projectiles||[]).some(p=>p.from==='enemy'&&Math.hypot(p.x-this.player.x,p.y-this.player.y)<this.h*.17) || (!!this.telegraph&&this.telegraph.from==='enemy'&&this.telegraph.remaining<.25);
+  const e=battle.energy,before={x:this.player.x,y:this.player.y};
+  const result=oldDodge.call(this);
+  // Mantém janela de invencibilidade curta, recarga visível e custo idêntico para jogadores.
+  if(this.player.dodgeCd>0){battle.energy=Math.max(0,e-14);this.player.dodgeCd=2.0;this.player.inv=Math.min(this.player.inv,.29);
+    if(near){perfect++;this.v3563CounterUntil=performance.now()+1800;this.particlesAt(this.player.x,this.player.y-this.h*.10,'#b6f9c5',9,65);if(typeof this.v25Popup==='function')this.v25Popup(this.player.x,this.player.y-this.h*.22,'ESQUIVA PERFEITA','#b6ffd8');}
+  }
+  return result;
+ };
+ BattleEngine.prototype.useMove=function(i){return oldUse.call(this,i);};
+ // Revidar após uma esquiva perfeita: efeito mecânico único, sem mudar o desenho de nenhum golpe.
+ damage=function(attacker,defender,type,power){
+  const result=oldDamage.call(this,attacker,defender,type,power);
+  if(battle?.active&&result?.hit>0&&attacker===current()&&engine&&performance.now()<(engine.v3563CounterUntil||0)){
+   result.hit=Math.max(1,Math.round(result.hit*1.08));
+   engine.v3563CounterUntil=0;counterHits++;
+  }
+  return result;
+ };
+ BattleEngine.prototype.update=function(dt,now){const out=oldUpdate.call(this,dt,now);
+  if(!battle?.active||battle.paused||!this.enemy||!this.player||this.enemy.inv>0)return out;
+  if(now<(this.v3563EnemyDodgeNext||0))return out;
+  const close=(this.projectiles||[]).find(p=>p.from==='player'&&Math.hypot(p.x-this.enemy.x,p.y-this.enemy.y)<this.h*.13);
+  if(close && Math.random()<.18){
+   const vx=close.vx||1,vy=close.vy||0,len=Math.hypot(vx,vy)||1;
+   const sign=(Math.floor(now/600)%2)?1:-1;
+   this.enemy.x+=(-vy/len)*this.h*.040*sign;this.enemy.y+=(vx/len)*this.h*.040*sign;
+   this.bounds(this.enemy);this.enemy.inv=Math.max(this.enemy.inv,.15);this.v3563EnemyDodgeNext=now+3800;enemyDodges++;
+   this.particlesAt(this.enemy.x,this.enemy.y,'#bbd8e6',6,45);
+  }
+  return out;
+ };
+ BattleEngine.prototype.updateHud=function(now){const r=oldHud.call(this,now);
+  const b=document.getElementById('dodgeBtn');if(b&&battle?.active){b.disabled=this.player.dodgeCd>0||battle.energy<14;b.title='Esquiva: 14 energia · 2 segundos de recarga';
+   if(performance.now()<(this.v3563CounterUntil||0)&&this.player.dodgeCd>0)b.style.borderColor='#b5f8cf';else b.style.borderColor='';}
+  return r;
+ };
+ const css=document.createElement('style');css.id='v3563Style';css.textContent=`
+  .v3563StatusRow{display:flex;gap:3px;min-height:17px;margin-top:1px;pointer-events:none;align-items:center}
+  .v3563Cond{background:rgba(11,27,40,.75);border:1px solid #adc3d033;border-radius:6px;font-size:11px;line-height:15px;padding:0 3px}
+  .v3563TowerPanel{background:rgba(18,42,60,.65);border:1px solid #8cb8bd44;border-radius:14px;padding:12px;margin-top:12px}
+  .v3563TowerPanel h3{margin:2px 0 8px}.v3563TowerPanel label{display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+  #v3563Challenge{background:#193045;color:#e8f8fc;border:1px solid #668fa9;border-radius:7px;padding:7px;max-width:100%}
+  .v3563TowerActions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .v3563Reward{color:#ffe7a5;font-size:14px;font-weight:800;text-align:center}
+  .v3563ProfileTop{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.v3563ProfileTop .spritewrap{min-width:95px;min-height:95px}
+  .v3563ProfileTop img{width:95px;max-height:100px;object-fit:contain}
+  .v3563ProfileCols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .v3563ProfileCols>section{background:#162f43;border-radius:9px;padding:8px}
+  .v3563ProfileCols h3{font-size:13px}.v3563TypeBadge{display:inline-block;border:1px solid #7396ac80;border-radius:7px;margin:2px;padding:4px;font-size:11px}
+  .v3563Stat{display:grid;grid-template-columns:88px minmax(40px,1fr) 35px;gap:6px;align-items:center;margin:4px 0;font-size:12px}
+  .v3563Stat div{background:#233c50;height:9px;border-radius:10px;overflow:hidden}.v3563Stat i{background:linear-gradient(90deg,#5ccfa9,#e5d17b);height:100%;display:block}
+  .v3563Next{border-bottom:1px solid #7293aa42;padding:5px 2px;font-size:12px;display:flex;justify-content:space-between}
+  @media(max-width:460px){.v3563TowerPanel{padding:8px}.v3563ProfileCols{grid-template-columns:minmax(0,1fr)}.v3563ProfileTop img{width:68px}.v3563StatusRow{min-height:14px}.v3563Cond{font-size:9px}}
+ `;document.head.appendChild(css);
+ window.PokemonTorreV3563DodgeDiagnostics=()=>({perfect,failed,enemyDodges,counterHits,cooldown:engine?.player?.dodgeCd||0,counterUntil:engine?.v3563CounterUntil||0});
+})();
+
+/* FIM 18_esquiva_ui.js */
+/* INICIO 19_versao.js */
+/* V35.63 — Versão única. Metadados de verificação. */
+(function(){
+ const oldRender=render,oldBattle=renderBattle;
+ function label(){
+  const brand=document.querySelector('.brand strong');if(brand)brand.textContent='POKÉMON TORRE · V35.63';
+  const home=document.getElementById('v3520VersionHome');if(home)home.textContent='V35.63';
+  const chip=document.getElementById('v30VersionTag');if(chip)chip.textContent='V35.63 · PATCH COMPLETO';
+  document.title='Pokémon Torre V35.63 · Combate, Torre e Progressão';
+ }
+ render=function(){const r=oldRender.apply(this,arguments);label();return r;};
+ renderBattle=function(){const r=oldBattle.apply(this,arguments);label();return r;};
+ window.PokemonTorreVersion='V35.63';
+ window.PokemonTorreV3563Diagnostics=()=>({version:'V35.63',protected:window.PokemonTorreGolpesProtegidos?.total||25,
+  boss:window.PokemonTorreV3563BossDiagnostics?.(),marks:window.PokemonTorreV3563MarksDiagnostics?.(),
+  mastery:window.PokemonTorreV3563MasteryDiagnostics?.(),dodge:window.PokemonTorreV3563DodgeDiagnostics?.(),
+  profile:window.PokemonTorreV3563ProfileDiagnostics?.(),tower:window.PokemonTorreV3563TowerDiagnostics?.()});
+ label();
+})();
+
+/* FIM 19_versao.js */
+/* INICIO 20_clima_pmd.js */
+/* V35.64 — clima real PMD: PNGs recortados com alpha, sem fundo ou legenda. */
+(function(){
+ 'use strict';
+ const SRC={"weather_embers_00":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABLklEQVR42u3dwQkAIRAEQWPb/OPYNMYAjgM/KkJVCK2/ERwDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHhcuqKCvgAAAAAAwAGGA9wHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOBPuqICAAAAAADA44w+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADsk66oAAAAAAAAwIchCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9vBXmPMDAAAAAADgAkMPAAAAAAAAAAAAAGu8PNUIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4IoJwj4o755h5oIAAAAASUVORK5CYII=","weather_embers_01":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABMElEQVR42u3csQ3AMAgEQM/G/nOwxqdOlSZSbHI3wgsqXqwFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPEtXpCBf8wIAAAAAALzGQQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB+L12RAgAAAAAAAAAAAAB8TbMX8wAAAAAAAAAAAAAAk0xrBWs5AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAW0tXpAB2BgAAAAAAAAAAAAAAAAAAAAAO5SUIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAcOmKFACAmwsa1CjvTMIFAAAAAABJRU5ErkJggg==","weather_embers_02":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABLklEQVR42u3dQQ0AMQgEwGrDvw5sbC3cfRpIZiRs4AWBcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYIB0RQryVS8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwjz+DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8lK5IAQAAAAAAgCcMpwAAAAAAAAAAAABgApu9qAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAm8mMPAAAAAAAAAAAAAAAAAAAAgAWcyQA9AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8Em6IgUAAAAAAAAAAAAAAAAAAAAA4DGnTwAAgH0uscco78psNXgAAAAASUVORK5CYII=","weather_embers_03":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABMUlEQVR42u3cUQ3AIBBEQbSdfx1nY2uBNBCaMiPhfcJlxwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4L10RQUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2SFdUAAAAAAC4mIdiAAAAAADgKJ8VAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAEmkgEAAAAAAAAAAABgJRe6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABPSFRUAAAAAAAAAAAAAAFZzrQ0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB+WrqigEQAAAAAAAAAAAAAAAAAAAAAA0/44S2NqBwAAAAAAAAAAAAAAAAAAAAAAAAAAuNMDwGclyYb9gM4AAAAASUVORK5CYII=","weather_embers_04":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABK0lEQVR42u3aQQ3AMAwEwWAzfxxH40qgUttPFUUzDLz+OVkLAAAAAAAAAAAAAOCNZqoCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAwZqpWdEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALjTTFUAAAAAAAA4hMcfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4opmqAAAAAAAAP3GYt1MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADYVjNVAQAAAAAAAAAAAIBnfp4CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7OoCi+wiowSe3nAAAAAASUVORK5CYII=","weather_embers_05":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABYUlEQVR42u3dsRWAIAwFQFZiBfafgZI1YuGzshQ1D+5GCKTQH6AUAAAAAAAAAAAAAAAAAAAAAFhOjBaqAAAAAAAAAAAAAAAAAAAAbCV6ddAaAAAAAHjGj0b1BQAAAAAAPiI4wH7gXHzv7gEAAAAAAJkILwAAAAAAAAAAAAAAAAAAAABgOtd6YH/pBwAAAAAAAAAA2EX0akYIAAAAAAAAAAAAAAAAAAAAAOZyrQcAAAAAAMAChD4AAAAAAAAAAAAAAMBkMZrjCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXKJXz1sBAAAAAABwJ0iCHRt/NI0PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO/zVpj1AwAAAAAA4AeCHgAAAAAAAMggRpPcAQAAkP/71eSpGgEAAAAAAACkZjIbAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkjoAo61NQBsTD2AAAAAASUVORK5CYII=","weather_embers_06":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABXElEQVR42u3cwRGAIAwEQNqgHfp/UwJtnC8L0FFkZLeEkORBMikFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACYIb1GFMRXvgAAAAAAAI8xUADuN5DRNBAAAAAAgFX5xAUAAAAAAAAAAAAAAAAAAFiUs8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMCq0mtEAQAAAAAAAAAAAAC+ZrMX+bD7o4/m0UHdAQAAAAAAAAAA8Cd/2wq25Qy812Bs9iIfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHhAeo0ogJoBAAAAAAC4JqOZmiBfAAAAAAAAAAAAAAAAAAAAAICTMyMAAAAAAAAAAAD7SK92xgAAAAAAAAAAAAAAAAAAAACA2Zw+AQAAAAAAANhJRjMlBtjBAeB8SHOttT5uAAAAAElFTkSuQmCC","weather_embers_07":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABT0lEQVR42u3d0Q3AIAgFwK7BOu7Kaq7gJ53BpG203o3wwC8MXBcAAAAAAAB7GRklBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWFb1VlIAAAAAAAAAAAAAAAAAAAAAAAAAAIBZI8NmT55nZax81QYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgj0ZGSQEAAAAAAIBPGVIBAAAAAAAAAAAAAKzGT+/DVG8KDt4dAAAAAAAAAAAAABzIz170AwAAAAAAAAAAAAAAAAAAbMKNPQAAAAAAAAAAAAAAAAAAAAA2YE2GeqEGAAAAAAAAc6o3ExP0CwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAmUaG81QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC8o3pzHAMAgAXcm9w9q9YBx6oAAAAASUVORK5CYII=","weather_embers_08":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABMUlEQVR42u3cQQ0AMQgEwGrDvw5s7Gm4pH3QzkjYwAuyawEAAAAAAAAAAAAAAGyXrkgBAAAAAAAAAAAAAAAAAAAAAGAsNTIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBo6YoUMF/2AQAAAAAAAAAAAAB4mW9qAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgm3RFCgAAAAAAAAAAAAAAAAAAAADAA9StgH0DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAO6QrUgAAAAAAAAAAAAAAAAAAAACAa02rGFGJAgAAAAAA8IPjCgAAAAAAAAAAAAAAAAAAcNwHmRwo70FEuPEAAAAASUVORK5CYII=","weather_embers_09":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABKklEQVR42u3dwQkAIQwEQGtL/3WkjfVjA3IHosyUsOS1LGQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACWdEUKAAAAAAAAAAAAAADwF0t9AAAAAIAPlKzyBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAx6UrUsAdAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7POLDfcAAAAAAMDTlN8AAAAAAAAAAAAAALsssQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgDPSFSkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA95gLTyKjmQLhHgAAAABJRU5ErkJggg==","weather_embers_10":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABJElEQVR42u3dwQkAMAgDwK7k/ru4SjpAn0Uo5W6EgK+IrgUAAAAAAAAAAAAc0hUpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8Cp/9wAAAAAAgKcoLwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4G/pihTAvAEAAAAAAAAAAAAAAAAAAAAA33DqBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgDnpihQAAAAAAAAAAAAAAG7YzAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAERuJKBhpgEI/wgAAAABJRU5ErkJggg==","weather_embers_11":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABJElEQVR42u3aQQ0AIAwEQWzUv6faOSzwIAHCjIRN+2k6BgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKxLV1QAAAAAALiUIy4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBb0hUVwN4BAAAAAAAAAAAAwH989mIeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4I11RAfMCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADslK6oAAAAAAAAAABwvQkmIRpWqljrJwAAAABJRU5ErkJggg==","weather_embers_12":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAABKElEQVR42u3dsQkAMAgEwKzh/jijpSnTBZIiELgb4fE70TEAAAAAAAC4VxktBQAAAAAAAAAAAAAAAAAAAACAbzgbAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfK0yWgqYN/0AAAAAAAAAAAAAAFhsUwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7FVGSwH0DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4AV/3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzrjzDgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwEsT7M0bCb/vGosAAAAASUVORK5CYII=","weather_embers_13":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASoAAADICAYAAABfwawSAAAA/klEQVR42u3BAQ0AAADCoPdPbQ8HFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwJcBpDUAATOkKlwAAAAASUVORK5CYII=","weather_fog":"data:image/png;base64,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","weather_hail_00":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAAAoCAYAAAB5LPGYAAABu0lEQVR4nO3ZwZWCMBDG8WG7SBkebWEtAzvZNrAMbMGjXUAZswfFF1iWJJIBlf/vsrrmGXx8JpNRBAAAAAAAAAA8rmrUVY1WjWrVqLqq0bWvCRvhB69qVFVvf9e+LmyEHzpVVSlrVkDM9hUzyF/pSidSHM/i9ju7q8JmRAVQ5BY8EZFTK+L2O/n5dsmTDetHVlBE6YLz5wBS1kkB8rdxDjJIU9aPuu+Z8Incgixl3aslOchsW/QWLKdD0T1sL9fe8xRuv5PieH5s6SL9GhMwM9zKO1YBpG+JvvsW7gfCKhj0LTFuWEc+UUvGoG/5HuJrwFxOh6K9XHvPc09B39IGX+BIw/rSaqtfuq/5aiXE2OclpJKvbxmyZl9zLIy5AhrzGSzr98+QoW8ZYtnXnLqxloeqlGARvpDu4GF00PHD7W/5c4Ph7gkLhXDOHKH5rd4bGVn2NQkBwhbsawLjFuprxrIKf8r78gVcWsZac2oF9f9v2Vaaen1qLMF7Y93NCwV5bFwoOLFzJ/1aNBhL+fGhYsJl3ZZJGrtyCYLMYsL1CGnmm//fqsYq9+H8sI2Fa8keIGEDAAAAAAAAMNcvcQjIiALP1CwAAAAASUVORK5CYII=","weather_hail_01":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAABK0lEQVR42u3YsQ3CMBAF0IMtPEbKrABjhE1YwxkjrEDJFmaMo4giRaJJF1l6rznXX/ry2REcVmrLUlvWlllbZqktpQKdlHcrbm2ZmeuUDHRgX9rMzJgWNzCnu4rgWHm381QiLo9XlHEQDArci6msc/5GlHGI560IBXp6//59YE2LFZpTXURw9Apey7qtzt/3J2K+yw8rdBd2ZVVeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoEc/VI9ezCYGOGoAAAAASUVORK5CYII=","weather_hail_02":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAABLUlEQVR42u3YsQ2CUBSG0YtbvDEoWUHGwE1c4zGGrmDpFs8xroWRqJ02ijmnIVD+yZcHRAAAAAC8KLVlbZm1ZZbastSWVoGVqC0zM5eI7yFbBlZyAsd0WCK+Xy3Dt2xM8GbEQx/d7hhTeT6ZLYOAV2C/LVGGPubL7f4xZOCXTYd8/ZHlO5hv6kzwQcRDHxERl9P59mwe7YhX6FWYx24JV7wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/4QqOhV7M/t+SxwAAAABJRU5ErkJggg==","weather_hail_03":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAABLUlEQVR42u3YsQ3CMBAF0AtbeIyUWQHGCJuwhjMGrEDJFmaMo4giRaKjiGT0XnOuv/TlsyMAAAAAAAAAgIiIKLVlqS1ry6wts9SWUoFOyrsVt7bMzHVKBjqwL21mZsx3NzCHO4ngt/Ju57lEDNdHlGkUDArci7msc3lHlGmM27kIBXp6/359YM13KzSHGkTw6xW8lnVbnd/PV8RykSdW6C7syqq8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8qw8AzF7MMUj1NAAAAABJRU5ErkJggg==","weather_hail_04":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAABS0lEQVR42u3bsXGDQBAF0MVdXBmEtGCVgTpRG1AGakGhu0BlnAMGBju1R4OW9xKGC+/4cwR/IyCJMsx1mGtdn6thrtXuwNH10xbefZDLMKcNcOPUSRfiro2IiOfja1kbL2m/8w8nTirjpdmCmzy8AAAAAAAAAMDO79pe5soepLMW5tcQZ+/dQrobOPppC7HJF15NF/qvIe7aaK736MvPm9nOIMBv4PZZonRtjM/lfR9k4MhOOH/KsRi1+o8Qn2j+FL/QuZg/BQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIBT+gYe6pUvJvXW1QAAAABJRU5ErkJggg==","weather_hail_05":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAABZklEQVR42u3bsW3DMBAF0HO24BguvUIyhrxJ1qDHcFZwmS3oMc6FIMBAgFQuzNN7jdiK1AcpQT8Cimp9ZOsj+8jsI7P1kWYFJgnvFtw+MjPXq5mBCTyHNjMzlmvJHfjDUlMxvNt4aRGH80+007HkvQowJS1tvV7uEe10jO/PZlJgpvffPx+wlmu5I/TBclNzC17Duh2d77ffiMtXuefdEZqansJaNbwAAAAAAAAAwD/0T2Hi8OqfwqT20j/lvfgX+kXh3cbV+6cIcEn6pzD5++8e+qe8FxWrl23B++if4ghdk/4pAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEREPAC0q72Xa7ZhjQAAAABJRU5ErkJggg==","weather_hail_06":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAABYUlEQVR42u3bwU2EQBQG4IddUAZHWnDLwE5sYyhjbcGjXcyW8TxslqiJnjTZeX7fhcCNGf7MQPgjAAAAABja3Hq2ntl65tx6zq2nUYFBtJ6ZmUeIb0E2MjDIChzb+Qjx7VjpHh9MM6VDvC4xPb3ENn9emQUYBvD8OMe8LrFfrucfgwzcs+2cXz9kVXsPnswy5UO8LhERcXl9u17bT2Wee1toattP0xHcYuEFAAAAAAAAAH6gfwoD0z+FwVfg6v1T7ot/oX87xMX7pwhwafqnMKp/0D/lvqhW/UWIC/dPsYWuTf8UAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAb7wDKKa9l5c7OMwAAAAASUVORK5CYII=","weather_hail_07":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAABZUlEQVR42u3bsY3CMBQG4Mdt4TEoWeFujLAJa5gxYAVKtjBjvCuiSEjXHAUStr+vidvY+WUnyh8BAAAAAAAAANChUluW2rK2zNoyS21pVqCT8G7BrS0zc72aGejAc2gzM2O5DLEDf1laZgjvNl5KxO54jXLYD3FvAswUlrJez4+IctjH6buYFOjp/ffPB6zl0v0Remd5mWMLXsO6HZ0ft3vE+af7598Rmjk8hXWU8AIAAAAAAAAAL9A/hY7Dq38KnRq1f8pn8S/0m8K7jUfrnyLAU9A/hc7ff0fsn/JZVKretgWP2T/FEXoO+qcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPBvvw0lvZcXVqFmAAAAAElFTkSuQmCC","weather_hail_08":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAABbElEQVR42u3dsW3DMBAF0JO34BgqtUI8hrJJ1qDGUFZwmS3kMZjCkOCkDRyI5HudVFL4OBb3ochbKSlvJW/lkLdSAji/PbzPQU55E2CowBDzWtI0RkTE/fb1eLtcB0cD53eJ5TocwRVeAAAAAAAAAADg1X6vDVsZhorshZ09xPb+obIJHPN6hLiF5t3FZ6WrEE9jDO+fMaefk1mAoQIfbynSNMZyfzw/Bxk4s3ktrfXfVQfpL8QN9d9doemL/jsAAAAAAAAA9En/FCqmfwqVT+DW+qeci13oV4e4sf4pAtwV/VOoVYP9U85Fleo/Quz/y7hCV0r/FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4g2/FTu9JwUft6QAAAABJRU5ErkJggg==","weather_hail_09":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAABoUlEQVR42u3dwW0CMRAFUEMXLiPHtJCUQTpJG6YM0gJHujBlTA4rI5JcyYpZvyetdrl6mLWN+HIpd2rrUVuP1iNaj6itR2Eao/bjPrQevgdZijcuhZvQ4fTnBe5FnsR900ZEjGIamTmbuLYe5XBaLp7WfjTvrX61lN3HV6mvL0ZnRsf33fV8+fHZoCSZfccMbOkEiX+8uDWv5RM8td393qeUcls6X88XyyfIsAf+vdfRvAAAAAAAAAAAwGrk3yFx88q/Q1Jbyb/vlZIZm3c8Z8+/a2CmdKjL/XhdEnifb9WgQKb97xby7yKDTDoFbyP/bgnNnOTfAQAAAAAAAGBu8qeQuHnlTyEp5y/zH/wXeqXmHc/OX0YDJyR/Csn3v85f5tFEqFabgp2/jCV0XvKnAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/1DRzTbIsDxplCAAAAAElFTkSuQmCC","weather_hail_10":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAABy0lEQVR42u3dy3mCQBQG0CFdTBksaUHLwE5sA8rAFlzaBZQxWRD84iM7TbjhnA2wHf2ZuehlUoIf5G4suRtLN5bSjaXkbixGBYKEdwluN5ZSynw0MhDA99CWUkpqBzPwCn0YAp6Fdzlvc0rV4ZRyUxuYtQf4vt5xx92uNs/HfkopN3U67rJBibRs8uBC/fvwAKsdfBfW/sGldripfTy42OoUPFzrXuENVAPnpk7V4XRdQt3XRGxEv6+W0+l8ubkmyNJpIcAQZNl0X/eog2G9qqch/vrJYDpfHpZTwIpr4NTvq2twhRcAAAAAAAAAAHg3/e8QmP53CD4DR+9/904sth3i4P3vAsymHXc55aZO/TRft179BUH8g/53rYIIceD+d0totk3/OwAAAAAAAABsk/5TCEz/KQSfge2/zCv5L/Rvh9j+ywhwXPpPISr7L/NiWqf+IsT2X8YSOij9pwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALzZJwt2lPMRu4MBAAAAAElFTkSuQmCC","weather_hail_11":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAAByUlEQVR42u3czW3CQBAG0HG6cBkcaQHKMJ3Qhl0GtJBjujBlbA5okUkOERGJd5L3LsaWkJClT/vHTMQD+nEu41xKvVbjXEoAjRtOt/Aug9yPswDDCrpvhXi7iYiIy+vb9dm077xK+H0vD39j2ne34AovQJs+LpcslSCRulFZQ2y/A5KNwDGcbiF24vAX1sD8rxBvN9EdzjH09yOzNyPAJHDc9dFvNzFdrvfLIAMtc+7fPEdAfB1i5/6m0CTl3B8AAAAAAAAAAAAAAOBn1L5f2gdBwvAue39pHwSJLENbSim1mUHrv1s9MMK7GGmHPqI7nKM2MRBgSKD2+pou10Z+x53mX5Bq/ftpA2s4NT+F1h4FIqKG9a7/V4L2QabQEHEX1izhBQAAAAAAAACeSP0pJA6v+lNIKmv9KW3xX+iVwls/Z6s/RYAJ9aeQfv2bsf6UtiiZWm0Izll/iik0EepPAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgBe+/VFLUGmxoWwAAAABJRU5ErkJggg==","weather_hail_12":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAAB3UlEQVR42u3csXECMRAF0D13oTIIacGUcXRCG0cZ0IJDd3GUIQdwjIwTD2aw1n4v4S4g0cwfSSy7ET9QprmWaa7TXOs011qmuQbQvza401xrredPKwMJtKGttdYYD3ZgeLKXe8O7PI8lYtgeo6xXVhMyBHgJbkTE/hRR1qvYvRarCZnuv19+wBoPjtDwRMPd37yEdTk6n97eI/abwZJCgiN0G1bhBUhwdVL3h6ThVfeHpNT9/9odmH8V3uVZ3V+ASUjdH5Lff9X9+6P0wze3YHV/R2jyUvcHAAAAAAAAAAAAAAB4rNt2SRNHIJF2bJDBfZBwB47x8Gn2V++D+/QDQxvi9SqG7fE6QmjZmQUYEti9lijrVexP5/fR6C9I4jIqt73/9n4PNhYFbkPczv2K6Hp8kCM0tPab4RrczsMLAAAAAAAAADyQ/lNITP8pJN+Bs/Wf0hf/hf7tECfrP0WAaeg/hawS9p/SF61SPYQ4Uf8pjtC09J8CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB34ANXGezzKhW+fAAAAAElFTkSuQmCC","weather_hail_13":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAAB7ElEQVR42u3cwW3CQBAF0HG6cBkcaQHKMJ3QhikDWsgxXZgyNgdrkUl8iRSUnfi9C4YTIL5218NMxIb041TGqZT6WI1TKQE0brg+wrsMcj9OAkxK3SZDvN9FRMT9/WN+7XLs/BTI6G1zn/hy7B7BFV627Ot21FYUEqk3gmqInSch2Qocw/URYnd0IdkZuN/vojvdYuifV2ZfLSQI8PnQR7/fxeU+P18GGWiZuir8qe5XQqyuCjm30OqqAAmo+0Ni6v6QfAVW9/9vZ2C2FWJ1fwEmL3V/yErdvzlKPvw8xOr+ttAkpe4PAAAAAAAAAAAAAADwGnXul/FBkDC8y9lfxgdBIsvQllJKHWbQ2vvUDwwr4a3XQx/RnW5RhxgIMCRQZ31d7vMgv/PB8C9Idf79dgNruDa3hTYOBVaX4DmsT/O/GhwfZAsNaxZhbTW8AAAAAAAAAMAL6T+FxOHVfwpJZek/pS3+C91IeOt16/2nCDAr9J9C8vNvhv5T2qJFqpklOEf/KbbQrNF/CgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANCkTwxisZ9KVMnGAAAAAElFTkSuQmCC","weather_hail_14":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAACBElEQVR42u3cwW3CQBAF0HG62DI4uoVQhumENuwyoIUc04UpY3MAIyeRiBSRZCe8dwGORP7aHSYzEQ+sjHMt41zHudZxrrWMcw0gR3iX4I5zrbWeX/1lIIF1aGutNYaDE5h0nh41vMv7oUR0u2OUfuNpQICzGMr5dTpFlH4T++fiaYBM9e+nH7CGgys0qXQP+80vYV2uzqeX14hp23kkcIXOYBVW4YXQV4X0daW+KiSkrwpJa2B9VUgc4CW4EfqqkLb+1VeF33W/1om+KuS9QuurAiQrnfT9IWl49f0hKX3//1YD81DhXd7r+wswCen7Q/L6V9//72n18M0jWN/fFZq89P0BAAAAAAAAAAAAAADu6+O4pI0jkMh6bZDFfZDwBI7h8G73V2uL+8wDw60Q95vodsfrCqHlZBZgSGD/XKL0m5hO58+D1V+QxGVV7rr+ba0OtgYFvgrxeu9XRFPrg1yh4ZZp212D21h4AQAAAAAAAIAfZP4UEjN/CslP4NbnT2mL/4VuLcSNz58iwNxg/hSySjB/SluMRrUY4obnT3GF5hbzpwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTxBkhK2geOp8aqAAAAAElFTkSuQmCC","weather_hail_15":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAACGElEQVR42u3cwVHDMBAFUJkuXEaOaYGUYTqhDbuM0AJHunDKEAePMgYGMDAhu/DehcCJ8fBHkj/aUoAQ+nGu41xr+9qMc62eDkQ3HM/hXQe5H+d3A9x5ahAsxPtdKaWU0+PT8rPp8G5ObzwxCGQ6dOfgfhJeZ45X25WPtipAMO1FQQvxZ+cNINgKXIbjOcTe+JHNvz8D9/td6e4eytC/XJn9aSDACdzf9qXf78p0Wr5fBxmI7Bu9G0TiFfUXezewhY5E7wYLvSokpleF5CuwXhUSn4H1qpA4wHpVyEqvCr+qu0iI9aqQcwutVwVIQO8Pien9IfkKrPf/a2dg/leI9f4CTF56f8hK7391Kh5+HmK9vy00Sen9AQAAAAAAAAAAAAAALqPN/TI+CBKGdz37y/ggSGQd2lprbcMMrv17uQ8MG8LbPg99Kd3dQ2lDDAQYEmizvqbTMsjv/tbwL0h1/n3zAms4Xn0LbfwJbFqCl7C+mP8VYHyQLTRssQprlPACAAAAAAAAAL/I/VNIHF73TyGpqPdPicX/QgcNb/sc7f4pAswG7p9C8vNvxPunxOJKVNglOOb9U2yh2cL9UwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASOsZ9GwQedyWnd0AAAAASUVORK5CYII=","weather_hail_16":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAACcUlEQVR42u3dzXHiQBAG0NZmoTA4koIJQ87EaUAYOAWOZIHCmD3gUYkfA4f17rT2vSrKhuI0Ux8zrWZQBGn021PZnkqpf6vtqRSjs8z5rnNd592oZDbsbybUxC77w7o+fFAvLMT99lRi2J8fLM48tKWUUuf9+n2/DFUyu003Ho4Xzw3K8sI7fV73Ed37Z/TrlYGBTKtvXYGVSpCw/r25gHWnXLL9ghZ9hbVuncfD8W65pAaGFs3C+l14ubN10XeDxHWHvhsk9GrfDVqiBg59NwQ4vaH/unYwnq/8fbz1BgUy1b+v9N2gJS5NT0vwa303sIVukb4b3G5N9VUhcV2prwoJ6atC0hpYXxUSB7gGN0JfFdLWv/qq8LN+rlWirwp5t9D6qgDJSid9f0gaXn1/SErff2k1MP9VeOv/+v4CTEL6/pC8/tX3//u0dvhDS7C+vy00een7AwAAAMC/56uhsOAwCzg04tH3uB3WgMbDW8rj45DCC0lXYADAyg1c1LbfhXD+up8MggZXzmfHIO+9rx6jNIrQYLCfhVNbCRreUj8L5xRyP2AAbYT2UTittAAAAAAAAAAAAAAALNb17TodIIdE5kfZLu67C+RYgWPYTyF2aJxr7g/ceojXq+jeP2PoL1dmI4MAJ/Dx1ke/XsVuPD+fBxlo2bAv1xey1MHMdYYgQYjXq4iIGA/H82u7jXnDFjqF3aabgiu8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEByvwEh7qscUU2OhQAAAABJRU5ErkJggg==","weather_hail_17":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAACgCAYAAAAy2+FlAAACmUlEQVR42u3dwXHiMBQGYHm7UBkcaQHKMJ3QhikDWuBIF3YZ2oNjhhiWsDO7iZ/4vgtkJrmI+SM9/QykRFi560vu+tL1pXR9Kbnri1WBIOGdgtv1pZQyPloZCOA2tKWUktqjHfgN/bIEMcM7PW9zSs3ulPJ6ZWEEmCjaPD4ehpTyepX2m2xRKh6TpvsOq1LRC3t3gdUevcCVjkkuKqvbgo/XuVd46/1Hndrjp7uO+UWlI3RUh20zPR3Ol08/U1GI16vU7E7XkWnama0MBBuVJgIMQcak+T3HfA527IKlh/ijIhzOl7vxyQwMS3bYNtfgzsLLH2YOvRsEpHeD4DvwV70bLIkZeB5ivRsCHNd+k1Ner9JhGH9uvcUYgnihd4MlcSX9KMRPejdwhF4yvRuM9KoQmF4Vgu/AelUIPAPrVSFwgPWqEJVeFf6r5ltCrFeFmEdovSpAAHp/CEzvD8F3YL1/bTMw7xVivb8AE5feH6LS+387lQ7/PsR6f0dogqq493eSgIo8CrSQQ4Cd1nwPCw3vq8EUXjDrAgDAux+rHcHhh0L67H3bt8F89LuCCz+5u368FfSlP5r9rloJajg6t0cBhiUdqechtstCkB1XWAEAAAAAAAAAAAAAAAAAAN5A7vq7r++0KhAkvFNwu76UUsrTT1AEFuQ2tKWU8lefoEi1fD9wkPBOz9ucUrM7pelLtBFgAmjz+HgYUsrrVdpvskWBSPPv3QWWzyB+e40liLIFj2Gdjs7D+ZLSYev1c4QmhJuwCi8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAfX4D3062tX5+ZeYAAAAASUVORK5CYII=","weather_rain_00":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAABwCAYAAADoiRecAAAAxElEQVR42u3YsQ2AMAwEwIiGmuUYgZ5N2IaK0hJLZJI0TJAOZAR3I7z08ielPCxqOwvQNYgAvl/CJWrbRA2JTFIwR4GobZcC5F7CSdxgjsKvS7j6oIHcEo7ihmQuIeS/CQ9FhNwSAi+YpLMUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADucgGyvhwsMGamSgAAAABJRU5ErkJggg==","weather_rain_01":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAABwCAYAAADoiRecAAAA70lEQVR42u3boQ0CQRCG0T8gThAMjhrO4SgHSxEYiqAYJNmEJraSRSCwWG4E75XwJZOZu2QTFtH6eKrANysJwBD+i7MEAACLa32cWh9HJaDum3CTZJIa6obwlWQnNdSepLfWx0EJqNmESbKWGmqH8JFklhtqT9J762OvBNRswiTZ5vOnFCgawmuSi+RQe5J6SQCFmxCwDcEmBAwhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8BNvi1Qfvx/9OokAAAAASUVORK5CYII=","weather_rain_02":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAABwCAYAAADoiRecAAAA/klEQVR42u3XsQlCUQxA0SDWloKFUwiuYecCti5h4RJWNtZO8eAv8SYQ7CWNC2j5f0DPGeFCSBLBqFrPfet5UoJvZhKMbhkRaxmgdhteWs+dEtiEdV4RsZWBT+YSTGITEU8ZoPYkHVrPsxI4R2stJMAQ1npIAAAwudZzpQLU/oR3qaF2CIHiIby2nke5ofYvHFQA5yj89RAeWs+b5OAkBecoYBuCTQgYQnCSAjYhGEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+EFvazwun3QTl0oAAAAASUVORK5CYII=","weather_rain_03":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAABwCAYAAADoiRecAAABOklEQVR42u3bMUpDQRQF0EvQWAgpsoEUaawtbGyzhhRBO7ck2YFglzUEBlLbzyaEFDJNarHOfxbnrOBzh/vfYz4/4WpaHwcplJ/BqfWx/8/POHNMV7UQAdS/iT+lgElYayUClBBwOSAFTEJQQgArKSYhoIS10/BNCgAA1K2jLmcAAMpWsY0U4K/ZRAV8TPIkbigqYZK7+MEVytfRVx+roW4SJslPknuRQ10Jb5IsRQ5FJXxe334kObc+tmKH39NpSssk32KHmnU0Sb6SPIgdCrU+jq2PnSSgZhImyTwuaKC0hO9JXkQPtSvpyUoKdZMQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAyVwAENY8aPJ8STIAAAAASUVORK5CYII=","weather_rain_04":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAABwCAYAAADoiRecAAABK0lEQVR42u3bsW3CUBQF0KdIbtiA2hNA65Zl0tBkBXZgAWpGoPvIokyX4heRImWI39BQ0uIH+BzJA/jKV+8KiQi4KbWN3md6Hz49AB51CZevcA1dQt7W0Hf/5ijAE0yisxRwCWWMDwQgd5KOUsAlBCWctV8RoIS5PkttJzGghHkWtweUMMPQd38R8V1q20gDJcxzjIidGFDCPEsRQLJS26nUtpcELmGen4hYiQElBAAAYFL+SQD3+WEGZlTCsdS2FjmYpGCOAnklPJTavsQOJimYo0BeCbeuISSWcOi7i9jBHAVMUgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmNIVWYBBnLpkeSUAAAAASUVORK5CYII=","weather_rain_05":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAABwCAYAAADoiRecAAABVUlEQVR42u3asWkCQBQG4COY1kJshBSCY6R1BgvBIXSAQAIZwlZIb2Gt1YFLHGSPI5ARjEV8evd9E3j/+e5/iCkBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE3KpS6k8L+eRMAFm8YelZ0hhFjDXOpIDDxSc0xzqefGzvSlCXkYr7Pn7waPNTOEAFy9wp2dB2hyCK2jaA6g74dFE4Ih7Polnkgh/A7epWAdQhMChrBf21zqUgyh28heCr4EVlJNCBjCvq1zqZ9iACspmhAMIbErqTY0hAT6EYEhJNZQBBAsl/pmJdWEQICBCO7GKaX0IgYAgJvLpc6lQK/u5YeZD1eBIfQ5oPuV9CAFNGGssevAEALdr6T+toUmBAwhYCUFTQiGMLgNV64GAIC4dfQoBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/uQXzzVf8Q4Vvj0AAAAASUVORK5CYII=","weather_rain_06":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAABwCAYAAADoiRecAAAB4klEQVR42u3dIWvVURgG8IfhWBA3uEzBMBC0LTmTiCAYDTabzU9hFARtwsKazWAVwSCzHRzL2jzZaDLIMRhcFRYc7909v983+D/nPvd9uZx7bwIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPxfrY/XUjh7ayLgHwVcJNmUBNQW8UHr44kkTELqfE9ySwxKSJ2NJAsxQO1K+rD18XTFnunIJOQ8uZjkihiUkDq/k1wVA9Sub69aHy+spGfjgpcYp7BI8lMM1lHqHCe5uWLP1E8uJMD5Wd9aHwdWUpMQYNpJeG8Fn2m/9fHY6UJdCfeWYSW1jjIzlxC8E4+7rY9rkig9gzetj48m4bx2k9wQQ6mvSS4p4bw28/duJlC4Du23PvYkMS+TcDm4PqiEFPqV5LIYoHYlfd/68HUhk5BC2/EBjRJS6jDJIzFA7Up6JAWTEFDCqb0zDcFKikkIAADAjFofH6TAjJbpgxnXtlDCYr7OA0uwkn6SAiahaQhTl/CbI0EJa71sfbx1LChhna0kO44FJSxy5/r6cZIvrY/bjgYlrPM5yTNHgxLW2UnxLyLD9E7+kPK5JDAJ6/xIct/xoIQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnNofYdmAxQ9vUCQAAAAASUVORK5CYII=","weather_rain_07":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAABwCAYAAADoiRecAAABmElEQVR42u3doUpEQRQG4EGUBYMWjYKwomaDRaPBJvgU+xA+ggaxGEUwaRRsYhnwJU7zCaxTLJs1uHp273wfbNxwz+zPfxhYbikAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdKdGuzSFbs/+wRRmZ+kX3z02vm6NjWA+QggAAAAMVI32ZAp/z8UM31k2AiEk12eNtm0MkLuSvpuCJgQhpGtvNdqpMYCVdJbPM6nRTjQh5BlNP0LIwrir0Z6H8jBH45XrUsq+ELJIP9rbUsrGwB5rq0Y7FELIszZPKyn8qEY7GOAFzY2ThdwQvtZoO9ZRyLM6XUuBxDZMX7E1IQghpLfhuSlYh+j4DDQhWEe791Gj7RkDWEnRhCCE5Hms0SbGAFZSNCEIIXkutCFYSdGEANoQTQhCCAAAAP+qRrv0Ljx6NE8XM6PizbAIYaqrUsqZI4HclfTFFNCEudZrtE3HArlteG8KaMJcu44FIQS6X0n9kwBNCAghAABkcTkDAAAAAAAAAAAAAAAAAAAAAAAAAIvsCxkqdBkBqfB/AAAAAElFTkSuQmCC","weather_rain_08":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAABwCAYAAADoiRecAAACI0lEQVR42u3dsWpUQRgF4INGlAiBCFoJRtIppIiNYGMZEBQES4WAhX1AxIeQgK1ECPgEInZWDmwn2A/Y2QsRZCwsfAFJInP3zvf1S9gzOfn/OySbBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgMKW2g15f+Fmpbc8RDPlNd6/Uti+J07VyjNdcSbImuiFdSnJVDNP4iXhYatuRxJBnv19q25XE6TlzzNedT3JTfEM6SrIthr7raJJcS/JLfEPaTrIuhmmsJYtS23NJDHv2h5Lou46edJKy/M6KYBol/C7CIf1M8k0MAAD8Z6W2y1KY9jMh8/deBEoISsjQ3pTaHooB+j4XLqRgEoISMrQXpbaXM5vuH5WQZfI1yf2Zvad1JWSZ+CNumMD6tjO3C5qpvB+TkH/1WwRKiJUUhl9JX1tJTUKwjjK0D0k+z3DCbzlaGHglNQnBOkqpbUMK3c/gQAnHPfytJE8k0c+dzXO3k9xQwnFdSLIqBug7DXdLbXcl4ZmQfo6S3BKDEtLPxfi1MCWk68XA2yQ/Sm0PpKGE9LOWxGd8KiEdrSS5LgboqNT2qdT2WBImIf2s5u8lDUpIJ1+SuJyBzivpwkpqEgIMPQmfSgEAoNcq9k4KjGZqFzObjgQlBIZfSf1DSkxCQAkBKymYhKCEgJUUTEJg4BKW2vYcEUrYz6skjxwRSggAAAAAAAAAAAAAAAAAAADL7A9ca5Zp0eufGgAAAABJRU5ErkJggg==","weather_rain_09":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAABwCAYAAADoiRecAAACbklEQVR42u3dIWhVYRgG4Be3MdkYA4MwcShMUBgsLAxk1T5YHNjsNovJYLUYDIJhTTEYbOKw/HKzYDD8WAyCeUH+BcNg2Jy68d97z/Pky4Hzfve738c999yTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAIpbarUhj7Gu1LYboLfCCFwdb+pRROstgttT0+q+Nd+MvXLyjBYC2K4MTlJKs9PwXeqYFpKIv2rNS212MSJsmSEgzWNRGc+Jlk4ywONCtL+CdbSQ57juKRGgx2DVP737IotT3tsY4CZ7hNakL4P1+tJaj9hDMJYZKbsNR2X4SDnYaPpAAA9F9J3khhsLV/KwUAAM5/7bxTaluRxPlxnZA/2UxyXQyakH6Wk8yLAfqupC9KbTckYRLSz2ySGTFoQvo5TOLLGei8kh5M2fmsj8vvX01CTmthyi5VzGRM/t5FE3JaoyR703Iy22tzn3L8Z00wUSvcaMrOZ7fU9sAkhH5mk1zUhEyS99M0DbfX5l4lOdKETNKb9uEUntZRqe1e73EMQ3ZFH0BnpbbXpbYt6yj0s5xkXRNCP0tJboph2OvQRyl0r8Go1HbXJBwudRgP84oPff0QwcDXISlYgwBNOGjfS20bYgArKSYhaEL6+VBq2xcDWEkxCUET0s8T0xAAAAAAhqbUttPrxkroZdwuUXj8Fpqwsy9JLikLmrCT7bW5z0kWS207SoMm7GfeWoom7Ot5Es9HRxN2XEm/JblVarutPGjCflbjCxroa9qekQ6TNgmT42ekbyoRmrCvFSWCviupm1sxCQFNCAAAAAAAAAAAAMDZ+AXgdLZjIp4grgAAAABJRU5ErkJggg==","weather_sun_00":"data:image/png;base64,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","weather_sun_01":"data:image/png;base64,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","weather_sun_02":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOgAAABoCAYAAAD7GbygAAAHc0lEQVR42u2dMXfiOBRG3+yZInSkg+0ondKl/8q2dGm3TEm5bTp+x/4ESpfjkm5JFzpSbsEIhGJZsmyDJd97zpydkw3gEVy+9yRb/iEj4lS+VpKtrj/4/Dr/9+PQ7wstluf/Pj9df1btZZa/Z6HHvS9FdvlS1vlbJhNmW26qojzIKpfg8YQrfzAE3fi1RU6ddf6W7fKl7Mvz2PAJSUjQWf6eXVKzLvH6TE+dz6+gb/tf29fqZf2eIWe9pC/r9wxJSdCHJefL+j3blpsKOesl3ZabCkm78WOMB3X6b1Nd+kM9Ubv2onp6as8/+7OdYPSc9KT34mdUR7tYhkvaU5ncl5y+qfKyjvtDrZJUyoOcytcKSRNI0MYUDUlSU87A9FRShcqpHr/K2z1uX8Yvq0rSFL50SNCLhMuzTM9Pt5Iq4Vyi1qWmLn1AGrf9cNmk3Hk+S1FdH6vSO8YPufpCox9NJEHVB1IWS7EmqS1RbeWsIWdTuWUm+P7fQ5CcSq5dTzoV1TVVY00iNcGGfpELWitpk6g2zMe65Dz9U4nMjZ8eZTb7O+tLzA95koV8yYc81Yf/7/+3kK/kRFXjQz+agKBWSXVMYZt+zys5F5bHfzh71iY5bTJ6t9KGrLFKSj+amKC1ZWdbPCeE6tPTnaJ6r9lGzFP1LLPsU07Vs4jI5e+z7LOVqDH2pszqJibojahNSWkka5uZ2hBBQ1JTCenCJmrsacr6aMKC3pS+TR/ugDe+bYlrk9MU00zKttiSVRc1xpKXCaOEBR1M/BaTREpQV3LaxLStp27LTeWTqLZyl1IXQdOW1FhmqSuT6+R0iRl69pEprCtJYyt1SVEE7fUb/Z5ypi4pKWqHq1lqUDOiTZhnBg0tZ91zmK9hHkPbUwrHPuYICs6JJ5WeIvaTEHRx1vlb1ucVL+bz2XpbdWwxnVrnM/YICo1loau0DZ2l7fTB1l5TP5Zddk7RGCSlB0VQJ2r7EtsMapek65uhn//ebMtNxTYp3/nJENz2bK6Jir7S83KyhYXWF5Fra6T6Oby7TKSIYOzVlw1lLgnaKWHbfNhsYl6WcJ4XNX/Ol9ddfq/Da4UcOyBoMuVt2/S8EdN6OuH8/EcTtWsvSplLiTuZ8jY00a4nPsw9jub4+/eOF0mbSt7LtiIdj50ylwSNvrytW1pxpadbzmO9nFqa+iZp3bHEuOQCCHpDX7O3duYeYh4tP58OqswFBO2Eb49Xfw3rUZP26JGs89b9aKx9KCCotXztuq7o93i9hD16puSxp9eOpw+lHEfQC6u8nzNZ7CXyvObv895Lw1Tej5f1exbTecRDwizu3TkyBECCPrI8c5e38we8NiBoxPRRIrqfw+w9KXFT/7cgaA+ETOvb9qv1S9D7EHaM8b4nCAodmdODAoIOgZrlLWqKr6Y9bGd/vmXy+dE9QT339a07FnXMXHOJoJMvhe3901HcJyYM17NRMiLo5NB7PHeKfoWXuQHpGXP/CQjaqcwNSbRrqdsyQR1y+s54Ut4i6GTKXL0P9U3RmyS99KTNYra5wbAtPfX7tkB8cCbRQKhkM08gUMJ13fKEtUIEBUup+Gv7WhVyvc5Sv8+n7/1X2u451CU9KW8pcSfZixaVW5htuan6TDvz+WxlNUsrCDr5XlTHnDU1xRniVELXjZToPRF00inaNGHUt6Qp35cF6EEbWeUiux77URG56UlFrnsFmaJx+0H7ewII6hTFl6Ky36tFl8ucQPJNVZ/Jp6JK5734i539KHH7LHVNQRbyVbtGOss+neulppj6Y23PH+PdtQFB7yqp2ZPWlaAu8XxEtpW1yJke3MBXrhtU9fHhVnc/E/le8nbdZa9OzBRTs8/3gwRNJAHb9IMhJa9elirRmk5o13/HLGdTllO9B8h5hkmiAYVXM7x1adpG0imICZS4jZzK18p1b5Yu5Zq5bLDzfCUzhVU6pyznUO8FCQrWNDVlbbMkMgUpgQT1SrpdvrzLFpa+O6dPScptuamK8sCXEdhLK0aB92BMMIsLQA8aB+ruzvcqc+F7ecsVOECJxdhT4sYMt75jzBF0pLD+xtgj6MjhWkTGHCIoudg5b3i25aaivIXWMGHBWEMEKcooMMaPhHVQR1/EuuhwpW1RHug9gfKLsSVBk4Wzi4ZLT84agt6+6emV+u07SU8/WAf1gAV0xhQi+eZnFBhDetCRf8DoR8P7TmgHOyoE9KP78n47L6Qk5yqntKUHvUPvtMpFivLATXSRE8beSyFps5z0nYCkyEkPCs2S0pN+L2tF2J0PQUcAE0f0nEPBJFEP6BNHUwc5EXS0kk6951L/duSkxKUvpd8E6NaXpjzLq8/ScuI7JW60Je+pfE3yFLeiPFyu56SkBdKU1AS4n6ix9taICZMRdcypqqclYsJkRTVT9ZGy6q+tpETMx8L1oA9EXztVIuy1CSUlzFBLNebz6xM/+5LJnzHAOugI+zy1FaW+qZa+xhiasrroemrrr8daJoJCB2kVbXfEq3s8MgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAlf8Bu+hmvxBOusAAAAAASUVORK5CYII=","weather_sun_03":"data:image/png;base64,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","weather_sun_04":"data:image/png;base64,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","weather_sun_05":"data:image/png;base64,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","weather_sun_06":"data:image/png;base64,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","weather_sun_07":"data:image/png;base64,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","weather_sun_08":"data:image/png;base64,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"};
+ const sprites={};
+ for(const [name,url] of Object.entries(SRC)){const im=new Image();im.src=url;sprites[name]=im;}
+ let framesDrawn=0;
+ let lastWeather='clear';
+ const oldDraw = BattleEngine.prototype.draw;
+ function frame(prefix,index,pad=2){return sprites['weather_'+prefix+'_'+String(index).padStart(pad,'0')];}
+ function drawImageSafe(ctx,image,x,y,w,h,alpha){
+  if(!image?.complete||!image.naturalWidth)return false;
+  ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,alpha));ctx.imageSmoothingEnabled=false;
+  ctx.drawImage(image,x,y,w,h);ctx.restore();return true;
+ }
+ BattleEngine.prototype.draw=function(now){
+  const result=oldDraw.call(this,now);
+  if(!battle?.active||!this.ctx||!this.w||!this.h)return result;
+  const weather=String(battle.v32Weather||'clear').toLowerCase();
+  lastWeather=weather;
+  const ctx=this.ctx,w=this.w,h=this.h;
+  const now2=typeof now==='number'?now:performance.now();
+  let drawn=false;
+  ctx.save();ctx.beginPath();ctx.rect(0,h*.19,w,h*.80);ctx.clip();
+  if(weather==='rain'||weather==='storm'){
+    for(let j=0;j<3;j++)for(let i=0;i<4;i++){
+      const f=Math.floor(now2/90+i*2+j*3)%10;
+      const im=frame('rain',f);
+      if(drawImageSafe(ctx,im,(i-.12)*w/4,(j*.26+.21)*h,w*.27,h*.27,weather==='storm'?.62:.48))drawn=true;
+    }
+  }else if(weather==='sun'){
+    const f=Math.floor(now2/125)%9;
+    const im=frame('sun',f);
+    if(drawImageSafe(ctx,im,w*.31,h*.14,w*.36,h*.19,.51))drawn=true;
+  }else if(weather==='fog'){
+    const im=sprites.weather_fog;
+    if(drawImageSafe(ctx,im,w*.07,h*.46,w*.58,h*.22,.34))drawn=true;
+    if(drawImageSafe(ctx,im,w*.47,h*.33,w*.48,h*.15,.25))drawn=true;
+  }else if(weather==='snow'||weather==='hail'){
+    const f=Math.floor(now2/90)%18;
+    const im=frame('hail',f);
+    if(drawImageSafe(ctx,im,0,h*.24,w,h*.7,.63))drawn=true;
+  }else if(weather==='volcano'){
+    const f=Math.floor(now2/145)%14;
+    const im=frame('embers',f);
+    if(drawImageSafe(ctx,im,0,h*.25,w,h*.75,.66))drawn=true;
+  }
+  ctx.restore();
+  if(drawn)framesDrawn++;
+  return result;
+ };
+ window.PokemonTorreV3564WeatherDiagnostics=()=>({weather:lastWeather,framesDrawn,spriteImages:Object.keys(sprites).length,weatherVisuals:['rain','storm','sun','fog','snow','hail','volcano']});
+})();
+/* FIM 20_clima_pmd.js */
+/* INICIO 21_status_pmd.js */
+/* V35.64 — condições visuais PMD: ícones originais transparentes no HUD. */
+(function(){
+ 'use strict';
+ const SRC={"status_burn":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAcCAYAAACK7SRjAAAB10lEQVR42sWUrXKEMBDH/zAnTkYikZWVKyuRJyMrkX0EHiPy5EkkjxCJRJ6MXFmXitxC4AgfqjuTgZnd/e1nAvy39ASf0hnAG6T1M8OjAQXaUzhrNvkZ8BJCBJSVhrXr9pcYTATApuGfFpnY60YDAJ7dI2mfx1lYe3IYdQDXmILGHcgN4KW8o0I0/YufcIimTuQxmCj09fBgrzwDl5VGWekpODfas4PnRvuepu9ekJ4Q/Jg9N9qPnBfLAD6PHcpKA/XjPYMVsRZ43gD8qtVqiKKBynBgQgAJktrhGsjGAOM+6xDsxwAAsp7gyzZSLoI9b9MK7t0BqXy+igIVRWSwtUUyk7fZGA0Yjdza6CJcOYCvPPZubyVnYPGNkoMBpmkzzya+976I7abvaPharTMP2NmkVoXdOaf8FP3AHA7D2cEPbciWmf3bhdmRyxZYFQAzY2iVx6+CO/lqrmZ+r1/ZunC9CwKcBQoCpJKUDG0Y8J7dzPheh5Oyu9cBGG8OxDGOtIwq+hR8hApY4HFme2WtwcVe9BJkaOExLr+byjrUrwM9z5UK66UKyDf7uO2/gnHGs3e+CwzbARk7eFkx2wHfZhssVRVfDKUU2AVYcspxz7egy22Qk/L9A9WCrPncKu6uAAAAAElFTkSuQmCC","status_confusion":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAABHElEQVR42tVWuxHDIAwVXAagZASPkVFSpkyZEShdegyPkDIjaARKbaA04ONssJHyuYtK2+JJ7yE9A/wozBu5LDnHrhL6QS4zBCQISNB1RkBiBRj7CZmI2E/YlW/HR1Txdjt7AACIT+zMuMyqjoiIpWywQh8mIpYWqdJH2o3VXPGszy+ClWPxfRArBQlI4CcUa2s1LfXPzh/o817kuQi47K7P20QavE3cB2ekxeb5Gh8R4nUwG6D0IifA7eyrHx84wH6xlVWy0NgLsrKLZUWVMtiKQ4oou6ZtlBgxAGAyO+WqsvfBVWlQ+NRusafyYQmSqzoK51z1YjSLXfHK2jHJhtg8R+OYLZDa9jAlUKJC9QtW5Dc1anItjSm2b+0L40/fdAGkcakAAAAASUVORK5CYII=","status_freeze":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAbCAYAAABvCO8sAAACL0lEQVR42tVWvbGzMBBcGApweCWoBEKV4PCFDgkJXQIhoUKHDimB0CWoBIXq4L4ADg6BbDxvXvDdjAdb6HbvZ3UWHg3YD9Pn0YCRMT+AY4wMgGPI79P7xWfez3747LeShcn50YAdTjoCED8AeJfQzklIAeBrwm/9JLIzpcxVCP+H3QbGbfj7aMl57nzkGCOT878iLT4RtZYAAM30gAtAP4ZlT2hM8Q1hmXvR+fiWTN6R8/wrQimfziJnrSX4HwI5z2eIyXkucyWUZz8GuDBlp9dT4jNkrSVUmkRnJWWEAkvX5HeuGkfYlV4IL48egP+hJaOUTPexBxBeHlSb/YSJkQVDY5dHEebIzDMszuHl9wpVx0WTbUQjYGnvUhOA8PLJ3LsWsnaUaYpdXdoRVBvcu3FxaOjMgL0WG1IM3N0teuc5NKa4d+MShMYuofrQWkJD+5IuhzzN7oRpbACoAKC7211mmvTMmTyswG3KWmuhotqsgJbQjwGplEW1vRplnY98JKqlCreBNXZrCeYZ1mOhCTTpkWDSqeLCvu+6jBq7iDHyJrJEbe2cddpnbeYZ1n2qAqIHERAAlC4oMczK0+RChse1SI+MC8ClHadDnfRZglrIZuzyUOZKYZpcT5s08tQu7bgKT2EX0lzJQjc8/b+TMuVasMFQOHq9lC9Um3U0HZRW3knUVBt0d4vY24/DQWOXG/UpsWh5H10ppJ+bbDNteX/FmME3ZUrknpupZy5h/wBk+slvnMZjMAAAAABJRU5ErkJggg==","status_guard":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAVCAYAAABYHP4bAAABJ0lEQVR42s2UvXGEMBCF3zIUQKgSVIJClXMhISUovPDKIXQJKkHhdrAOzHpkgYQ47Bm/GQIYPr390S7hQMwsAPBKX+/PNSE9LKFDzCzTNJF5RdFv6WFpOAM3E/SaAECILLM3atJkZIP06TZiZgmRZcuoi+02uBvgu/pzg/8h6kyVbpaJKESW8jqX2q5oaSYhcnUkSn5cwgoAMM4ifcQdZFx7Dnr5IX8xzp4efKScr2kAcBjJu6qZjQAQFv+zxlrbjgCMs9B1o/1Rs5w/3HU5eKYymBo7akPzlK+WUm9ZixuO6mqcRVj8rixXL0V+LoXIUmY0e4PnmjB7g8VOzYENkXcVyc9RnvKfywafmOzMWjyVU96ZCWpb4rtfxTahxt6iiyN0l/8dfQIhO6g85wSmbAAAAABJRU5ErkJggg==","status_paralysis":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAXCAYAAAAV1F8QAAABLUlEQVR42s1Uu3GEMBBdGApQSCkuwyUQUoLDC13ChQodUgKhwwtdwoYbXvYcIAl9T/JhM94ZZgSP3ff2oyU6ybqD/miNe4QIIrKd7ioA1JjGHgqq2gVEJCUbhNOPaiQ8IEMjCXzRw2+VyzdfvBXdVxQlZV3eVHO5lovXC+Hi5JQaCz0TvV7qJNN19+1bFfmDMl2LWJbE1hO5R8/50kWZtfs9SZIle+h3gCQgq/o1K6qvItR2HfS8vSQN/AN7NpP/Z13D6u9+itsVFF923xFfLxNEBPacxc3w5HBhcv5m64CIqJf3D9cjcya6K7cYY3xcNPHnpnZcdIjzthV4VW5DmDggWW9wP643iMh+r0SQ4LzfG2EKcePjcBPLZhWmbslCkhDnhCQpXUxy6jCcYt9f1lKHwhfnggAAAABJRU5ErkJggg==","status_poison":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAdCAYAAAApQnX+AAAB+UlEQVR4nO2XIXcCMQzH/7e3DzE5GVmJRCJPVu4jIJGVk8hJ5EkkEomsrETyLTrB0qWhhcKOt7094rhLm1+Sf3MF+KPmJi52vw2hzU1cBAAyBk1wvCD93rm7JOUmLpIxICK8vr3guQWKFwiL94JkMAD1yuksAGC/OiCEkHyC96MBcrzZ+zQ9O1s5CQYggQXvQcaMAqTjsW0WWzzVFpExGdh+dUDwHvaj7ySgDtAKxTF6a9Fbm8XhWNXK6SzGamFNLsCxM0SUOlSsXCmLEpg6JM1WkgsZg+B95leFS/oSBwDIT/C11iSXr3hkzBk4lQXrhBcSEdbDkAG3mJbLehiyrgTvU+xMczJ48D7LghcwGL8TYm6efUljFbn01mI9DN9wWqgzTLGcLROQPFFcsflmnmYft9nBxXOAWvSlwrBlldNCZUdZaoaSwdjnkg7dznUOLsrWSklIucw386PmWoSqsyr5tM4+KRcNJiuaKnftXLt19nH1GKgml81im7f1klCJCMH7i7NPn/QSIHDUp/Rl0JMvxDVCHWv2yeTcxEXNkL3srUUI4SRzKdQWn1s/c5ohG8ItQm0V860m988yrF0u05dg57oWn5/AXbymt1zL7311v+Uq9rCH/WvTJyxe+U6fqK7wrLRXS8x49j9EYYNOAcjNNECHehJN9gmCuah8xe9jyAAAAABJRU5ErkJggg==","status_sleep":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAYCAYAAADkgu3FAAABK0lEQVR42t1UIXLDMBBceQoKAwMDAwP1BMPAQD0hsE/wMwoNCwsNAwUFAw3vBxfgXBMnsnRKNQW9GY3Hmt3Zu/WeQYNnGjwDYOiKqes5WMdExFp+g90GAECDh1LMrD4OWO9bjO0Rar6iM/7lZNN7Bpyzhanrp0PENGKR30Rt6HoBAaeQtREA4M/AOwHbXZI/t0E67HptSCbOiNtkCf5cjKgkic9iGf4PiAbPwbpyMQV/CsN13GBdqZiKPwPJnYAVQlm+ieyLWdghkxNL8d9kaXMLuj19Jpf+ijEP95gJ1SgReWg6X8E6lvOKsPDkaVKgmB0lIvf85i9EniaqJZLk1vomi39fbVJSXQbrOJa6+7umVrzFjcguMf5lmVJ71vsWADB+fb+UzKoJi9UFDvKbQIoSIQQAAAAASUVORK5CYII=","status_slow":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAaCAYAAACkVDyJAAABSUlEQVR42t2WLZKDQBCF30xFrBwZuRIZyREiV0ZyhMgcgSNERnKESCQSOXIlsm/QK8hkM9QMdBNqxXYVVcPQH+8184cBwAAM4uDJvfo5DWPD7ZPP/3GsKZXfeYfJjOGsIBE9b5xzKlFLbZ9yLQ4tb9dA74haHD61kHHOAdc7huMZat6XFRMRU9sztT0rKmWqG9bydv91lDjlZKWXE9bwS06XnDPVzXgRMQ2Y5W3Wad2EZKDz82N6OY2t/hv4IKA4iPi40uC4bqTjOjIDfisV8LEoESuXSywq5J/J1Pbsy0ovquDHSfP4DL6stKIqPkoOfQESCIr43MFqMmvICE+SLL973XEWFjqK7ja7Yz1yzKQ/4ndbHq5BbGJeHr6sOFxr+akBs5Sc+kwasSlv/1IsWeFWYiJ2qzET/bVJkudc+7Li1Cx97Su6m/kBymCZ0F1WKaUAAAAASUVORK5CYII="};
+ const icons={};
+ const mapping={poison:'poison',burn:'burn',paralysis:'paralysis',sleep:'sleep',confusion:'confusion',freeze:'freeze',slow:'slow',guard:'guard',flinch:'confusion',seed:'poison'};
+ for(const [name,url] of Object.entries(SRC)){const im=new Image();im.src=url;icons[name.replace('status_','')]=im;}
+ let iconsDrawn=0;
+ const oldHud=BattleEngine.prototype.updateHud;
+ BattleEngine.prototype.updateHud=function(now){
+  const result=oldHud.call(this,now);
+  if(!battle?.active||!this.v25?.stats)return result;
+  for(const [who,side] of [['ally','player'],['enemy','enemy']]){
+   const row=document.querySelector('.hudPro.'+who+' .v3563StatusRow');
+   if(!row)continue;
+   const conditions=(this.v25.stats[side]?.conditions||[]).slice(0,3);
+   const desired=conditions.map(s=>mapping[s]||s);
+   if(who==='ally'&&this.player?.guard>0)desired.push('guard');
+   const key=desired.join(',');
+   if(row.dataset.v3564Key===key&&row.querySelectorAll('img').length===desired.length)continue;
+   row.dataset.v3564Key=key;row.textContent='';
+   desired.forEach((id,i)=>{
+    if(!SRC['status_'+id])return;
+    const img=document.createElement('img');img.className='v3564StatusSprite';img.alt='';img.title=(conditions[i]||id).toUpperCase();
+    img.src=SRC['status_'+id];row.appendChild(img);iconsDrawn++;
+   });
+  }
+  return result;
+ };
+ const style=document.createElement('style');style.id='v3564Style';style.textContent='.v3564StatusSprite{width:19px;height:19px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 1px 1px #0008);pointer-events:none}.v3563StatusRow{min-height:20px!important;align-items:center;gap:4px}';document.head.appendChild(style);
+ window.PokemonTorreV3564StatusDiagnostics=()=>({iconsDrawn,assetCount:Object.keys(icons).length,visible:document.querySelectorAll('.v3564StatusSprite').length});
+})();
+/* FIM 21_status_pmd.js */
+/* INICIO 22_versao.js */
+/* V35.64 — versão real e registro de sprites recebidos. */
+(function(){
+ const prevRender=render,prevBattle=renderBattle;
+ function label(){
+  const brand=document.querySelector('.brand strong');if(brand)brand.textContent='POKÉMON TORRE · V35.64';
+  const home=document.getElementById('v3520VersionHome');if(home)home.textContent='V35.64';
+  const chip=document.getElementById('v30VersionTag');if(chip)chip.textContent='V35.64 · SPRITES MYSTERY DUNGEON';
+  document.title='Pokémon Torre V35.64 — Clima e status PMD';
+ }
+ render=function(){const r=prevRender.apply(this,arguments);label();return r;};
+ renderBattle=function(){const r=prevBattle.apply(this,arguments);label();return r;};
+ window.PokemonTorreVersion='V35.64';
+ window.PokemonTorreV3564Diagnostics=()=>({version:'V35.64',protected:window.PokemonTorreGolpesProtegidos?.total||25,weather:window.PokemonTorreV3564WeatherDiagnostics?.(),status:window.PokemonTorreV3564StatusDiagnostics?.(),shiny:window.PokemonTorreV3559Diagnostics?.()});
+ label();
+})();
+/* FIM 22_versao.js */
+/* INICIO 25_projetil_inimigo_2d.js */
+/* Melhora generica dos projeteis do adversario, sem substituir efeitos de golpes aprovados. */
+(function(){
+ 'use strict';
+ const prev=BattleEngine.prototype.drawProjectile;
+ let drawings=0;
+ function path(c,ps,color,w,a){if(ps.length<2)return;c.save();c.globalAlpha=a;c.strokeStyle=color;c.lineWidth=w;c.lineCap='round';c.lineJoin='round';c.beginPath();ps.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.stroke();c.restore();}
+ BattleEngine.prototype.drawProjectile=function(p){
+   if(!p||p.from!=='enemy'||!this.ctx)return prev.call(this,p);
+   const c=this.ctx,col=(TYPE_COLOR[p.type]||'#d4eaf0');
+   const vx=p.vx||0,vy=p.vy||0,r=Math.max(4,Math.min(15,p.r||6));
+   const points=(p.tail||[]).map(a=>({x:a.x,y:a.y}));
+   if(points.length<2){points.unshift({x:p.x-vx*.016,y:p.y-vy*.016});points.push({x:p.x,y:p.y});}
+   // Particulas leves com movimento em vez de uma imagem plana ou um quadrado.
+   path(c,points,col,r*.52,.40);
+   path(c,points,'rgba(255,255,255,.75)',1.4,.60);
+   c.save();c.translate(p.x,p.y);
+   c.rotate(Math.atan2(vy,vx));
+   const phase=performance.now()*.016+p.x*.01;
+   if(p.type==='rock'||p.type==='ground'){
+     c.fillStyle='#bca68d';c.beginPath();c.moveTo(-r*.8,-r*.2);c.lineTo(-r*.22,-r);c.lineTo(r*.8,-r*.4);c.lineTo(r*.64,r*.77);c.lineTo(-r*.56,r*.88);c.closePath();c.fill();c.strokeStyle='#625041';c.lineWidth=1.4;c.stroke();
+   }else if(p.type==='electric'){
+     c.strokeStyle='#fff5b0';c.lineWidth=2.6;c.beginPath();c.moveTo(-r,-r*.55);c.lineTo(0,-r*.5);c.lineTo(-r*.1,r*.15);c.lineTo(r*.65,-r*.20);c.lineTo(r*.14,r*.85);c.stroke();
+   }else if(p.type==='fire'){
+     c.fillStyle='#ff994a';c.beginPath();c.moveTo(-r*.9,r*.33);c.quadraticCurveTo(-r*.2,-r*1.6,r*.85,-r*.24);c.quadraticCurveTo(r*1.1,r*.6,r*.15,r*.9);c.closePath();c.fill();c.fillStyle='#ffe28d';c.beginPath();c.ellipse(0,r*.25,r*.35,r*.55,0,0,Math.PI*2);c.fill();
+   }else if(p.type==='water'){
+     c.fillStyle='#73d2ff';c.beginPath();c.moveTo(-r*.8,0);c.quadraticCurveTo(0,-r*1.5,r*.85,0);c.quadraticCurveTo(0,r*.95,-r*.8,0);c.fill();c.strokeStyle='#e9ffff';c.lineWidth=1.3;c.stroke();
+   }else if(p.type==='grass'){
+     c.fillStyle='#8ee86c';c.beginPath();c.ellipse(0,0,r*1.25,r*.52,Math.sin(phase)*.2,0,Math.PI*2);c.fill();c.strokeStyle='#e8ffb0';c.lineWidth=1.1;c.beginPath();c.moveTo(-r,0);c.lineTo(r,0);c.stroke();
+   }else if(p.type==='poison'){
+     c.fillStyle='#9a63c6';c.beginPath();c.arc(0,0,r*.82,0,Math.PI*2);c.fill();c.strokeStyle='#e3b7ff';c.lineWidth=1.2;c.stroke();
+     for(let i=0;i<3;i++){const a=phase+i*2.1;c.beginPath();c.arc(Math.cos(a)*r*.58,Math.sin(a)*r*.52,r*.24,0,Math.PI*2);c.stroke();}
+   }else if(p.type==='psychic'||p.type==='ghost'){

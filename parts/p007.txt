@@ -1,0 +1,1000 @@
+ save.coins-=item.price;if(key==='superball')save.superBalls++;else save.ultraBalls++;persist();render();showShop();
+ };});};
+function v29AvailableBall(){return ['ball','superball','ultraball'].find(k=>k==='ball'?save.balls>0:k==='superball'?save.superBalls>0:save.ultraBalls>0)||'ball';}
+function v29CaptureControls(){const target=$('catchCombat');if(!target)return;
+ const options=document.createElement('select');options.id='v29BallSelect';options.className='v29BallSelector';options.setAttribute('aria-label','Escolher Pokébola');
+ const stock={ball:save.balls,superball:save.superBalls,ultraball:save.ultraBalls};
+ for(const [id,label] of [['ball','🔴 Pokébola'],['superball','🔵 Super Ball'],['ultraball','🟡 Ultra Ball']]){
+  const el=document.createElement('option');el.value=id;el.textContent=label+' · '+stock[id];el.disabled=stock[id]<=0;options.appendChild(el);
+ }
+ options.value=v29AvailableBall();target.insertAdjacentElement('beforebegin',options);
+ target.textContent='🔴 Capturar';target.disabled=stock.ball+stock.superball+stock.ultraball===0;
+ options.onchange=()=>{battle.v29Ball=options.value;target.textContent='🔴 Capturar ('+(options.value==='ultraball'?'Ultra':options.value==='superball'?'Super':'Pokébola')+')';};
+};
+catchMon=function(){
+ if(!battle?.active||!battle.wild||battle.paused||!engine?.v25?.stats)return;
+ let id=$('v29BallSelect')?.value||battle.v29Ball||v29AvailableBall();const store=id==='ultraball'?'ultraBalls':id==='superball'?'superBalls':'balls';
+ if(!save[store])return;
+ const m=foe();if(!m)return;
+ const mult=id==='ultraball'?1.7:id==='superball'?1.35:1;
+ const rarity=KANTO_LEGENDS.has(m.id)?.53:1;
+ const wildConditions=engine?.v25?.stats?.enemy?.conditions||[];
+const captureStatusBonus=(m.status==='sleep'||m.status==='freeze'||wildConditions.some(c=>/sleep|freeze|sono|gelo/i.test(c)))?1.32:(m.status==='paralyze'||m.status==='poison'||m.status==='burn'||wildConditions.length>0)?1.17:1;
+const chance=Math.max(.05,Math.min(.98,(.17+.72*(1-m.hp/m.maxHp))*mult*rarity*captureStatusBonus));
+ save[store]--;persist();
+ engine.v25.capture={time:0,duration:1.65,fromX:engine.player.x,fromY:engine.player.y-engine.h*.16,toX:engine.enemy.x,toY:engine.enemy.y-engine.h*.15,success:Math.random()<chance,spark:false,shake:false};
+ battle.paused=true;log((id==='ultraball'?'Ultra Ball':id==='superball'?'Super Ball':'Pokébola')+' lançada! Chance '+Math.round(chance*100)+'%');playSound('dash');
+ const selector=$('v29BallSelect');if(selector){const option=selector.querySelector(`option[value="${id}"]`);if(option){option.textContent=option.textContent.replace(/\d+$/,save[store]);option.disabled=save[store]===0;}}
+};
+
+// 10. Pos-jogo: desafios lendarios apos completar a Elite Four (sem alterar a campanha).
+const V29_LEGENDARY=[144,145,146,150,151];
+const v29OldWin=renderWin;
+renderWin=function(){v29OldWin();if(save.gym<13)return;
+ const panel=document.querySelector('#main section');if(!panel)return;
+ const block=document.createElement('section');block.className='v29Endgame';
+ block.innerHTML='<h3>✨ Desafios lendários de Kanto</h3><p class="desc">Campeão de Kanto: enfrente e tente capturar Articuno, Zapdos, Moltres, Mewtwo e Mew. Leve Pokébolas e uma equipe preparada.</p><div class="v29EndgameButtons"></div>';
+ const row=block.querySelector('.v29EndgameButtons');const mart=document.createElement('button');mart.className='btn gold';mart.textContent='🛍️ Comprar Pokébolas';mart.onclick=showShop;row.appendChild(mart);for(const id of V29_LEGENDARY){const b=document.createElement('button');b.className='btn ghost';b.textContent=D[id].name;b.onclick=()=>{
+ if(!requireTeam()){showItems();return}if(save.balls+save.superBalls+save.ultraBalls<1){alert('Compre Pokébolas para iniciar o desafio.');return;}
+ startBattle([mon(id,id===150?75:68)],'✨ DESAFIO LENDÁRIO · '+D[id].name,true);
+ };row.appendChild(b)}panel.appendChild(block);
+};
+
+// As lutas lendarias NAO devem incrementar os ginásios ou a Liga finalizada.
+const v29OldFinishBattle=finishBattle;
+finishBattle=function(win){
+ if(!battle?.active)return;
+ if(save.gym===13&&battle.wild){
+  const name=foe()?D[foe().id].name:'Pokémon lendário';
+  battle.active=false;stopTimers();
+  if(win){save.wins++;save.coins+=40;for(const m of save.team){if(m.hp>0){awardXP(m,42);m.hp=Math.min(m.maxHp,m.hp+Math.ceil(m.maxHp*.12));}}}
+  else{save.losses++;for(const m of save.team)m.hp=Math.max(1,Math.ceil(m.maxHp*.55));}
+  persist();resultScreen(win?'✨ DESAFIO LENDÁRIO VENCIDO':'💔 DESAFIO ENCERRADO',win?name+' foi derrotado. Volte para tentar capturá-lo!':'Você pode tentar novamente no pós-jogo.',win,false);
+  return;
+ }
+ return v29OldFinishBattle(win);
+};
+// Corrige botao de encontros selvagens para aceitar qualquer classe de Pokebola.
+const v29OldRenderFinal=render;
+render=function(){v29OldRenderFinal();const grass=$('grassBtn');if(grass&&save.gym<8){const used=save.routeUsed[save.gym+'-'+save.stage]||0;grass.disabled=!(save.stage>=1&&save.stage<=v29TrainerCount(save.gym)&&used<3&&(save.balls+save.superBalls+save.ultraBalls)>0);}};
+// Diagnostico nao invasivo para regressao em Android e navegadores desktop.
+window.PokemonTorreDiagnostics=()=>({version:V29_VERSION,active:!!battle?.active,gym:save.gym,stage:save.stage,monsters:save.team.length,wasm:!!v28Wasm,phaser:!!v27Scene,fps:engine?.fps??null});
+
+/* POKEMON TORRE V30 — PATCH UNIFICADO 2D: 10 MECANICAS + CAMERA + BACKUPS */
+const V30_VERSION='30.0';
+function v29TrainerCount(g){return Number.isInteger(g)&&g>=0&&g<8?6+g:6;}
+// Estado local de habilidades; evita depender de auxiliares removidos em versões anteriores.
+function sideState(side){
+ if(!battle)return {atk:0,def:0,paralyze:0};
+ if(!battle.v30Stats)battle.v30Stats={ally:{atk:0,def:0,paralyze:0},enemy:{atk:0,def:0,paralyze:0}};
+ return battle.v30Stats[side==='enemy'?'enemy':'ally'];
+}
+
+const V30_SAFE_SAVE='pokeTorreKantoV30Safety';
+const V30_MISSIONS_KEY='pokeTorreKantoV30Missions';
+const V30_MOVE_TRAITS={
+  3:{name:'Chicotes em Área',kind:'area',type:'grass',power:38,cost:34,cd:3400,icon:'🌿'},
+  6:{name:'Chamas Persistentes',kind:'hazard',type:'fire',power:12,cost:39,cd:4100,icon:'🔥'},
+  9:{name:'Onda Aquática',kind:'pierce',type:'water',power:48,cost:39,cd:4000,icon:'🌊'},
+  25:{name:'Faísca Teleguiada',kind:'homing',type:'electric',power:38,cost:30,cd:3150,icon:'⚡'},
+  26:{name:'Tempestade Elétrica',kind:'area',type:'electric',power:43,cost:39,cd:4200,icon:'🌩️'},
+  31:{name:'Impacto de Nidoqueen',kind:'area',type:'ground',power:40,cost:36,cd:3800,icon:'💥'},
+  34:{name:'Terremoto de Nidoking',kind:'area',type:'ground',power:43,cost:39,cd:4000,icon:'🌋'},
+  59:{name:'Rastro de Fogo',kind:'hazard',type:'fire',power:13,cost:39,cd:4300,icon:'🔥'},
+  64:{name:'Confusão Psíquica',kind:'homing',type:'psychic',power:37,cost:30,cd:3050,icon:'🔮'},
+  65:{name:'Orbe Psíquico',kind:'homing',type:'psychic',power:43,cost:39,cd:4100,icon:'🔮'},
+  68:{name:'Soco Sísmico',kind:'area',type:'fighting',power:39,cost:38,cd:4000,icon:'🥊'},
+  76:{name:'Pedras em Área',kind:'area',type:'rock',power:42,cost:39,cd:4200,icon:'🪨'},
+  94:{name:'Orbe Sombrio',kind:'homing',type:'ghost',power:40,cost:34,cd:3700,icon:'👻'},
+  105:{name:'Osso Bumerangue',kind:'pierce',type:'ground',power:40,cost:33,cd:3600,icon:'🦴'},
+  112:{name:'Terremoto',kind:'area',type:'ground',power:44,cost:40,cd:4500,icon:'⛰️'},
+  121:{name:'Raio Aquático',kind:'pierce',type:'water',power:46,cost:39,cd:4150,icon:'🌟'},
+  123:{name:'Lâminas Cortantes',kind:'pierce',type:'bug',power:43,cost:37,cd:3850,icon:'🦗'},
+  125:{name:'Trovão Teleguiado',kind:'homing',type:'electric',power:43,cost:39,cd:4250,icon:'🌩️'},
+  130:{name:'Fúria do Oceano',kind:'area',type:'water',power:45,cost:42,cd:4600,icon:'🌊'},
+  131:{name:'Geada Persistente',kind:'hazard',type:'ice',power:12,cost:40,cd:4500,icon:'❄️'},
+  143:{name:'Tremor de Snorlax',kind:'area',type:'normal',power:41,cost:37,cd:4000,icon:'💤'},
+  144:{name:'Nevasca em Área',kind:'area',type:'ice',power:45,cost:42,cd:4500,icon:'❄️'},
+  145:{name:'Raio de Zapdos',kind:'homing',type:'electric',power:45,cost:42,cd:4600,icon:'⚡'},
+  146:{name:'Chamas de Moltres',kind:'hazard',type:'fire',power:15,cost:42,cd:4600,icon:'🔥'},
+  149:{name:'Fúria Dracônica',kind:'pierce',type:'dragon',power:48,cost:43,cd:4700,icon:'🐉'},
+  150:{name:'Onda de Mewtwo',kind:'area',type:'psychic',power:50,cost:45,cd:4800,icon:'🔮'},
+  151:{name:'Orbe Místico',kind:'homing',type:'psychic',power:44,cost:39,cd:4500,icon:'✨'}
+};
+const v30BaseSkills=skillSet;
+skillSet=function(m){const result=v30BaseSkills(m);const special=V30_MOVE_TRAITS[m.id];if(special){result[2]={...special,cat:'special'};}return result;};
+const v30CSS=document.createElement('style');v30CSS.id='v30Css';v30CSS.textContent=`
+.v30VersionTag{font-size:10px;color:#91e4ce;font-weight:800;letter-spacing:.08em;padding:3px 7px;border:1px solid #34765f;border-radius:8px}
+.v30BossPhase{position:absolute;z-index:8;left:50%;top:19%;transform:translateX(-50%);background:#12273bdc;border:1px solid #d7b66b;color:#ffe3a2;font-size:10px;font-weight:800;letter-spacing:.06em;padding:6px 9px;border-radius:10px;max-width:67%;pointer-events:none;text-align:center}
+.v30Ability{position:absolute;z-index:8;top:18%;left:3%;max-width:36%;font-weight:700;color:#c7f4df;font-size:10px;pointer-events:none;background:#152c3ba6;border:1px solid #91ddbe66;border-radius:7px;padding:4px 7px}
+.v30Evolution{border:1px solid #d5c27b;border-radius:15px;padding:12px;background:linear-gradient(115deg,#182d49,#263447,#172d48);margin:12px 0;text-align:center;animation:v30Evolve 1.4s ease-in-out 1}
+.v30Evolution .spritewrap{display:inline-flex;width:50px;height:50px;align-items:center;justify-content:center;vertical-align:middle;overflow:hidden}
+.v30Evolution img.sprite{max-width:100%;max-height:100%;image-rendering:pixelated}.v30Evolution .placeholder{display:none}
+@keyframes v30Evolve{0%{filter:brightness(1);transform:scale(.97)}35%{filter:brightness(3);transform:scale(1.03)}80%{filter:brightness(1.35)}100%{filter:brightness(1);transform:scale(1)}}
+.v30Missions{border:1px solid #2f6171;background:linear-gradient(155deg,#142f40,#18283b);border-radius:13px;padding:12px 14px;margin:13px 0}.v30MissionRow{display:flex;align-items:center;justify-content:space-between;font-size:11px;gap:10px;border-bottom:1px solid #ffffff12;padding:6px 0;color:#d7eeef}.v30MissionRow:last-child{border-bottom:none}.v30MissionRow b{color:#a4ecdc}
+.v30Stages{font-size:11px;margin:9px 0;color:#c5d9ec;line-height:1.4}
+.skillgridV8{gap:7px!important}.skillV8{min-height:65px!important;padding:9px 11px!important}.skillName b{font-size:clamp(11px,2.4vw,14px)!important;line-height:1.14!important}.skillName small{font-size:10px!important}.skillMeta{flex-shrink:0!important}.coolMask{border-radius:10px!important;pointer-events:none!important}.coolText{top:6px!important;right:8px!important;left:auto!important;bottom:auto!important;transform:none!important;font:800 11px system-ui!important;background:#0b2035cf!important;border:1px solid #6489a5!important;border-radius:7px!important;padding:2px 5px!important;width:auto!important;height:auto!important;pointer-events:none!important}
+.v30Reinforce{font-size:11px;color:#a2d3cb}
+@media(max-width:700px){.skillV8{padding:7px 8px!important;min-height:62px!important}.skillName small{font-size:9px!important}.skillIcon{font-size:19px!important}.skillMeta small{font-size:9px!important}.v30BossPhase{top:20%;font-size:9px}.v30Ability{top:21%;font-size:9px}}
+@media(prefers-reduced-motion:reduce){.v30Evolution{animation:none!important}}
+`;document.head.appendChild(v30CSS);
+
+// Golpes AOE, teleguiados, atravessantes e temporarios, sem novo loop de requestAnimationFrame.
+const v30OriginalMove=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(i){
+ const m=current(),s=m&&skillSet(m)[i],b=battle;
+ if(!b?.active||b.paused||!s||i!==2||!V30_MOVE_TRAITS[m.id])return v30OriginalMove.call(this,i);
+ const now=performance.now();if((cooldowns[i]||0)>now||b.energy<s.cost||m.hp<=0)return;
+ b.energy-=s.cost;cooldowns[i]=now+s.cd;this.attackActs.player=this.time+.46;
+ this.v30Shots=this.v30Shots||[];this.v30Zones=this.v30Zones||[];
+ const aim=this.aimVector(),sx=this.player.x,sy=this.player.y,color=TYPE_COLOR[s.type]||'#f8fbff';
+ this.particlesAt(sx+aim.x*15,sy+aim.y*15,color,13,75);
+ if(s.kind==='homing'||s.kind==='pierce'){
+   if(this.v30Shots.length>14)this.v30Shots.shift();
+   this.v30Shots.push({x:sx,y:sy,vx:aim.x*this.h*.60,vy:aim.y*this.h*.60,kind:s.kind,type:s.type,power:s.power,life:1.8,trail:[],hit:false});
+ }else if(s.kind==='area'){
+   this.v30Zones.push({kind:'area',x:this.enemy.x,y:this.enemy.y,type:s.type,power:s.power,life:.42,hit:false,r:this.h*.21});
+   this.v19Impacts.push({x:this.enemy.x,y:this.enemy.y-this.h*.13,type:s.type,life:.4,max:.4,seed:Math.random()*6.28});
+ }else if(s.kind==='hazard'){
+   this.v30Zones.push({kind:'hazard',x:this.enemy.x,y:this.enemy.y,type:s.type,power:s.power,life:3.1,tick:.4,r:this.h*.18});
+ }
+ this.v30Zones=this.v30Zones.slice(-8);
+ log(D[m.id].name+' usou '+s.name+'!');playSound('move');
+ if(typeof v27EmitFx==='function')v27EmitFx(s.type,'enemy',1.4);
+ if(typeof v27Cinematic==='function')v27Cinematic(this);
+};
+const v30OriginalUpdate=BattleEngine.prototype.update;
+BattleEngine.prototype.update=function(dt,now){
+ const result=v30OriginalUpdate.call(this,dt,now);if(!battle?.active)return result;
+ // Montado no loop existente, com delta em segundos e limites rígidos de partículas.
+ if(this.v30Shots){for(let j=this.v30Shots.length-1;j>=0;j--){const o=this.v30Shots[j];
+  o.life-=dt;if(o.life<=0){this.v30Shots.splice(j,1);continue;}
+  if(o.kind==='homing'&&foe()?.hp>0){let dx=this.enemy.x-o.x,dy=this.enemy.y-o.y,len=Math.hypot(dx,dy)||1;
+   const speed=this.h*.58;o.vx=o.vx*.82+dx/len*speed*.18;o.vy=o.vy*.82+dy/len*speed*.18;}
+  o.x+=o.vx*dt;o.y+=o.vy*dt;o.trail.push({x:o.x,y:o.y});if(o.trail.length>7)o.trail.shift();
+  if(Math.hypot(o.x-this.enemy.x,o.y-this.enemy.y)<this.h*.085){this.hitTarget('enemy',o.type,o.power);o.hit=true;this.v30Shots.splice(j,1);}
+ }}
+ if(this.v30Zones){for(let j=this.v30Zones.length-1;j>=0;j--){const z=this.v30Zones[j];z.life-=dt;
+  if(z.kind==='area'&&!z.hit){z.hit=true;if(this.dist({x:z.x,y:z.y},this.enemy)<z.r){this.hitTarget('enemy',z.type,z.power);}}
+  if(z.kind==='hazard'){z.tick-=dt;if(z.tick<=0){z.tick=.68;if(this.dist({x:z.x,y:z.y},this.enemy)<z.r)this.hitTarget('enemy',z.type,z.power);}}
+  if(z.life<=0)this.v30Zones.splice(j,1);
+ }}
+ // Fases do chefe: reduz o intervalo entre golpes, sem inflar HP nem dano bruto.
+ if(battle.v30Boss&&battle.v30Phase>=2&&this.enemyAttackCD>1.8)this.enemyAttackCD=Math.max(1.1,this.enemyAttackCD-.2*dt);
+ return result;
+};
+const v30OriginalDraw=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){
+ v30OriginalDraw.call(this,now);if(!battle?.active||(!this.v30Shots?.length&&!this.v30Zones?.length))return;
+ const c=this.ctx;c.save();
+ for(const z of this.v30Zones||[]){c.save();c.globalAlpha=Math.min(.42,Math.max(0,z.life))*.65;c.strokeStyle=TYPE_COLOR[z.type]||'#dcecff';c.lineWidth=2;c.beginPath();c.ellipse(z.x,z.y,z.r,z.r*.35,0,0,7);c.stroke();c.restore();}
+ for(const p of this.v30Shots||[]){c.save();c.globalAlpha=.88;c.strokeStyle=TYPE_COLOR[p.type]||'#ebf5ff';c.lineWidth=2;c.beginPath();let last=p.trail[0]||p;c.moveTo(last.x,last.y);for(const q of p.trail)c.lineTo(q.x,q.y);c.stroke();c.fillStyle=TYPE_COLOR[p.type]||'#ebf5ff';c.beginPath();if(p.type!=='electric'&&!p.v343Signature){c.arc(p.x,p.y,4.2,0,7);c.fill();}c.restore();}
+ c.restore();
+};
+
+// Estilos de liderança e fases no último Pokémon; fases são progresso real da equipe do líder.
+function v30BossName(){if(!battle?.active)return '';const g=Math.min(save.gym,12);return GYMS[g]?.leader||'Chefe';}
+function v30PhaseView(){const el=$('arenaPro');if(!el||!battle?.v30Boss)return;
+ let tag=el.querySelector('#v30BossPhase');if(!tag){tag=document.createElement('div');tag.id='v30BossPhase';tag.className='v30BossPhase';el.append(tag);}
+ tag.textContent='👑 '+v30BossName()+' · FASE '+battle.v30Phase+'/'+battle.v30Total+' · '+(battle.enemies.length===0?'POKÉMON FINAL':'Estratégia adaptativa');
+}
+const v30OriginalStart=startBattle;
+startBattle=function(enemies,label,wild){
+ v30OriginalStart(enemies,label,wild);
+ if(!battle?.active)return;
+ const boss=!wild&&((save.gym<8&&save.stage===v29TrainerCount(save.gym))||save.gym>=8);
+ battle.v30Boss=boss;battle.v30Phase=1;battle.v30Total=1+battle.enemies.length;
+ battle.v30MissionFaint=0;
+ if(boss){v30PhaseView();const monId=foe()?.id;if(monId){const abil=v30Ability(monId);if(abil==='Intimidate'){const st=engine?.v25?.stats?.player;if(st)st.atk=Math.max(.60,(st.atk||1)-.12);}}}
+};
+const v30OriginalNext=nextFoe;
+nextFoe=function(){
+ const boss=battle?.v30Boss;
+ const result=v30OriginalNext();if(boss&&battle?.active){battle.v30Phase=Math.min(battle.v30Total,(battle.v30Phase||1)+1);v30PhaseView();}
+ return result;
+};
+
+// Habilidades: Static, Levitate, Intimidate, Overgrow, Blaze e Torrent.
+const V30_ABILITY={
+ Intimidate:new Set([23,24,58,59,130,142]), Levitate:new Set([92,93,94,109,110]),
+ Static:new Set([25,26,100,101,125,135,81,82]), Overgrow:new Set([1,2,3,43,44,45,69,70,71]),
+ Blaze:new Set([4,5,6,37,38,58,59,77,78]), Torrent:new Set([7,8,9,60,61,62,72,73,120,121,129,130])
+};
+function v30Ability(id){for(const [k,values] of Object.entries(V30_ABILITY))if(values.has(id))return k;return '—';}
+const v30OriginalDamage=damage;
+damage=function(attacker,defender,type,power){
+ const r=v30OriginalDamage(attacker,defender,type,power);if(!attacker||!defender)return r;
+ const allyMon=battle?.active?current():null;
+ const atkStat=allyMon&&attacker===allyMon?sideState('ally'):sideState('enemy');
+ const defStat=allyMon&&defender===allyMon?sideState('ally'):sideState('enemy');
+ r.hit=Math.max(0,Math.round(r.hit * Math.max(.45,1+(atkStat.atk||0)*.14) / Math.max(.45,1+(defStat.def||0)*.14)));
+ if(type==='ground'&&v30Ability(defender.id)==='Levitate'){r.hit=0;r.mult=0;return r;}
+ const ab=v30Ability(attacker.id),low=attacker.hp<=attacker.maxHp/3;
+ if(low&&((ab==='Blaze'&&type==='fire')||(ab==='Torrent'&&type==='water')||(ab==='Overgrow'&&type==='grass')))r.hit=Math.min(9999,Math.round(r.hit*1.30));
+ return r;
+};
+const v30OriginalHit=BattleEngine.prototype.hitTarget;
+BattleEngine.prototype.hitTarget=function(who,type,power){
+ const defender=who==='enemy'?foe():current(),attacker=who==='enemy'?current():foe();
+ if(!battle?.active||!defender||!attacker)return;
+ if(type==='ground'&&v30Ability(defender.id)==='Levitate'){
+  this.damageLabels.push({x:who==='enemy'?this.enemy.x:this.player.x,y:(who==='enemy'?this.enemy.y:this.player.y)-this.h*.20,text:'LEVITATE · IMUNE',life:.95,color:'#c1edff'});return;
+ }
+ const hp=defender.hp;
+ const r=v30OriginalHit.call(this,who,type,power);
+ if(battle?.active&&defender.hp<hp){
+  if(v30Ability(defender.id)==='Static'&&Math.random()<.17){const effectSide=who==='enemy'?'ally':'enemy';const st=sideState(effectSide);st.paralyze=1;}
+  if(who==='enemy')v30AdvanceMission('damage',Math.max(1,hp-defender.hp));
+ }
+ return r;
+};
+
+// Evolução após combate: tela informativa não modal, não interrompe a progressão.
+let v30EvolutionQueue=[];
+const v30OriginalXP=awardXP;
+awardXP=function(m,amount){const prev=m.id;const events=v30OriginalXP(m,amount);if(m.id!==prev){v30EvolutionQueue.push({from:prev,to:m.id,level:m.level});}return events;};
+const v30OriginalResult=resultScreen;
+resultScreen=function(title,description,win,canCatch){
+ v30OriginalResult(title,description,win,canCatch);
+ if(!v30EvolutionQueue.length)return;
+ const root=$('modal');if(!root){v30EvolutionQueue=[];return;}
+ const holder=document.createElement('div');holder.className='v30Evolution';
+ for(const e of v30EvolutionQueue.splice(0,5)){const row=document.createElement('div');row.innerHTML='✨ '+img(e.from)+' <strong>'+D[e.from].name+' → '+D[e.to].name+'</strong> '+img(e.to)+' <small>Nv.'+e.level+'</small>';holder.append(row);}
+ root.append(holder);
+};
+
+// Rivais e Team Rocket espalhados pelos 13 confrontos do último ginásio.
+const v30OriginalLaunch=launchTrainer;
+launchTrainer=function(){
+ if(save.gym>=8)return v30OriginalLaunch();
+ const st=save.stage;if(st===8||st===11){if(!requireTeam()){showItems();return;}
+  const g=save.gym,p=GYMS[g],rocket=st===11,ids=rocket?[V27_ROCKET[(g+5)%V27_ROCKET.length],V27_ROCKET[(g+9)%V27_ROCKET.length]]:[V27_RIVALS[g%V27_RIVALS.length],133];
+  const queue=ids.map((id,i)=>mon(id,Math.min(p.max-1,p.min+2+Math.floor(st*.65)+i)));
+  startBattle(queue,rocket?'🚀 MISSÃO ROCKET · CHEFE':'⚔️ RIVAL BLUE · REVANCHE',false);return;
+ }
+ return v30OriginalLaunch();
+};
+
+// Três objetivos permanentes por jornada (não dependem de servidor externo).
+const V30_MISSIONS=[{id:'victories',title:'Vença 12 treinadores',target:12,unit:'victory',coins:60},{id:'damage',title:'Cause 350 pontos de dano',target:350,unit:'damage',coins:85},{id:'capture',title:'Capture 3 Pokémon',target:3,unit:'capture',coins:70}];
+let v30MissionState={};try{v30MissionState=JSON.parse(localStorage.getItem(V30_MISSIONS_KEY)||'{}')||{};}catch{}
+function v30SaveMissions(){try{localStorage.setItem(V30_MISSIONS_KEY,JSON.stringify(v30MissionState));}catch{}}
+function v30AdvanceMission(unit,amount=1){for(const m of V30_MISSIONS){if(m.unit!==unit)continue;
+ const st=v30MissionState[m.id]||(v30MissionState[m.id]={n:0,claimed:false});if(st.claimed)continue;st.n=Math.min(m.target,(st.n||0)+amount);
+ if(st.n>=m.target){st.claimed=true;save.coins+=m.coins;persist();const l=$('battleLog');if(l)l.textContent='🎁 Missão concluída: '+m.title+' · +'+m.coins+' moedas!';}
+ }v30SaveMissions();}
+const v30OriginalFinish=finishBattle;
+finishBattle=function(win){if(!battle?.active)return;
+ const boss=battle.v30Boss,rocket=/ROCKET/.test(battle.label||''),rival=/RIVAL/.test(battle.label||''),wild=battle.wild;
+ const completed=win;
+ const result=v30OriginalFinish(win);
+ if(completed){if(!wild)v30AdvanceMission('victory',1);if(rocket||rival){save.coins+=rocket?18:12;persist();}}
+ return result;
+};
+const v30OldCaught=save.caught?save.caught.length:0;
+const v30OriginalPersist=persist;
+persist=function(){
+ // 3 backups circulares, verificação mínima antes de substituir o último backup.
+ try{if(save.starter&&save.team?.length){let a=[];try{a=JSON.parse(localStorage.getItem(V30_SAFE_SAVE)||'[]')||[];}catch{}
+  const ss={ts:Date.now(),gym:save.gym,stage:save.stage,team:save.team.length,state:JSON.parse(JSON.stringify(save))};
+  if(!a.length||a[0].gym!==ss.gym||a[0].stage!==ss.stage||ss.ts-a[0].ts>60000){a.unshift(ss);a=a.slice(0,3);localStorage.setItem(V30_SAFE_SAVE,JSON.stringify(a));}
+  if(save.caught?.length>v30LastCaught){v30AdvanceMission('capture',save.caught.length-v30LastCaught);v30LastCaught=save.caught.length;}
+ }}catch(e){console.warn('Backup V30 não disponível:',e)}
+ return v30OriginalPersist();
+};
+let v30LastCaught=v30OldCaught;
+function v30ShowMissions(){const node=document.createElement('div');node.className='v30Missions';node.innerHTML='<strong>🎯 Missões de treinador</strong>'+V30_MISSIONS.map(m=>{const s=v30MissionState[m.id]||{n:0,claimed:false};return '<div class="v30MissionRow"><span>'+m.title+'</span><b>'+(s.claimed?'✓ +'+m.coins+' 🪙':Math.floor(s.n||0)+'/'+m.target)+'</b></div>';}).join('');return node;}
+const v30OriginalRender=render;
+render=function(){v30OriginalRender();
+ if(battle?.active)return;
+ const bar=$('resources');if(bar&&!$('v30VersionTag')){const tag=document.createElement('span');tag.id='v30VersionTag';tag.className='v30VersionTag';tag.textContent='V30 · 2D';bar.appendChild(tag);}
+ const place=document.querySelector('#main .gymHero')||document.querySelector('#main .v29Endgame');
+ if(place&&!document.querySelector('.v30Missions'))place.insertAdjacentElement('afterend',v30ShowMissions());
+ const gear=$('v281SettingsButton');if(gear&&!gear.dataset.v30){gear.dataset.v30='1';const old=gear.onclick;gear.onclick=()=>{old?.();
+ const area=document.querySelector('.v281SettingsActions');if(!area||$('v30Recovery'))return;const b=document.createElement('button');b.className='btn ghost';b.id='v30Recovery';b.textContent='🛟 Recuperar salvamento seguro';area.append(b);
+ b.onclick=()=>{try{const snapshots=JSON.parse(localStorage.getItem(V30_SAFE_SAVE)||'[]');const item=snapshots.find(x=>x?.state?.team?.length&&x.state.gym>=0&&x.state.gym<=13);if(!item){alert('Nenhum salvamento seguro encontrado.');return;}
+ if(!confirm('Restaurar progresso de '+new Date(item.ts).toLocaleString('pt-BR')+'?'))return;
+ save={...defaultSave(),...item.state};save.team=save.team.filter(m=>D[m.id]&&m.level>=1).slice(0,6);save.box=(save.box||[]).filter(m=>D[m.id]).slice(0,100);if(!save.team.length)throw Error('invalido');persist();close();render();
+ }catch(e){alert('Backup indisponível ou inválido neste navegador.')}};};}
+};
+
+// IA ajusta a frequência e as esquivas progressivamente, sem escalar o HP artificialmente.
+const v30AIOriginal=BattleEngine.prototype.update;
+BattleEngine.prototype.update=function(dt,now){const old=v30AIOriginal.call(this,dt,now);if(!battle?.active||battle.wild)return old;
+ const g=save.gym,step=save.stage,difficulty=Math.min(1,g/10+(step/16));
+ if(sideState('enemy').paralyze&&this.enemyAttackCD<.8)this.enemyAttackCD=.8;
+ if(this.enemyAttackCD>1.65){this.enemyAttackCD=Math.max(1.25,this.enemyAttackCD-dt*.22*difficulty);}
+ if(difficulty>.5&&this.foeDodgeCD>2.6)this.foeDodgeCD=2.6;
+ return old;
+};
+
+// Câmera 2D e redução de falhas em FPS baixo; nenhum sprite aumenta de escala na luta.
+const v30CameraOld=v27Cinematic;
+v27Cinematic=function(ref){if(!ref?.canvas||!battle?.active)return;
+ const mobile=window.matchMedia?.('(max-width:650px)').matches,reduced=window.matchMedia?.('(prefers-reduced-motion:reduce)').matches;
+ if(reduced||ref.fps<26)return;
+ const x=mobile?.35:.65;
+ ref.canvas.animate?.([{transform:'translate(0,0)'},{transform:'translate('+x+'%,.12%)'},{transform:'translate(0,0)'}],{duration:320,easing:'ease-out'});
+};
+const v30ParticleOld=BattleEngine.prototype.particlesAt;
+BattleEngine.prototype.particlesAt=function(x,y,color,count=18,speed=120){
+ const d=this.fps>0&&this.fps<36?9:this.fps>0&&this.fps<48?15:27;
+ if((this.particles?.length||0)>120)return;
+ return v30ParticleOld.call(this,x,y,color,Math.min(count,d),speed);
+};
+window.PokemonTorreDiagnostics=()=>({version:V30_VERSION,active:!!battle?.active,gym:save.gym,stage:save.stage,monsters:save.team.length,wasm:!!v28Wasm,phaser:!!v27Scene,fps:engine?.fps??null,missions:v30MissionState,backup:!!localStorage.getItem(V30_SAFE_SAVE),bossPhase:battle?.v30Phase||null});
+/* POKEMON TORRE V30 END */
+
+/* Pokémon Torre V30.1 — reinício de campanha compatível com Android */
+(function(){
+ const keys=['pokeTorreKantoV7','pokeTorreKantoV8','pokeTorreKantoV29Backup','pokeTorreKantoV30Safety','pokeTorreKantoV30Missions'];
+ const css=document.createElement('style');
+ css.textContent='.v301ResetPanel{max-width:560px;margin:auto;padding:5px 2px 8px}.v301ResetPanel h2{margin:4px 0 13px;font-size:clamp(21px,5vw,28px)}.v301ResetPanel p{line-height:1.6;color:#cfdeed;font-size:14px}.v301Warning{border:1px solid #a97750;border-radius:13px;padding:13px 15px;background:#412c2888;color:#ffddbb;margin:12px 0 17px;font-size:13px;line-height:1.5}.v301ResetActions{display:flex;flex-wrap:wrap;gap:10px;margin-top:17px}.v301ResetActions button{flex:1 1 145px;min-height:44px}.v301ConfirmDelete{background:#903d4f!important;color:#fff!important;border:1px solid #c66d7a!important}.v301ResetError{color:#ffd2d7;font-size:13px;margin-top:9px}';
+ document.head.appendChild(css);
+ function showReset(){
+  if(battle?.active)return;
+  overlay('<div class="v301ResetPanel" role="dialog" aria-label="Confirmar reinício da campanha"><div class="overline">CONFIGURAÇÕES · NOVA JORNADA</div><h2>↻ Reiniciar campanha?</h2><p>Seu time, sua caixa, os ginásios, a Pokédex, moedas, missões e recompensas voltarão ao início.</p><div class="v301Warning"><b>Esta ação não pode ser desfeita.</b> Também remove os backups automáticos. Para guardar seu progresso, volte às opções e baixe um backup antes.</div><div class="v301ResetActions"><button class="btn ghost" id="v301CancelReset" type="button">Cancelar</button><button class="btn v301ConfirmDelete" id="v301ConfirmReset" type="button">Sim, começar de novo</button></div><div class="v301ResetError" id="v301ResetError" role="alert"></div></div>');
+  $('v301CancelReset').onclick=()=>{close();render()};
+  $('v301ConfirmReset').onclick=doReset;
+ }
+ function doReset(){
+  const btn=$('v301ConfirmReset');if(btn)btn.disabled=true;
+  const previous=save,clean=defaultSave();
+  try{
+   localStorage.setItem(SAVE_KEY,JSON.stringify(clean));
+   const check=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');
+   if(!check||check.starter!==null||!Array.isArray(check.team)||check.team.length)throw Error('Gravação do novo início não confirmada.');
+   for(const key of keys)localStorage.removeItem(key);
+   save=clean;
+   if(typeof v30MissionState!=='undefined')v30MissionState={};
+   if(typeof v30LastCaught!=='undefined')v30LastCaught=0;
+   stopTimers();battle=null;cooldowns=[0,0,0,0];
+   if($('modal'))$('modal').classList.remove('combatModal');
+   close();render();
+   const banner=document.createElement('div');banner.id='v301ResetSuccess';banner.className='notice';
+   banner.textContent='✅ Campanha reiniciada! Escolha seu Pokémon inicial.';
+   $('main')?.prepend(banner);
+  }catch(err){
+   save=previous;if(btn)btn.disabled=false;
+   const el=$('v301ResetError');if(el)el.textContent='Não foi possível salvar uma nova campanha. Libere armazenamento e tente novamente. '+String(err?.message||err);
+   console.error('Falha ao reiniciar campanha:',err);
+  }
+ }
+ document.addEventListener('click',e=>{
+  const target=e.target?.closest?.('#v281Restart, #newBtn');
+  if(!target||!target.isConnected)return;
+  e.preventDefault();e.stopImmediatePropagation();showReset();
+ },true);
+})();
+/* POKEMON TORRE V30.1 — shiny na caca, 10s teleguiado, animacao de desmaio e reacao dos lideres */
+(function () {
+  const V301_SHINY_MIN = 0.01, V301_SHINY_MAX = 0.03, V301_HOMING_COOLDOWN = 10000;
+  for (const move of Object.values(V30_MOVE_TRAITS)) {
+    if (move && move.kind === 'homing') move.cd = V301_HOMING_COOLDOWN;
+  }
+  if (!Array.isArray(save.shinyCaught)) save.shinyCaught = [];
+  const css = document.createElement('style');
+  css.id = 'v301FeatureCSS';
+  css.textContent = `
+    .v301ShinyFlag{display:inline-block;color:#ffdc70;font-size:10px;font-weight:850;line-height:1.4;margin-left:4px;text-shadow:0 1px 4px #0009}
+    .v301ShinyCard{border-color:#dfba5a!important;box-shadow:inset 0 0 0 1px #dfba5a33}
+    .v301ShinyCard .sprite{filter:hue-rotate(95deg) saturate(1.7) brightness(1.1)}
+    .v301ShinyCard .placeholder{display:none!important}
+    .v301FaintLabel{position:absolute;z-index:15;left:50%;top:37%;transform:translate(-50%,-50%);padding:6px 12px;border:1px solid #f0d3bb77;border-radius:10px;color:#f7ece4;font-size:11px;letter-spacing:.08em;background:#13202cd9;pointer-events:none;animation:v301FadeOut .7s ease-in forwards}
+    .v301LeaderQuote{background:#1c3345;color:#f9e4ad;border:1px solid #806947;padding:14px 16px;border-radius:13px;margin:12px auto;max-width:560px;text-align:center;font-size:14px;line-height:1.5}
+    @keyframes v301FadeOut{0%{opacity:0;transform:translate(-50%,-40%)}20%{opacity:1;transform:translate(-50%,-50%)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-80%)}}
+    @media(prefers-reduced-motion:reduce){.v301FaintLabel{animation:none}}
+  `;
+  document.head.appendChild(css);
+  const startPrevious = startBattle;
+  startBattle = function(enemies, label, wild) {
+    if (wild && enemies && enemies[0] && !enemies[0].shiny) {
+      const rate = V301_SHINY_MIN + Math.random() * (V301_SHINY_MAX - V301_SHINY_MIN);
+      enemies[0].shiny = Math.random() < rate;
+      enemies[0].shinyRoll = rate;
+    }
+    return startPrevious(enemies, label, wild);
+  };
+  const persistPrevious = persist;
+  persist = function() {
+    const list = new Set(Array.isArray(save.shinyCaught) ? save.shinyCaught : []);
+    for (const m of [...(save.team||[]), ...(save.box||[])]) if(m?.shiny && D[m.id]) list.add(m.id);
+    save.shinyCaught = [...list].filter(id=>Number.isInteger(id) && id>=1 && id<=151);
+    return persistPrevious();
+  };
+  const thumbPrevious=thumb;
+  thumb = function(m) {
+    const html=thumbPrevious(m);
+    if (!m?.shiny) return html;
+    return html.replace('class="moncard"', 'class="moncard v301ShinyCard"')
+      .replace('</strong>', '</strong><span class="v301ShinyFlag">✦ SHINY</span>');
+  };
+  const pokedexPrevious=showPokedex;
+  showPokedex=function(){
+    pokedexPrevious();
+    const shiny = new Set(save.shinyCaught||[]);
+    document.querySelectorAll('.dexGrid .dexCard').forEach((card,index)=>{
+      if(!shiny.has(index+1))return;
+      card.classList.add('v301ShinyCard');
+      const label=document.createElement('small');label.className='v301ShinyFlag';label.textContent='✦ SHINY CAPTURADO';card.appendChild(label);
+    });
+    const head=$('modal')?.querySelector('.sectionhead');
+    if(head){const label=document.createElement('span');label.className='pill';label.textContent='✨ '+shiny.size+' Shiny';head.appendChild(label);}
+  };
+  const teamPrevious=showTeam;
+  showTeam=function(){
+    teamPrevious();
+    const all=[...(save.team||[]),...(save.box||[])];
+    document.querySelectorAll('[data-team]').forEach(button=>{
+      const m=all[Number(button.dataset.team)];
+      if(!m?.shiny)return;
+      button.classList.add('v301ShinyCard');
+      const flag=document.createElement('span');flag.className='v301ShinyFlag';flag.textContent='✦ SHINY';button.appendChild(flag);
+    });
+  };
+  const battleRenderPrevious=renderBattle;
+  renderBattle=function(){
+    battleRenderPrevious();
+    if(!battle?.active)return;
+    if(battle.foe?.shiny){const n=$('enemyTitle');if(n&&!n.querySelector('.v301ShinyFlag'))n.insertAdjacentHTML('beforeend','<span class="v301ShinyFlag">✦ SHINY</span>');}
+    if(current()?.shiny){const n=$('allyTitle');if(n&&!n.querySelector('.v301ShinyFlag'))n.insertAdjacentHTML('beforeend','<span class="v301ShinyFlag">✦ SHINY</span>');}
+  };
+  const monDrawPrevious=BattleEngine.prototype.drawMon;
+  BattleEngine.prototype.drawMon=function(entity,id,isEnemy,now){
+    const monster=isEnemy?battle?.foe:(battle?.active?current():null);
+    const ctx=this.ctx,shiny=monster?.shiny && monster.id===id;
+    const faint=this.v301Faint && this.v301Faint.side === (isEnemy?'enemy':'ally') ? this.v301Faint : null;
+    if(!shiny&&!faint)return monDrawPrevious.call(this,entity,id,isEnemy,now);
+    ctx.save();
+    if(shiny){
+      // V35.43: cores shiny mais naturais sem apagar a animação.
+      ctx.filter=id===18?'sepia(.25) saturate(1.35) hue-rotate(-12deg) brightness(1.08)':
+        id===105?'sepia(.19) saturate(1.25) hue-rotate(-25deg) brightness(1.06)':
+        'hue-rotate(38deg) saturate(1.20) brightness(1.06)';
+    }
+    if(faint){const t=Math.min(1,Math.max(0,(performance.now()-faint.start)/faint.duration));ctx.globalAlpha=1-t;ctx.translate(0,t*t*30);}
+    try{return monDrawPrevious.call(this,entity,id,isEnemy,now);}
+    finally{ctx.restore();}
+  };
+  function faint(side, done) {
+    if(!battle?.active || !engine || battle.v301Fainting)return done();
+    const b=battle;
+    b.v301Fainting=true;
+    b.paused=true;
+    engine.v301Faint={side,start:performance.now(),duration:700};
+    const arena=$('arenaPro');
+    if(arena){const label=document.createElement('div');label.className='v301FaintLabel';label.textContent=(side==='enemy'?D[b.foe.id]?.name:D[current()?.id]?.name || 'Pokémon')+' desmaiou!';arena.appendChild(label);}
+    setTimeout(()=>{
+      if(battle!==b || !b.active)return;
+      if(engine)engine.v301Faint=null;
+      b.v301Fainting=false;
+      b.paused=false;
+      done();
+    },730);
+  }
+  const LEADER_LINES=[
+    'Brock: Você venceu com determinação. Essa Insígnia é merecida.',
+    'Misty: Uau, você superou minha equipe! Preciso treinar ainda mais.',
+    'Lt. Surge: Essa me pegou de surpresa! Você lutou muito bem, soldado.',
+    'Erika: Que batalha encantadora. Aceito minha derrota com respeito.',
+    'Koga: Sua estratégia atravessou minhas ilusões. Meus parabéns.',
+    'Sabrina: Não previ tamanho talento. Você conquistou essa vitória.',
+    'Blaine: Hahaha! Minhas chamas não foram suficientes desta vez.',
+    'Giovanni: Impressionante. Sua força está acima do que eu esperava.'
+  ];
+  const finishPrevious=finishBattle;
+  finishBattle=function(win){
+    if(!battle?.active)return;
+    const b=battle;
+    const leader=win && !b.wild && save.gym>=0 && save.gym<8 &&
+      save.stage===v29TrainerCount(save.gym) && /LÍDER/.test(b.label||'');
+    const leaderIndex=leader?save.gym:-1;
+    const complete=()=>{
+      if(!b.active)return;
+      finishPrevious(win);
+      if(leaderIndex>=0){const modal=$('modal');if(modal){const quote=document.createElement('div');quote.className='v301LeaderQuote';quote.setAttribute('aria-label','Reação do líder derrotado');quote.textContent='💬 '+LEADER_LINES[leaderIndex];const btn=$('nextStage');if(btn)btn.before(quote);else modal.appendChild(quote);}}
+    };
+    if(b.v301SkipFaint){b.v301SkipFaint=false;complete();return;}
+    if(win || current()?.hp<=0){faint(win?'enemy':'ally',complete);return;}
+    complete();
+  };
+  const nextPrevious=nextFoe;
+  nextFoe=function(){
+    if(!battle?.active || battle.v301Fainting)return;
+    const b=battle;
+    const last=b.enemies.length===0;
+    faint('enemy',()=>{
+      if(last)b.v301SkipFaint=true;
+      nextPrevious();
+    });
+  };
+  window.PokemonTorre301Diagnostics=()=>({
+    shinyCaught:[...(save.shinyCaught||[])],currentShiny:!!battle?.foe?.shiny,
+    homingCooldowns:Object.fromEntries(Object.entries(V30_MOVE_TRAITS).filter(([,m])=>m.kind==='homing').map(([id,m])=>[id,m.cd])),
+    isFainting:!!battle?.v301Fainting,resetAvailable:!!document.querySelector('#v281SettingsButton')
+  });
+})();
+/* POKEMON TORRE V30.1 — fim */
+
+/* POKEMON TORRE V31 - PACOTE UNICO 2D / 10 ATUALIZACOES
+   Conserva o motor, SAVE_KEY, V30.1, WASM e o funcionamento offline do HTML. */
+(function(){
+'use strict';
+const V31_VERSION='31.0';
+const V31_HELD={leftovers:{name:'Leftovers',price:145,icon:'🍎',description:'Recupera PV aos poucos'},quick:{name:'Quick Claw',price:125,icon:'⚡',description:'Movimenta-se mais rápido'},mystic:{name:'Mystic Water',price:125,icon:'💧',description:'+12% aos golpes de água'},charcoal:{name:'Charcoal',price:125,icon:'🔥',description:'+12% aos golpes de fogo'},focus:{name:'Focus Band',price:160,icon:'🛡️',description:'Chance de resistir a um golpe fatal'}};
+const V31_ACH=[{id:'first',name:'Primeira vitória',coins:30,check:s=>s.wins>=1},{id:'ten',name:'10 vitórias',coins:80,check:s=>s.wins>=10},{id:'gym',name:'Primeira insígnia',coins:90,check:s=>s.medals.length>=1},{id:'four',name:'Quatro insígnias',coins:180,check:s=>s.medals.length>=4},{id:'league',name:'Campeão de Kanto',coins:350,check:s=>s.gym>=8},{id:'shiny',name:'Primeiro Shiny capturado',coins:140,check:s=>(s.shinyCaught||[]).length>=1},{id:'dex',name:'Pokédex de Kanto completa',coins:500,check:s=>(s.caught||[]).filter(id=>id<=151).length>=151},{id:'noKO',name:'Vença um líder sem desmaios',coins:120,check:s=>(s.v31CleanGym||0)>=1}];
+const V31_SIG={
+  6:{name:'Lança-Chamas',type:'fire',kind:'beam',power:55,cost:40,cd:4800,icon:'🔥'},
+  9:{name:'Hidro Bomba',type:'water',kind:'beam',power:56,cost:42,cd:4900,icon:'🌊'},
+  25:{name:'Thunder',type:'electric',kind:'homing',power:45,cost:38,cd:10000,icon:'🌩️',condition:'paralyze'},
+  26:{name:'Thunder',type:'electric',kind:'homing',power:47,cost:39,cd:10000,icon:'🌩️',condition:'paralyze'},
+  34:{name:'Earthquake',type:'ground',kind:'area',power:52,cost:42,cd:5700,icon:'🌋'},
+  31:{name:'Earthquake',type:'ground',kind:'area',power:48,cost:40,cd:5600,icon:'🌋'},
+  65:{name:'Psíquico',type:'psychic',kind:'homing',power:46,cost:39,cd:10000,icon:'🔮'},
+  94:{name:'Bola Sombria',type:'ghost',kind:'homing',power:45,cost:40,cd:10000,icon:'👻'},
+  112:{name:'Earthquake',type:'ground',kind:'area',power:53,cost:43,cd:5750,icon:'🌋'},
+  143:{name:'Hyper Beam',type:'normal',kind:'beam',power:66,cost:50,cd:7800,icon:'☄️',recovery:1500},
+  130:{name:'Hidro Bomba',type:'water',kind:'area',power:51,cost:41,cd:5100,icon:'🌊'},
+  145:{name:'Thunder',type:'electric',kind:'homing',power:54,cost:45,cd:10000,icon:'⚡',condition:'paralyze'},
+  149:{name:'Hyper Beam',type:'normal',kind:'beam',power:64,cost:48,cd:7900,icon:'☄️',recovery:1600},
+  150:{name:'Psíquico',type:'psychic',kind:'homing',power:55,cost:44,cd:10000,icon:'🔮'},
+  121:{name:'Recover',type:'psychic',kind:'recover',power:0,cost:38,cd:9500,icon:'💚'},
+  64:{name:'Recover',type:'psychic',kind:'recover',power:0,cost:38,cd:9500,icon:'💚'},
+  132:{name:'Transformação',type:'normal',kind:'illusion',power:0,cost:28,cd:9500,icon:'✨'},
+  137:{name:'Recover',type:'normal',kind:'recover',power:0,cost:38,cd:9500,icon:'💚'}
+};
+const V31_SUPPORT=new Set([63,64,65,92,93,94,122,123,130,132]);
+function v31EnsureSave(){
+ if(!Array.isArray(save.v31Items))save.v31Items=[];
+ if(!save.v31Achievements||typeof save.v31Achievements!=='object')save.v31Achievements={};
+ if(!save.v31Difficulty||!['casual','normal','mestre'].includes(save.v31Difficulty))save.v31Difficulty='normal';
+ if(!Array.isArray(save.v31Presets))save.v31Presets=[];
+ for(const m of [...(save.team||[]),...(save.box||[])]){
+  if(m && !m.v31Uid)m.v31Uid='p'+Math.random().toString(36).slice(2,11)+Date.now().toString(36);
+ }
+}
+v31EnsureSave();
+const css=document.createElement('style');css.id='v31Style';css.textContent=`
+.v31Trainer{position:absolute;z-index:3;right:2%;top:34%;width:52px;display:grid;place-items:center;pointer-events:none;opacity:.75;filter:drop-shadow(0 2px 3px #0009)}
+.v31Trainer img{width:48px;height:68px;object-fit:contain;image-rendering:pixelated}
+.v31TrainerLabel{font-size:9px;color:#f4eccc;background:#0e1b2dbd;padding:2px 5px;border-radius:5px;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v31Status{display:inline-block;vertical-align:middle;background:#0b2e3ddb;color:#f8d6ab;border-radius:5px;padding:2px 5px;margin-left:5px;font-size:9px;font-weight:800}
+.v31Glow{position:absolute;inset:0;z-index:2;opacity:0;pointer-events:none;transition:opacity .12s;mix-blend-mode:screen;background:radial-gradient(circle at 55% 50%,var(--v31-color,#ffd78a) 0%,transparent 52%)}
+.v31Badge{display:inline-block;background:#0b2c33dd;border:1px solid #5696a0;color:#d2fff0;border-radius:8px;padding:3px 7px;font-size:10px;font-weight:800}
+.v31Pane{border:1px solid #48677b;background:#132939;border-radius:14px;padding:13px;margin:12px 0}
+.v31Pane h3{margin:2px 0 9px;font-size:15px;color:#e4f0fc}.v31Actions{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}.v31Actions .btn{flex:1 1 130px;min-height:40px}
+.v31Fav{position:absolute;right:10px;top:7px;z-index:5;padding:3px 7px;cursor:pointer;color:#ffe494;background:#203446;border:1px solid #48677b;border-radius:7px;font-size:12px}
+.v31Held{font-size:10px;color:#afe7e0;line-height:1.4}.v31Info{font-size:11px;color:#cbdce9;line-height:1.55}
+.v31Shiny{object-fit:contain;image-rendering:pixelated!important}.v31DuoChip{position:absolute;z-index:6;top:23%;right:11px;font-size:10px;color:#d6f5ff;background:#11283acb;border:1px solid #a0d8ed88;border-radius:9px;padding:4px 7px;pointer-events:none}
+.v31Message{position:fixed;z-index:9999;left:50%;bottom:8%;transform:translateX(-50%);max-width:min(480px,88vw);border:1px solid #76cab8;border-radius:12px;padding:9px 13px;color:#e9fff2;font-size:12px;font-weight:750;background:#142e36eb;box-shadow:0 6px 22px #0008;pointer-events:none;animation:v31Toast .3s ease-out}
+@keyframes v31Toast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(max-width:600px){.v31Trainer{right:1%;top:31%;width:35px}.v31Trainer img{width:32px;height:43px}.v31TrainerLabel{font-size:8px;max-width:40px}.v31DuoChip{font-size:9px;top:25%}.v31Pane{padding:10px}}
+@media(prefers-reduced-motion:reduce){.v31Message{animation:none}.v31Glow{transition:none}}
+`;
+document.head.appendChild(css);
+function v31Toast(message){document.querySelector('.v31Message')?.remove();const el=document.createElement('div');el.className='v31Message';el.textContent=message;document.body.append(el);setTimeout(()=>el.remove(),2300);}
+function v31ShinyImage(id){return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/'+id+'.png';}
+const shinyImgs={};function v31Img(id){if(!shinyImgs[id]){let a=new Image();a.crossOrigin='anonymous';a.decoding='async';a.src=v31ShinyImage(id);shinyImgs[id]=a;}return shinyImgs[id];}
+function v31ReplaceShiny(container,mon){if(!mon?.shiny||!container)return;
+ const pic=container.querySelector('.spritewrap img.sprite');if(!pic)return;
+ pic.dataset.v31Shiny='1';pic.classList.add('v31Shiny');pic.onerror=function(){this.onerror=null;this.style.filter='hue-rotate(95deg) saturate(1.8)';};pic.src=v31ShinyImage(mon.id);
+ const placeholder=container.querySelector('.spritewrap .placeholder');if(placeholder)placeholder.style.display='none';
+}
+// 1: movesets com recuperacao, ilusoes, Earthquake, Thunder e recuperacao do Hyper Beam.
+const skillPrev=skillSet;
+skillSet=function(m){const skills=skillPrev(m),custom=V31_SIG[m?.id];if(custom)skills[2]={...custom,cat:custom.power?'special':'status'};
+ if(m && V31_SUPPORT.has(m.id) && m.id!==132)skills[3]={name:'Double Team',type:'normal',cat:'status',kind:'illusion',power:0,cost:24,cd:8600,icon:'✨'};
+ // Golpes teleguiados nunca recarregam antes de dez segundos.
+ for(const s of skills)if(s?.kind==='homing')s.cd=Math.max(10000,s.cd||0);
+ return skills;};
+function v31StateSide(side){return typeof sideState==='function'?sideState(side):null;}
+const movePrev=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(i){const m=battle?.active?current():null,s=m?skillSet(m)[i]:null;
+ if(!s||!battle?.active||battle.paused)return movePrev.call(this,i);
+ const now=performance.now();if((cooldowns[i]||0)>now||battle.energy<s.cost||m.hp<=0)return;
+ if(this.v31RecoverUntil && now<this.v31RecoverUntil){log('Hyper Beam: recuperando energia!');return;}
+ if(s.kind==='recover'||s.kind==='illusion'){
+  battle.energy-=s.cost;cooldowns[i]=now+s.cd;
+  if(s.kind==='recover'){const gained=Math.max(1,Math.round(m.maxHp*.32));m.hp=Math.min(m.maxHp,m.hp+gained);this.particlesAt(this.player.x,this.player.y,'#88f3b6',19,90);log(D[m.id].name+' recuperou '+gained+' PV!');}
+  else{this.player.inv=Math.max(this.player.inv,1.05);this.player.dodgeCd=0;this.particlesAt(this.player.x,this.player.y,'#b6e8ff',17,110);log(D[m.id].name+' criou cópias ilusórias!');}
+  persist();return;
+ }
+ const res=movePrev.call(this,i);
+ if((cooldowns[i]||0)>now && s.name==='Hyper Beam')this.v31RecoverUntil=now+1500;
+ if((cooldowns[i]||0)>now){this.v31LastUsed=s;const count=this.v31Repeat?.id===m.id&&this.v31Repeat?.slot===i?(this.v31Repeat.count||0)+1:1;this.v31Repeat={id:m.id,slot:i,count,at:now};
+  if(s.kind==='area'||s.name==='Thunder'){this.v31Flash={color:TYPE_COLOR[s.type]||'#ffdacc',time:performance.now(),length:240};}
+ }
+ return res;
+};
+// 2: particulas/iluminacao temporarias, sem loop de renderizacao adicional.
+const drawPrev=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){drawPrev.call(this,now);if(!battle?.active)return;
+ const f=this.v31Flash;if(f&&now-f.time<f.length){const ctx=this.ctx;ctx.save();ctx.globalAlpha=Math.max(0,1-(now-f.time)/f.length)*.18;ctx.fillStyle=f.color;ctx.fillRect(0,0,this.w,this.h);ctx.restore();}
+};
+// 3: lider em posicao discreta atras do adversario; reaproveita imagens ja usadas no jogo.
+const renderBattlePrev=renderBattle;
+renderBattle=function(){renderBattlePrev();if(!battle?.active)return;
+ const area=$('arenaPro');if(!area)return;
+ if(!battle.wild&&save.gym<8){const label=GYMS[save.gym].leader;const box=document.createElement('div');box.className='v31Trainer';box.id='v31Trainer';
+ const source=typeof V27_TRAINER_GIFS!=='undefined'?V27_TRAINER_GIFS[label]:null;
+ if(source){const pic=document.createElement('img');pic.src=source;pic.alt='Treinador '+label;pic.onerror=()=>pic.remove();box.append(pic);}
+ const desc=document.createElement('div');desc.className='v31TrainerLabel';desc.textContent=label;box.append(desc);area.append(box);
+ }
+ const glow=document.createElement('div');glow.className='v31Glow';glow.id='v31Glow';area.append(glow);
+ const m=current();if(m?.shiny){const label=$('allyTitle');if(label&&!label.querySelector('.v31Status'))label.insertAdjacentHTML('beforeend','<span class="v31Status">✨ Shiny</span>');}
+};
+// 4: sprites Shiny com paleta por especie. Fallback generico apenas sem sprite disponivel.
+const monDrawPrev=BattleEngine.prototype.drawMon;
+BattleEngine.prototype.drawMon=function(entity,id,isEnemy,now){
+ // V35.43: não substituir Idle/Walk/Attack/Hurt por uma imagem shiny estática.
+ // A paleta é aplicada nas mesmas animações do Pokémon normal, conservando
+ // caminhada, ataque, dano e desmaio em todas as direções.
+ return monDrawPrev.call(this,entity,id,isEnemy,now);
+};
+// 5: encontros de dupla assistidos. Os Pokemon secundários têm PV individuais e atacam em paralelo.
+const startPrev=startBattle;
+startBattle=function(enemies,label,wild){startPrev(enemies,label,wild);if(!battle?.active)return;
+ const duo=!wild&&/ROCKET|RIVAL/.test(label||'') && save.team.filter(m=>m.hp>0).length>=2 && battle.enemies?.length>=1;
+ if(duo){const idx=save.team.findIndex((m,i)=>i!==battle.pIndex&&m.hp>0);const enemy=battle.enemies.shift();battle.v31Duo={ally:save.team[idx],enemy,clockAlly:1.6,clockEnemy:2.7};
+  engine?.loadArt(enemy.id);engine?.loadArt(battle.v31Duo.ally.id);const div=document.createElement('div');div.className='v31DuoChip';div.id='v31DuoChip';div.textContent='⚔️ DUPLA · '+D[battle.v31Duo.ally.id].name+' × '+D[enemy.id].name; $('arenaPro')?.append(div);
+ }
+ battle.v31NoKo=true;battle.v31EnemyType=foe()?.id;
+};
+const updatePrev=BattleEngine.prototype.update;
+BattleEngine.prototype.update=function(dt,now){const beforeX=this.player.x,beforeY=this.player.y;const result=updatePrev.call(this,dt,now);if(!battle?.active||battle.paused)return result;
+ if(current()?.held==='quick'){this.player.x+=(this.player.x-beforeX)*.14;this.player.y+=(this.player.y-beforeY)*.14;this.collideRocks(this.player);}
+ if(this.v31RecoverUntil && performance.now()<this.v31RecoverUntil){this.enemyAttackCD=Math.max(this.enemyAttackCD,.25);}
+ const d=battle.v31Duo;
+ if(d){d.clockAlly-=dt;d.clockEnemy-=dt;
+  if(d.ally.hp>0&&d.clockAlly<=0){d.clockAlly=2.4;let t=d.enemy?.hp>0?d.enemy:foe();if(t&&t.hp>0){const hit=damage(d.ally,t,D[d.ally.id].type,25).hit;t.hp=Math.max(0,t.hp-hit);this.damageLabels.push({x:this.enemy.x+this.h*.10,y:this.enemy.y-this.h*.16,text:'APOIO -'+hit,life:.8,color:'#b3fff1'});this.particlesAt(this.enemy.x+this.h*.1,this.enemy.y,D[d.ally.id].type==='fire'?'#ffb58e':'#86dfff',10,80);}}
+  if(d.enemy?.hp>0&&d.clockEnemy<=0){d.clockEnemy=3.0;const target=d.ally.hp>0?d.ally:current();const hit=damage(d.enemy,target,D[d.enemy.id].type,19).hit;target.hp=Math.max(0,target.hp-hit);if(target===d.ally&&target.hp<=0)battle.v31NoKo=false;this.damageLabels.push({x:this.player.x-this.h*.12,y:this.player.y-this.h*.18,text:'DUPLA -'+hit,life:.8,color:'#ffd5b9'});}
+ }
+ if(battle.v31Boss&&this.v31Repeat?.count>=3){this.foeDodgeCD=Math.min(this.foeDodgeCD,.9);this.enemyAttackCD=Math.min(this.enemyAttackCD,1.95);}
+ // V35.43: não redefina o tempo de ataque a cada quadro. Isso impedia inimigos no Casual de atacar.
+ const tier=save.v31Difficulty||'normal';
+ if(tier==='mestre'&&this.enemyAttackCD>2.05)this.enemyAttackCD=2.05;
+ if(this.v31LeftoverTimer===undefined)this.v31LeftoverTimer=0;
+ this.v31LeftoverTimer+=dt;if(this.v31LeftoverTimer>=4){this.v31LeftoverTimer=0;for(const p of save.team){if(p.hp>0&&p.held==='leftovers')p.hp=Math.min(p.maxHp,p.hp+Math.max(1,Math.round(p.maxHp*.035)));}}
+ return result;
+};
+const drawDuoPrev=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){drawDuoPrev.call(this,now);const d=battle?.v31Duo;if(!battle?.active||!d)return;
+ const ctx=this.ctx,positions=[{m:d.ally,x:this.player.x-this.h*.19,y:this.player.y+this.h*.12},{m:d.enemy,x:this.enemy.x+this.h*.19,y:this.enemy.y+this.h*.12}];
+ for(const pos of positions){const {m,x,y}=pos;if(!m||m.hp<=0)continue;const entry=this.assets?.get(m.id);const pic=m.shiny?v31Img(m.id):entry?.customStatic||entry?.art;ctx.save();ctx.globalAlpha=.85;
+  if(pic?.complete&&pic.naturalWidth){const width=this.h*.087;ctx.imageSmoothingEnabled=false;ctx.drawImage(pic,x-width/2,y-width*.65,width,width);}
+  else{ctx.font='12px sans-serif';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.fillText(D[m.id].name,x,y);}
+  ctx.fillStyle='#12222d';ctx.fillRect(x-19,y+12,38,4);ctx.fillStyle='#83ddbc';ctx.fillRect(x-19,y+12,38*Math.max(0,m.hp/m.maxHp),4);ctx.restore();
+ }
+};
+const nextPrev=nextFoe;
+nextFoe=function(){const duo=battle?.v31Duo;
+ // Se o parceiro rival sobreviveu, entra no lugar do Pokémon principal derrotado.
+ if(duo && battle?.enemies?.length===0 && duo.enemy?.hp>0){battle.enemies.push(duo.enemy);duo.enemy=null;}
+ return nextPrev();
+};
+// 6: equipe/caixa: favoritos, ordenacao da caixa e predefinicoes de equipes.
+function v31InventoryPanel(){return `<div class="v31Pane"><h3>🎒 Organizar equipe e caixa</h3><p class="v31Info">Marque favoritos ⭐. Organize somente a caixa; a ordem de batalha da equipe não muda.</p><div class="v31Actions"><button class="btn ghost" id="v31SortLevel">Nível ↓</button><button class="btn ghost" id="v31SortName">Nome A–Z</button><button class="btn ghost" id="v31SavePreset">Salvar equipe</button><button class="btn ghost" id="v31LoadPreset">Carregar equipe</button></div><div class="v31Info">Itens equipáveis: ${save.v31Items.length} no inventário. Selecione uma estrela ou Pokémon para equipar.</div></div>`;}
+const showTeamPrev=showTeam;
+showTeam=function(){v31EnsureSave();showTeamPrev();const root=$('modal');if(!root)return;
+ root.insertAdjacentHTML('beforeend',v31InventoryPanel());
+ document.querySelectorAll('[data-team]').forEach(el=>{const index=+el.dataset.team,m=[...save.team,...save.box][index];if(!m)return;el.style.position='relative';const b=document.createElement('button');b.type='button';b.className='v31Fav';b.textContent=m.fav?'★':'☆';b.setAttribute('aria-label','Favorito e item para '+D[m.id].name);b.onclick=e=>{e.stopPropagation();showV31MonOptions(m);};el.append(b);v31ReplaceShiny(el,m);
+  if(m.held){const held=document.createElement('small');held.className='v31Held';held.textContent='🎒 '+V31_HELD[m.held]?.name;el.append(held);}
+ });
+ $('v31SortLevel').onclick=()=>{save.box.sort((a,b)=>b.level-a.level);persist();showTeam();};
+ $('v31SortName').onclick=()=>{save.box.sort((a,b)=>D[a.id].name.localeCompare(D[b.id].name,'pt'));persist();showTeam();};
+ $('v31SavePreset').onclick=()=>{save.v31Presets=[save.team.map(m=>m.v31Uid)];persist();v31Toast('Equipe favorita salva!');};
+ $('v31LoadPreset').onclick=()=>{const list=save.v31Presets[0]||[];if(!list.length)return v31Toast('Salve primeiro uma equipe.');const all=[...save.team,...save.box];const selected=list.map(uid=>all.find(m=>m.v31Uid===uid)).filter(Boolean);if(!selected.length)return v31Toast('Equipe salva não encontrada.');const wanted=new Set(selected);save.team=selected.slice(0,6);save.box=all.filter(m=>!wanted.has(m)).concat(selected.slice(6));persist();showTeam();};
+};
+function showV31MonOptions(m){const choices=Object.entries(V31_HELD).map(([key,item])=>`<option value="${key}" ${m.held===key?'selected':''} ${!save.v31Items.includes(key)&&m.held!==key?'disabled':''}>${item.icon} ${item.name}${!save.v31Items.includes(key)&&m.held!==key?' · comprar na loja':''}</option>`).join('');
+ overlay(`<div class="sectionhead"><div><div class="overline">GERENCIAR POKÉMON</div><h2>${D[m.id].name} · Nv.${m.level}</h2></div></div><div class="v31Pane"><p class="v31Info">${img(m.id)} <br>Item atual: ${V31_HELD[m.held]?.name||'Nenhum'}</p><div class="v31Actions"><button class="btn ghost" id="v31ToggleFav">${m.fav?'★ Desmarcar favorito':'☆ Marcar favorito'}</button></div><label class="v31Info" for="v31HeldSelect">Equipar item</label><select id="v31HeldSelect"><option value="">Nenhum</option>${choices}</select><div class="v31Actions"><button class="btn" id="v31Equip">Salvar</button><button class="btn ghost" id="v31BackTeam">Voltar</button></div></div>`);
+ const item=$('v31HeldSelect');item.value=m.held||'';$('v31ToggleFav').onclick=()=>{m.fav=!m.fav;persist();showV31MonOptions(m);};
+ $('v31Equip').onclick=()=>{const chosen=item.value;if(chosen&&!save.v31Items.includes(chosen)&&m.held!==chosen)return v31Toast('Compre o item na PokéMart.');if(m.held&&m.held!==chosen)save.v31Items.push(m.held);if(chosen&&chosen!==m.held)save.v31Items.splice(save.v31Items.indexOf(chosen),1);m.held=chosen||null;persist();showTeam();};
+ $('v31BackTeam').onclick=showTeam;
+}
+// 7: itens equipaveis. Multiplicador aplicado apenas ao Pokemon segurando item.
+for(const [id,p] of Object.entries(V31_HELD))if(!KANTO_SHOP.some(s=>s.id===id))KANTO_SHOP.push({id,name:p.name,icon:p.icon,price:p.price,detail:p.description});
+const shopPrev=showShop;
+showShop=function(){shopPrev();document.querySelectorAll('[data-buy]').forEach(btn=>{const id=btn.dataset.buy;if(!V31_HELD[id])return;btn.onclick=()=>{const item=V31_HELD[id];if(save.coins<item.price)return;save.coins-=item.price;save.v31Items.push(id);persist();render();showShop();v31Toast(item.name+' comprado! Equipe pelo menu 🎒.');};});};
+const damagePrev=damage;
+damage=function(att,def,type,power){const r=damagePrev(att,def,type,power);if(!att||!def)return r;
+ if((att.held==='mystic'&&type==='water')||(att.held==='charcoal'&&type==='fire'))r.hit=Math.round(r.hit*1.12);
+ if(def.held==='focus'&&def.hp<=r.hit&&def.hp>1&&Math.random()<.1)r.hit=Math.max(0,def.hp-1);
+ return r;
+};
+// 8: IA adaptativa e modalidades de dificuldade; aplica os ajustes depois do movimento base.
+const moveStatPrev=BattleEngine.prototype.hitTarget;
+BattleEngine.prototype.hitTarget=function(side,type,power){const ally=side==='player'?current():null;const before=ally?.hp??0;const r=moveStatPrev.call(this,side,type,power);
+ if(side==='player'&&ally?.hp<=0&&before>0&&battle)battle.v31NoKo=false;
+ if(side==='enemy'&&type==='electric'&&this.v31LastUsed?.condition==='paralyze'&&Math.random()<.25){const st=v31StateSide('enemy');if(st)st.paralyze=1;this.damageLabels.push({x:this.enemy.x,y:this.enemy.y-55,text:'PARALISADO',life:1,color:'#ffe38c'});}
+ return r;
+};
+const framePrev=BattleEngine.prototype.frame;
+BattleEngine.prototype.frame=function(now){if(!this.running)return;
+ try{return framePrev.call(this,now);}catch(error){console.error('Pokémon Torre V31: falha isolada no desenho/combate',error);this.v31LastError=String(error);if(battle?.active){battle.paused=true;log('A batalha foi pausada por segurança. Reabra o jogo para recuperar sua equipe.');}this.running=false;}
+};
+const particlePrev=BattleEngine.prototype.particlesAt;
+BattleEngine.prototype.particlesAt=function(x,y,color,count=18,speed=120){if((this.particles?.length||0)>95)return;return particlePrev.call(this,x,y,color,Math.min(count,this.fps>0&&this.fps<30?7:22),speed);};
+// 9: conquistas e recompensas pagas uma vez. Sem servidor e sem dias ficticios.
+const persistPrev=persist;let v31Checking=false;
+persist=function(){if(v31Checking)return persistPrev();v31Checking=true;try{v31EnsureSave();let unlocked=[];
+ for(const a of V31_ACH){if(!save.v31Achievements[a.id]&&a.check(save)){save.v31Achievements[a.id]=Date.now();save.coins+=a.coins;unlocked.push(a.name+' +'+a.coins+' 🪙');}}
+ const r=persistPrev();if(unlocked.length)v31Toast('🏆 '+unlocked.join(' · '));return r;
+ }finally{v31Checking=false;}
+};
+const finishPrev=finishBattle;
+finishBattle=function(win){if(battle?.active&&win&&!battle.wild&&save.gym<8&&save.stage===v29TrainerCount(save.gym)&&battle.v31NoKo)save.v31CleanGym=(save.v31CleanGym||0)+1;
+ return finishPrev(win);
+};
+const dexPrev=showPokedex;
+showPokedex=function(){dexPrev();document.querySelectorAll('.dexCard').forEach((node,i)=>{const id=i+1;if((save.shinyCaught||[]).includes(id)){v31ReplaceShiny(node,{id,shiny:true});node.classList.add('v301ShinyCard');}});};
+// 10: configuracoes e medalhas no menu. Nao muda a campanha salvo por clique explicito.
+const renderPrev=render;
+render=function(){v31EnsureSave();renderPrev();if(battle?.active)return;
+ const bar=$('resources');if(bar){const tag=$('v30VersionTag');if(tag)tag.textContent='V35.11 · SPRITES DS';}
+ const area=document.querySelector('#main .v30Missions')||document.querySelector('#main .gymHero')||document.querySelector('#main .v29Endgame');
+ if(area&&!$('v31Achievements')){const panel=document.createElement('div');panel.className='v31Pane';panel.id='v31Achievements';panel.innerHTML='<h3>🏆 Conquistas</h3><div class="v31Info">'+V31_ACH.map(a=>'<div>'+((save.v31Achievements||{})[a.id]?'✅':'▫️')+' '+a.name+' · +'+a.coins+' 🪙</div>').join('')+'</div>';area.insertAdjacentElement('afterend',panel);}
+ const gear=$('v281SettingsButton');if(gear&&!gear.dataset.v31){gear.dataset.v31='1';const old=gear.onclick;gear.onclick=()=>{old?.();const box=document.querySelector('.v281SettingsActions');if(!box||$('v31Difficulty'))return;
+ const row=document.createElement('div');row.className='v31Pane';row.innerHTML='<h3>⚔️ Dificuldade</h3><p class="v31Info">Altere a IA dos próximos encontros; não reinicia o progresso.</p><select id="v31Difficulty"><option value="casual">Casual</option><option value="normal">Normal</option><option value="mestre">Mestre</option></select>';
+ box.insertAdjacentElement('afterend',row);const select=$('v31Difficulty');select.value=save.v31Difficulty;select.onchange=()=>{save.v31Difficulty=select.value;persist();v31Toast('Dificuldade: '+select.options[select.selectedIndex].text);};
+ };}
+};
+window.PokemonTorreV31Diagnostics=()=>({version:V31_VERSION,gym:save.gym,stage:save.stage,shiny:(save.shinyCaught||[]).length,items:save.v31Items.length,difficulty:save.v31Difficulty,achievements:Object.keys(save.v31Achievements||{}),duo:!!battle?.v31Duo,errors:engine?.v31LastError||null,moves:Object.keys(V31_SIG).length,source:'local 2D'});
+})();
+/* FIM V31 */
+/* Pokémon Torre V32 · patch 2D: Liga, golpes equipáveis, TMs, loja, Torre, clima, captura, temperamentos, áudio e testes */
+(function(){
+'use strict';
+const V32_VERSION='32.0';
+const V32_NATURES=[
+ {id:'audaz',name:'Audaz',desc:'+4% de dano',atk:1.04,def:1},
+ {id:'cauteloso',name:'Cauteloso',desc:'+4% de resistência',atk:1,def:.96},
+ {id:'veloz',name:'Veloz',desc:'Movimento veloz',atk:1,def:1},
+ {id:'equilibrado',name:'Equilibrado',desc:'Sem bônus ou penalidade',atk:1,def:1},
+ {id:'calmo',name:'Calmo',desc:'+3% de resistência',atk:1,def:.97}
+];
+const V32_TM={
+ electric:{id:'tm-electric',name:'TM Raio',type:'electric',price:145,power:44,cost:32,cd:3300,kind:'bolt',icon:'⚡',level:1},
+ water:{id:'tm-water',name:'TM Pulso d’Água',type:'water',price:140,power:43,cost:30,cd:3400,kind:'bolt',icon:'💧',level:1},
+ fire:{id:'tm-fire',name:'TM Explosão de Fogo',type:'fire',price:150,power:49,cost:37,cd:4800,kind:'beam',icon:'🔥',level:1},
+ grass:{id:'tm-grass',name:'TM Bomba de Sementes',type:'grass',price:140,power:45,cost:31,cd:3700,kind:'bolt',icon:'🍃',level:1},
+ psychic:{id:'tm-psychic',name:'TM Confusion',type:'psychic',price:150,power:41,cost:28,cd:3450,kind:'bolt',icon:'🔮',level:1},
+ ground:{id:'tm-ground',name:'TM Terremoto',type:'ground',price:175,power:51,cost:43,cd:5800,kind:'area',icon:'🪨',level:1},
+ normal:{id:'tm-normal',name:'TM Slam',type:'normal',price:90,power:32,cost:0,cd:1550,kind:'dash',icon:'💥',level:1},
+ poison:{id:'tm-poison',name:'TM Ácido',type:'poison',price:130,power:40,cost:29,cd:3150,kind:'bolt',icon:'☣️',level:1},
+ ice:{id:'tm-ice',name:'TM Raio de Gelo',type:'ice',price:160,power:48,cost:38,cd:4400,kind:'beam',icon:'❄️',level:1},
+ ghost:{id:'tm-ghost',name:'TM Bola Sombria',type:'ghost',price:150,power:45,cost:37,cd:4200,kind:'bolt',icon:'👻',level:1}
+};
+const V32_ADD_MOVES={
+ fire:{name:'Rajada Flamejante',type:'fire',kind:'bolt',power:34,cost:22,cd:2350,icon:'🔥',level:12},
+ water:{name:'Onda de Bolhas',type:'water',kind:'bolt',power:33,cost:22,cd:2250,icon:'🫧',level:12},
+ electric:{name:'Descarga Elétrica',type:'electric',kind:'area',power:39,cost:32,cd:4150,icon:'⚡',level:18},
+ grass:{name:'Folhas Cortantes',type:'grass',kind:'bolt',power:36,cost:22,cd:2300,icon:'🍃',level:12},
+ psychic:{name:'Onda Mental',type:'psychic',kind:'bolt',power:36,cost:24,cd:2550,icon:'🔮',level:15},
+ ground:{name:'Abalo Terrestre',type:'ground',kind:'area',power:40,cost:32,cd:4450,icon:'🪨',level:17},
+ poison:{name:'Névoa Tóxica',type:'poison',kind:'bolt',power:36,cost:22,cd:2550,icon:'☣️',level:14},
+ ice:{name:'Estilhaços de Gelo',type:'ice',kind:'bolt',power:37,cost:24,cd:2500,icon:'❄️',level:14},
+ ghost:{name:'Sombra Viva',type:'ghost',kind:'bolt',power:37,cost:24,cd:2700,icon:'👻',level:14},
+ rock:{name:'Pedra Afiada',type:'rock',kind:'bolt',power:38,cost:24,cd:2600,icon:'🪨',level:14},
+ fighting:{name:'Golpe Concentrado',type:'fighting',kind:'dash',power:41,cost:25,cd:3100,icon:'🥊',level:14},
+ flying:{name:'Vento Cortante',type:'flying',kind:'bolt',power:35,cost:22,cd:2450,icon:'🪶',level:14},
+ bug:{name:'Agulhas Velozes',type:'bug',kind:'bolt',power:35,cost:22,cd:2450,icon:'🐛',level:14},
+ dragon:{name:'Sopro de Dragão',type:'dragon',kind:'beam',power:43,cost:31,cd:4300,icon:'🐉',level:20},
+ steel:{name:'Lâmina de Metal',type:'steel',kind:'dash',power:40,cost:24,cd:3150,icon:'⚙️',level:16},
+ dark:{name:'Pulso Sombrio',type:'dark',kind:'bolt',power:41,cost:27,cd:2950,icon:'🌘',level:16},
+ normal:{name:'Impacto Poderoso',type:'normal',kind:'dash',power:29,cost:0,cd:1150,icon:'💥',level:12}
+};
+const V32_WEATHERS={
+ clear:{name:'Céu limpo',icon:'☀️',bonus:{},penalty:{}},
+ rain:{name:'Chuva',icon:'🌧️',bonus:{water:1.2},penalty:{fire:.82}},
+ sun:{name:'Sol forte',icon:'🌞',bonus:{fire:1.2},penalty:{water:.82}},
+ sand:{name:'Tempestade de areia',icon:'🌪️',bonus:{rock:1.12,ground:1.12},penalty:{}},
+ storm:{name:'Tempestade elétrica',icon:'⛈️',bonus:{electric:1.12},penalty:{}},
+ fog:{name:'Névoa',icon:'🌫️',bonus:{ghost:1.10,poison:1.10},penalty:{}},
+ snow:{name:'Neve',icon:'❄️',bonus:{ice:1.12},penalty:{}},
+ hail:{name:'Granizo',icon:'🌨️',bonus:{ice:1.12},penalty:{}},
+ volcano:{name:'Calor vulcânico',icon:'🌋',bonus:{fire:1.20},penalty:{}}
+};
+const V32_SHOP_EXTRA=[{id:'ball',name:'Pokébola',price:12},{id:'superball',name:'Super Ball',price:32},{id:'ultraball',name:'Ultra Ball',price:65}];
+const v32MonBase=mon;
+mon=function(id,level){const m=v32MonBase(id,level);m.v32Nature=V32_NATURES[Math.floor(Math.random()*V32_NATURES.length)].id;return m;};
+function v32Ensure(){
+ if(!save.v32||typeof save.v32!=='object') save.v32={};
+ const c=save.v32;
+ if(!Array.isArray(c.tms))c.tms=[];
+ if(!c.tower||typeof c.tower!=='object')c.tower={floor:1,best:0,wins:0};
+ c.tower.floor=Math.max(1,Math.min(999,Math.floor(Number(c.tower.floor)||1)));
+ c.tower.best=Math.max(0,Math.min(999,Math.floor(Number(c.tower.best)||0)));
+ if(!c.league||typeof c.league!=='object')c.league={stage:0,wins:0,championships:0};
+ if(!Number.isFinite(c.volume))c.volume=35;
+ c.volume=Math.max(0,Math.min(100,c.volume));
+ for(const m of [...(save.team||[]),...(save.box||[])]){
+  if(!m||!D[m.id])continue;
+  if(!V32_NATURES.some(n=>n.id===m.v32Nature))m.v32Nature=V32_NATURES[(m.id+m.level)%V32_NATURES.length].id;
+  if(!Array.isArray(m.v32Slots)||m.v32Slots.length!==4)m.v32Slots=null;
+ }
+ return c;
+}
+v32Ensure();
+const v32Style=document.createElement('style');v32Style.id='v32Style';v32Style.textContent=`
+.v32Banner{margin:9px 0 12px;border:1px solid #355968;border-radius:12px;background:#132d3ddd;padding:10px 12px;font-size:12px;line-height:1.5;color:#cbe7ed}
+.v32Actions{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0 14px}.v32Actions .btn{font-size:11px;padding:9px 10px}
+.v32SwapBtn{font-size:11px;border:1px solid #417b87;border-radius:10px;padding:7px 10px;margin:4px 0 9px 9px;display:inline-flex;gap:6px;align-items:center;background:#163447;color:#dcfcfc;cursor:pointer}
+.v32MoveRow{border:1px solid #345568;background:#172d40;border-radius:11px;padding:9px 11px;margin:7px 0;display:flex;justify-content:space-between;align-items:center;gap:9px;color:#def6ff;width:100%;text-align:left}
+.v32MoveRow.selected{border-color:#88e3c8;background:#1d443f}.v32MoveRow.locked{opacity:.5;cursor:not-allowed}
+.v32MoveRow b{display:block;font-size:13px}.v32MoveRow small{display:block;color:#adc8d5;font-size:10px;padding-top:3px}.v32MoveRow .pillSmall{flex-shrink:0}
+.v32Grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v32Box{border:1px solid #355669;border-radius:12px;padding:10px;background:#11283c}
+.v32Weather{position:absolute;top:4px;left:50%;transform:translateX(-50%);z-index:8;background:#172a39df;color:#edf8fd;padding:5px 10px;font-size:10px;border-radius:11px;border:1px solid #53788a;pointer-events:none}
+.v32TowerCard{padding:17px 12px;border-radius:14px;border:1px solid #578e93;background:linear-gradient(145deg,#19384a,#17243a);max-width:580px;margin:0 auto 14px}
+.v32TowerCard h2{font-size:clamp(22px,4vw,30px);margin:8px 0 12px}
+.v32SoundControl{padding:10px;background:#182e3d;border-radius:11px;border:1px solid #486778;margin:12px 0;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.v32SoundControl input{width:140px;max-width:45vw;accent-color:#65b8ae}
+.v32Info{font-size:11px;color:#b7d6e6;line-height:1.55}
+@media(max-width:510px){.v32Grid{grid-template-columns:1fr}.v32SwapBtn{margin-left:0}.v32Actions .btn{flex:1 1 125px}}
+`;document.head.appendChild(v32Style);
+const v32MoveKey=m=>(m.name||'')+'|'+(m.type||'normal')+'|'+(m.kind||'bolt');
+const v32BaseSkills=skillSet;
+function v32Catalogue(monster){
+ if(!monster||!D[monster.id])return [];
+ const p=D[monster.id],base=v32BaseSkills(monster),known=new Map();
+ function add(move,level=1,tm=false){if(!move||!move.name)return;const item={...move,cat:move.cat||(move.power?'special':'status')};if(item.kind==='homing')item.cd=Math.max(10000,item.cd||0);
+  const key=v32MoveKey(item);if(!known.has(key))known.set(key,{key,move:item,level,tm,available:!tm?monster.level>=level:save.v32.tms.includes(item.type)});
+ }
+ for(const x of base)add(x);
+ const types=[...new Set([p.type,p.type2].filter(Boolean))];
+ for(const t of types){const e=V32_ADD_MOVES[t];if(e)add(e,e.level);}
+ if(p.type!=='normal'&&p.type2!=='normal')add(V32_ADD_MOVES.normal,Math.max(10,V32_ADD_MOVES.normal.level));
+ for(const [type,m] of Object.entries(V32_TM)){
+  if(type==='normal'||types.includes(type))add({...m,cat:'special',name:m.name.replace(/^TM /,''),type},1,true);
+ }
+ return [...known.values()];
+}
+function v32DefaultSlots(m){const b=v32BaseSkills(m),pool=v32Catalogue(m);return b.map(move=>v32MoveKey(move)).map((key,i)=>pool.some(x=>x.key===key)?key:pool[i]?.key).slice(0,4);}
+skillSet=function(m){
+ const basic=v32BaseSkills(m);if(!m||!Array.isArray(m.v32Slots)||m.v32Slots.length!==4)return basic;
+ const pool=v32Catalogue(m);const base=v32DefaultSlots(m);
+ return m.v32Slots.map((key,i)=>{
+  const match=pool.find(x=>x.key===key&&x.available);
+  return match?{...match.move}:{...basic[i]};
+ });
+};
+function v32MoveScreen(m){
+ if(battle?.active)return;
+ v32Ensure();const all=[...save.team,...save.box];if(!all.includes(m))return;
+ const cat=v32Catalogue(m),selected=Array.isArray(m.v32Slots)?m.v32Slots:v32DefaultSlots(m);let slot=0;
+ function paint(){
+  const rows=cat.map(x=>{
+    const selectedThis=selected[slot]===x.key;let unlock=x.tm?'TM da loja':`Nv. ${x.level}`;
+    const locked=!x.available;
+    return `<button type="button" class="v32MoveRow ${locked?'locked':''} ${selectedThis?'selected':''}" data-v32-learn="${cat.indexOf(x)}" ${locked?'disabled':''}><span><b>${x.move.icon||'✨'} ${x.move.name}</b><small>${TYPE_NAME[x.move.type]||x.move.type} · ${x.move.power||0} força · ${x.move.cost||0} energia · ${(x.move.cd/1000).toFixed(1)}s ${locked?'· Desbloqueio: '+unlock:''}</small></span><span class="pillSmall">${selectedThis?'EQUIPADO':locked?'BLOQUEADO':'APRENDER'}</span></button>`;
+  }).join('');
+  overlay(`<div class="sectionhead"><div><div class="overline">GERENCIAR GOLPES · V32</div><h2>🧠 ${D[m.id].name} · Nv. ${m.level}</h2></div><button class="btn tiny ghost" id="v32ReturnTeam">✕</button></div><p class="desc">Selecione uma das quatro posições e depois escolha um golpe disponível. A troca é permanente até você alterar novamente, e não custa moedas.</p><div class="v32Banner">${v32Nature(m).name}: ${v32Nature(m).desc}. Novos golpes aparecem ao subir de nível ou comprar TMs compatíveis no PokéMart.</div><div class="v32Grid"><div class="v32Box"><h3>Quatro golpes equipados</h3>${selected.map((k,i)=>{const x=cat.find(c=>c.key===k)||cat.find(c=>c.key===v32DefaultSlots(m)[i]);const p=x?.move||skillSet(m)[i];return `<button type="button" class="v32MoveRow ${slot===i?'selected':''}" data-v32-slot="${i}"><span><b>${i+1}. ${p?.icon||'✨'} ${p?.name||'Golpe'}</b><small>${TYPE_NAME[p?.type]||'Normal'} · ${p?.cost||0} energia</small></span><span class="pillSmall">${slot===i?'TROCAR':'ESCOLHER'}</span></button>`}).join('')}</div><div class="v32Box"><h3>Golpes disponíveis (${cat.filter(x=>x.available).length})</h3><div style="max-height:55vh;overflow-y:auto">${rows}</div></div></div><div class="v32Actions"><button type="button" class="btn ghost" id="v32ResetMoves">↻ Golpes padrão</button><button type="button" class="btn primary" id="v32DoneMoves">✓ Voltar à equipe</button></div>`);
+  $('v32ReturnTeam').onclick=showTeam;$('v32DoneMoves').onclick=showTeam;
+  $('v32ResetMoves').onclick=()=>{m.v32Slots=null;persist();showTeam()};
+  document.querySelectorAll('[data-v32-slot]').forEach(b=>b.onclick=()=>{slot=Number(b.dataset.v32Slot);paint()});
+  document.querySelectorAll('[data-v32-learn]').forEach(b=>b.onclick=()=>{
+   const e=cat[Number(b.dataset.v32Learn)];if(!e?.available)return;
+   if(selected.some((k,i)=>k===e.key&&i!==slot))return v31Toast('Esse golpe já está em outro espaço.');
+   selected[slot]=e.key;m.v32Slots=selected.slice();persist();v31Toast(e.move.name+' equipado!');paint();
+  });
+ }
+ paint();
+}
+const v32TeamOld=showTeam;
+showTeam=function(){v32Ensure();v32TeamOld();if(battle?.active)return;
+ const monsters=[...save.team,...save.box];
+ document.querySelectorAll('[data-team]').forEach(row=>{
+  const m=monsters[+row.dataset.team];if(!m)return;
+  const btn=document.createElement('button');btn.type='button';btn.className='v32SwapBtn';btn.textContent='🧠 Trocar golpes · '+v32Nature(m).name;
+  btn.onclick=()=>v32MoveScreen(m);row.insertAdjacentElement('afterend',btn);
+ });
+};
+function v32Nature(m){return V32_NATURES.find(n=>n.id===m?.v32Nature)||V32_NATURES[3];}
+const v32DamageOld=damage;
+damage=function(att,def,type,power){const result=v32DamageOld(att,def,type,power);if(!result||result.hit<=0)return result;
+ let mod=v32Nature(att).atk/v32Nature(def).def;
+ const currentWeather=battle?.v32Weather;const w=V32_WEATHERS[currentWeather];
+ if(w){mod*=w.bonus[type]||1;mod*=w.penalty[type]||1;}
+ result.hit=Math.max(1,Math.round(result.hit*mod));return result;
+};
+const v32StartOld=startBattle;
+startBattle=function(enemies,label,wild){v32Ensure();v32StartOld(enemies,label,wild);if(!battle?.active)return;
+ if(!battle.v32Weather){const g=save.gym;const choices=wild?['clear','rain','sun','sand','clear','clear']:g===1?['rain','rain','clear']:g===6?['sun','sun','clear']:g===7?['sand','sand','clear']:g===2?['storm','storm','clear']:['clear','rain','sun','sand','clear'];battle.v32Weather=choices[Math.floor(Math.random()*choices.length)];}
+ v32ShowWeather();
+};
+function v32ShowWeather(){if(!battle?.active)return;const arena=$('arenaPro');if(!arena)return;
+ const w=V32_WEATHERS[battle.v32Weather]||V32_WEATHERS.clear;let chip=arena.querySelector('#v32Weather');if(chip)chip.remove();chip=document.createElement('div');chip.id='v32Weather';chip.className='v32Weather';chip.textContent=w.icon+' '+w.name;arena.append(chip);
+}
+const v32RenderBattleOld=renderBattle;
+renderBattle=function(){v32RenderBattleOld();v32ShowWeather();};
+// Captura: o núcleo da V29 já utiliza tipos de Pokébolas e animação; o cálculo incorpora status no HTML montado.
+const v32ShopOld=showShop;
+showShop=function(){v32Ensure();v32ShopOld();if(battle?.active)return;
+ const root=$('modal');if(!root)return;
+ const holder=document.createElement('div');holder.className='v31Pane';holder.id='v32TMs';
+ holder.innerHTML=`<h3>💿 TMs — Golpes para aprender</h3><p class="v32Info">TMs compradas ficam disponíveis para Pokémon compatíveis e podem ser equipadas em 🎒 Equipe → Trocar golpes.</p><div class="shopList">${Object.values(V32_TM).map(tm=>`<div class="shopItem"><div class="shopEmoji">${tm.icon}</div><div class="shopInfo"><strong>${tm.name}</strong><small>${TYPE_NAME[tm.type]||tm.type} · compatibilidade por tipo</small></div><button type="button" class="btn tiny ${save.v32.tms.includes(tm.type)?'ghost':'gold'}" data-v32-tm="${tm.type}" ${save.v32.tms.includes(tm.type)||save.coins<tm.price?'disabled':''}>${save.v32.tms.includes(tm.type)?'✓ COMPRADA':'🪙 '+tm.price}</button></div>`).join('')}</div>`;
+ const back=$('shopBack');if(back)back.before(holder);else root.append(holder);
+ root.querySelectorAll('[data-v32-tm]').forEach(b=>b.onclick=()=>{const tm=V32_TM[b.dataset.v32Tm];if(!tm||save.coins<tm.price||save.v32.tms.includes(tm.type))return;
+  save.coins-=tm.price;save.v32.tms.push(tm.type);persist();render();showShop();});
+};
+const v32RenderOld=render;
+render=function(){v32Ensure();v32RenderOld();if(!save.starter||battle?.active)return;
+ const root=$('main'),area=root?.querySelector('.gymHero')||root?.querySelector('.v27League')||root?.querySelector('.panel');if(!area||$('v32Menu'))return;
+ const tools=document.createElement('div');tools.id='v32Menu';tools.className='v32Actions';
+ tools.innerHTML='<button class="btn ghost" type="button" id="v32TowerMenu">♾️ Torre de Desafios</button>'+(save.gym>=13?'<button class="btn ghost" type="button" id="v32LeagueMenu">🏆 Revanche da Liga</button>':'')+'<button class="btn ghost" type="button" id="v32SoundMenu">🎵 Áudio</button>';
+ area.insertAdjacentElement('afterend',tools);
+ $('v32TowerMenu').onclick=v32TowerMenu;
+ if($('v32LeagueMenu'))$('v32LeagueMenu').onclick=v32LeagueMenu;
+ $('v32SoundMenu').onclick=v32SoundMenu;
+ const tag=$('v30VersionTag');if(tag)tag.textContent='V32 · 2D';
+};
+function v32TowerMenu(){if(battle?.active)return;v32Ensure();const info=save.v32.tower;
+ overlay(`<div class="v32TowerCard"><div class="overline">♾️ DESAFIO EXTRA · SEM ALTERAR OS GINÁSIOS</div><h2>Torre Infinita</h2><p class="desc">Enfrente adversários cada vez mais fortes. A cada 10 andares, você luta contra um chefe e recebe moedas extras. Se perder, recomeça no primeiro andar, sem perder Pokémon capturados.</p><div class="v32Banner">Andar atual <b>${info.floor}</b> · Recorde <b>${info.best}</b> · Vitórias <b>${info.wins||0}</b></div><div class="v32Actions"><button class="btn gold" id="v32TowerFight">⚔️ Entrar no andar ${info.floor}</button><button class="btn ghost" id="v32TowerBack">Voltar</button></div></div>`);
+ $('v32TowerBack').onclick=()=>{close();render()};$('v32TowerFight').onclick=()=>v32StartTower();
+}
+function v32StartTower(){if(!requireTeam())return showItems();const floor=save.v32.tower.floor;const level=Math.max(5,Math.min(100,8+floor*2));
+ const count=floor%10===0?3:Math.min(3,1+Math.floor(floor/5));const ids=[];
+ for(let i=0;i<count;i++)ids.push(1+((floor*31+i*43+Math.floor(Math.random()*151))%151));
+ const enemies=ids.map(id=>mon(id,level));startBattle(enemies,`♾️ TORRE · ANDAR ${floor}${floor%10===0?' · CHEFE':''}`,false);
+ if(battle?.active){battle.v32Mode='tower';battle.v32Floor=floor;}
+}
+function v32LeagueMenu(){if(battle?.active)return;const p=save.v32.league;const stage=Math.max(0,Math.min(4,p.stage));const names=['Lorelei','Bruno','Agatha','Lance','Blue'];
+ overlay(`<div class="v32TowerCard"><div class="overline">🏆 REVANCHE DE KANTO · TORNEIO COMPLETO</div><h2>Liga Pokémon — Revanche</h2><p class="desc">Enfrente novamente Lorelei, Bruno, Agatha, Lance e o campeão Blue em sequência, com níveis mais altos. A campanha original e os oito ginásios ficam preservados.</p><div class="v32Banner">Próximo: <b>${names[stage]}</b> (${stage+1}/5) · Campeonatos repetidos: <b>${p.championships||0}</b></div><div class="v32Actions"><button class="btn gold" id="v32LeagueFight">⚔️ Enfrentar ${names[stage]}</button><button class="btn ghost" id="v32LeagueBack">Voltar</button></div></div>`);
+ $('v32LeagueBack').onclick=()=>{close();render()};$('v32LeagueFight').onclick=()=>v32StartLeague();
+}
+function v32StartLeague(){if(!requireTeam())return showItems();if(save.gym<13)return;
+ const stage=Math.max(0,Math.min(4,save.v32.league.stage));const team=teamOfTrainer(8+stage,6);const foes=team.map((m,i)=>mon(m.id,Math.min(100,m.level+8+Math.min(24,(save.v32.league.championships||0)*3))));
+ startBattle(foes,`🏆 REVANCHE DA LIGA · ${['LORELEI','BRUNO','AGATHA','LANCE','BLUE'][stage]}`,false);
+ if(battle?.active){battle.v32Mode='league';battle.v32LeagueStage=stage;}
+}
+const v32FinishOld=finishBattle;
+finishBattle=function(win){
+ if(!battle?.active||!['tower','league'].includes(battle.v32Mode))return v32FinishOld(win);
+ const mode=battle.v32Mode,stage=mode==='tower'?battle.v32Floor:battle.v32LeagueStage;
+ battle.active=false;stopTimers();battle=null;
+ if(mode==='tower'){
+  const info=save.v32.tower;
+  if(win){info.best=Math.max(info.best,stage);info.wins=(info.wins||0)+1;info.floor=Math.min(999,stage+1);
+   const money=20+Math.min(120,stage*4)+(stage%10===0?200:0);save.coins+=money;save.wins++;
+   for(const m of save.team){if(m.hp>0){awardXP(m,24+stage);m.hp=Math.min(m.maxHp,m.hp+Math.ceil(m.maxHp*.17));}}
+   if(stage%10===0)save.superPotions=(save.superPotions||0)+1;
+   persist();resultScreen('♾️ ANDAR '+stage+' CONCLUÍDO!','+ moedas e experiência! Próximo andar: '+info.floor+(stage%10===0?' · Chefe derrotado! Superpoção recebida.':''),true,false);
+  }else{info.floor=1;save.losses++;for(const m of save.team)m.hp=Math.max(1,Math.ceil(m.maxHp*.55));persist();resultScreen('♾️ TORRE · DESAFIO ENCERRADO','Seu recorde foi mantido. Reinicie no primeiro andar quando quiser.',false,false);}
+ }else{
+  const info=save.v32.league;if(win){save.wins++;save.coins+=120+(stage*50);for(const m of save.team){if(m.hp>0){awardXP(m,45+stage*10);m.hp=Math.min(m.maxHp,m.hp+Math.ceil(m.maxHp*.22));}}
+   info.wins=(info.wins||0)+1;info.stage=(stage+1)%5;if(stage===4){info.championships=(info.championships||0)+1;save.coins+=400;}persist();
+   resultScreen(stage===4?'🏆 CAMPEÃO NOVAMENTE!':'🏆 REVANCHE VENCIDA','Vitória contra '+['Lorelei','Bruno','Agatha','Lance','Blue'][stage]+'. '+(stage===4?'Torneio concluído! Bônus de 400 moedas.':'Próximo desafiante desbloqueado.'),true,false);
+  }else{info.stage=0;save.losses++;for(const m of save.team)m.hp=Math.max(1,Math.ceil(m.maxHp*.5));persist();resultScreen('💔 REVANCHE ENCERRADA','A sequência da Liga volta para Lorelei; sua campanha original permanece salva.',false,false);}
+ }
+};
+// Áudio local gerado com WebAudio: música curta em loop só quando usuário habilitar, sem downloads externos.
+let v32AudioTimer=null,v32AudioStep=0;
+function v32StopMusic(){if(v32AudioTimer){clearInterval(v32AudioTimer);v32AudioTimer=null;}}
+function v32Note(frequency,duration=.13){if(!soundEnabled||save.v32.volume<=0||document.hidden)return;
+ try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();
+  const now=audioCtx.currentTime,osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type='triangle';
+  osc.frequency.setValueAtTime(frequency,now);gain.gain.setValueAtTime(.0001,now);gain.gain.linearRampToValueAtTime(save.v32.volume*.00028,now+.015);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+  osc.connect(gain).connect(audioCtx.destination);osc.start(now);osc.stop(now+duration+.01);
+ }catch(e){console.warn('V32 som indisponível:',e);v32StopMusic();}
+}
+function v32RefreshAudio(){v32StopMusic();if(!soundEnabled||!save.v32.volume)return;
+ const melody=[329.6,392,440,392,293.7,349.2,392,293.7,329.6,392,523.25,493.9,440,392,329.6,293.7];
+ v32AudioTimer=setInterval(()=>{v32Note(melody[v32AudioStep++%melody.length],.19)},500);
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)v32StopMusic();else if(soundEnabled)v32RefreshAudio()});
+function v32SoundMenu(){v32Ensure();if(battle?.active)return;
+ overlay(`<div class="sectionhead"><h2>🎵 Áudio da Torre</h2><button class="btn tiny ghost" id="v32SoundClose">✕</button></div><p class="desc">Trilha sintetizada e efeitos sonoros diretamente no navegador. Controle o volume ou desligue sem afetar o combate.</p><div class="v32SoundControl"><button class="btn ${soundEnabled?'gold':'ghost'}" id="v32SoundToggle">${soundEnabled?'🔊 Desligar':'🔇 Ligar'} áudio</button><label for="v32SoundRange">Volume <b id="v32SoundLevel">${save.v32.volume}%</b></label><input type="range" min="0" max="100" id="v32SoundRange" value="${save.v32.volume}"></div><button class="btn ghost wide" id="v32SoundReturn">Voltar</button>`);
+ $('v32SoundClose').onclick=close;$('v32SoundReturn').onclick=close;
+ $('v32SoundToggle').onclick=()=>{soundEnabled=!soundEnabled;persist();v32RefreshAudio();v32SoundMenu();};
+ $('v32SoundRange').oninput=e=>{save.v32.volume=Number(e.target.value);$('v32SoundLevel').textContent=save.v32.volume+'%';persist();v32RefreshAudio();};
+}
+// Personalidade Veloz: deslocamento um pouco mais rápido, sem afetar a mira nem teleporte.
+const v32UpdateOld=BattleEngine.prototype.update;
+BattleEngine.prototype.update=function(dt,now){
+ const can=!!(battle?.active&&!battle.paused&&this.player&&current()?.v32Nature==='veloz');
+ const x=this.player?.x||0,y=this.player?.y||0;
+ const result=v32UpdateOld.call(this,dt,now);
+ if(can&&battle?.active&&!battle.paused&&this.player){
+  this.player.x+=(this.player.x-x)*.07;this.player.y+=(this.player.y-y)*.07;
+  if(typeof this.collideRocks==='function')this.collideRocks(this.player);
+  if(typeof this.bounds==='function')this.bounds(this.player);
+ }

@@ -1,0 +1,1000 @@
+ return result;
+};
+const v32BattleSoundOld=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(i){
+ const s=battle?.active?skillSet(current())[i]:null;
+ const now=performance.now(),can=!!(s&&battle&&!battle.paused&&cooldowns[i]<=now&&battle.energy>=s.cost);
+ const result=v32BattleSoundOld.call(this,i);
+ if(can&&soundEnabled&&s){const sounds={electric:659,psychic:520,water:392,fire:261.6,ground:196,rock:220,ice:784,poison:293.7,grass:349.2};v32Note(sounds[s.type]||440,.09);}
+ return result;
+};
+window.PokemonTorreV32Diagnostics=()=>({version:V32_VERSION,tms:[...save.v32.tms],tower:{...save.v32.tower},league:{...save.v32.league},team:save.team.map(m=>({id:m.id,slots:skillSet(m).map(s=>s.name),nature:v32Nature(m).name})),weather:battle?.v32Weather||'none',musicOn:!!v32AudioTimer,shinyRange:[.01,.03],homeCooldown:skillSet(save.team[0]||mon(25,5)).filter(x=>x.kind==='homing').map(x=>x.cd)});
+/* POKEMON TORRE V33 · Pacote 2D integrado: batalhas, especies, IA, lendarios, duplas, treino e laboratorio */
+const V33_VERSION='33.0';
+const V33_LEADERS=[
+ {name:'Brock',tempo:1.06,evade:0.8,style:'Defesa rochosa',type:'rock'},
+ {name:'Misty',tempo:.95,evade:1.17,style:'Movimento aquático',type:'water'},
+ {name:'Lt. Surge',tempo:.86,evade:1.04,style:'Pressão elétrica',type:'electric'},
+ {name:'Erika',tempo:1.08,evade:.95,style:'Equilíbrio e cura',type:'grass'},
+ {name:'Koga',tempo:.97,evade:1.13,style:'Precisão e veneno',type:'poison'},
+ {name:'Sabrina',tempo:1.1,evade:1.26,style:'Esquiva psíquica',type:'psychic'},
+ {name:'Blaine',tempo:.88,evade:1.01,style:'Ataque flamejante',type:'fire'},
+ {name:'Giovanni',tempo:1.03,evade:.8,style:'Impacto terrestre',type:'ground'}
+];
+const V33_LEGENDARIES=[
+ {id:144,name:'Articuno',level:56,gate:8,place:'Ilhas Espuma',weather:'snow'},
+ {id:145,name:'Zapdos',level:57,gate:8,place:'Usina Abandonada',weather:'storm'},
+ {id:146,name:'Moltres',level:59,gate:8,place:'Monte Brasa',weather:'sun'},
+ {id:150,name:'Mewtwo',level:70,gate:13,place:'Caverna Celeste',weather:'psychic'}
+];
+// Golpes característicos por espécie e linhagem, além dos conjuntos e TMs da V32.
+const V33_SPECIES_MOVES={
+ 1:['Chicote de Vinha','grass','bolt',27,14],2:['Chicote de Vinha','grass','bolt',31,18],3:['Raio Solar','grass','beam',59,36],
+ 4:['Brasa','fire','bolt',27,12],5:['Garra de Fogo','fire','dash',37,21],6:['Lança-Chamas','fire','beam',59,36],
+ 7:['Jato d’Água','water','bolt',26,12],8:['Jato d’Água','water','bolt',32,18],9:['Hidro Bomba','water','beam',60,37],
+ 10:['Picada','bug','dash',22,10],11:['Casulo','bug','guard',0,10],12:['Pó do Sono','grass','status',0,17],
+ 13:['Picada','bug','dash',23,10],14:['Endurecer','normal','guard',0,10],15:['Ferrão Venenoso','poison','dash',37,19],
+ 16:['Rajada','flying','bolt',24,11],17:['Rajada','flying','bolt',32,19],18:['Ataque de Asa','flying','dash',46,27],
+ 19:['Mordida','normal','dash',25,11],20:['Hiper Presa','normal','dash',41,21],21:['Bicada','flying','dash',25,11],22:['Bico Broca','flying','dash',45,26],
+ 23:['Picada Venenosa','poison','bolt',28,13],24:['Ácido','poison','bolt',43,24],25:['Choque do Trovão','electric','bolt',31,13],26:['Raio','electric','homing',54,31],
+ 27:['Tapa de Lama','ground','bolt',27,12],28:['Garra de Areia','ground','dash',41,22],29:['Picada Venenosa','poison','bolt',27,12],30:['Slam','normal','dash',37,21],31:['Earthquake','ground','area',56,36],
+ 32:['Picada Venenosa','poison','bolt',28,12],33:['Slam','normal','dash',40,22],34:['Earthquake','ground','area',57,36],
+ 35:['Encantar','normal','status',0,13],36:['Poder da Lua','normal','bolt',49,29],37:['Brasa','fire','bolt',29,14],38:['Lança-Chamas','fire','beam',54,31],
+ 39:['Canto','normal','status',0,10],40:['Voz Encantadora','normal','bolt',39,21],41:['Mordida','poison','dash',28,12],42:['Ataque de Asa','flying','dash',41,22],
+ 43:['Absorver','grass','bolt',26,12],44:['Ácido','poison','bolt',33,19],45:['Pétalas','grass','area',47,29],
+ 46:['Arranhão','bug','dash',28,13],47:['Esporos','grass','status',0,24],48:['Confusão','psychic','bolt',25,12],49:['Pó do Sono','grass','status',0,22],
+ 50:['Tapa de Lama','ground','bolt',27,12],51:['Earthquake','ground','area',44,28],52:['Arranhão','normal','dash',26,12],53:['Golpe Rápido','normal','dash',41,22],
+ 54:['Pistola d’Água','water','bolt',29,15],55:['Pulso d’Água','water','bolt',43,26],56:['Soco','fighting','dash',28,11],57:['Golpe Furioso','fighting','dash',45,27],
+ 58:['Brasa','fire','bolt',31,13],59:['Lança-Chamas','fire','beam',55,32],60:['Bolhas','water','bolt',24,10],61:['Jato d’Água','water','bolt',35,19],62:['Hidro Bomba','water','beam',52,31],
+ 63:['Confusion','psychic','bolt',27,12],64:['Confusion','psychic','bolt',38,19],65:['Psíquico','psychic','homing',55,32],
+ 66:['Soco','fighting','dash',29,11],67:['Golpe de Karatê','fighting','dash',40,20],68:['Soco Dinâmico','fighting','dash',53,31],
+ 69:['Chicote de Vinha','grass','bolt',29,14],70:['Ácido','poison','bolt',39,22],71:['Folha Navalha','grass','bolt',52,30],
+ 72:['Ácido','poison','bolt',28,11],73:['Hidro Bomba','water','beam',49,30],74:['Pedra','rock','bolt',29,13],75:['Pedra','rock','bolt',38,21],76:['Rock Slide','rock','area',53,30],
+ 77:['Brasa','fire','bolt',29,13],78:['Lança-Chamas','fire','beam',54,31],79:['Confusion','psychic','bolt',27,15],80:['Psíquico','psychic','bolt',48,29],
+ 81:['Choque','electric','bolt',28,13],82:['Raio','electric','bolt',47,29],83:['Corte','flying','dash',36,20],84:['Bicada','flying','dash',28,13],85:['Bico Broca','flying','dash',49,29],
+ 86:['Jato d’Água','water','bolt',27,12],87:['Raio de Gelo','ice','beam',51,30],88:['Ácido','poison','bolt',28,12],89:['Bomba de Lodo','poison','area',51,29],
+ 90:['Jato d’Água','water','bolt',26,12],91:['Raio de Gelo','ice','beam',54,32],92:['Lambida','ghost','bolt',27,12],93:['Bola Sombria','ghost','bolt',39,20],94:['Bola Sombria','ghost','homing',54,33],
+ 95:['Rock Slide','rock','area',47,26],96:['Confusion','psychic','bolt',31,14],97:['Psíquico','psychic','homing',51,30],98:['Bolhas','water','bolt',28,13],99:['Martelada','water','dash',46,28],
+ 100:['Faísca','electric','bolt',30,14],101:['Descarga','electric','area',48,30],102:['Confusion','psychic','bolt',27,13],103:['Raio Solar','grass','beam',51,32],
+ 104:['Osso','ground','bolt',28,12],105:['Osso Bumerangue','ground','bolt',47,27],106:['Chute Alto','fighting','dash',48,27],107:['Soco Rápido','fighting','dash',47,27],
+ 108:['Lambida','normal','dash',36,18],109:['Névoa Tóxica','poison','area',30,14],110:['Névoa Tóxica','poison','area',48,29],
+ 111:['Rock Slide','rock','area',38,22],112:['Earthquake','ground','area',54,33],113:['Recuperar','normal','recover',0,25],114:['Chicote de Vinha','grass','bolt',36,21],
+ 115:['Slam','normal','dash',49,30],116:['Bolhas','water','bolt',27,13],117:['Jato d’Água','water','bolt',40,23],118:['Jato d’Água','water','bolt',27,13],119:['Hidro Bomba','water','beam',49,30],
+ 120:['Jato d’Água','water','bolt',29,13],121:['Psíquico','psychic','homing',49,30],122:['Confusion','psychic','bolt',45,28],123:['Corte','bug','dash',48,29],124:['Raio de Gelo','ice','beam',50,30],
+ 125:['Raio','electric','bolt',52,30],126:['Lança-Chamas','fire','beam',52,30],127:['Slam','bug','dash',47,27],128:['Slam','normal','dash',47,27],
+ 129:['Salpicar','water','status',0,1],130:['Hidro Bomba','water','area',61,40],131:['Raio de Gelo','ice','beam',53,32],132:['Transformar','normal','illusion',0,18],
+ 133:['Investida','normal','dash',28,11],134:['Hidro Bomba','water','beam',52,31],135:['Raio','electric','bolt',52,31],136:['Lança-Chamas','fire','beam',52,31],
+ 137:['Tri Ataque','normal','bolt',48,28],138:['Jato d’Água','water','bolt',34,19],139:['Hidro Bomba','water','beam',52,30],140:['Pedra','rock','bolt',36,19],141:['Corte','rock','dash',49,29],
+ 142:['Rock Slide','rock','area',52,30],143:['Hyper Beam','normal','beam',66,40],144:['Nevasca','ice','area',58,40],145:['Thunder','electric','homing',58,40],146:['Lança-Chamas','fire','beam',58,40],
+ 147:['Sopro de Dragão','dragon','bolt',31,17],148:['Sopro de Dragão','dragon','bolt',43,24],149:['Hyper Beam','normal','beam',64,39],150:['Psíquico','psychic','homing',64,43],151:['Psíquico','psychic','homing',59,41]
+};
+const V33_HEAVY=new Set(['Hyper Beam','Hidro Bomba','Nevasca','Thunder','Raio Solar']);
+const V33_FX_COLORS={fire:'#ff934c',water:'#64c4ff',electric:'#ffdf62',grass:'#9cdf80',psychic:'#dca0ff',ground:'#d6a472',rock:'#c7b693',poison:'#d7a2ef',ice:'#b3f9ff',ghost:'#a3b5ef',fighting:'#ffc49a',normal:'#dde8ff',bug:'#b3d07c',dragon:'#b29bfc'};
+const v33SafeNumber=(x,fallback)=>Number.isFinite(+x)?+x:fallback;
+function v33Ensure(){
+ if(!save.v33||typeof save.v33!=='object')save.v33={};
+ const s=save.v33;
+ if(!s.stats||typeof s.stats!=='object')s.stats={fights:0,wins:0,losses:0,captures:0,shiny:0,damage:0,misses:0,moves:{},legendary:[],bestCombo:0};
+ if(!Array.isArray(s.stats.legendary))s.stats.legendary=[];
+ if(!s.stats.moves||typeof s.stats.moves!=='object')s.stats.moves={};
+ if(!Array.isArray(s.discovered))s.discovered=[];
+ if(!s.settings||typeof s.settings!=='object')s.settings={effects:true,performance:'auto'};
+ for(const m of [...(save.team||[]),...(save.box||[])]){
+  if(!m||!D[m.id])continue;
+  if(!m.v33Train||typeof m.v33Train!=='object')m.v33Train={atk:0,def:0,spd:0,special:0};
+  for(const stat of ['atk','def','spd','special'])m.v33Train[stat]=Math.max(0,Math.min(8,Math.floor(v33SafeNumber(m.v33Train[stat],0))));
+ }
+ return s;
+}
+v33Ensure();
+const v33Style=document.createElement('style');v33Style.id='v33Style';v33Style.textContent=
+ '.v33Menu{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 13px}.v33Menu>.btn{flex:1 1 130px;font-size:11px;min-height:39px}.v33Pane{background:#132b3a;border:1px solid #456574;padding:13px;border-radius:13px;margin:9px 0}.v33Pane p,.v33Pane small{color:#bcd2e1;line-height:1.5}.v33Flex{display:flex;flex-wrap:wrap;gap:8px}.v33Flex>.btn{flex:1 1 130px;min-height:41px}.v33Pet{font-size:11px;color:#c4ebec;padding:6px 0}.v33Bar{height:7px;border-radius:10px;background:#35546b;overflow:hidden}.v33Bar i{display:block;height:100%;background:#76d7c6}.v33Stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.v33MoveBtn{background:#173449;border:1px solid #52788a;color:#e5f8fe;border-radius:10px;padding:9px;min-height:42px;cursor:pointer}.v33MoveBtn:disabled{opacity:.45}.v33DuoControls{position:absolute;bottom:72px;left:8px;right:8px;display:flex;flex-wrap:wrap;gap:6px;z-index:15;pointer-events:none}.v33DuoControls button{pointer-events:auto;background:#15394fe8;border:1px solid #65a5ae;color:#ecfeff;border-radius:8px;padding:5px 7px;font-size:10px;min-height:30px;cursor:pointer}.v33DuoControls button:disabled{opacity:.48}.v33Terrain{position:absolute;top:34px;left:50%;transform:translateX(-50%);z-index:10;background:#142c3cda;border:1px solid #557484;padding:3px 7px;border-radius:9px;color:#ebf8fc;font-size:9px;pointer-events:none}.v33BattleCall{position:absolute;top:58px;left:50%;transform:translateX(-50%);z-index:19;background:#102c3ce8;border:1px solid #7eabd1;color:#f8e8c4;border-radius:10px;padding:6px 10px;font-size:11px;pointer-events:none;white-space:nowrap}.v33Alert{color:#ffe4a7;font-size:12px;line-height:1.5}.v33Trainer{margin-top:8px;color:#a8e9e4;font-size:10px}.v33LabNote{font-size:12px;line-height:1.5;color:#d8edfa}.v33BattleModes{margin-top:5px;padding:10px;background:#163746;border:1px solid #436d7d;border-radius:11px}.v33Legendary{border:1px solid #6389a0;border-radius:12px;padding:10px;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:9px}.v33Legendary strong{color:#fff}.v33Tabs{display:flex;gap:8px;flex-wrap:wrap}.v33Tabs>*{flex:1 1 130px}@media(max-width:480px){.v33DuoControls{bottom:57px}.v33DuoControls button{font-size:9px;padding:4px 5px}.v33Stats{grid-template-columns:1fr}.v33BattleCall{font-size:10px;max-width:90%;white-space:normal;text-align:center}}';
+document.head.appendChild(v33Style);
+const v33MoveForSpecies=(m)=>{
+ const row=V33_SPECIES_MOVES[m?.id];if(!row)return null;
+ const [name,type,kind,power,level]=row;
+ return {name,type,kind,power,cat:power?'special':'status',icon:V32_ADD_MOVES[type]?.icon||'✨',cost:power===0?24:Math.min(49,Math.round(power*.67)),cd:kind==='homing'?10000:kind==='area'?4500:kind==='beam'?3900:kind==='recover'?9200:kind==='guard'?6500:kind==='illusion'?8500:kind==='status'?6800:2300,level};
+};
+// Enriquecimento direto do catálogo da V32 (e da tela original de troca de golpes).
+const v33CataloguePrev=v32Catalogue;
+v32Catalogue=function(m){
+ const all=v33CataloguePrev(m),special=v33MoveForSpecies(m);
+ if(!special)return all;
+ const key=v32MoveKey(special);
+ if(!all.some(x=>x.key===key))all.push({key,move:special,level:special.level,tm:false,available:m.level>=special.level});
+ return all;
+};
+const v33SkillPrev=skillSet;
+skillSet=function(m){const s=v33SkillPrev(m);if(!m||!D[m.id])return s;
+ const special=v33MoveForSpecies(m);
+ if(special&&m.level>=special.level&&!Array.isArray(m.v32Slots)){
+  const slot=(m.id===143||m.id===150||m.id===149)?2:1;
+  if(s[slot]&&s[slot].name!==special.name)s[slot]={...special};
+ }
+ for(const move of s)if(move?.kind==='homing')move.cd=Math.max(10000,move.cd||0);
+ return s;
+};
+function v33Toast(message){const prev=document.querySelector('.v33Message');prev?.remove();const d=document.createElement('div');d.className='v31Message v33Message';d.textContent=message;document.body.append(d);setTimeout(()=>d.remove(),2300);}
+function v33Track(name,damageValue=0){const info=v33Ensure().stats;info.moves[name]=(info.moves[name]||0)+1;info.damage+=Math.max(0,Math.round(damageValue));}
+const v33PersistPrev=persist;
+persist=function(){v33Ensure();return v33PersistPrev();};
+const v33DamagePrev=damage;
+damage=function(att,def,type,power){const r=v33DamagePrev(att,def,type,power);if(!r||r.hit<=0)return r;
+ const a=att?.v33Train||{},d=def?.v33Train||{};
+ let factor=(1+Math.min(8,a.atk||0)*.018+Math.min(8,a.special||0)*.009)/(1+Math.min(8,d.def||0)*.018);
+ const t=battle?.v33Terrain;
+ // O bônus do cenário é centralizado na V35.35, sem multiplicação antiga duplicada.
+ r.hit=Math.max(1,Math.round(r.hit*factor));return r;
+};
+const v33StartPrev=startBattle;
+startBattle=function(enemies,label,wild){v33Ensure();v33StartPrev(enemies,label,wild);if(!battle?.active)return;
+ const b=battle;
+ b.v33Tracker={moves:{},damage:0,misses:0};
+ b.v33Terrain=(wild?'grass':save.gym===0?'rock':save.gym===1?'water':save.gym===2?'electric':save.gym===3?'grass':save.gym===5?'psychic':save.gym===7?'rock':'normal');
+ b.v33StartTime=performance.now();b.v33Type='normal';
+ b.v33Boss=(!wild&&save.gym>=0&&save.gym<=7&&(/LÍDER/i.test(label||''))&&!!V33_LEADERS[save.gym])?save.gym:-1;
+ b.v33BossStage=0;b.v33LastEnemyHp=b.foe?.hp||0;
+ if(engine){engine.v33Fx=[];engine.v33FrameWarn=false;}
+ v33BattleTools();
+};
+function v33BattleTools(){if(!battle?.active)return;const arena=$('arenaPro');if(!arena)return;
+ const t=battle.v33Terrain;const terrains={rock:'🪨 Rochas',water:'💧 Poças',electric:'⚡ Energia',grass:'🌿 Vegetação',psychic:'🔮 Campo psíquico',normal:'🏟️ Arena'};
+ let tag=$('v33TerrainTag');if(!tag){tag=document.createElement('span');tag.id='v33TerrainTag';tag.className='v33Terrain';arena.append(tag);}tag.textContent=terrains[t]||terrains.normal;
+ if(battle.v33Boss>=0){let boss=$('v33BossStyle');if(!boss){boss=document.createElement('div');boss.id='v33BossStyle';boss.className='v33Trainer';arena.append(boss);}boss.textContent=V33_LEADERS[battle.v33Boss].style;}
+ const d=battle.v31Duo;if(!d)return;
+ let box=$('v33DoubleControls');if(box)return;
+ box=document.createElement('div');box.id='v33DoubleControls';box.className='v33DuoControls';
+ box.innerHTML='<button type="button" id="v33TargetPrimary">🎯 Alvo A</button><button type="button" id="v33TargetPartner">🎯 Alvo B</button><button type="button" id="v33SupportAttack">⚔️ Golpe parceiro</button><button type="button" id="v33SupportHeal">💚 Apoio</button><button type="button" id="v33SupportSwap">🔁 Trocar parceiro</button>';
+ arena.append(box);
+ d.v33Manual=true;d.v33Target='main';d.v33SupportCD=0;d.v33HealCD=0;
+ const update=()=>{if(!battle?.active||battle.v31Duo!==d)return;
+  const main=$('v33TargetPrimary'),p=$('v33TargetPartner');if(main)main.style.borderColor=d.v33Target==='main'?'#d4cc72':'#65a5ae';if(p)p.style.borderColor=d.v33Target==='partner'?'#d4cc72':'#65a5ae';
+  if(p)p.disabled=!(d.enemy&&d.enemy.hp>0);
+  const attack=$('v33SupportAttack'),heal=$('v33SupportHeal');if(attack)attack.disabled=!(d.ally&&d.ally.hp>0);if(heal)heal.disabled=!(d.ally&&d.ally.hp>0);
+ };
+ $('v33TargetPrimary').onclick=()=>{d.v33Target='main';update()};
+ $('v33TargetPartner').onclick=()=>{d.v33Target='partner';update()};
+ $('v33SupportAttack').onclick=()=>{
+  if(!battle?.active||battle.paused||d.ally.hp<=0||performance.now()<d.v33SupportCD)return;
+  const enemy=d.v33Target==='partner'&&d.enemy?.hp>0?d.enemy:foe();if(!enemy||enemy.hp<=0)return;
+  d.v33SupportCD=performance.now()+2250;
+  const move=skillSet(d.ally)[1]||skillSet(d.ally)[0];const power=Math.min(52,move.power||23),hit=damage(d.ally,enemy,move.type,power).hit;
+  enemy.hp=Math.max(0,enemy.hp-hit);engine?.particlesAt(engine.enemy.x,engine.enemy.y,V33_FX_COLORS[move.type]||'#d8fdff',9,70);
+  engine?.damageLabels.push({x:engine.enemy.x+(enemy===d.enemy?30:0),y:engine.enemy.y-30,text:'PARCEIRO -'+hit,life:.8,color:'#b4ffe8'});
+  if(enemy===d.enemy&&enemy.hp<=0){d.enemy=null;d.v33Target='main';}
+  else if(enemy===foe()&&enemy.hp<=0){nextFoe();}
+  update();
+ };
+ $('v33SupportHeal').onclick=()=>{
+  if(!battle?.active||battle.paused||d.ally.hp<=0||performance.now()<d.v33HealCD||battle.energy<22)return;
+  d.v33HealCD=performance.now()+8200;battle.energy-=22;const target=d.ally.hp<current().hp?d.ally:current();
+  target.hp=Math.min(target.maxHp,target.hp+Math.max(2,Math.round(target.maxHp*.17)));
+  engine?.particlesAt(engine.player.x,engine.player.y,'#b0ffd4',12,80);v33Toast('Apoio: recuperação de '+D[target.id].name+'!');update();
+ };
+ $('v33SupportSwap').onclick=()=>{
+  if(!battle?.active||battle.paused)return;
+  const opts=save.team.filter(m=>m.hp>0&&m!==current()&&m!==d.ally);
+  if(!opts.length)return v33Toast('Sem outro Pokémon disponível para ser parceiro.');
+  const index=save.team.findIndex(m=>m===d.ally),next=opts[0];if(index>=0){d.ally=next;d.v33SupportCD=performance.now()+850;engine?.loadArt(next.id);v33Toast(D[next.id].name+' entrou na dupla!');}update();
+ };
+ update();
+}
+// Na V31 o ataque do parceiro era automático. Na V33, o jogador controla os comandos de apoio.
+const v33UpdatePrev=BattleEngine.prototype.update;
+BattleEngine.prototype.update=function(dt,now){
+ const b=battle,duo=b?.v31Duo;
+ if(duo?.v33Manual){duo.clockAlly=99999;}
+ const originalX=this.player?.x||0,originalY=this.player?.y||0;
+ const result=v33UpdatePrev.call(this,dt,now);
+ if(!battle?.active||battle.paused)return result;
+ if(duo?.v33Manual){duo.clockAlly=99999;if(duo.enemy?.hp<=0){duo.enemy=null;duo.v33Target='main';}}
+ if(battle.v33Boss>=0){
+  const g=battle.v33Boss,profile=V33_LEADERS[g];
+  if(profile){this.enemyAttackCD=Math.max(.25,Math.min(12,this.enemyAttackCD+dt*(profile.tempo-1)*.7));
+   if(Number.isFinite(this.foeDodgeCD))this.foeDodgeCD=Math.max(.13,this.foeDodgeCD+dt*(profile.evade-1)*.5);
+   const f=foe();if(f?.hp>0&&f.hp<=f.maxHp*.42&&battle.v33BossStage<1){
+    battle.v33BossStage=1;this.enemyAttackCD=Math.max(.25,this.enemyAttackCD-.35);
+    engine?.particlesAt(this.enemy.x,this.enemy.y,V33_FX_COLORS[profile.type]||'#fff',17,78);
+    v33Toast('👑 '+profile.name+': "Agora é minha vez de lutar a sério!"');
+   }
+  }
+ }
+ // Treinamento leve de velocidade mantém o personagem dentro da arena.
+ const sp=Math.min(8,current()?.v33Train?.spd||0);
+ if(sp>0&&this.player){this.player.x+=(this.player.x-originalX)*sp*.004;this.player.y+=(this.player.y-originalY)*sp*.004;this.bounds(this.player);}
+ return result;
+};
+const v33HitPrev=BattleEngine.prototype.hitTarget;
+BattleEngine.prototype.hitTarget=function(who,type,power){
+ if(!battle?.active)return;
+ const p=who==='enemy'?current():foe(),a=who==='enemy'?foe():current();
+ const aSpeed=(D[a.id]?.spd||50)+Math.min(8,a.v33Train?.spd||0)*3;
+ const dSpeed=(D[p.id]?.spd||50)+Math.min(8,p.v33Train?.spd||0)*3;
+ const evade=Math.max(.035,Math.min(.14,.045+(dSpeed-aSpeed)*.00035));
+ if(Math.random()<evade){
+  const target=who==='enemy'?this.enemy:this.player;
+  if(target){this.damageLabels.push({x:target.x,y:target.y-34,text:'ESQUIVOU',life:.7,color:'#c9f1ff'});this.particlesAt(target.x,target.y,'#cee6ff',5,45);}
+  v33Ensure().stats.misses++;
+  if(battle.v33Tracker)battle.v33Tracker.misses++;
+  return;
+ }
+ if(who==='enemy'&&battle.v31Duo?.v33Manual&&battle.v31Duo.v33Target==='partner'&&battle.v31Duo.enemy?.hp>0){
+  const enemy=battle.v31Duo.enemy,hit=damage(current(),enemy,type,power).hit;
+  enemy.hp=Math.max(0,enemy.hp-hit);
+  this.damageLabels.push({x:this.enemy.x+35,y:this.enemy.y-31,text:'- '+hit,life:.7,color:'#ffe4a0'});
+  this.particlesAt(this.enemy.x+30,this.enemy.y,V33_FX_COLORS[type]||'#fff',10,75);
+  if(battle.v33Tracker)battle.v33Tracker.damage+=hit;
+  if(enemy.hp===0){battle.v31Duo.enemy=null;battle.v31Duo.v33Target='main';v33Toast('Alvo secundário derrotado!');}
+  return;
+ }
+ const hp=p.hp;
+ const r=v33HitPrev.call(this,who,type,power);
+ if(who==='enemy'&&battle?.v33Tracker)battle.v33Tracker.damage+=Math.max(0,hp-p.hp);
+ if(battle?.active&&battle.v33Fx){ /* reserve for visual effects */ }
+ return r;
+};
+const v33CastPrev=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(i){
+ if(!battle?.active||battle.paused)return v33CastPrev.call(this,i);
+ const m=current(),s=skillSet(m)[i],now=performance.now();
+ if(!s||cooldowns[i]>now||battle.energy<s.cost||m.hp<=0)return;
+ if(this.v33Windup&&now<this.v33Windup.until)return;
+ const name=s.name;
+ if(battle.v33Tracker)battle.v33Tracker.moves[name]=(battle.v33Tracker.moves[name]||0)+1;
+ v33Ensure().stats.moves[name]=(save.v33.stats.moves[name]||0)+1;
+ const fx={type:s.type,start:now,until:now+260,from:'player'};
+ if(!this.v33Fx)this.v33Fx=[];this.v33Fx.push(fx);if(this.v33Fx.length>12)this.v33Fx.shift();
+ const castHeavy=(s.power>=60||V33_HEAVY.has(name))&&s.kind!=='homing';
+ if(castHeavy){
+  const b=battle,me=m;this.v33Windup={until:now+410};
+  let chip=$('v33CastCall');if(!chip){chip=document.createElement('div');chip.id='v33CastCall';chip.className='v33BattleCall';$('arenaPro')?.append(chip);}chip.textContent='✨ '+name+' · Preparando...';
+  setTimeout(()=>{if(this.v33Windup)this.v33Windup=null;chip?.remove();if(battle===b&&b.active&&!b.paused&&current()===me){v33CastPrev.call(this,i);}},420);
+  return;
+ }
+ return v33CastPrev.call(this,i);
+};
+const v33DrawPrev=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){
+ v33DrawPrev.call(this,now);
+ if(!battle?.active)return;
+ const ctx=this.ctx,w=this.w,h=this.h,t=now*.001;
+ ctx.save();
+ // Props pequenos nas bordas; nunca atrás do Pokémon ou cobrindo barras de vida.
+ const terrain=battle.v33Terrain;
+ if(terrain!=='normal'){
+  const color={rock:'#c9bd96',water:'#6bd7f5',grass:'#83c77b',electric:'#ecd879',psychic:'#c79df3'}[terrain]||'#d5e1e7';
+  ctx.globalAlpha=.32;ctx.fillStyle=color;ctx.strokeStyle=color;
+  for(let i=0;i<7;i++){
+   const x=w*(.06+(i*137%77)/100),y=h*(i%2===0?.18:.85),r=3+(i%3)*2;
+   if(terrain==='water'){ctx.beginPath();ctx.ellipse(x,y,r*2.4,r*.55,0,0,Math.PI*2);ctx.stroke();}
+   else if(terrain==='grass'){ctx.beginPath();ctx.moveTo(x-r,y);ctx.lineTo(x,y-r*1.5);ctx.lineTo(x+r,y);ctx.fill();}
+   else if(terrain==='electric'){ctx.beginPath();ctx.moveTo(x-r,y-r);ctx.lineTo(x+1,y);ctx.lineTo(x-2,y+r);ctx.stroke();}
+   else{ctx.beginPath();ctx.moveTo(x-r,y+r);ctx.lineTo(x,y-r);ctx.lineTo(x+r,y+r);ctx.closePath();ctx.stroke();}
+  }
+ }
+ // Efeitos 2D leves vinculados ao desenho existente, sem novo RAF.
+ if(save.v33?.settings?.effects!==false){
+  this.v33Fx=(this.v33Fx||[]).filter(x=>x.until>now);
+  for(const f of this.v33Fx){
+   const life=Math.max(0,Math.min(1,(f.until-now)/260)),cx=f.from==='player'?this.player.x:this.enemy.x,cy=f.from==='player'?this.player.y:this.enemy.y;
+   ctx.globalAlpha=.25*life;ctx.strokeStyle=V33_FX_COLORS[f.type]||'#fff';ctx.lineWidth=1.4;
+   const lines=6;
+   for(let i=0;i<lines;i++){const a=i*Math.PI*2/lines+t*.5,outer=8+20*(1-life);ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*8,cy+Math.sin(a)*8);ctx.lineTo(cx+Math.cos(a+.13)*outer,cy+Math.sin(a+.13)*outer);ctx.stroke();}
+  }
+ }
+ ctx.restore();
+};
+const v33RenderBattlePrev=renderBattle;
+renderBattle=function(){v33RenderBattlePrev();if(battle?.active)v33BattleTools();};
+function v33Result(title,message,win=true){
+ if(!battle?.active)return;
+ battle.active=false;stopTimers();battle=null;
+ resultScreen(title,message,win,false);
+}
+const v33FinishPrev=finishBattle;
+finishBattle=function(win){
+ if(!battle?.active)return;
+ const b=battle,mode=b.v33Type;
+ const stats=v33Ensure().stats;
+ if(mode!=='lab'){stats.fights++;if(win)stats.wins++;else stats.losses++;}else{stats.lab=(stats.lab||0)+1;}
+ if(b.v33Tracker){stats.damage+=b.v33Tracker.damage;}
+ if(mode==='lab'){
+  const snapshot=b.v33Snapshot||[];
+  for(const state of snapshot){const m=save.team.find(p=>p===state.ref);if(m)Object.assign(m,state.data);}
+  if(b.v33SaveSnapshot){save.coins=b.v33SaveSnapshot.coins;save.gym=b.v33SaveSnapshot.gym;save.stage=b.v33SaveSnapshot.stage;save.wins=b.v33SaveSnapshot.wins;save.losses=b.v33SaveSnapshot.losses;if(Array.isArray(b.v33SaveSnapshot.seen))save.seen=b.v33SaveSnapshot.seen;if(Array.isArray(b.v33SaveSnapshot.caught))save.caught=b.v33SaveSnapshot.caught;}
+  persist();v33Result('🧪 LABORATÓRIO · '+(win?'VITÓRIA':'DERROTA'),'Seu time foi restaurado. Insígnias, moedas e campanha não foram alteradas.',win);return;
+ }
+ if(mode==='legendary'){
+  if(win){const legend=b.v33Legendary;save.coins+=65;
+   v33Result('✨ DESAFIO LENDÁRIO VENCIDO!',legend+' recuou! Tente uma Pokébola durante o combate para capturá-lo. Bônus: 65 moedas.',true);persist();}
+  else{persist();v33Result('⚡ DESAFIO LENDÁRIO','A batalha foi difícil. Treine seu time e tente novamente.',false);}return;
+ }
+ persist();return v33FinishPrev(win);
+};
+const v33CapturePrev=finishCapture;
+finishCapture=function(m){
+ const legendary=battle?.v33Type==='legendary';
+ if(battle?.active){const stats=v33Ensure().stats;stats.captures++;if(m?.shiny)stats.shiny++;if(legendary&&!stats.legendary.includes(m.id))stats.legendary.push(m.id);persist();}
+ return v33CapturePrev(m);
+};
+function v33RenderMenu(){
+ if(!save.starter||battle?.active)return;
+ const root=$('main');if(!root||$('v33MainMenu'))return;
+ const row=document.createElement('div');row.id='v33MainMenu';row.className='v33Menu';
+ row.innerHTML='<button class="btn ghost" type="button" id="v33TrainOpen">💪 Treinamento</button><button class="btn ghost" type="button" id="v33LegendOpen">✨ Lendários</button><button class="btn ghost" type="button" id="v33LabOpen">🧪 Laboratório</button><button class="btn ghost" type="button" id="v33HistoryOpen">📊 Histórico</button>';
+ const area=$('v32Menu')||root.querySelector('.gymHero')||root.querySelector('.panel');
+ if(area)area.insertAdjacentElement('afterend',row);else root.prepend(row);
+ $('v33TrainOpen').onclick=v33TrainingMenu;
+ $('v33LegendOpen').onclick=v33LegendMenu;
+ $('v33LabOpen').onclick=v33LabMenu;
+ $('v33HistoryOpen').onclick=v33HistoryMenu;
+ const tag=$('v30VersionTag');if(tag)tag.textContent='V33 · 2D';
+}
+const v33RenderPrev=render;
+render=function(){v33Ensure();v33RenderPrev();v33RenderMenu();};
+function v33TrainingMenu(){if(battle?.active)return;v33Ensure();const team=save.team;
+ overlay('<div class="sectionhead"><div><div class="overline">V33 · TREINAMENTO INDIVIDUAL</div><h2>💪 Centro de Treino</h2></div><button class="btn tiny ghost" id="v33BackTrain">✕</button></div><p class="desc">Treine cada Pokémon até 8 pontos em quatro atributos. O custo cresce conforme o treino. Nenhuma evolução ou progresso será apagado.</p><div class="v33Pane">Moedas disponíveis: <b>🪙 '+save.coins+'</b></div><div id="v33TrainList">'+team.map((m,i)=>'<button type="button" data-v33-mon="'+i+'" class="v32MoveRow"><b>'+D[m.id].name+' · Nv. '+m.level+'</b><small>Treinar →</small></button>').join('')+'</div>');
+ $('v33BackTrain').onclick=close;document.querySelectorAll('[data-v33-mon]').forEach(el=>el.onclick=()=>v33TrainMon(save.team[+el.dataset.v33Mon]));
+}
+function v33TrainMon(m){if(!m||!save.team.includes(m)||battle?.active)return;
+ v33Ensure();const tr=m.v33Train,labels={atk:'Ataque',def:'Defesa',spd:'Velocidade',special:'Ataque Especial'};
+ overlay('<div class="sectionhead"><div><div class="overline">V33 · TREINAMENTO</div><h2>💪 '+D[m.id].name+'</h2></div><button class="btn tiny ghost" id="v33TrainBack">✕</button></div><p class="desc">Cada ponto aumenta levemente o desempenho no combate. Limite: 8 por atributo.</p><div class="v33Pane">🪙 Moedas: <b>'+save.coins+'</b> · Nível '+m.level+'</div><div id="v33TrainCards">'+Object.entries(labels).map(([key,label])=>{
+ const lv=tr[key]||0,cost=25+lv*16;
+ return '<div class="v33Pane"><strong>'+label+'</strong><small> · '+lv+'/8</small><div class="v33Bar"><i style="width:'+(lv*12.5)+'%"></i></div><button class="btn tiny gold" style="margin-top:8px" data-v33-train="'+key+'" '+(lv>=8||save.coins<cost?'disabled':'')+'>'+(lv>=8?'MÁXIMO':'🪙 '+cost+' · Treinar')+'</button></div>';
+ }).join('')+'</div>');
+ $('v33TrainBack').onclick=v33TrainingMenu;
+ document.querySelectorAll('[data-v33-train]').forEach(btn=>btn.onclick=()=>{
+  const stat=btn.dataset.v33Train,lv=tr[stat];if(!Number.isInteger(lv)||lv>=8)return;const cost=25+lv*16;if(save.coins<cost)return;
+  save.coins-=cost;tr[stat]=lv+1;persist();v33TrainMon(m);
+ });
+}
+function v33LegendMenu(){if(battle?.active)return;
+ const medals=save.medals?.length||0;
+ overlay('<div class="sectionhead"><div><div class="overline">V33 · DESAFIOS EXTRAS</div><h2>✨ Lendários de Kanto</h2></div><button class="btn tiny ghost" id="v33LegendClose">✕</button></div><p class="desc">Encontros especiais após obter 8 insígnias. Use Pokébolas durante o combate para tentar capturar um lendário. Mewtwo exige concluir a Liga.</p>'+V33_LEGENDARIES.map((p,i)=>'<div class="v33Legendary"><div><strong>'+p.name+'</strong><small style="display:block">'+p.place+' · Nv. '+p.level+' · '+(p.gate===13?'Liga completa':'8 insígnias')+'</small></div><button class="btn tiny '+((p.gate===8?medals>=8:save.gym>=13)?'gold':'ghost')+'" type="button" data-v33-legend="'+i+'" '+((p.gate===8?medals>=8:save.gym>=13)?'':'disabled')+'>Enfrentar</button></div>').join(''));
+ $('v33LegendClose').onclick=close;
+ document.querySelectorAll('[data-v33-legend]').forEach(el=>el.onclick=()=>{
+  const p=V33_LEGENDARIES[+el.dataset.v33Legend];if(!p||save.balls<=0)return v33Toast('Compre Pokébolas antes de tentar o desafio.');
+  if((p.gate===8&&medals<8)||(p.gate===13&&save.gym<13))return;
+  if(!requireTeam())return showItems();
+  startBattle([mon(p.id,p.level)],'✨ LENDÁRIO '+p.name,true);
+  if(battle?.active){battle.v33Type='legendary';battle.v33Legendary=p.name;battle.v32Weather=p.weather;}
+ });
+}
+function v33LabMenu(){if(battle?.active)return;
+ if(!requireTeam())return v33Toast('Cure um Pokémon da equipe antes de entrar no Laboratório.');
+ const choices=[25,6,9,65,94,130,149,150];
+ overlay('<div class="sectionhead"><div><div class="overline">V33 · TESTES SEM RISCO</div><h2>🧪 Laboratório de Batalhas</h2></div><button class="btn tiny ghost" id="v33LabClose">✕</button></div><p class="v33LabNote">Escolha um adversário e o nível. Treine movimentos e estratégias sem perder moedas, insígnias ou progresso. O HP da equipe volta ao valor original depois da batalha.</p><div class="v33Pane"><label for="v33LabTarget">Adversário</label><select id="v33LabTarget" style="width:100%;padding:10px;margin:8px 0;background:#182f40;color:#fff;border:1px solid #678299;border-radius:9px">'+choices.map(id=>'<option value="'+id+'">'+D[id].name+'</option>').join('')+'</select><label for="v33LabLevel">Nível (5 a 100)</label><input id="v33LabLevel" inputmode="numeric" type="number" value="35" min="5" max="100" style="width:100%;padding:10px;margin:8px 0;background:#182f40;color:#fff;border:1px solid #678299;border-radius:9px" /><label><input type="checkbox" id="v33LabDuo"> Batalha dupla (precisa de dois Pokémon vivos)</label></div><div class="v33Flex"><button class="btn gold" id="v33LabStart">⚔️ Começar teste</button><button class="btn ghost" id="v33LabBack">Voltar</button></div>');
+ $('v33LabClose').onclick=close;$('v33LabBack').onclick=close;
+ $('v33LabStart').onclick=()=>{
+  const id=Number($('v33LabTarget').value),level=Math.max(5,Math.min(100,Math.floor(Number($('v33LabLevel').value)||35))),duo=$('v33LabDuo').checked;
+  if(!D[id]||!requireTeam())return;if(duo&&save.team.filter(x=>x.hp>0).length<2)return v33Toast('Você precisa de dois Pokémon vivos para testar a dupla.');
+  const snapshot=save.team.map(m=>({ref:m,data:JSON.parse(JSON.stringify(m))}));
+  const saveSnapshot={coins:save.coins,gym:save.gym,stage:save.stage,wins:save.wins,losses:save.losses,seen:[...(save.seen||[])],caught:[...(save.caught||[])]};
+  const adversaries=[mon(id,level)];if(duo)adversaries.push(mon(id,level));
+  startBattle(adversaries,duo?'🧪 RIVAL · TESTE DUPLO':'🧪 LABORATÓRIO · TESTE',false);
+  if(battle?.active){battle.v33Type='lab';battle.v33Snapshot=snapshot;battle.v33SaveSnapshot=saveSnapshot;
+   if(duo&&!battle.v31Duo){const ally=save.team.find(m=>m.hp>0&&m!==current());const enemy=battle.enemies.shift();battle.v31Duo={ally,enemy,clockAlly:99999,clockEnemy:2.5};v33BattleTools();}
+  }
+ };
+}
+function v33HistoryMenu(){if(battle?.active)return;
+ const info=v33Ensure().stats,most=Object.entries(info.moves).sort((a,b)=>b[1]-a[1]).slice(0,8);
+ overlay('<div class="sectionhead"><div><div class="overline">V33 · HISTÓRICO LOCAL</div><h2>📊 Estatísticas</h2></div><button class="btn tiny ghost" id="v33StatsBack">✕</button></div><p class="desc">Os registros desta tela começam na V33 e ficam salvos apenas neste navegador.</p><div class="v33Stats">'+[
+ ['Batalhas concluídas',info.fights],['Vitórias registradas',info.wins],['Derrotas registradas',info.losses],['Capturas',info.captures],['Shiny capturados',info.shiny],['Dano causado',info.damage],['Desvios/erros',info.misses],['Recorde na Torre',save.v32?.tower?.best||0]
+ ].map(([name,val])=>'<div class="v33Pane"><small>'+name+'</small><h3>'+val+'</h3></div>').join('')+'</div><div class="v33Pane"><h3>Golpes mais usados</h3>'+((most.length?most.map(([name,n])=>'<div class="v33Pet">'+name+' · '+n+' uso(s)</div>').join(''):'Ainda não existem dados de golpes.'))+'</div><div class="v33Pane">Lendários capturados: '+(info.legendary.map(id=>D[id]?.name||id).join(', ')||'Nenhum')+'</div>');
+ $('v33StatsBack').onclick=close;
+}
+// Recuperação no próprio loop — um erro não pode gerar milhares de mensagens/quadros congelados.
+const v33FramePrev=BattleEngine.prototype.frame;
+BattleEngine.prototype.frame=function(now){try{return v33FramePrev.call(this,now);}catch(error){
+ console.error('Pokemon Torre V33 erro de batalha:',error);this.running=false;if(this.raf)cancelAnimationFrame(this.raf);
+ const msg='Erro de renderização; o progresso anterior está preservado.';
+ if(battle?.active){const b=battle;b.active=false;stopTimers();battle=null;}
+ persist();
+ try{resultScreen('⚠️ BATALHA INTERROMPIDA',msg,false,false);}catch(e){console.error('Erro ao recuperar batalha',e);$('backdrop')?.classList.add('hide');render();}
+ }};
+window.PokemonTorreV33Diagnostics=()=>({version:V33_VERSION,speciesProfiles:Object.keys(V33_SPECIES_MOVES).length,trainer:save.team.map(m=>({id:m.id,train:m.v33Train||{},skills:skillSet(m).map(x=>x.name)})),legendaries:V33_LEGENDARIES.map(l=>l.id),stats:{...v33Ensure().stats},lab:battle?.v33Type==='lab',double:!!battle?.v31Duo,terrain:battle?.v33Terrain||null});
+/* FIM POKEMON TORRE V33 */
+/* POKEMON TORRE V33.1 | fix multi-moves, Kanto trainer sprites, double battle attacks */
+(function(){
+ 'use strict';
+ const V331='33.1';
+ const MOVE_DEFS={
+ normal:[['Investida','dash',1,19],['Arranhão','dash',4,22],['Golpe de Corpo','dash',9,30],['Slam','dash',15,37],['Corte','dash',21,37],['Cabeçada','dash',28,41],['Ataque Duplo','dash',34,43],['Mega Soco','dash',41,48],['Golpe Duplo','dash',49,49],['Hiper Raio','beam',60,64],['Impacto Estelar','pierce',72,56]],
+ fire:[['Brasa','bolt',1,22],['Roda de Fogo','dash',6,27],['Chama','bolt',11,32],['Chama Circular','area',19,37],['Lança-Chamas','beam',27,47],['Punho de Fogo','dash',35,48],['Rajada Ígnea','pierce',44,52],['Giro de Fogo','hazard',53,47],['Explosão de Fogo','area',65,60],['Labareda Final','beam',78,66]],
+ water:[['Bolhas','bolt',1,21],['Pistola d’Água','bolt',6,25],['Jato d’Água','bolt',11,30],['Aqua Jet','dash',18,33],['Pulso de Água','bolt',25,42],['Cachoeira','dash',34,47],['Mergulho','dash',41,50],['Onda Gigante','area',51,54],['Hidro Bomba','beam',63,62],['Tsunami','pierce',77,67]],
+ grass:[['Absorver','bolt',1,19],['Chicote de Vinha','bolt',5,27],['Folha Navalha','pierce',11,31],['Mega Dreno','bolt',18,37],['Raízes Violentas','area',25,40],['Chicote Duplo','dash',33,46],['Bomba de Sementes','bolt',42,49],['Pétalas Cortantes','area',51,54],['Raio Solar','beam',65,64],['Tempestade de Folhas','pierce',76,66]],
+ electric:[['Choque do Trovão','bolt',1,23],['Faísca','bolt',5,27],['Onda Elétrica','bolt',10,32],['Carga Relâmpago','dash',17,36],['Descarga','area',24,42],['Raio','bolt',32,47],['Choque Magnético','homing',40,48],['Campo Elétrico','hazard',48,48],['Trovão','homing',61,62],['Tempestade de Raios','area',76,66]],
+ psychic:[['Confusion','bolt',1,22],['Telecinese','bolt',6,28],['Onda Mental','bolt',12,31],['Confusão','bolt',18,36],['Psíquico','homing',27,43],['Barreira Psíquica','shield',34,0],['Psicocorte','pierce',43,50],['Pulsação Mental','area',52,53],['Premonição','homing',63,58],['Tempestade Psíquica','area',77,66]],
+ poison:[['Ferrão Venenoso','bolt',1,22],['Picada Tóxica','dash',6,26],['Ácido','bolt',12,33],['Névoa Venenosa','area',19,39],['Golpe de Veneno','dash',27,44],['Bomba de Lodo','area',36,49],['Lama Corrosiva','hazard',46,48],['Rajada Ácida','pierce',55,54],['Toxina Pesada','bolt',65,62]],
+ ground:[['Tapa de Lama','bolt',1,23],['Lançamento de Areia','bolt',7,29],['Soco de Terra','dash',13,34],['Fenda Rasa','area',21,39],['Lança de Areia','pierce',30,44],['Tremor','area',39,49],['Abalo Terrestre','area',48,53],['Terremoto','area',60,62],['Grande Fissura','area',76,68]],
+ rock:[['Arremesso de Pedra','bolt',1,23],['Pedrada','bolt',6,28],['Cascalho','pierce',12,33],['Rochedo','dash',20,37],['Deslizamento','area',28,42],['Pedra Afiada','pierce',37,48],['Martelo Rochoso','dash',45,52],['Avalanche','area',54,57],['Chuva de Meteoritos','area',73,67]],
+ ice:[['Caco de Gelo','bolt',1,24],['Vento Gelado','bolt',8,30],['Sopro Congelante','bolt',16,36],['Fragmentos de Gelo','pierce',24,42],['Raio de Gelo','beam',32,47],['Impacto Glacial','dash',41,51],['Campo Gelado','hazard',50,54],['Nevasca','area',62,61],['Tempestade de Neve','area',76,67]],
+ ghost:[['Lambida','dash',1,23],['Sombra','bolt',7,29],['Assombração','bolt',13,34],['Garra Sombria','dash',22,40],['Bola Sombria','homing',30,45],['Maldição Espectral','area',39,48],['Pulso Fantasma','pierce',48,53],['Esfera Escura','homing',59,59],['Trevas Eternas','area',75,65]],
+ fighting:[['Soco','dash',1,24],['Chute','dash',6,29],['Golpe de Karatê','dash',12,33],['Investida Forte','dash',19,39],['Soco Cruzado','dash',27,43],['Quebra-Tijolo','dash',36,48],['Golpe de Aura','bolt',46,54],['Onda de Choque','area',56,58],['Soco Dinâmico','dash',72,67]],
+ flying:[['Rajada','bolt',1,24],['Bicada','dash',6,28],['Vento Cortante','pierce',13,34],['Ataque de Asa','dash',20,39],['Aerocorte','pierce',28,44],['Furacão','area',38,48],['Pique','dash',49,55],['Vendaval','area',61,60],['Céu Tempestuoso','area',74,65]],
+ bug:[['Picada','dash',1,23],['Ataque de Inseto','dash',7,28],['Ferroada','dash',14,33],['Agulhas','pierce',21,38],['Corte X','dash',29,44],['Enxame','area',38,50],['Ferrão Duplo','dash',47,53],['Teia Cortante','pierce',58,59],['Tempestade de Insetos','area',75,65]],
+ dragon:[['Sopro de Dragão','bolt',1,26],['Garra Dracônica','dash',8,33],['Onda Dracônica','bolt',17,39],['Investida Dragão','dash',26,45],['Raiva do Dragão','bolt',34,49],['Pulso de Dragão','pierce',44,53],['Tempestade Dracônica','area',55,58],['Hiper Raio Dragão','beam',68,65],['Fúria Ancestral','area',80,69]],
+ dark:[['Mordida','dash',1,25],['Ataque Sombrio','dash',8,31],['Golpe Noturno','dash',16,37],['Pulso Sombrio','bolt',24,43],['Fúria Noturna','pierce',33,48],['Escuridão','area',43,52],['Sombra Perseguidora','homing',54,57],['Impacto das Trevas','area',67,64]],
+ steel:[['Garra de Metal','dash',1,25],['Choque Metálico','bolt',8,31],['Corte de Aço','dash',16,38],['Canhão Metálico','bolt',26,44],['Lâmina Prateada','pierce',36,49],['Parede de Aço','shield',45,0],['Tempestade Metálica','area',57,57],['Canhão de Ferro','beam',71,65]],
+ fairy:[['Vento de Fada','bolt',1,23],['Encanto','bolt',7,30],['Brilho Mágico','bolt',15,36],['Luz da Lua','recover',24,0],['Raio Encantado','pierce',34,47],['Impacto Féerico','area',44,52],['Explosão de Estrelas','area',59,59],['Poder da Lua','beam',72,64]]
+ };
+ const V331_SMALL_CATALOG={129:['Salpicar','Investida','Chicote','Ataque de Corpo','Salto'],11:['Endurecer','Investida'],14:['Endurecer','Investida'],132:['Transformar','Investida','Mimetismo','Ataque de Corpo']};
+ const V331_EXTRA_TM={normal:'TM Universal',fighting:'TM Lutador'};
+ const v331PreviousCatalogue=v32Catalogue;
+ const v331Key=v32MoveKey;
+ function v331AsMove(row,type){
+  const [name,kind,level,power]=row,heavy=power>=60;
+  const cost=kind==='shield'||kind==='recover'?24:kind==='dash'?Math.max(0,Math.round((power-26)*.55)):Math.round(power*.58);
+  const cd=kind==='homing'?10000:kind==='area'?4600:kind==='hazard'?6300:kind==='pierce'?3200:kind==='beam'?heavy?6800:4000:kind==='recover'?8500:kind==='shield'?5800:kind==='dash'?1400:2300;
+  return {name,type,kind,cat:power?'special':'status',power,level,cost:Math.min(55,cost),cd,icon:V32_ADD_MOVES[type]?.icon||'✨'};
+ }
+ v32Catalogue=function(m){
+  if(!m||!D[m.id])return [];
+  const base=v331PreviousCatalogue(m),p=D[m.id],types=[...new Set([p.type,p.type2].filter(Boolean))];
+  const keys=new Set(base.map(x=>x.key));
+  const restricted=V331_SMALL_CATALOG[m.id];
+  for(const t of [...new Set(['normal',...types])]){
+   for(const row of MOVE_DEFS[t]||[]){
+    if(restricted && !restricted.includes(row[0]))continue;
+    const move=v331AsMove(row,t),key=v331Key(move);
+    if(keys.has(key))continue;keys.add(key);
+    base.push({key,move,level:move.level,tm:false,available:m.level>=move.level});
+   }
+  }
+  // A assinatura da espécie continua disponível; a quantidade de opções cresce com o nível.
+  return base.sort((a,b)=>(a.level||1)-(b.level||1)||a.move.name.localeCompare(b.move.name,'pt'));
+ };
+ // A equipe ganha um acesso claramente visível; o botão antigo permanece como compatibilidade.
+ const v331PreviousTeam=showTeam;
+ showTeam=function(){
+  v331PreviousTeam();if(battle?.active)return;
+  const root=$('modal'),head=root?.querySelector('.sectionhead');if(!head)return;
+  if(root.querySelector('#v331MovesShortcut'))return;
+  const button=document.createElement('button');button.id='v331MovesShortcut';button.type='button';button.className='btn gold v331Shortcut';button.textContent='🧠 TROCAR OS 4 GOLPES DO POKÉMON';
+  button.onclick=v331ChoosePokemon;head.insertAdjacentElement('afterend',button);
+  root.querySelectorAll('.v32SwapBtn').forEach((old,i)=>{old.textContent='🧠 GOLPES · '+D[[...save.team,...save.box][i]?.id]?.name;old.onclick=()=>v331MovesEditor([...save.team,...save.box][i]);});
+ };
+ function v331ChoosePokemon(){if(battle?.active)return;
+  const all=[...save.team,...save.box];
+  overlay('<div class="sectionhead"><div><div class="overline">V33.1 · CENTRAL DE GOLPES</div><h2>🧠 Escolha o Pokémon</h2></div><button class="btn tiny ghost" id="v331BackTeam">✕</button></div><p class="desc">Cada Pokémon pode equipar quatro golpes. A lista cresce conforme o nível e respeita seus tipos e TMs.</p><div class="v331PokemonList">'+all.map((m,i)=>'<button type="button" class="v331Pokemon" data-v331-pokemon="'+i+'">'+img(m.id)+'<span><b>'+D[m.id].name+' · Nv. '+m.level+'</b><small>'+v32Catalogue(m).filter(x=>x.available).length+' golpes liberados · '+v32Catalogue(m).length+' no catálogo</small></span><span>Editar →</span></button>').join('')+'</div>');
+  $('v331BackTeam').onclick=showTeam;
+  document.querySelectorAll('[data-v331-pokemon]').forEach(el=>el.onclick=()=>v331MovesEditor(all[+el.dataset.v331Pokemon]));
+ }
+ function v331MovesEditor(m){if(!m||battle?.active)return;
+  const all=[...save.team,...save.box];if(!all.includes(m))return;
+  let slot=0,filter='available';
+  function paint(){
+   const cat=v32Catalogue(m),defaults=v32DefaultSlots(m);
+   const selected=(Array.isArray(m.v32Slots)&&m.v32Slots.length===4?m.v32Slots:defaults).slice();
+   const chosen=selected.map((key,i)=>cat.find(x=>x.key===key)||cat.find(x=>x.key===defaults[i]));
+   const available=cat.filter(x=>filter==='all'||(filter==='available'?x.available:!x.available));
+   const controls=chosen.map((x,i)=>'<button class="v331Slot '+(slot===i?'active':'')+'" data-v331-slot="'+i+'"><b>'+(i+1)+'. '+(x?.move.icon||'✦')+' '+(x?.move.name||'Golpe')+'</b><small>'+(x?.move.cost||0)+' energia · '+(((x?.move.cd||1000)/1000).toFixed(1))+'s</small></button>').join('');
+   const moves=available.map(x=>'<button class="v331Choice '+(selected.includes(x.key)?'equipped':'')+'" data-v331-pick="'+cat.indexOf(x)+'" '+(x.available?'':'disabled')+'><span><b>'+(x.move.icon||'✦')+' '+x.move.name+'</b><small>'+(TYPE_NAME[x.move.type]||x.move.type)+' · '+(x.move.power||'Defesa')+' força · '+x.move.cost+' energia · '+(x.move.cd/1000).toFixed(1)+'s</small></span><span class="pillSmall">'+(selected.includes(x.key)?'EM USO':x.available?'EQUIPAR':'Nv. '+x.level)+'</span></button>').join('');
+   overlay('<div class="sectionhead"><div><div class="overline">PERSONALIZAR · '+D[m.id].name+'</div><h2>🧠 '+D[m.id].name+' · Nv. '+m.level+'</h2></div><button class="btn tiny ghost" id="v331BackMoves">✕</button></div><p class="desc">1. Escolha um dos quatro espaços. 2. Toque no novo golpe. A mudança é salva automaticamente.</p><div class="v331Slots">'+controls+'</div><div class="v331Tabs"><button class="btn tiny '+(filter==='available'?'gold':'ghost')+'" data-v331-filter="available">Liberados ('+cat.filter(x=>x.available).length+')</button><button class="btn tiny '+(filter==='all'?'gold':'ghost')+'" data-v331-filter="all">Todos ('+cat.length+')</button><button class="btn tiny '+(filter==='locked'?'gold':'ghost')+'" data-v331-filter="locked">Futuros</button></div><div class="v331MoveList">'+moves+'</div><div class="v331Actions"><button class="btn ghost" id="v331DefaultMoves">↻ Restaurar golpes</button><button class="btn gold" id="v331Done">✓ Pronto</button></div><div class="v331Feedback" id="v331Feedback" aria-live="polite"></div>');
+   $('v331BackMoves').onclick=v331ChoosePokemon;$('v331Done').onclick=showTeam;
+   $('v331DefaultMoves').onclick=()=>{m.v32Slots=null;persist();paint()};
+   document.querySelectorAll('[data-v331-slot]').forEach(el=>el.onclick=()=>{slot=+el.dataset.v331Slot;paint()});
+   document.querySelectorAll('[data-v331-filter]').forEach(el=>el.onclick=()=>{filter=el.dataset.v331Filter;paint()});
+   document.querySelectorAll('[data-v331-pick]').forEach(el=>el.onclick=()=>{
+    const x=cat[+el.dataset.v331Pick];if(!x||!x.available)return;
+    const list=selected.slice();if(list.some((key,i)=>key===x.key && i!==slot)){const note=$('v331Feedback');if(note)note.textContent='Este golpe já ocupa outra posição.';return;}
+    list[slot]=x.key;m.v32Slots=list;persist();
+    const selectedNow=skillSet(m)[slot];
+    if(selectedNow?.name!==x.move.name){m.v32Slots=selected;persist();const note=$('v331Feedback');if(note)note.textContent='Não foi possível equipar '+x.move.name;return;}
+    paint();const note=$('v331Feedback');if(note)note.textContent='✓ '+x.move.name+' equipado e salvo na posição '+(slot+1);
+   });
+  }
+  paint();
+ }
+ // Classes de treinadores de Kanto (Sprites da Pok. Showdown, sprites originais nao alterados).
+ const V331_TRAINERS={
+   0:[['Jovem','youngster-gen1'],['Montanhista','hiker-gen1'],['Caçador de Insetos','bugcatcher-gen1']],
+   1:[['Nadador','swimmerm-gen2'],['Garota','lass-gen1'],['Treinadora','jrtrainerf-gen1']],
+   2:[['Roqueiro','rocker-gen1'],['Jovem','youngster-gen1'],['Treinador','acetrainer-gen1']],
+   3:[['Beleza','beauty-gen1'],['Treinadora','jrtrainerf-gen1'],['Garota','lass-gen1']],
+   4:[['Domador','tamer-gen1'],['Caçador de Insetos','bugcatcher-gen1'],['Montanhista','hiker-gen1']],
+   5:[['Psíquico','psychic-gen1'],['Malabarista','juggler-gen1'],['Treinadora','jrtrainerf-gen1']],
+   6:[['Cientista','supernerd-gen1'],['Ladrão','burglar-gen1'],['Cavalheiro','gentleman-gen1']],
+   7:[['Montanhista','hiker-gen1'],['Domador','tamer-gen1'],['Treinador','acetrainer-gen1']]
+ };
+ function v331TrainerInfo(){
+  const b=battle;if(!b?.active||b.wild)return null;
+  const name=b.label||'';if(/LABORATÓRIO|LENDÁRIO|TORRE|REVANCHE DA LIGA/i.test(name))return null;
+  if(/LÍDER\s/i.test(name) && save.gym<8)return {title:GYMS[save.gym].leader,src:V27_TRAINER_GIFS[GYMS[save.gym].leader]||'',leader:true};
+  if(/ROCKET/i.test(name))return {title:'Recruta Rocket',src:'https://play.pokemonshowdown.com/sprites/trainers/rocketgrunt.png'};
+  if(/RIVAL/i.test(name))return {title:'Rival Blue',src:'https://play.pokemonshowdown.com/sprites/trainers/blue-gen1.png'};
+  const list=V331_TRAINERS[save.gym]||V331_TRAINERS[0],step=Math.max(0,save.stage||0),x=list[step%list.length];
+  return {title:x[0]+' de Kanto',src:'https://play.pokemonshowdown.com/sprites/trainers/'+x[1]+'.png'};
+ }
+ function v331FixTrainer(){
+  const box=$('v31Trainer');if(!box)return;
+  const info=v331TrainerInfo();if(!info){box.remove();return;}
+  box.innerHTML='';const pic=document.createElement('img');pic.src=info.src;pic.alt=info.title;pic.loading='lazy';pic.onerror=()=>{pic.remove();const mark=document.createElement('span');mark.className='v331TrainerFallback';mark.textContent='♟';box.prepend(mark);};
+  const label=document.createElement('div');label.className='v31TrainerLabel';label.textContent=info.title;
+  box.append(pic,label);box.title=info.title;
+ }
+ const prevBattleRender=renderBattle;
+ renderBattle=function(){prevBattleRender();v331FixTrainer();};
+ function v331ArrangeDouble(){
+  const controls=$('v33DoubleControls'),foot=document.querySelector('.battleFooter'),grid=foot?.querySelector('.skillgridV8');
+  if(!controls||!foot||!grid)return;
+  if(controls.parentElement!==foot)grid.insertAdjacentElement('afterend',controls);
+  controls.classList.add('v331DuoBar');
+  const message=$('v331DuoNotice');if(!message){const el=document.createElement('div');el.id='v331DuoNotice';el.className='v331DuoNotice';el.textContent='⚔️ Seus quatro golpes funcionam normalmente. Toque no alvo A ou B; os botões abaixo controlam o parceiro.';grid.insertAdjacentElement('beforebegin',el);}
+ }
+ const oldDuoTools=v33BattleTools;
+ v33BattleTools=function(){oldDuoTools();v331ArrangeDouble();};
+ const prevStart=startBattle;
+ startBattle=function(enemies,label,wild){const result=prevStart(enemies,label,wild);v331ArrangeDouble();v331FixTrainer();return result;};
+ const v331OldSkillClick=useSkill;
+ useSkill=function(i){
+  if(battle?.active&&battle.paused&&battle.v31Duo&&engine)return engine.useMove(i);
+  return v331OldSkillClick(i);
+ };
+ const oldUseMove=BattleEngine.prototype.useMove;
+ function v331OverlayFeedback(msg){const line=$('v331BattleNotice');if(line){line.textContent=msg;return;}const parent=document.querySelector('.battleFooter');if(!parent)return;const el=document.createElement('span');el.id='v331BattleNotice';el.className='v331BattleNotice';el.textContent=msg;parent.prepend(el);setTimeout(()=>el.remove(),1600);}
+ BattleEngine.prototype.useMove=function(i){
+  const b=battle;if(!b?.active||i<0||i>3||!Number.isInteger(i))return;
+  const monNow=current(),s=skillSet(monNow)[i],now=performance.now();if(!s)return;
+  if(b.paused){
+   if(b.v31Duo && this.running && (this.v25?.entry?.length||this.v301Faint) && !this.v25?.capture){this.v331Queued={slot:i,b};v331OverlayFeedback('Pokémon entrando! Golpe '+(i+1)+' na fila.');return;}
+   if(b.v31Duo && this.running && !this.v25?.entry?.length && !this.v25?.capture && !b.v301Fainting && $('swapSheet')?.classList.contains('hide'))b.paused=false;
+   else{v331OverlayFeedback('Aguarde a animação de entrada para atacar.');return;}
+  }
+  if(cooldowns[i]>now){v331OverlayFeedback(s.name+' recarregando.');return;}
+  if(b.energy<s.cost){v331OverlayFeedback('Energia insuficiente para '+s.name+'.');return;}
+  if(monNow.hp<=0)return;
+  if(this.v33Windup&&now<this.v33Windup.until){v331OverlayFeedback('Preparando o golpe anterior.');return;}
+  // O renderizador antigo só reconhecia projéteis teleguiados e áreas na posição 3.
+  // Agora qualquer um dos quatro slots pode executar esses golpes com a mesma mecânica 2D.
+  if(['homing','pierce','area','hazard'].includes(s.kind) && (i!==2 || !V30_MOVE_TRAITS[monNow.id])){
+   b.energy-=s.cost;cooldowns[i]=now+(s.kind==='homing'?Math.max(10000,s.cd):s.cd);
+   this.attackActs.player=this.time+.45;this.v30Shots ||= [];this.v30Zones ||= [];
+   const aim=this.aimVector(),x=this.player.x,y=this.player.y,color=TYPE_COLOR[s.type]||'#c6e4ff';
+   this.particlesAt(x,y,color,13,88);
+   if(s.kind==='homing'||s.kind==='pierce'){
+    this.v30Shots.push({x,y,vx:aim.x*this.h*.60,vy:aim.y*this.h*.60,kind:s.kind,type:s.type,power:s.power,life:2.2,trail:[],hit:false});this.v30Shots=this.v30Shots.slice(-12);
+   } else {
+    this.v30Zones.push({kind:s.kind,x:this.enemy.x,y:this.enemy.y,type:s.type,power:s.power,life:s.kind==='hazard'?3.1:.42,tick:.4,r:this.h*.21,hit:false});this.v30Zones=this.v30Zones.slice(-8);
+   }
+   if(typeof v27EmitFx==='function')v27EmitFx(s.type,'enemy',1.1);
+   log(D[monNow.id].name+' usou '+s.name+'!');playSound('move');
+   if(b.v33Tracker)b.v33Tracker.moves[s.name]=(b.v33Tracker.moves[s.name]||0)+1;
+   v33Ensure().stats.moves[s.name]=(save.v33.stats.moves[s.name]||0)+1;
+   return;
+  }
+  if(s.kind==='recover'||s.kind==='illusion'||s.kind==='shield'){
+   // Protege todas as posições (o motor anterior só tratava o 4º golpe como status).
+   if(s.kind==='shield' && i!==3){b.energy-=s.cost;cooldowns[i]=now+s.cd;this.player.guard=1.9;this.rings.push({x:this.player.x,y:this.player.y,r:12,life:1.3,color:'#9cdbff',follow:'player'});log(monNow.id+' usou '+s.name);return;}
+  }
+  return oldUseMove.call(this,i);
+ };
+ const oldUpdate=BattleEngine.prototype.update;
+ BattleEngine.prototype.update=function(dt,now){
+  const outcome=oldUpdate.call(this,dt,now);
+  const queued=this.v331Queued;
+  if(queued && battle===queued.b && queued.b.active && !battle.paused && this.running){this.v331Queued=null;this.useMove(queued.slot);}
+  if(queued && (!battle?.active||battle!==queued.b))this.v331Queued=null;
+  return outcome;
+ };
+ const styles=document.createElement('style');styles.id='v331Styles';styles.textContent=
+  '.v331Shortcut{width:100%;margin:10px 0 12px;min-height:44px}.v331PokemonList{display:grid;gap:8px;max-height:64vh;overflow:auto}.v331Pokemon{display:flex;gap:12px;align-items:center;text-align:left;border:1px solid #4b798a;color:#defbff;background:#152c3e;border-radius:11px;padding:10px;width:100%;min-height:62px;cursor:pointer}.v331Pokemon .spritewrap{flex-shrink:0;width:42px;height:42px;overflow:hidden}.v331Pokemon span:nth-child(2){flex:1}.v331Pokemon small{display:block;color:#a6d0dd;font-size:11px;margin-top:4px}.v331Slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.v331Slot{cursor:pointer;min-height:65px;background:#142f40;border:1px solid #365c72;color:#e5faff;border-radius:10px;padding:10px;text-align:left}.v331Slot.active{border-color:#ffe095;background:#244448;box-shadow:inset 0 0 0 1px #d8bf80}.v331Slot b{display:block;font-size:12px}.v331Slot small{display:block;color:#a9cfde;font-size:10px;margin-top:4px}.v331Tabs,.v331Actions{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.v331Tabs>button,.v331Actions>button{flex:1 1 105px}.v331MoveList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;max-height:39vh;overflow-y:auto;padding-right:2px}.v331Choice{background:#172c3d;border:1px solid #426074;color:#ecfaff;border-radius:9px;padding:9px;display:flex;justify-content:space-between;gap:7px;text-align:left;cursor:pointer;min-height:55px}.v331Choice b{display:block;font-size:11px}.v331Choice small{display:block;font-size:9px;color:#afd5db;line-height:1.4;margin-top:3px}.v331Choice .pillSmall{font-size:9px}.v331Choice:disabled{opacity:.48;cursor:not-allowed}.v331Choice.equipped{border-color:#b7d776}.v331Feedback{min-height:18px;font-size:11px;color:#b9f6c9}.v331DuoBar{position:relative!important;bottom:auto!important;left:auto!important;right:auto!important;z-index:12;pointer-events:auto;display:flex;flex-wrap:wrap;justify-content:center;padding:8px 4px;background:#112b3ad9;border-radius:9px;margin:6px 0}.v331DuoBar button{font-size:10px;min-height:34px;touch-action:manipulation;flex:1 1 85px}.v331DuoNotice{font-size:10px;color:#d3eeff;padding:7px 4px 2px;text-align:center}.v331BattleNotice{color:#f4df9a;font-size:11px;line-height:1.4;display:block;margin:3px 6px}.v331TrainerFallback{font-size:26px;color:#7ee1ff}.v31Trainer{opacity:1!important;z-index:2!important}.v31Trainer img{max-width:46px;object-fit:contain}.v31TrainerLabel{text-align:center;max-width:100px!important;white-space:normal}@media(max-width:550px){.v331MoveList{grid-template-columns:1fr;max-height:40vh}.v331Slots{gap:5px}.v331Slot{padding:8px}.v331Shortcut{font-size:11px}.v31Trainer{top:27%!important;right:1%!important}.v331DuoBar button{flex:1 1 100px}}';document.head.append(styles);
+ window.PokemonTorreV331Diagnostics=()=>({version:V331,trainer:v331TrainerInfo()?.title||null,catalog:save.team[0]?v32Catalogue(save.team[0]).map(x=>({name:x.move.name,key:x.key,available:x.available})):[],team:save.team.map(m=>({id:m.id,skills:skillSet(m).map(x=>x.name),catalogue:v32Catalogue(m).length,available:v32Catalogue(m).filter(x=>x.available).length})),duoActive:!!battle?.v31Duo,queued:!!engine?.v331Queued});
+})();
+/* END V33.1 */
+/* POKEMON TORRE V34 — 2D: luta dupla automatica, golpes, chefes, terreno, ficha, captura e estabilidade */
+(function(){
+'use strict';
+const V34='34.0';
+const BADGE='✦';
+const safe=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp=(n,min,max)=>Math.min(max,Math.max(min,n));
+function state(){if(!save.v34 || typeof save.v34!=='object')save.v34={};let s=save.v34;
+ if(!s.stats)s.stats={battles:0,wins:0,losses:0,combo:0,dodges:0,bestStreak:0,streak:0,rewards:0,crits:0};
+ if(!s.records)s.records=[];
+ if(!s.tutorial)s.tutorial={};
+ if(!s.settings)s.settings={quality:'auto'};
+ return s;}
+state();
+const typeMoves={
+ water:['Surf','Hydro Pump','Waterfall','Bubble Beam'],electric:['Thunderbolt','Thunder','Volt Tackle','Discharge'],fire:['Flamethrower','Fire Blast','Fire Spin','Ember'],
+ grass:['Razor Leaf','Solar Beam','Petal Dance','Vine Whip'],psychic:['Psychic','Psybeam','Confusion','Recover'],poison:['Poison Jab','Sludge Bomb','Toxic','Acid'],
+ ground:['Earthquake','Earth Power','Dig','Mud-Slap'],rock:['Rock Slide','Stone Edge','Rock Throw','Ancient Power'],ice:['Ice Beam','Blizzard','Ice Shard','Aurora Beam'],
+ ghost:['Shadow Ball','Night Shade','Lick','Confuse Ray'],fighting:['Karate Chop','Cross Chop','Brick Break','Low Kick'],flying:['Air Slash','Wing Attack','Gust','Fly'],
+ bug:['X-Scissor','Leech Life','Bug Bite','Pin Missile'],dragon:['Dragon Breath','Dragon Claw','Dragon Rage','Outrage'],normal:['Body Slam','Headbutt','Hyper Beam','Swift'],
+ steel:['Iron Tail','Metal Claw','Iron Defense'],dark:['Bite','Crunch','Pursuit'],fairy:['Moonlight','Fairy Wind']
+};
+// Compatibilidade extra por espécie, não apenas por tipo.
+const species={
+ 3:['Sleep Powder','Leech Seed','Solar Beam'],6:['Dragon Claw','Flamethrower','Fire Spin'],9:['Hydro Pump','Rapid Spin','Skull Bash'],
+ 12:['Sleep Powder','Stun Spore','Psybeam'],25:['Thunderbolt','Thunder Wave','Agility'],26:['Thunder','Thunderbolt','Quick Attack'],
+ 31:['Earthquake','Body Slam','Poison Jab'],34:['Megahorn','Earth Power','Poison Jab','Thrash'],
+ 38:['Fire Spin','Confuse Ray'],45:['Petal Dance','Solar Beam','Sleep Powder'],
+ 59:['Flamethrower','Extreme Speed','Crunch'],65:['Psychic','Recover','Reflect','Future Sight'],64:['Confusion','Recover','Reflect'],
+ 68:['Cross Chop','Karate Chop','Submission'],76:['Earthquake','Rock Slide','Explosion'],80:['Psychic','Surf','Amnesia'],
+ 89:['Sludge Bomb','Minimize','Acid'],94:['Shadow Ball','Hypnosis','Dream Eater','Psybeam','Psychic','Confusion'],95:['Rock Slide','Bind','Earthquake'],
+ 105:['Bonemerang','Bone Club','Earthquake','Earth Power','Dig','Mud-Slap'],112:['Rock Slide','Earthquake','Megahorn'],
+ 121:['Surf','Psychic','Ice Beam'],123:['X-Scissor','Wing Attack','Swords Dance'],
+ 130:['Hydro Pump','Dragon Rage','Hyper Beam'],131:['Surf','Ice Beam','Blizzard'],
+ 143:['Body Slam','Rest','Hyper Beam'],144:['Ice Beam','Blizzard','Agility'],145:['Thunderbolt','Thunder','Drill Peck'],
+ 146:['Flamethrower','Fire Blast','Wing Attack'],149:['Dragon Claw','Dragon Rage','Hyper Beam'],150:['Psychic','Recover','Barrier'],151:['Psychic','Metronome','Transform']
+};
+const moveTraits={
+ 'Recover':['psychic','recover',0,8800,35], 'Rest':['psychic','recover',0,9300,36], 'Reflect':['psychic','shield',0,6900,28],
+ 'Hypnosis':['psychic','status',0,7300,24],'Toxic':['poison','status',0,7800,29],'Sleep Powder':['grass','status',0,7800,25],
+ 'Thunder Wave':['electric','status',0,7400,25],'Stun Spore':['grass','status',0,7300,25],
+ 'Swords Dance':['normal','status',0,6800,24],'Iron Defense':['steel','shield',0,7000,27],
+ 'Agility':['psychic','status',0,6500,22],'Metronome':['normal','bolt',32,3400,28],
+ 'Earthquake':['ground','area',56,6300,43],'Surf':['water','area',52,5200,36],
+ 'Hydro Pump':['water','beam',60,5700,42],'Thunder':['electric','homing',61,10000,46],
+ 'Thunderbolt':['electric','bolt',45,3200,29],'Psychic':['psychic','homing',50,10000,35],
+ 'Shadow Ball':['ghost','homing',48,10000,33],'Solar Beam':['grass','beam',62,5900,44],
+ 'Hyper Beam':['normal','beam',70,8500,52],'Fire Spin':['fire','hazard',39,4800,28],
+ 'Blizzard':['ice','area',56,5900,43],'Rock Slide':['rock','area',48,5100,34],
+ 'X-Scissor':['bug','dash',42,2400,25],'Poison Jab':['poison','dash',43,2400,24],
+ 'Body Slam':['normal','dash',40,2500,22],'Megahorn':['bug','dash',57,4400,36],
+ 'Future Sight':['psychic','homing',55,10000,39],'Ice Beam':['ice','beam',49,3900,34]
+};
+const aliases={'Lança-Chamas':'Flamethrower','Raio':'Thunderbolt','Confusion':'Confusion','Hidro Bomba':'Hydro Pump','Terremoto':'Earthquake','Surf':'Surf','Psíquico':'Psychic','Slam':'Body Slam'};
+const v34CatalogPrev=v32Catalogue;
+function asMove(name,type,lvl){
+ const t=moveTraits[name]||[type,(name.includes('Beam')||name.includes('Raio')?'beam':name.includes('Spin')?'hazard':'bolt'),32+Math.min(19,lvl*.22),2600+Math.min(1800,lvl*11),23+Math.min(16,lvl*.2)];
+ return {name,type:t[0],kind:t[1],power:t[2],cd:t[3],cost:t[4],cat:t[2]>0?'special':'status',icon:(V32_ADD_MOVES[t[0]]?.icon)||'✨'};
+}
+// Não remove os golpes já equipados das versões anteriores.
+v32Catalogue=function(m){
+ const existing=v34CatalogPrev(m);if(!m||!D[m.id])return existing;
+ const seen=new Set(existing.map(x=>x.key));const d=D[m.id];const names=[...(species[m.id]||[])];
+ for(const t of [d.type,d.type2])if(t)names.push(...(typeMoves[t]||[]));
+ const add=(name,n)=>{const same=existing.find(x=>x.move.name===name||aliases[x.move.name]===name);if(same)return;
+  const type=Object.entries(typeMoves).find(([,ns])=>ns.includes(name))?.[0]||
+    (Object.entries(moveTraits).find(([nm])=>nm===name)?.[1]?.[0])||d.type;
+  const level=clamp(5+Math.floor(n/2)*7,5,78),move=asMove(name,type,level),key=v32MoveKey(move);
+  if(seen.has(key))return;seen.add(key);existing.push({key,move,level,tm:false,available:m.level>=level});};
+ names.forEach(add);
+ if(m.id===105){
+   let eq=existing.find(x=>x.move?.name==='Earthquake');
+   if(!eq){const move=asMove('Earthquake','ground',1),key=v32MoveKey(move);
+     existing.push({key,move,level:1,tm:false,available:true});
+   }else{eq.level=1;eq.available=true;}
+ }
+ // Para Pokémon da mesma linhagem, os conjuntos-base antigos permanecem disponíveis.
+ return existing;
+};
+const prevRender=render, prevTeam=showTeam, prevDex=showPokedex;
+const qualityCSS=document.createElement('style');qualityCSS.id='v34Style';qualityCSS.textContent=`
+.v34Panel{background:#142c3e;border:1px solid #42687c;border-radius:13px;padding:12px;margin:10px 0;color:#d5eefb}
+.v34Panel h3{margin:2px 0 10px;font-size:17px}.v34Actions{display:flex;gap:8px;flex-wrap:wrap;margin:9px 0}
+.v34Actions>*{flex:1 1 115px;min-height:40px}.v34Profile{display:grid;grid-template-columns:88px 1fr;gap:12px;align-items:start}
+.v34Profile img{max-width:84px;height:84px;object-fit:contain;image-rendering:pixelated}.v34Grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.v34Datum{padding:7px 9px;border-radius:8px;background:#213c50;font-size:12px}.v34Datum strong{color:#ffdfa0}
+.v34TrainerTag{color:#adcad9;font-size:11px}.v34AutoDuo{display:block;text-align:center;padding:7px;border:1px solid #5e9a98;border-radius:9px;margin:5px 0;color:#beffe5;background:#113c3b;font-size:11px}
+.v34Callout{position:absolute;top:16%;left:50%;transform:translateX(-50%);z-index:22;color:#ffe4a9;background:#1c3149f2;border:1px solid #e8ba6c;border-radius:10px;padding:7px 9px;font-size:11px;pointer-events:none;max-width:70%;text-align:center}
+.v34Indicator{font-size:10px;color:#c5ecf6;margin-left:5px}.v34Reward{font-size:11px;color:#bbecd2}.v34DexButton{display:block;margin:5px auto 0;padding:5px 9px;border-radius:7px;border:1px solid #4d8295;color:#c7edff;background:#143044;font-size:10px;cursor:pointer}
+.v34ArenaMark{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);color:#d9e0ee;opacity:.7;font-size:10px;pointer-events:none}
+#v33DoubleControls,#v331DuoNotice{display:none!important}
+@media(max-width:480px){.v34Grid{grid-template-columns:1fr}.v34Profile{grid-template-columns:72px 1fr}.v34Panel{padding:10px}}
+`;document.head.appendChild(qualityCSS);
+function mvName(m){return D[m.id]?.name||'Pokémon';}
+function profile(m,compare=false){if(battle?.active||!m)return;
+ const all=[...save.team,...save.box],idx=all.indexOf(m),p=D[m.id],nat=typeof v32Nature==='function'?v32Nature(m):{name:'Equilibrado'},moves=v32Catalogue(m),four=skillSet(m);
+ let compareRow='';if(compare){const other=all.find(q=>q!==m&&q.id!==m.id)||all.find(q=>q!==m);if(other){const d=D[other.id];compareRow='<h3>⚖️ Comparação com '+safe(d.name)+'</h3><div class="v34Grid">'+[['Vida',m.maxHp,other.maxHp],['Nível',m.level,other.level],['Ataque base',p.atk,d.atk],['Defesa base',p.def,d.def],['Velocidade',p.spd,d.spd]].map(v=>'<div class="v34Datum">'+v[0]+': <b>'+v[1]+'</b> vs '+v[2]+'</div>').join('')+'</div>';}}
+ overlay('<div class="sectionhead"><h2>📋 '+safe(p.name)+' · Nv.'+m.level+'</h2><button class="btn tiny ghost" id="v34Close">✕</button></div><div class="v34Panel v34Profile">'+img(m.id)+'<div><b>#'+String(m.id).padStart(3,'0')+' '+safe(p.name)+'</b><p class="v34TrainerTag">'+(TYPE_NAME[p.type]||p.type)+(p.type2?' / '+(TYPE_NAME[p.type2]||p.type2):'')+' · '+safe(nat.name)+' · '+(m.shiny?'✨ SHINY':'Normal')+'</p><div class="v34Datum">PV '+Math.ceil(m.hp)+'/'+m.maxHp+' · Nv. '+m.level+'</div><p class="v34TrainerTag">Item: '+safe(m.held||'Nenhum')+' · Treinamento: '+Object.values(m.v33Train||{}).reduce((a,b)=>a+(Number(b)||0),0)+' pontos</p></div></div><div class="v34Panel"><h3>⚔️ Golpes equipados</h3>'+four.map((x,i)=>'<div class="v34Datum">'+(i+1)+'. '+safe(x.name)+' · '+(TYPE_NAME[x.type]||x.type)+' · '+x.cost+' energia · '+(x.cd/1000).toFixed(1)+'s</div>').join('')+'<p class="v34TrainerTag">'+moves.filter(x=>x.available).length+' aprendidos de '+moves.length+' disponíveis · evoluções no menu da equipe</p></div><div class="v34Panel">'+compareRow+'</div><div class="v34Actions"><button class="btn ghost" id="v34Compare">⚖️ Comparar</button><button class="btn ghost" id="v34MoveBack">🧠 Trocar golpes</button><button class="btn gold" id="v34TeamBack">Voltar à equipe</button></div>');
+ $('v34Close').onclick=prevTeam;$('v34TeamBack').onclick=showTeam;$('v34Compare').onclick=()=>profile(m,true);$('v34MoveBack').onclick=()=>{showTeam();const editor=$('v331MovesShortcut');if(editor)editor.click();};
+}
+showTeam=function(){prevTeam();if(battle?.active)return;document.querySelectorAll('[data-team]').forEach((row,i)=>{const m=[...save.team,...save.box][i];if(!m)return;const b=document.createElement('button');b.className='v34DexButton';b.textContent='📋 Ficha e atributos';b.type='button';b.onclick=()=>profile(m);row.insertAdjacentElement('afterend',b);});};
+showPokedex=function(){prevDex();if(battle?.active)return;
+ document.querySelectorAll('.dexGrid .dexCard').forEach((card,index)=>{const id=index+1;if(!save.seen.includes(id))return;const m=[...save.team,...save.box].find(x=>x.id===id)||mon(id,Math.max(5,save.gym*4+5));
+ const b=document.createElement('button');b.type='button';b.className='v34DexButton';b.textContent='Golpes e detalhes';b.onclick=()=>{const info=v32Catalogue(m);const names=info.slice(0,35).map(x=>safe(x.move.name)+' <small> Nv.'+x.level+'</small>');overlay('<div class="sectionhead"><h2>📖 '+safe(D[id].name)+'</h2><button class="btn tiny ghost" id="v34DexClose">✕</button></div><div class="v34Panel">'+img(id)+'<p class="v34TrainerTag">'+(TYPE_NAME[D[id].type]||D[id].type)+' · '+(save.caught.includes(id)?'CAPTURADO':'VISTO')+' · '+((save.shinyCaught||[]).includes(id)?'✨ SHINY REGISTRADO':'')+'</p><h3>Movimentos compatíveis</h3><div class="v34Grid">'+names.map(n=>'<div class="v34Datum">'+n+'</div>').join('')+'</div></div><button class="btn ghost wide" id="v34DexReturn">Voltar à Pokédex</button>');$('v34DexClose').onclick=showPokedex;$('v34DexReturn').onclick=showPokedex;};card.append(b);
+ });};
+// 4: treinadores de Kanto — preserva sprites de líderes só nos desafios reais.
+const KANTO_TRAINER_CLASSES=[['Jovem','youngster-gen1'],['Pescador','fisherman-gen1'],['Cientista','scientist-gen1'],['Caçador de Insetos','bugcatcher-gen1'],['Montanhista','hiker-gen1'],['Karateca','blackbelt-gen1'],['Criador de Pássaros','birdkeeper-gen1'],['Nadador','swimmerm-gen2'],['Domador','tamer-gen1'],['Supernerd','supernerd-gen1'],['Treinadora','jrtrainerf-gen1'],['Cavalheiro','gentleman-gen1']];
+const prevBattleRender=renderBattle;
+renderBattle=function(){prevBattleRender();const tag=$('v31Trainer');if(!tag||!battle?.active||battle.wild)return;
+ const isLeader=/LÍDER\s/i.test(battle.label||'')&&save.gym<8;if(isLeader)return;
+ const specials=/LABORATÓRIO|LENDÁRIO|TORRE|REVANCHE|RIVAL|ROCKET/i.test(battle.label||'');if(specials)return;
+ const row=KANTO_TRAINER_CLASSES[(save.gym*5+save.stage)%KANTO_TRAINER_CLASSES.length];if(!row)return;
+ const image=tag.querySelector('img');if(image){image.src='https://play.pokemonshowdown.com/sprites/trainers/'+row[1]+'.png';image.alt=row[0];}
+ const label=tag.querySelector('.v31TrainerLabel');if(label)label.textContent=row[0]+' de Kanto';};
+// 10: volta ao motor de ataque automático já presente no V31, sem duplicar loops.
+function setAutoDuo(){const duo=battle?.v31Duo;if(!duo)return;
+ duo.v33Manual=false;duo.v33Target='main';if(!Number.isFinite(duo.clockAlly)||duo.clockAlly>100)duo.clockAlly=.7;
+ const old=$('v33DoubleControls');if(old)old.remove();$('v331DuoNotice')?.remove();let tag=$('v34DuoChip');if(!tag){tag=document.createElement('div');tag.className='v34AutoDuo';tag.id='v34DuoChip';const footer=document.querySelector('.battleFooter');footer?.querySelector('.skillgridV8')?.insertAdjacentElement('afterend',tag);}
+ if(tag)tag.textContent='⚔️ '+mvName(duo.ally)+' ataca automaticamente · Você controla o Pokémon principal';
+}
+const prevStart=startBattle;
+startBattle=function(enemies,label,wild){const r=prevStart(enemies,label,wild);if(battle?.active){setAutoDuo();battle.v34={start:performance.now(),hits:0,dodges:0,combo:0,lastAttack:null,rewarded:false,highestHp:current()?.hp||0};}return r;};
+const prevUpdate=BattleEngine.prototype.update;
+BattleEngine.prototype.update=function(dt,now){const b=battle,duo=b?.v31Duo;
+ if(duo?.v33Manual){duo.v33Manual=false;if(duo.clockAlly>100)duo.clockAlly=.7;}
+ const r=prevUpdate.call(this,dt,now);
+ if(!battle?.active||!battle.v34||battle.paused)return r;
+ const a=battle.v34;
+ if(duo){if(duo.enemy?.hp<=0){duo.enemy=null;duo.v33Target='main';}if(!$('v34DuoChip')&&$('arenaPro'))setAutoDuo();}
+ // 3: posicionamento por tipo — velocidade moderada e longe dos HUDs.
+ const enemy=foe();if(enemy&&this.enemy&&this.player){const t=D[enemy.id]?.type;
+  const rx=this.enemy.x-this.player.x,ry=this.enemy.y-this.player.y,dist=Math.hypot(rx,ry)||1;
+  if(['psychic','ghost','water'].includes(t)&&dist<this.h*.22){this.enemy.x+=rx/dist*dt*12;this.enemy.y+=ry/dist*dt*9;}
+  if(['fighting','ground','rock'].includes(t)&&dist>this.h*.29){this.enemy.x-=rx/dist*dt*10;this.enemy.y-=ry/dist*dt*7;}
+  if(t==='electric'&&dist<this.h*.31){this.enemy.x+=Math.sin(now/500)*dt*9;}
+  if(typeof this.bounds==='function')this.bounds(this.enemy);
+ }
+ // 6: chefe avisa o ataque carregado; sem novo timer de animação.
+ if(battle.v33Boss>=0){
+  if(!a.nextBoss)a.nextBoss=now+8500;
+  if(!a.cast&&now>=a.nextBoss){a.cast={end:now+1050,type:V33_LEADERS[battle.v33Boss].type};a.nextBoss=now+9300;
+   let chip=document.createElement('div');chip.className='v34Callout';chip.id='v34BossCast';chip.textContent='⚠️ '+V33_LEADERS[battle.v33Boss].name+' prepara um golpe especial!';$('arenaPro')?.append(chip);
+  }
+  if(a.cast&&now>=a.cast.end){const cast=a.cast;a.cast=null;$('v34BossCast')?.remove();if(battle?.active&&this.player&&this.enemy){
+   const near=Math.hypot(this.player.x-this.enemy.x,this.player.y-this.enemy.y)<this.h*.64;
+   if(near){this.hitTarget('enemy',cast.type,33);this.particlesAt(this.player.x,this.player.y,'#ffe39b',9,48);}
+  }}
+ }
+ return r;};
+// 2: efeitos ligados ao frame existente, limitados e sem alterar o tamanho dos sprites.
+const prevDraw=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){prevDraw.call(this,now);if(!battle?.active||!battle.v34||!this.ctx)return;
+ const x=this.ctx,a=battle.v34,fx=a.fx;if(!fx||now-fx.at>480)return;
+ let quality=state().settings.quality==='low'||(this.fps>0&&this.fps<28)?4:9;
+ const progress=clamp((now-fx.at)/480,0,1),cx=fx.x,cy=fx.y;
+ x.save();x.strokeStyle=fx.color;x.fillStyle=fx.color;x.globalAlpha=.53*(1-progress);x.lineWidth=2;
+ for(let i=0;i<quality;i++){const ang=i*2*Math.PI/quality+fx.at*.003,len=12+progress*27;
+  x.beginPath();x.moveTo(cx+Math.cos(ang)*6,cy+Math.sin(ang)*6);
+  if(fx.type==='electric'){const mx=cx+Math.cos(ang)*(len*.6),my=cy+Math.sin(ang)*(len*.6);x.lineTo(mx+Math.sin(ang)*5,my);}
+  else if(fx.type==='water'){x.arc(cx,cy,Math.max(3,len*.55),ang,ang+.6);}
+  else if(fx.type==='ground'){x.lineTo(cx+Math.cos(ang)*len*.6,cy+Math.sin(ang)*len*.6);}
+  x.lineTo(cx+Math.cos(ang)*len,cy+Math.sin(ang)*len);x.stroke();
+ }
+ x.restore();};
+const prevUse=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(i){const b=battle,s=b?.active?skillSet(current())[i]:null,now=performance.now(),valid=s&&b&&!b.paused&&current()?.hp>0&&cooldowns[i]<=now&&b.energy>=s.cost;
+ if(valid&&b.v34){const a=b.v34;a.lastAttack=s.type;const color=(TYPE_COLOR[s.type]||'#fff');a.fx={type:s.type,color,at:now,x:this.enemy?.x||this.w/2,y:this.enemy?.y||this.h/2};a.hits++;}
+ return prevUse.call(this,i);};
+// 7: golpe muito forte pode interromper ataque carregado, mas apenas quando acerta.
+const prevHit=BattleEngine.prototype.hitTarget;
+BattleEngine.prototype.hitTarget=function(who,type,power){const before=who==='enemy'?current()?.hp:foe()?.hp,b=battle;const result=prevHit.call(this,who,type,power);
+ if(!b?.active||battle!==b||!b.v34)return result;
+ const after=who==='enemy'?current()?.hp:foe()?.hp;
+ if(who!=='enemy'&&Number(before)>Number(after)&&b.v34.cast&&power>=44){b.v34.cast=null;$('v34BossCast')?.remove();v31Toast('⚡ Ataque do líder interrompido!');}
+ if(before===after){b.v34.dodges++;}return result;};
+// Combos de campo — bônus pequenos, limitados e sem multiplicadores cumulativos permanentes.
+const prevDamage=damage;
+damage=function(att,def,type,power){const r=prevDamage(att,def,type,power);if(!r?.hit||!battle?.active||!battle.v34)return r;
+ const a=battle.v34,now=performance.now();let bonus=1,label='';
+ if(type==='water')a.wetUntil=now+4800;
+ if(type==='grass')a.grassUntil=now+5200;
+ if(type==='ground')a.crackedUntil=now+5500;
+ if(type==='electric'&&a.wetUntil>now){bonus=1.12;label='ÁGUA + ELÉTRICO';a.wetUntil=0;}
+ else if(type==='fire'&&a.grassUntil>now){bonus=1.10;label='PLANTA + FOGO';a.grassUntil=0;}
+ else if(type==='ice'&&a.wetUntil>now){bonus=1.08;label='ÁGUA + GELO';a.wetUntil=0;}
+ else if(type==='rock'&&a.crackedUntil>now){bonus=1.11;label='TERRA + PEDRA';a.crackedUntil=0;}
+ if(bonus>1){r.hit=Math.max(1,Math.round(r.hit*bonus));a.combo++;if(typeof v31Toast==='function')v31Toast('✦ COMBO '+label+' +'+Math.round((bonus-1)*100)+'%');}
+ return r;};
+// 8: captura com três balanços, bônus de status do jogo anterior e chance rara de captura crítica.
+// Preserve o sorteio original, o Shiny e as Pokébolas das versões anteriores.
+const v34CaptureUpdate=BattleEngine.prototype.v25Update;
+BattleEngine.prototype.v25Update=function(dt){
+ const cap=this.v25?.capture;
+ if(cap && !cap.v34Prepared){
+  cap.v34Prepared=true;cap.duration=2.85;cap.critical=Math.random()<.035;
+  if(cap.critical){state().stats.crits++;if(!cap.success && Math.random()<.55)cap.success=true;}
+ }
+ return v34CaptureUpdate.call(this,dt);
+};
+const v34CaptureDraw=BattleEngine.prototype.v25Draw;
+BattleEngine.prototype.v25Draw=function(c){
+ v34CaptureDraw.call(this,c);
+ const cap=this.v25?.capture;if(!cap||!cap.v34Prepared||cap.time<1.42||cap.time>2.76)return;
+ const t=clamp((cap.time-1.42)/1.33,0,1),amp=(1-t)*.32;
+ const theta=Math.sin(t*Math.PI*6)*amp;
+ if(this.v25Ball)this.v25Ball(c,cap.toX,cap.toY+this.h*.035,this.h*.024,theta);
+ c.save();c.textAlign='center';c.font='900 '+Math.max(10,this.h*.021)+'px system-ui';c.fillStyle=cap.critical?'#ffe78b':'#d4efff';c.globalAlpha=.65+.35*Math.sin(t*Math.PI);
+ c.fillText(cap.critical?'✦ CAPTURA CRÍTICA':'●  ●  ●',cap.toX,cap.toY+this.h*.085);c.restore();
+};
+
+// 9: recompensas pequenas por desempenho; nunca em laboratório e nunca duas vezes.
+const prevFinish=finishBattle;
+finishBattle=function(win){if(!battle?.active)return;const b=battle,a=b.v34,mode=b.v33Type;
+ const eligible=!!(win&&a&&mode!=='lab'&&b.v32Mode!=='lab');
+ const hits=a?.hits||0,combo=a?.combo||0,dodges=a?.dodges||0,health=current()?.hp||0;
+ const bonus=eligible&&!a.rewarded?Math.min(35,(health>0?8:0)+(combo>0?Math.min(12,combo*4):0)+(dodges>=3?10:0)+(hits>=4?5:0)):0;
+ if(a)a.rewarded=true;
+ const out=prevFinish(win);
+ if(a&&mode!=='lab'){
+  const s=state();s.stats.battles++;s.stats.wins+=win?1:0;s.stats.losses+=win?0:1;s.stats.combo+=combo;s.stats.dodges+=dodges;
+  s.stats.streak=win?s.stats.streak+1:0;s.stats.bestStreak=Math.max(s.stats.bestStreak,s.stats.streak);
+  s.records.unshift({at:Date.now(),win:!!win,enemy:mvName(b.foe||{}),mode:b.label||'',combo,bonus});s.records=s.records.slice(0,40);
+  if(bonus>0){save.coins+=bonus;s.stats.rewards+=bonus;persist();document.querySelector('.result')?.insertAdjacentHTML('afterend','<p class="v34Reward">✦ Bônus de desempenho: +'+bonus+' moedas</p>');}
+ }
+ return out;};
+// 5, 9, 11: menu ficha, Pokédex, histórico.
+render=function(){prevRender();if(!save.starter||battle?.active)return;
+ const ver=$('v30VersionTag');if(ver)ver.textContent='V35.11 · SPRITES DS';
+ const root=$('main');if(!root||$('v34Menu'))return;const parent=root.querySelector('.gymHero')||root.querySelector('.v27League')||root.firstElementChild;
+ if(!parent)return;const box=document.createElement('div');box.id='v34Menu';box.className='v34Actions';box.innerHTML='<button class="btn ghost" type="button" id="v34Stats">📊 Histórico V34</button><button class="btn ghost" type="button" id="v34Quality">⚙️ Qualidade: '+safe(state().settings.quality)+'</button>';
+ parent.insertAdjacentElement('afterend',box);$('v34Stats').onclick=historyMenu;$('v34Quality').onclick=()=>{const q=state().settings.quality;state().settings.quality=q==='auto'?'low':q==='low'?'high':'auto';persist();render();const label=$('v34Quality');if(label)label.textContent='⚙️ Qualidade: '+state().settings.quality;};
+};
+function historyMenu(){const s=state().stats;const rows=state().records;
+ overlay('<div class="sectionhead"><h2>📊 Histórico V34</h2><button class="btn tiny ghost" id="v34StatClose">✕</button></div><div class="v34Grid">'+[['Batalhas',s.battles],['Vitórias',s.wins],['Derrotas',s.losses],['Maior sequência',s.bestStreak],['Combos',s.combo],['Bônus em moedas',s.rewards],['Recorde Torre',save.v32?.tower?.best||0],['Shiny registrados',(save.shinyCaught||[]).length]].map(x=>'<div class="v34Datum">'+x[0]+': <strong>'+x[1]+'</strong></div>').join('')+'</div><div class="v34Panel"><h3>Últimos confrontos</h3>'+ (rows.slice(0,15).map(x=>'<p class="v34TrainerTag">'+new Date(x.at).toLocaleDateString('pt-BR')+' · '+(x.win?'✅ Vitória':'❌ Derrota')+' · '+safe(x.mode)+' · '+x.combo+' combos</p>').join('')||'<p>Ainda não há batalhas registradas na V34.</p>')+'</div><button class="btn ghost wide" id="v34StatBack">Voltar</button>');$('v34StatClose').onclick=close;$('v34StatBack').onclick=close;
+}
+// Correção V34.1: o editor deve mostrar os QUATRO golpes realmente ativos,
+// e não as chaves antigas anteriores aos golpes exclusivos da V33.
+const v34DefaultSlotsPrev=v32DefaultSlots;
+v32DefaultSlots=function(m){
+ const fallback=v34DefaultSlotsPrev(m);
+ if(!m||Array.isArray(m.v32Slots))return fallback; // Nunca altera personalizações salvas.
+ const equipped=skillSet(m),catalog=v32Catalogue(m);
+ return equipped.map((move,i)=>{
+  const found=catalog.find(x=>x.available && x.move.name===move.name && x.move.type===move.type && x.move.kind===move.kind);
+  return found?.key||fallback[i];
+ });
+};
+window.PokemonTorreV34Diagnostics=()=>({version:V34,species:151,moveCatalog:save.team.map(m=>({id:m.id,total:v32Catalogue(m).length,learned:v32Catalogue(m).filter(x=>x.available).length})),duoAuto:!!battle?.v31Duo&&!battle.v31Duo.v33Manual,combo:battle?.v34?.combo||0,stats:{...state().stats},trainer:battle?.label||null,quality:state().settings.quality});
+})();
+/* END POKEMON TORRE V34 */
+/* POKEMON TORRE V34.2 — líderes de Kanto FRLG, golpes de status reais e efeitos vetoriais 2D */
+(function(){
+'use strict';
+const V342='34.2';
+// FireRed/LeafGreen: ordem e níveis fixos. A progressão de 6–13 treinadores permanece.
+const KANTO_LEADERS_FRLG=[
+ {name:'Brock',type:'rock',team:[[74,12],[95,14]]},
+ {name:'Misty',type:'water',team:[[120,18],[121,21]]},
+ {name:'Lt. Surge',type:'electric',team:[[100,21],[25,18],[26,24]]},
+ {name:'Erika',type:'grass',team:[[71,29],[114,24],[45,29]]},
+ {name:'Koga',type:'poison',team:[[109,37],[89,39],[109,37],[110,43]]},
+ {name:'Sabrina',type:'psychic',team:[[64,38],[122,37],[49,38],[65,43]]},
+ {name:'Blaine',type:'fire',team:[[58,42],[77,40],[78,42],[59,47]]},
+ {name:'Giovanni',type:'ground',team:[[111,45],[51,42],[31,44],[34,45],[111,50]]}
+];
+for(let g=0;g<8;g++){
+ const spec=KANTO_LEADERS_FRLG[g],gym=GYMS[g];
+ Object.assign(gym,{leader:spec.name,type:spec.type,boss:spec.team.map(t=>t[0]),max:Math.max(...spec.team.map(t=>t[1]))});
+ if(typeof V28_KANTO_LEADERS!=='undefined'&&V28_KANTO_LEADERS[g]){
+  V28_KANTO_LEADERS[g].ids=spec.team.map(p=>[...p]);
+  V28_KANTO_LEADERS[g].leader=spec.name;
+ }
+}
+function isGymLeaderLabel(label){return /(?:^|\s)(?:👑\s*)?LÍDER\b/i.test(label||'')&&!/RIVAL|ROCKET|LIGA|REVANCHE|LABORATÓRIO/i.test(label||'');}
+function gymRoster(g){return KANTO_LEADERS_FRLG[g].team.map(([id,level])=>mon(id,level));}
+const v342PreviousTeam=teamOfTrainer;
+teamOfTrainer=function(g,stage){
+ if(Number.isInteger(g)&&g>=0&&g<8&&stage===v29TrainerCount(g))return gymRoster(g);
+ return v342PreviousTeam(g,stage);
+};
+// A proteção extra também corrige desafios iniciados por um menu que ignorou teamOfTrainer.
+const v342Start=startBattle;
+startBattle=function(enemies,label,wild){
+ const g=save.gym;
+ if(!wild&&g>=0&&g<8&&isGymLeaderLabel(label)&&save.stage===v29TrainerCount(g)){
+  enemies=gymRoster(g);
+ }
+ return v342Start(enemies,label,wild);
+};
+// Quando duas instâncias da mesma espécie aparecem no time, preserve ambas e os níveis individuais.
+// Correção crítica: V30 usava os números globais 8 e 11 para Rival/Rocket,
+// mas eles são exatamente os estágios finais de Surge e Sabrina.
+// A condição de LÍDER sempre tem precedência.
+const v342LaunchPrevious=launchTrainer;
+launchTrainer=function(){
+ const g=save.gym,stage=save.stage;
+ if(g>=0&&g<8&&stage===v29TrainerCount(g)){
+  if(!requireTeam()){showItems();return;}
+  return startBattle(gymRoster(g),'👑 LÍDER '+KANTO_LEADERS_FRLG[g].name,false);
+ }
+ return v342LaunchPrevious();
+};
+const v342Next=nextFoe;
+nextFoe=function(){const b=battle,leader=b?.v342GymLeader;if(!b?.active||!leader)return v342Next();
+ return v342Next();
+};
+const v342StartFlag=startBattle;
+startBattle=function(enemies,label,wild){const result=v342StartFlag(enemies,label,wild);
+ if(battle?.active&&!wild&&isGymLeaderLabel(label)&&save.gym<8&&save.stage===v29TrainerCount(save.gym)){
+  battle.v342GymLeader=save.gym;
+  const box=document.querySelector('.battleHeading');
+  if(box&&!box.querySelector('#v342LeaderRoster')){
+   const roster=document.createElement('div');roster.id='v342LeaderRoster';roster.className='v342LeaderRoster';
+   roster.textContent='EQUIPE OFICIAL · '+KANTO_LEADERS_FRLG[save.gym].team.map(([id,l])=>D[id].name+' Nv.'+l).join(' · ');
+   box.append(roster);
+  }
+ }
+ return result;
+};
+// Catálogo estendido somente para tipos/espécies compatíveis, mantendo os golpes escolhidos.
+// [tipo, nivel, custo, recarga (ms), categoria, intensidade]
+const STATUS_DEFS={
+ 'Growl':['normal',6,16,3400,'atkdown',.15], 'Tail Whip':['normal',7,17,3600,'defdown',.16],
+ 'Leer':['normal',9,18,3800,'defdown',.17], 'Sand Attack':['ground',9,20,4200,'accuracydown',.16],
+ 'Screech':['normal',27,29,6400,'defdown',.31], 'Scary Face':['normal',19,22,5000,'speeddown',.23],
+ 'Double Team':['normal',18,25,7200,'evasion',.0], 'Agility':['psychic',16,24,6600,'speedup',.26],
+ 'Swords Dance':['normal',27,30,7500,'atkup',.34], 'Calm Mind':['psychic',29,28,7500,'mindup',.18],
+ 'Nasty Plot':['dark',35,33,8800,'atkup',.36], 'Bulk Up':['fighting',30,30,7400,'bulk',.20],
+ 'Harden':['normal',7,17,4000,'defup',.17], 'Iron Defense':['steel',30,30,7500,'defup',.35],
+ 'Amnesia':['psychic',26,26,6900,'defup',.23], 'Withdraw':['water',10,19,4100,'defup',.19],
+ 'Defense Curl':['normal',9,18,4200,'defup',.19], 'Reflect':['psychic',20,26,7500,'reflect',.20],
+ 'Light Screen':['psychic',21,26,7500,'reflect',.18], 'Protect':['normal',17,30,10000,'protect',0],
+ 'Safeguard':['normal',26,28,8800,'cleanse',0], 'Haze':['ice',31,26,8100,'haze',0],
+ 'Thunder Wave':['electric',16,26,7700,'paralysis',0], 'Stun Spore':['grass',15,25,7400,'paralysis',0],
+ 'Poison Powder':['poison',14,25,8000,'poison',0], 'Toxic':['poison',33,34,10000,'poison',0],
+ 'Will-O-Wisp':['fire',28,28,8600,'burn',0], 'Confuse Ray':['ghost',22,28,7600,'confusion',0],
+ 'Supersonic':['normal',21,25,7000,'confusion',0], 'Hypnosis':['psychic',27,29,9200,'sleep',0],
+ 'Sleep Powder':['grass',29,30,9700,'sleep',0], 'Spore':['grass',34,34,10100,'sleep',0],
+ 'Leech Seed':['grass',15,27,8600,'seed',0], 'Recover':['psychic',24,36,9000,'heal',.32],
+ 'Roost':['flying',30,35,9200,'heal',.32], 'Synthesis':['grass',25,35,9400,'heal',.34],
+ 'Moonlight':['fairy',30,35,9400,'heal',.34], 'Rest':['psychic',32,40,11000,'heal',.45],
+ 'Rain Dance':['water',24,25,8700,'rain',0], 'Sunny Day':['fire',24,25,8700,'sun',0],
+ 'Sandstorm':['rock',24,25,8700,'sand',0], 'Charge':['electric',21,22,6600,'atkup',.19],
+ 'Growth':['grass',19,24,5900,'atkup',.19], 'Minimize':['normal',28,26,7700,'evasion',0]
+};
+window.__V351_STATUS_DEFS=STATUS_DEFS;
+const STATUS_BY_TYPE={
+ normal:['Growl','Tail Whip','Leer','Double Team','Protect','Rest'],
+ electric:['Thunder Wave','Charge','Agility','Light Screen'],water:['Withdraw','Rain Dance','Haze','Protect'],
+ fire:['Will-O-Wisp','Sunny Day','Smokescreen','Protect'],grass:['Growth','Leech Seed','Stun Spore','Sleep Powder','Synthesis'],
+ poison:['Poison Powder','Toxic','Screech'],psychic:['Calm Mind','Reflect','Light Screen','Recover','Hypnosis'],
+ ground:['Sand Attack','Sandstorm','Scary Face'],rock:['Harden','Defense Curl','Sandstorm','Iron Defense'],
+ ghost:['Confuse Ray','Hypnosis','Will-O-Wisp'],fighting:['Bulk Up','Leer','Swords Dance'],
+ bug:['String Shot','Supersonic','Harden'],ice:['Haze','Amnesia','Light Screen'],
+ flying:['Agility','Roost','Double Team'],dark:['Nasty Plot','Scary Face','Taunt'],
+ steel:['Iron Defense','Light Screen'],fairy:['Moonlight','Safeguard'],dragon:['Agility','Safeguard','Dragon Dance']
+};
+// Extras escolhidos por espécie; espécies não recebem golpes de status sem compatibilidade.
+const STATUS_SPECIES={
+ 3:['Sleep Powder','Leech Seed','Synthesis'],6:['Dragon Dance','Roost','Smokescreen'],
+ 12:['Sleep Powder','Stun Spore'],25:['Thunder Wave','Agility','Double Team'],26:['Thunder Wave','Light Screen'],
+ 31:['Tail Whip','Toxic'],34:['Leer','Toxic'],38:['Confuse Ray','Will-O-Wisp'],
+ 45:['Sleep Powder','Petal Dance'],49:['Sleep Powder','Supersonic'],59:['Agility','Roar'],
+ 65:['Reflect','Recover','Calm Mind'],80:['Amnesia','Rest'],94:['Hypnosis','Confuse Ray','Will-O-Wisp'],
+ 103:['Sleep Powder','Leech Seed'],110:['Toxic','Haze'],121:['Recover','Light Screen'],
+ 130:['Dragon Dance','Leer'],143:['Rest','Amnesia'],149:['Dragon Dance','Roost'],
+ 150:['Recover','Calm Mind','Reflect'],151:['Recover','Transform','Safeguard']
+};
+Object.assign(STATUS_DEFS,{
+ 'Smokescreen':['normal',10,20,5100,'accuracydown',.20],
+ 'String Shot':['bug',8,18,4500,'speeddown',.22],
+ 'Dragon Dance':['dragon',34,30,8000,'dance',.20],
+ 'Roar':['normal',20,20,5400,'atkdown',.16],
+ 'Taunt':['dark',20,22,6200,'accuracydown',.16]
+});
+const v342Catalog=v32Catalogue;
+v32Catalogue=function(m){const base=v342Catalog(m);if(!m||!D[m.id])return base;
+ const p=D[m.id],names=new Set([...(STATUS_BY_TYPE[p.type]||[]),...(STATUS_BY_TYPE[p.type2]||[]),...(STATUS_SPECIES[m.id]||[])]);
+ const existing=new Set(base.map(x=>x.key));
+ for(const name of names){const entry=STATUS_DEFS[name];if(!entry)continue;
+  const [type,level,cost,cd]=entry,move={name,type,kind:'status',cat:'status',power:0,cost,cd,icon:'✧'};
+  const key=v32MoveKey(move);if(existing.has(key))continue;
+  base.push({key,move,level,tm:false,available:m.level>=level});existing.add(key);
+ }
+ return base;
+};
+// Estatísticas já existentes no motor V25 — status agora pode estar em qualquer posição 1–4.
+const v342OldUse=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(i){
+ const b=battle,m=b?.active?current():null,s=m&&skillSet(m)?.[i];
+ const cfg=s&&STATUS_DEFS[s.name];
+ if(!cfg||!s||s.kind!=='status')return v342OldUse.call(this,i);
+ if(!Number.isInteger(i)||i<0||i>3||!b.active||b.paused||!this.v25?.stats||m.hp<=0)return;
+ const now=performance.now();if((cooldowns[i]||0)>now||b.energy<s.cost)return;
+ const action=cfg[4],delta=cfg[5];const self=this.v25.stats.player,enemy=this.v25.stats.enemy;
+ const enemyTypes=[D[b.foe.id]?.type,D[b.foe.id]?.type2];
+ if(action==='poison'&&enemyTypes.some(t=>['poison','steel'].includes(t))){log('Não afeta o adversário!');this.v25Popup(this.enemy.x,this.enemy.y-this.h*.27,'NÃO AFETA','#ffddd5');return;}
+ if(action==='paralysis'&&enemyTypes.includes('ground')){log('Não afeta o adversário terrestre!');return;}
+ if(action==='sleep'&&enemyTypes.includes('grass')&&/Powder|Spore/.test(s.name)){log('Pó não afeta Pokémon de Planta!');return;}
+ b.energy-=s.cost;cooldowns[i]=now+Math.max(1000,s.cd);this.attackActs.player=this.time+.4;
+ const buff=(st,field,amount)=>st[field]=Math.min(1.9,Math.max(.45,(st[field]||1)+amount));
+ const cond=(name,duration)=>{if(!enemy.conditions.includes(name))enemy.conditions.push(name);this.v342CondTimers||={};this.v342CondTimers[name]=now+duration;};
+ let target=this.enemy,label='',tint='#e4d2ff';
+ switch(action){
+ case 'atkdown':buff(enemy,'atk',-delta);label='ATK ↓';break;
+ case 'defdown':buff(enemy,'def',-delta);label='DEF ↓';break;
+ case 'speeddown':buff(enemy,'speed',-delta);label='VEL ↓';break;
+ case 'accuracydown':buff(enemy,'accuracy',-delta);label='PRECISÃO ↓';break;
+ case 'atkup':buff(self,'atk',delta);label='ATK ↑';target=this.player;break;
+ case 'defup':buff(self,'def',delta);label='DEF ↑';target=this.player;break;
+ case 'speedup':buff(self,'speed',delta);label='VEL ↑';target=this.player;break;
+ case 'mindup':buff(self,'atk',delta);buff(self,'def',delta*.5);label='ATK/DEF ↑';target=this.player;break;
+ case 'bulk':buff(self,'atk',delta);buff(self,'def',delta);label='ATK/DEF ↑';target=this.player;break;
+ case 'dance':buff(self,'atk',delta);buff(self,'speed',delta);label='ATK/VEL ↑';target=this.player;break;
+ case 'reflect':buff(self,'def',delta);this.player.guard=Math.max(this.player.guard,1.7);target=this.player;label='BARREIRA ↑';break;
