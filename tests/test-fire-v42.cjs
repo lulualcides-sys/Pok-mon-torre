@@ -212,7 +212,7 @@ assert.ok(blueOnly.every(frame=>frame.blue),
 assert.equal(engine.v41FireVisuals.filter(f=>f.move.name==='Will-O-Wisp').length,1);
 // Opposite direction: casting Sunny Day while Will-O-Wisp is active must never
 // show blue status flames over the solar effect.
-now+=550;
+now+=2200;
 assert.equal(engine.useMove(sunnyIndex),true,'Sunny Day may replace Will-O-Wisp visuals');
 assert.equal(engine.v41FireVisuals.filter(f=>f.move.name==='Will-O-Wisp').length,0,
  'Sunny Day takes over status visual without re-triggering Will-O-Wisp');
