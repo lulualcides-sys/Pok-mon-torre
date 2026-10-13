@@ -1,4 +1,4 @@
-/* HYDRO PUMP V44.2 — TWO MATCHING THIN JETS that visibly JOIN before impact.
+/* HYDRO PUMP V44.3 — TWO MATCHING THIN JETS that visibly JOIN before impact.
  * The water is drawn solely by repeated ORIGINAL-style pixel-art sprite frames,
  * with animated water flecks from the user's source water atlas. Never a line,
  * gradient, CSS laser, thick single beam or unrelated bubble cloud.
@@ -6,7 +6,7 @@
  */
 const hydroJetV442=new Image();
 hydroJetV442.decoding='async';
-hydroJetV442.src='effects/moves/hydro-pump/jet.svg?v=44.2';
+hydroJetV442.src='effects/moves/hydro-pump/jet.svg?v=44.3';
 waterSpriteV43.add('hydropump',{
  key:'hydroPump',duration:1610,beam:true,contact:false,
  twinStream:true,followTarget:true,pressureStream:true,
@@ -16,13 +16,13 @@ waterSpriteV43.add('hydropump',{
   const ux=dx/distance,uy=dy/distance,nx=-uy,ny=ux;
   const head=ease((t-.09)/.40);
   const fade=1-ease((t-.86)/.14);
-  const TAU=Math.PI*2,joinAt=.84;
+  const TAU=Math.PI*2,joinAt=.62;
   const thickness=(16+1.6*Math.sin(ms*.012))*s;
   if(!hydroJetV442.naturalWidth)return;
   // Symmetric start points around the attacking Pokemon; both jets are
-  // IDENTICAL size. Their separation decreases smoothly to ZERO at joinAt.
+  // IDENTICAL size. They visibly meet at 62% of the route, before the target.
   function point(u,side){
-   const converge=1-ease((u-.47)/(.84-.47));
+   const converge=1-ease((u-.19)/(joinAt-.19));
    const sway=Math.sin(ms*.014-u*TAU*2.1)*2.7*s;
    const offset=side*converge*(19*s+sway);
    return [lerp(A[0],B[0],u)+nx*offset,
@@ -70,7 +70,7 @@ waterSpriteV43.add('hydropump',{
        11*s,15*s,{alpha:fade*.43,rotation:Math.atan2(dy,dx)});
     }
    }
-   // From the connection point to the enemy they form ONE short shared jet.
+   // From 62% of the route to the foe, BOTH streams feed ONE extended jet.
    // There is no duplicated thick beam across the battlefield.
    if(head>joinAt){
     const common=point(joinAt,1),end=point(head,1);
