@@ -1,14 +1,17 @@
-/* TSUNAMI V44.2 — TRUE ANIMATION of the user-approved pixel-art wave.
+/* TSUNAMI V44.3 — THREE-QUARTER BREAKING WAVE of the user-approved pixel-art wave.
  * The crest bends and rolls in 22 independently animated sprite strips.
  * Original wave/splash-sheet frames move ALONG the face and break on the foe.
  * Never slide a single rigid PNG, never use CSS or procedural circles/paths.
  */
 const tsunamiWaveV442=new Image();
 tsunamiWaveV442.decoding='async';
-tsunamiWaveV442.src='effects/moves/tsunami/wave.svg?v=44.2';
+tsunamiWaveV442.src='effects/moves/tsunami/wave.svg?v=44.3';
+const tsunamiFrontV443=new Image();
+tsunamiFrontV443.decoding='async';
+tsunamiFrontV443.src='effects/moves/tsunami/front.svg?v=44.3';
 waterSpriteV43.add('tsunami',{
  key:'tsunami',duration:2070,area:true,contact:false,
- waterWall:true,animatedCrest:true,followTarget:true,
+ waterWall:true,animatedCrest:true,perspectiveFront:true,followTarget:true,
  paint(g,f,t,ms,s,K){
   const {draw,ease,lerp,clamp}=K,A=f.from,B=f.to;
   const dx=B[0]-A[0],dy=B[1]-A[1],distance=Math.hypot(dx,dy)||1;
@@ -41,18 +44,53 @@ waterSpriteV43.add('tsunami',{
     const ex=Math.floor((i+1)*srcWidth/strips);
     const sw=Math.max(1,ex-sx);
     const dw=width/strips;
-    const left=x-width*.5+i*dw;
+    const depth=u*u;
+    // Perspective: distant edge smaller; near edge leans INTO the target.
+    // This prevents the whole wave reading as a flat side-on cartoon.
+    const left=x-width*.5+i*dw+ux*width*.17*depth;
+    const edgeDepth=(u-.5)*height*.115;
     const swell=Math.sin(ms*.007+i*.46)*7*s;
     const backflow=Math.sin(ms*.0033-i*.22)*5*s;
     const crestCurl=Math.sin(ms*.011-i*.33)*4*s*bend;
-    const dy=baseY+swell+backflow+crestCurl;
-    const stretch=1+.035*Math.sin(ms*.0038+i*.24)+.018*bend*Math.sin(ms*.008+i*.53);
+    const dy=baseY+edgeDepth+swell+backflow+crestCurl;
+    const stretch=.83+.26*u+.035*Math.sin(ms*.0038+i*.24)+.018*bend*Math.sin(ms*.008+i*.53);
     // Adjacent columns overlap 1.5px to avoid visible seams.
     g.drawImage(tsunamiWaveV442,sx,0,sw,srcHeight,
       Math.round(left),Math.round(dy),
       Math.ceil(dw+1.8*s),Math.round(height*stretch));
    }
    g.restore();
+   // The front-facing plunging face extends TOWARDS the opponent and camera.
+   // Twelve independent sprite columns animate the diagonal breaking lip;
+   // this layer supplies depth while preserving the approved 22-strip wave.
+   if(tsunamiFrontV443.naturalWidth){
+    const frontWidth=(150+112*grow)*s;
+    const frontHeight=(115+92*grow)*s;
+    const frontX=x+ux*width*.22;
+    const frontY=y+height*.12+uy*width*.12;
+    const frontCurl=Math.sin(ms*.0062)*8*s;
+    const faceStrips=12;
+    g.save();
+    g.globalAlpha=fade*foamIn*.94;
+    g.imageSmoothingEnabled=false;
+    for(let j=0;j<faceStrips;j++){
+     const u=(j+.5)/faceStrips;
+     const sx=Math.floor(j*240/faceStrips);
+     const sw=Math.floor((j+1)*240/faceStrips)-sx;
+     // Face has near/far perspective and its frothy lip rolls independently.
+     const perspective=.78+.40*u;
+     const yy=frontY-frontHeight*.66+
+        (u-.5)*22*s+Math.sin(ms*.010+j*.72)*6*s+
+        frontCurl*Math.sin(u*Math.PI);
+     const xx=frontX-frontWidth*.5+j*frontWidth/faceStrips+
+        ux*Math.sin(u*Math.PI)*15*s;
+     g.drawImage(tsunamiFrontV443,sx,0,sw,200,
+       Math.round(xx),Math.round(yy),
+       Math.ceil(frontWidth/faceStrips+1.6*s),
+       Math.round(frontHeight*perspective));
+    }
+    g.restore();
+   }
    // Foam constantly rolls from behind the crest towards the breaking tip.
    // Original source frames 0–4 are animated wave crests; 5–9 are splashes.
    for(let i=0;i<7;i++){
@@ -69,7 +107,7 @@ waterSpriteV43.add('tsunami',{
    for(let i=0;i<6;i++){
     const side=(i-2.5)*width*.13;
     const pulse=Math.sin(ms*.009+i*.91)*6*s;
-    const px=x+nx*side+ux*(width*.20+9*s);
+    const px=x+nx*side+ux*(width*.29+16*s);
     const py=baseY+height*.25+ny*side*.14+pulse;
     draw(g,5+((Math.floor(ms/95)+i)%5),
       px,py,(37+i%2*9)*s,(46+i%3*8)*s,
