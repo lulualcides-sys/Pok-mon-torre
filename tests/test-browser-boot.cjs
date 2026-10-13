@@ -93,12 +93,18 @@ async function browserCase(port,query){
 server.listen(0,'127.0.0.1',async()=>{
  try{
   const port=server.address().port;
-  const stable=await browserCase(port,'?v=boot-safe');
+  const stable=await browserCase(port,'?safe=1');
   console.log('BROWSER STABLE:',JSON.stringify(stable));
-  const experimental=await browserCase(port,'?electric46=1');
+  const experimental=await browserCase(port,'?v=46.1');
   console.log('BROWSER EXPERIMENT:',JSON.stringify(experimental));
-  if(!stable.ok){console.error('FAIL: default safe game does not open');process.exitCode=1;}
-  if(!experimental.ok)console.warn('WARNING: V46 remains isolated due to boot failure');
+  if(!stable.ok||stable.result?.electric||stable.result?.types){
+   console.error('FAIL: V45 recovery mode must boot WITHOUT the experimental modules');process.exitCode=1;
+  }
+  if(!experimental.ok||!experimental.result?.electric||!experimental.result?.types){
+   console.error('FAIL: V46 must now boot with electric and canonical types enabled');process.exitCode=1;
+  }
+  if(stable.ok&&experimental.ok&&experimental.result.electric&&experimental.result.types)
+   console.log('PASS: Chromium actually boots V46 and the safe V45 fallback');
  }catch(e){console.error('BROWSER TEST EXCEPTION:',e);process.exitCode=1}
  finally{server.close()}
 });
