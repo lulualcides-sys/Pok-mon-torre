@@ -7,7 +7,7 @@ const oldfx=mustGet('Existing original V35 FX',/const fxFiles=(\[[^;]+?\]);let p
 const fire=mustGet('Approved fire V41',/const fireSpriteFiles=(\[[\s\S]*?\]);\s*const fireSpriteSections=/);
 const moreFire=mustGet('Approved fire V42',/const nextFourFireMoves=(\[[\s\S]*?\]);\s*const extraFireSections=/);
 const water=mustGet('Approved water V45',/const waterSpriteFiles=(\[[\s\S]*?\]);\s*const waterSpriteSections=/);
-const electric=mustGet('New electric V46',/const electricV46Files=(\[[\s\S]*?\]);\s*const electricV46Parts=/);
+const electric=mustGet('New electric V46',/const electricV46Files=(\[[\s\S]*?\]);\s*const enableElectricPreview=[^;]*;\s*const electricV46Parts=/);
 assert.deepEqual(electric,[
  'effects/moves/_runtime/electric-sprite-kit.js',
  'effects/moves/faisca/index.js',
@@ -18,6 +18,10 @@ assert.deepEqual(electric,[
  'effects/moves/_runtime/move-type-canon-v46.js'
 ]);
 assert.equal(water.length,10,'Existing eight water animations must be preserved');
+assert.match(html,/const enableElectricPreview=new URLSearchParams\(location\.search\)\.get\('electric46'\)==='1'/,
+ 'Broken V46 must be opt-in while the stable game boots');
+assert.match(html,/if\(enableElectricPreview\)game=game\.replace/,
+ 'Safe-mode must not inject V46 scripts into the approved V45 game');
 assert.equal(fire.length+moreFire.length-2,8,'Existing eight fire animations must be preserved');
 const original=Array.from({length:25},(_,i)=>read('parts/p'+String(i).padStart(3,'0')+'.txt')).join('');
 const anchor='\nrender();\n})();\n</script>';
