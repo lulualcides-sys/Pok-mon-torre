@@ -1,8 +1,18 @@
-/* Fire V41 combat bridge: isolate these FOUR sprite-based moves from legacy painters. */
+/* V42.1 combat bridge: preserve V41 and replace old fire/status animations. */
 (function(){
 'use strict';
 const K=fireSpriteV41;
-const stats={casts:0,frames:0,lastMove:'',lastError:''};
+const stats={casts:0,frames:0,lastMove:'',lastError:'',removedLegacy:0};
+const correctedKeys=new Set(['fireBlast','sunnyDay','willOWisp']);
+const legacyArrays=['v3568StatusFX','v3580Visuals','v356FX','v352FX','v352OtherFX','v343Named','v344Fx'];
+function scrubReplacedEffects(engine){
+ for(const prop of legacyArrays){
+  const items=engine[prop];if(!Array.isArray(items)||!items.length)continue;
+  const kept=items.filter(f=>!correctedKeys.has(K.resolve(f)?.key));
+  if(kept.length!==items.length){stats.removedLegacy+=items.length-kept.length;engine[prop]=kept;}
+ }
+}
+
 const previousPainter=window.PokemonTorreV360Paint;
 window.PokemonTorreV360Paint=function(g,fx,now,engine){
  if(K.resolve(fx))return true; // no duplicate generic effect
@@ -15,6 +25,13 @@ BattleEngine.prototype.useMove=function(slot){
  if(!descriptor)return previousUse.apply(this,arguments);
  const now=performance.now(),cost=b.energy,oldCooldown=cooldowns[slot]||0;
  const oldQueue=this.v359Attacks?.length||0;
+ // Prevent old unlabelled orange particles from these replacement status moves.
+ const oldParticles={};
+ if(descriptor.stickToTarget||descriptor.weather){
+  for(const prop of ['particles','rings','v26Particles']){
+   if(Array.isArray(this[prop]))oldParticles[prop]=this[prop].length;
+  }
+ }
  const result=previousUse.apply(this,arguments);
  const active=b===battle&&b?.active;
  const accepted=active&&(result!==false)&&(
@@ -22,6 +39,15 @@ BattleEngine.prototype.useMove=function(slot){
   (this.v359Attacks?.length||0)>oldQueue
  );
  if(!accepted)return result;
+ if(descriptor.stickToTarget||descriptor.weather){
+  for(const [prop,before] of Object.entries(oldParticles)){
+   if(Array.isArray(this[prop])&&this[prop].length>before){
+    stats.removedLegacy+=this[prop].length-before;
+    this[prop].length=before;
+   }
+  }
+ }
+ scrubReplacedEffects(this);
  const length=descriptor.duration;
  const event={at:now,end:now+length,duration:length,battle:b,move:{name:move.name},owner:mon,
   from:[this.player.x,this.player.y-this.h*.13],to:[this.enemy.x,this.enemy.y-this.h*.12]};
@@ -42,6 +68,14 @@ BattleEngine.prototype.draw=function(now){
  const queued=this.v41FireVisuals||[];
  const active=valid?queued.filter(f=>f.battle===battle&&f.end>now&&f.owner===current()):[];
  this.v41FireVisuals=active;
+ // The older status animation can be queued again during combat updates.
+ if(active.some(f=>correctedKeys.has(K.resolve(f)?.key)))scrubReplacedEffects(this);
+ for(const fx of active){
+  if(K.resolve(fx)?.stickToTarget&&this.enemy){
+   // Keep the spectral flames on top of the foe even if it moves or dodges.
+   fx.to=[this.enemy.x,this.enemy.y-Math.max(26,(this.h||560)*.12)];
+  }
+ }
  const actor=this.player,target=this.enemy,originalX=actor?.x,originalY=actor?.y;
  // Only Fire Claw moves the actual attacker. The sprite itself remains small.
  const contact=active.findLast?.(f=>K.resolve(f)?.contact) ||
@@ -70,7 +104,7 @@ function markVersion(){
   tag.style.cssText='position:fixed;bottom:6px;left:6px;z-index:2147483637;padding:3px 6px;border-radius:5px;background:#102335;color:#b9ddf5;font:700 10px system-ui;pointer-events:none';
   document.body.appendChild(tag);
  }
- tag.textContent='SPRITES FOGO V42';
+ tag.textContent='SPRITES FOGO V42.1';
 }
 markVersion();
 window.PokemonTorreFireSpriteV41=()=>({
@@ -80,8 +114,9 @@ window.PokemonTorreFireSpriteV41=()=>({
 });
 window.PokemonTorreFireSpriteV42=()=>({
  ...window.PokemonTorreFireSpriteV41(),
- version:'42.0',
+ version:'42.1',
  newMoves:['Fire Blast','Will-O-Wisp','Sunny Day','Brasa'],
- previousMovesPreserved:['Chamas de Moltres','Rajada Flamejante','Chama Circular','Garra de Fogo']
+ previousMovesPreserved:['Chamas de Moltres','Rajada Flamejante','Chama Circular','Garra de Fogo'],
+ willOWispFollowsEnemy:true,suppressedLegacy:stats.removedLegacy
 });
 })();
