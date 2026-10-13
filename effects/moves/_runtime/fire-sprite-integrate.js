@@ -1,8 +1,8 @@
-/* V42.4 combat bridge: keep Will-O-Wisp and Sunny Day visual timelines mutually exclusive. */
+/* V42.5: isolate blue Will-O-Wisp over the foe; Sunny Day uses a real sun sprite. */
 (function(){
 'use strict';
 const K=fireSpriteV41;
-const stats={casts:0,frames:0,lastMove:'',lastError:'',removedLegacy:0,overlapPrevented:0};
+const stats={casts:0,frames:0,lastMove:'',lastError:'',removedLegacy:0,overlapPrevented:0,hiddenNearEnemy:0};
 // Only these three visual replacements are controlled; gameplay status stays intact.
 const correctedKeys=new Set(['fireBlast','sunnyDay','willOWisp']);
 const statusKeys=new Set(['sunnyDay','willOWisp']);
@@ -68,6 +68,49 @@ function revertStatusCastVisuals(engine,snapshot){
    stats.removedLegacy+=now.length-previous.length;
    engine[prop]=previous.slice();
   }
+ }
+}
+
+// Will-O-Wisp owns the opponent's immediate visual space while blue fire is up.
+// Suppress other short-lived combat VISUALS there, without deleting projectiles,
+// altering HP/damage, or delaying enemy attacks. All original lists are restored
+// after rendering, so update() and the rules engine remain fully untouched.
+const enemyVisualLists=['particles','rings','v19Impacts','v19Beams','v26Particles','projectiles'];
+function nearEnemyVisual(item,enemy,h){
+ if(!item||!enemy)return false;
+ const x=Number(item.x),y=Number(item.y);
+ if(!Number.isFinite(x)||!Number.isFinite(y))return false;
+ const centerY=enemy.y-h*.065;
+ const rx=Math.max(56,h*.155),ry=Math.max(69,h*.175);
+ const dx=(x-enemy.x)/rx,dy=(y-centerY)/ry;
+ return dx*dx+dy*dy<=1;
+}
+function paintBehindBlueOnly(engine,paint){
+ const enemy=engine.enemy;
+ if(!enemy)return paint();
+ const h=engine.h||560,original=Object.create(null);
+ let storedEnemyAttack=null,attackHidden=false;
+ for(const list of enemyVisualLists){
+  const items=engine[list];
+  if(!Array.isArray(items)||!items.length)continue;
+  const filtered=items.filter(item=>!nearEnemyVisual(item,enemy,h));
+  if(filtered.length<items.length){
+   original[list]=items;
+   engine[list]=filtered;
+   stats.hiddenNearEnemy+=items.length-filtered.length;
+  }
+ }
+ // Do not overlay the yellow/white Attack pose arcs on the blue spectral flame.
+ // This only masks the actor's drawing timer, not an attack or its damage.
+ if(engine.attackActs && Number.isFinite(engine.attackActs.enemy)){
+  storedEnemyAttack=engine.attackActs.enemy;
+  engine.attackActs.enemy=-1;
+  attackHidden=true;
+ }
+ try{return paint();}
+ finally{
+  for(const list of Object.keys(original))engine[list]=original[list];
+  if(attackHidden)engine.attackActs.enemy=storedEnemyAttack;
  }
 }
 
@@ -149,7 +192,10 @@ BattleEngine.prototype.draw=function(now){
  }
  let result;
  try{
-  result=previousDraw.call(this,now);
+  const wispActive=active.some(f=>K.resolve(f)?.key==='willOWisp');
+  result=wispActive
+   ?paintBehindBlueOnly(this,()=>previousDraw.call(this,now))
+   :previousDraw.call(this,now);
  }finally{
   if(actor&&contact){actor.x=originalX;actor.y=originalY;}
   // Some old painters queue their status VFX during draw(). Purge after rendering
@@ -169,7 +215,7 @@ function markVersion(){
   tag.style.cssText='position:fixed;bottom:6px;left:6px;z-index:2147483637;padding:3px 6px;border-radius:5px;background:#102335;color:#b9ddf5;font:700 10px system-ui;pointer-events:none';
   document.body.appendChild(tag);
  }
- tag.textContent='SPRITES FOGO V42.4';
+ tag.textContent='SPRITES FOGO V42.5';
 }
 markVersion();
 window.PokemonTorreFireSpriteV41=()=>({
@@ -179,11 +225,11 @@ window.PokemonTorreFireSpriteV41=()=>({
 });
 window.PokemonTorreFireSpriteV42=()=>({
  ...window.PokemonTorreFireSpriteV41(),
- version:'42.4',
+ version:'42.5',
  newMoves:['Fire Blast','Will-O-Wisp','Sunny Day','Brasa'],
  previousMovesPreserved:['Chamas de Moltres','Rajada Flamejante','Chama Circular','Garra de Fogo'],
  willOWispFollowsEnemy:true,suppressedLegacy:stats.removedLegacy,
- overlapPrevented:stats.overlapPrevented,
+ overlapPrevented:stats.overlapPrevented,hiddenNearEnemy:stats.hiddenNearEnemy,
  exclusiveStatusVisuals:['Sunny Day','Will-O-Wisp']
 });
 })();
