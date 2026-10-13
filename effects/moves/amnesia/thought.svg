@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" shape-rendering="crispEdges">
+<title>Amnesia — pergunta psíquica em pixel art</title>
+<!-- Real pixel-sprite glyph used as a single-frame sprite; not a CSS animation. -->
+<g fill="#312653" opacity=".85">
+<path d="M32 12H64V20H72V28H80V44H72V52H64V60H56V68H40V56H48V48H56V40H64V28H56V24H40V36H24V20H32Z"/>
+<path d="M40 72H56V88H40Z"/>
+</g>
+<g fill="#b9a4ff">
+<path d="M32 16H64V24H72V40H64V48H56V56H48V64H40V52H48V44H56V36H64V28H56V24H40V32H28V20H32Z"/>
+<path d="M40 72H56V84H40Z"/>
+</g>
+<path fill="#f4eaff" d="M36 20H56V24H64V28H60V32H56V28H36Z M44 76H52V80H44Z"/>
+<path fill="#6c55bb" d="M24 32H32V40H24Z M72 44H80V52H72Z M32 76H40V84H32Z"/>
+<path fill="#e7dfff" d="M14 20H20V26H14Z M76 16H82V22H76Z M12 54H18V60H12Z M78 68H84V74H78Z"/>
+</svg>
