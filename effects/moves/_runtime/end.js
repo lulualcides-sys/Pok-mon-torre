@@ -14,6 +14,7 @@ window.PokemonTorreV360Paint=function(g,f,now,e){
  // These 4 named moves draw only the source GBA pixel sprites. Intercept
  // BEFORE Pixi/semantic/old Canvas to avoid duplicate generic VFX.
  // Fire-specific sprites take priority over the generic pipeline.
+ if(legendaryFireFX.handles(f))return legendaryFireFX.paint(g,f,now,e);
  if(originalFireFX.handles(f))return originalFireFX.paint(g,f,now,e);
  if(originalGbaFX.handles(f))return originalGbaFX.paint(g,f,now,e);
  const k=pick(f?.move?.name||f?.name);if(k)return paint(g,f,now,e,k);
