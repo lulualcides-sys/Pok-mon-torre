@@ -87,13 +87,13 @@ async function browserCase(port,query,mobile=false,combat=false){
   const ok=!!(result?.main&&result?.resources?.length>10&&!result?.text?.includes('Não foi possível abrir o jogo'));
   let combatResults=null;
   if(combat&&ok){
-   const cases=[['electric',25,143],['water',9,143],['fire',6,143]];
+   const cases=[['electric-spark',25,143,0],['electric-spark-pikachu',25,143,1],['electric-thunder',25,143,2],['water-gun',9,143,0],['water-hydro',9,143,2],['fire-ember',6,143,0]];
    combatResults=[];
-   for(const [name,allyId,foeId] of cases){
+   for(const [name,allyId,foeId,slot] of cases){
     const expression="(async()=>{const qa=window.PokemonTorreLocalCombatTestV47;"+
      "if(!qa)return {error:'Combat QA missing'};"+
      "const initial=qa.start("+allyId+","+foeId+");"+
-     "const fired=qa.cast(0);"+
+     "const fired=qa.cast("+slot+");"+
      "await new Promise(r=>setTimeout(r,1700));"+
      "return {initial,fired,final:qa.snapshot()};})()";
     const response=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
@@ -139,7 +139,7 @@ server.listen(0,'127.0.0.1',async()=>{
   const combat=await browserCase(port,'?v=47.1-hit-regression',false,true);
   console.log('BROWSER REAL COMBAT:',JSON.stringify(combat.combatResults));
   if(!combat.ok||!combat.combatResults?.every(c=>c.landed)){
-   console.error('FAIL: real player bolts must actually reduce enemy HP for electric, water and fire');process.exitCode=1;
+   console.error('FAIL: real player bolts must actually reduce enemy HP for electric (Spark/Pikachu/Thunder), Water Gun/Hydro and fire');process.exitCode=1;
   }
   if(stable.ok&&experimental.ok&&phone.ok&&recovered.ok&&combat.ok&&
      combat.combatResults?.every(c=>c.landed))
