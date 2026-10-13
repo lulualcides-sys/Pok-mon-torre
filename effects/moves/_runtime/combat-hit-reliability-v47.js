@@ -1,4 +1,4 @@
-/* Pokemon Torre V47.1 — combat impact reliability, NOT visual/fake damage.
+/* Pokemon Torre V47.2 — reliable real collisions with independent per-cast physics.
  * The original BattleEngine.hitTarget()/damage() remains the only damage source.
  * Projectiles steer toward the foe instead of missing on every sideways step.
  * Beams track the visible target on discharge; physical dashes actually connect.
@@ -6,8 +6,9 @@
  */
 (function(){
  'use strict';
- const report={version:'47.1',casts:0,projectileCorrections:0,beamsAligned:0,
-  contactFollowThrough:0,missingCollisionRecovered:0,realHits:0,lastHit:null,lastCast:null};
+ const report={version:'47.2',casts:0,projectileCorrections:0,beamsAligned:0,
+  contactFollowThrough:0,missingCollisionRecovered:0,realHits:0,
+  ignoredOldShots:0,waitedForInvincibility:0,lastHit:null,lastCast:null};
  const savedHit=BattleEngine.prototype.hitTarget;
  BattleEngine.prototype.hitTarget=function(who,type,power){
   const victim=battle?.active?(who==='enemy'?foe():current()):null;
@@ -30,6 +31,11 @@
   const priorCooldown=Number(cooldowns[slot]||0);
   const victim=active?foe():null;
   const priorHP=Number(victim?.hp);
+  // An existing projectile from an EARLIER move must never prevent THIS
+  // move from generating an independent collision. Track the identity
+  // of physics actors present BEFORE the new cast.
+  const shotsBefore=new Set((this.projectiles||[]).filter(x=>x.from==='player'));
+  const beamBefore=this.telegraph;
   const result=savedCast.apply(this,arguments);
   const accepted=!!(active&&selected&&battle?.active&&
     (Number(battle.energy)<priorEnergy||
@@ -44,24 +50,38 @@
    (typeof waterSpriteV43!=='undefined'&&waterSpriteV43.resolve(selected)?.contact)||
    (typeof fireSpriteV41!=='undefined'&&fireSpriteV41.resolve(selected)?.contact)
   );
-  if((selected.kind==='dash'||spriteContact)&&Number(selected.power)>0&&
+  if((selected.kind==='dash'||spriteContact)&&selected.kind!=='status'&&
+     selected.cat!=='status'&&Number(selected.power)>0&&
     victim===foe()&&Number(victim?.hp)>=priorHP){
    this.v47ContactToLand=(this.v47ContactToLand||[]).filter(f=>f.until>now);
    this.v47ContactToLand.push({
-    at:now+.37*1000,until:now+1100,owner,victim,
+    at:now+380,until:now+2750,owner,victim,hpBefore:priorHP,
     type:selected.type,power:selected.power,name:selected.name
    });
   }else if(Number(selected.power)>0&&!spriteContact&&selected.kind!=='dash'&&
+      selected.kind!=='status'&&selected.cat!=='status'&&
       victim===foe()&&Number(victim?.hp)>=priorHP){
    // Some older visual-move overrides consume cooldown and play an animation
    // without ever spawning a REAL projectile / beam. Recover ONLY those casts.
    // A real projectile/beam, or a previous damage event, cancels the fallback.
    this.v47MissingCollisions=(this.v47MissingCollisions||[]).filter(x=>x.until>now);
-   this.v47MissingCollisions.push({
-    at:now+870,until:now+1850,owner,victim,type:selected.type,
-    power:selected.power,hpBefore:priorHP,
-    sawPhysics:false,name:selected.name
-   });
+   const createdProjectiles=(this.projectiles||[]).filter(x=>
+    x.from==='player'&&!shotsBefore.has(x)&&x.life>0);
+   const createdBeam=this.telegraph?.from==='player'&&this.telegraph!==beamBefore;
+   // Do not duplicate a REAL projectile or beam created by the same cast.
+   // Other casts' shots do not affect this decision.
+   if(!createdProjectiles.length&&!createdBeam){
+    this.v47MissingCollisions.push({
+     at:now+770,until:now+3200,owner,victim,type:selected.type,
+     power:selected.power,hpBefore:priorHP,name:selected.name
+    });
+    report.ignoredOldShots+=shotsBefore.size;
+   }
+   // Wider matching between the visible projectile and the original game's
+   // segmentTouches() collider, without changing the animation itself.
+   for(const shot of createdProjectiles){
+    shot.r=Math.max(Number(shot.r)||0,(this.h||560)*.031);
+   }
   }
   return result;
  };
@@ -77,7 +97,7 @@
     const dx=x-projectile.x,dy=y-projectile.y;
     const d=Math.hypot(dx,dy),speed=Math.hypot(projectile.vx,projectile.vy);
     if(d<1||speed<1)continue;
-    const steer=Math.min(0.88,Math.max(.36,(Number(dt)||.016)*36));
+    const steer=Math.min(.95,Math.max(.50,(Number(dt)||.016)*43));
     const vx=projectile.vx*(1-steer)+dx/d*speed*steer;
     const vy=projectile.vy*(1-steer)+dy/d*speed*steer;
     const length=Math.hypot(vx,vy)||1;
@@ -103,7 +123,11 @@
    const pending=[];
    for(const fx of this.v47ContactToLand){
     if(fx.until<=time||fx.victim!==foe()||fx.owner!==current())continue;
-    if(time<fx.at||this.enemy.inv>0){pending.push(fx);continue;}
+    if(Number(fx.victim.hp)<fx.hpBefore)continue;
+    if(time<fx.at||this.enemy.inv>0){
+     if(this.enemy.inv>0)report.waitedForInvincibility++;
+     pending.push(fx);continue;
+    }
     const hp=Number(fx.victim.hp);
     this.hitTarget('enemy',fx.type,fx.power);
     if(Number(fx.victim.hp)<hp)report.contactFollowThrough++;
@@ -117,18 +141,17 @@
    const time=performance.now(),pending=[];
    for(const fx of this.v47MissingCollisions){
     if(fx.until<=time||fx.victim!==foe()||fx.owner!==current())continue;
-    if(this.projectiles?.some(p=>p.from==='player'&&p.life>0)||
-       this.telegraph?.from==='player')fx.sawPhysics=true;
+    // Only this cast's physics is relevant. Previous casts can leave shots
+    // alive in the arena; those must NOT silence this accepted hit.
     if(Number(fx.victim.hp)<fx.hpBefore)continue;
     if(time<fx.at||(this.enemy?.inv||0)>0){
+     if((this.enemy?.inv||0)>0)report.waitedForInvincibility++;
      pending.push(fx);continue;
     }
-    if(!fx.sawPhysics){
-     const hp=Number(fx.victim.hp);
-     this.hitTarget('enemy',fx.type,fx.power);
-     // Drop the fallback after one REAL hit attempt (including immunity).
-     if(Number(fx.victim.hp)<hp)report.missingCollisionRecovered++;
-    }
+    const hp=Number(fx.victim.hp);
+    this.hitTarget('enemy',fx.type,fx.power);
+    // Drop fallback after one ORIGINAL hit attempt, including immunities.
+    if(Number(fx.victim.hp)<hp)report.missingCollisionRecovered++;
    }
    this.v47MissingCollisions=pending;
   }
