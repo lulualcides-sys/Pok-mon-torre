@@ -9,6 +9,9 @@ const mime={'.html':'text/html;charset=utf-8','.js':'application/javascript;char
 const server=http.createServer((req,res)=>{
  try{
   const pathname=decodeURIComponent(new URL(req.url,'http://local').pathname);
+  // Regression: a missing optional V47 electric script MUST recover to safe=1.
+  if((req.headers.referer||'').includes('electricFail=1')&&
+     pathname.endsWith('/electric-sprite-kit.js'))throw Error('Simulated electric module load failure');
   const file=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname));
   if(!file.startsWith(root+path.sep))throw Error('Invalid path');
   const bytes=fs.readFileSync(file);
@@ -26,13 +29,14 @@ const chrome=process.env.CHROME_BIN||[
  '/usr/bin/chromium-browser'
 ].find(x=>fs.existsSync(x));
 if(!chrome){console.error('SKIP: Chrome/Chromium missing');process.exit(0)}
-async function browserCase(port,query){
+async function browserCase(port,query,mobile=false){
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'pokemon-boot-'));
  const child=cp.spawn(chrome,[
   '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
   '--no-first-run','--no-default-browser-check','--disable-extensions',
   '--disable-background-networking','--remote-allow-origins=*',
   '--remote-debugging-port=0','--user-data-dir='+tmp,'--window-size=460,970',
+  ...(mobile?['--user-agent=Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36']:[]),
   'http://127.0.0.1:'+port+'/'+query
  ],{stdio:'ignore'});
  const errors=[];let ws=null;
@@ -71,7 +75,7 @@ async function browserCase(port,query){
    try{ws.send(JSON.stringify({id,method,params}))}catch(e){pending.delete(id);rej(e)}
   });
   await cmd('Runtime.enable');await cmd('Log.enable');
-  const expression="(() => ({title:document.title,ready:document.readyState,main:!!document.getElementById('main'),resources:(document.getElementById('resources')?.textContent||'').slice(0,140),text:(document.body?.innerText||'').slice(0,200),electric:typeof window.PokemonTorreElectricV46==='function',water:typeof window.PokemonTorreWaterV43==='function',types:typeof window.PokemonTorreMoveTypesV46==='function'}))()";
+  const expression="(() => ({title:document.title,ready:document.readyState,main:!!document.getElementById('main'),resources:(document.getElementById('resources')?.textContent||'').slice(0,140),text:(document.body?.innerText||'').slice(0,200),electric:typeof window.PokemonTorreElectricV46==='function',water:typeof window.PokemonTorreWaterV43==='function',types:typeof window.PokemonTorreMoveTypesV46==='function',url:location.search}))()";
   let result=null;
   for(let i=0;i<100;i++){
    const report=await cmd('Runtime.evaluate',{expression,returnByValue:true});
@@ -103,8 +107,18 @@ server.listen(0,'127.0.0.1',async()=>{
   if(!experimental.ok||!experimental.result?.electric||!experimental.result?.types){
    console.error('FAIL: V46 must now boot with electric and canonical types enabled');process.exitCode=1;
   }
-  if(stable.ok&&experimental.ok&&experimental.result.electric&&experimental.result.types)
-   console.log('PASS: Chromium actually boots V46 and the safe V45 fallback');
+  const phone=await browserCase(port,'?v=47-mobile',true);
+  console.log('BROWSER ANDROID:',JSON.stringify(phone));
+  if(!phone.ok||!phone.result?.electric||!phone.result?.types){
+   console.error('FAIL: Android mobile-like Chromium must boot V47');process.exitCode=1;
+  }
+  const recovered=await browserCase(port,'?v=47&electricFail=1',true);
+  console.log('BROWSER AUTOMATIC RECOVERY:',JSON.stringify(recovered));
+  if(!recovered.ok||recovered.result?.electric||!recovered.result?.url?.includes('safe=1')){
+   console.error('FAIL: a missing electric asset should recover to V45 safe mode on phone');process.exitCode=1;
+  }
+  if(stable.ok&&experimental.ok&&phone.ok&&recovered.ok)
+   console.log('PASS: V47 desktop/mobile boots; optional electric failure restores safe V45 mode');
  }catch(e){console.error('BROWSER TEST EXCEPTION:',e);process.exitCode=1}
  finally{server.close()}
 });
