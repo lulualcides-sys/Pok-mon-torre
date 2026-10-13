@@ -27,6 +27,12 @@ assert.match(thought,/<svg[^>]+shape-rendering="crispEdges"/,'Amnesia must use r
 assert.match(tsunami,/waterWall:true/,'Tsunami is a real vertical advancing wave');
 assert.match(tsunami,/tsunamiWaveV442/,'Animated Tsunami sprite must load independently');
 assert.match(tsunami,/const strips=22/,'Tsunami must animate at least 22 columns of its own wave');
+assert.match(tsunami,/const faceStrips=12/,'Angled front of Tsunami must animate independently');
+assert.match(tsunami,/perspectiveFront:true/,'Tsunami must use three-quarter perspective');
+assert.match(tsunami,/edgeDepth=/,'Original crest needs depth projection');
+assert.match(tsunami,/tsunamiFrontV443\.src/,'Tsunami front sprite must be loaded independently');
+assert.match(read('effects/moves/tsunami/front.svg'),/<svg[^>]+shape-rendering="crispEdges"/,
+ 'Tsunami's front-facing foam must remain real pixel art');
 assert.match(tsunami,/Math\.sin\(ms\*\.007\+i\*\.46\)/,'Wave crest columns must have temporal deformation');
 assert.match(read('effects/moves/tsunami/wave.svg'),/<svg[^>]+shape-rendering="crispEdges"/,'Wave must be pixel art');
 assert.match(pump,/pressureStream:true/,'Hydro Pump has its own continuous jet');
@@ -34,10 +40,13 @@ assert.match(pump,/hydroJetV442/,'Hydro Pump sprite must load independently');
 assert.match(pump,/for\(const side of \[-1,1\]\)/,'Exactly two mirrored streams');
 assert.match(pump,/const offset=side\*converge/,'Both streams must converge at common point');
 assert.match(pump,/if\(head>joinAt\)/,'Streams must connect into shared tip');
+assert.match(pump,/joinAt=\.62/,'Both jets must connect before two-thirds of the travel distance');
+assert.match(pump,/const converge=1-ease\(\(u-\.19\)\/\(joinAt-\.19\)\)/,
+ 'Hydro Pump must start merging early, not immediately before opponent');
 assert.match(read('effects/moves/hydro-pump/jet.svg'),/<svg[^>]+shape-rendering="crispEdges"/,'Jet must be pixel art');
 assert.match(amnesia,/amnesiaMarkV44\.src/,'Amnesia loads its own question-mark sprite');
 assert.doesNotMatch(amnesia,/draw\(g,/,'Amnesia must not paint water at all');
-assert.match(read(files[0]),/version:'44\.2'/);
+assert.match(read(files[0]),/version:'44\.3'/);
 const source=files.map(read).join('\n');
 const fxMatch=html.match(/const fxFiles=(\[[^;]+?\]);let plugin=/);
 const fsMatch=html.match(/const fireSpriteFiles=(\[[\s\S]*?\]);\s*const fireSpriteSections=/);
@@ -103,7 +112,7 @@ const diagnostics=env.window.PokemonTorreWaterV43;
 assert.equal(diagnostics().waterReady,true);
 assert.equal(diagnostics().psychicReady,true);
 assert.equal(diagnostics().registered.length,4);
-assert.equal(diagnostics().version,'44.2','Published water version must be V44.2');
+assert.equal(diagnostics().version,'44.3','Published water version must be V44.3');
 for(let i=0;i<4;i++){
  now=1000+i*4000;
  const before=draws.length;
@@ -130,6 +139,12 @@ let tsunamiDraws=draws.slice(startFrame);
 assert.ok(tsunamiDraws.some(x=>x.img.includes('tsunami/wave.svg')),
  'The advancing Tsunami must render a single real full-height wave');
 const waveStrips=tsunamiDraws.filter(x=>x.img.includes('tsunami/wave.svg'));
+const frontWave=tsunamiDraws.filter(x=>x.img.includes('tsunami/front.svg'));
+assert.equal(frontWave.length,12,'Front wave must form a 12-column visible rolling face');
+assert.ok(frontWave.every(x=>x.args[3]===200),
+ 'Frontal wave must use entire true 3/4-angle sprite height');
+assert.ok(frontWave.some(x=>x.args[7]>=160),
+ 'Front wave face must have substantial depth and not be a thin side profile');
 assert.equal(waveStrips.length,22,'Tsunami now bends its own wave in 22 separate strips');
 assert.ok(waveStrips.every(x=>x.args[2]<30&&x.args[6]<45),
  'No single giant rigid PNG should be stretched over the arena');
@@ -147,6 +162,12 @@ assert.ok(hydroDraws.some(x=>x.img.includes('hydro-pump/jet.svg')),
 const twinJets=hydroDraws.filter(x=>x.img.includes('hydro-pump/jet.svg'));
 assert.equal(twinJets.length,27,'Two equal 13-section jets must merge into one short section');
 const upper=twinJets.slice(0,13),lower=twinJets.slice(13,26);
+const joinPoint=twinJets[26];
+const ratioFromActor=(joinPoint.tx-engine.player.x)/(engine.enemy.x-engine.player.x);
+assert.ok(Math.abs(ratioFromActor-.62)<.02,
+ 'Jets must meet at 62% of the battlefield, not next to the target');
+assert.ok(joinPoint.tx<engine.enemy.x-155,
+ 'Shared stream must begin visibly well before reaching the enemy');
 assert.ok(Math.hypot(upper[0].tx-lower[0].tx,upper[0].ty-lower[0].ty)>=25,
  'The two jets must visibly begin SEPARATED');
 assert.ok(Math.hypot(upper[12].tx-lower[12].tx,upper[12].ty-lower[12].ty)<8,
@@ -167,7 +188,7 @@ assert.ok(amnesiaDraws.every(x=>!x.img.includes('water-original')),
 assert.ok(amnesiaDraws.some(x=>x.img.includes('psychic-original')),
  'Amnesia keeps approved authentic psychic accents');
 assert.equal(engine.player.x,190,'Skull Bash movement restored as before');
-console.log('PASS: V44.2 animated rolling 22-strip Tsunami; two matching thin Hydro Pump jets converge; approved Amnesia remains');
+console.log('PASS: V44.3 Tsunami with animated 3/4 angled front; twin Hydro jets merge at 62%; Amnesia and Skull Bash unchanged');
 
 console.log('PASS: Skull Bash contact, Tsunami wave, Amnesia self-status and Hydro Pump jet');
 console.log(JSON.stringify({version:diagnostics().version,registered:diagnostics().registered,waterFrames:draws.length,previousFire:diagnostics().originalFire}));
