@@ -1,34 +1,29 @@
-/* Sunny Day V42.2 — quiet sun/weather sprite animation, ZERO explosion frames.
- * Uses only the user-supplied fire GIF atlas as pixel-art sprites.
- * No burst, impact, projectile, shockwave, radial expansion or damage VFX.
+/* Sunny Day V42.5 — calm pixel-art SUN, no particles, fire rings or blasts.
+ * Sprite stored alongside this isolated move at sun.svg. No CSS animation.
  */
+const sunnyDaySpriteV425=new Image();
+sunnyDaySpriteV425.decoding='async';
+sunnyDaySpriteV425.src='effects/moves/sunny-day/sun.svg?v=42.5';
 fireSpriteV41.add('sunnyday',{
- key:'sunnyDay',duration:4800,contact:false,status:true,weather:true,
+ key:'sunnyDay',duration:4800,contact:false,status:true,weather:true,solarSprite:true,
  paint(g,f,t,ms,s,K){
-  const {draw,ease,lerp}=K,A=f.from,B=f.to,TAU=Math.PI*2;
-  // A calm sun stays overhead instead of exploding over either Pokémon.
-  const cx=(A[0]+B[0])*.5;
-  const cy=Math.max(69,Math.min(A[1],B[1])-124*s);
-  const alpha=ease(t/.17)*(1-ease((t-.86)/.14));
+  const {ease}=K;
+  if(!sunnyDaySpriteV425.naturalWidth||!sunnyDaySpriteV425.naturalHeight)return;
+  const A=f.from,B=f.to;
+  const size=77*s;
+  const x=(A[0]+B[0])*.5;
+  // Position near the arena's upper center, away from the enemy hit area.
+  const y=Math.max(80*s,Math.min(A[1],B[1])-127*s);
+  // Continuous light: fixed-size sun, slowly breathing with NO burst/impact.
+  const alpha=ease(t/.18)*(1-ease((t-.85)/.15));
   if(alpha<=.001)return;
-  const breath=1+.025*Math.sin(ms*.0017);
-  // Stable solar halo: original ring GIF frames, no scaling burst.
-  draw(g,'spinRing',Math.floor(ms/160),cx,cy,63*s*breath,55*s*breath,
-   {alpha:alpha*.63,rotation:ms*.00012});
-  draw(g,'spinRing',Math.floor(ms/190)+4,cx,cy,43*s,38*s,
-   {alpha:alpha*.57});
-  // A gentle, fixed solar core formed by flame sprite pixels.
-  draw(g,'flame',0,cx,cy-2*s,34*s,39*s,
-   {alpha:alpha*.55});
-  // Delicate corona made of low-opacity flames, no projectile/explosion sprites.
-  for(let i=0;i<8;i++){
-   const a=i*TAU/8;
-   const r=(36+Math.sin(ms*.0019+i)*2)*s;
-   const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r*.83;
-   draw(g,'flame',0,x,y,11*s,17*s,
-     {rotation:a+Math.PI/2,alpha:alpha*(.28+.04*Math.sin(ms*.002+i))});
-  }
-  // Stable daytime illumination only — no ground impact rings or shockwaves.
-
+  const bob=Math.sin(ms*.0019)*2*s;
+  g.save();
+  g.imageSmoothingEnabled=false;
+  g.globalAlpha=alpha*(.86+.08*Math.sin(ms*.0017));
+  g.drawImage(sunnyDaySpriteV425,
+   Math.round(x-size*.5),Math.round(y-size*.5+bob),
+   Math.round(size),Math.round(size));
+  g.restore();
  }
 });
