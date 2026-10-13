@@ -28,6 +28,13 @@
      targetInv:this.enemy?.inv,playerInv:this.player?.inv,
      hpBefore:before,hpAfter:after,battlePaused:battle?.paused,
      targetId:this.enemy?.id,foeMatches:victim===foe(),
+     attackerStats:this.v25?.stats?.player?{
+      accuracy:this.v25.stats.player.accuracy,atk:this.v25.stats.player.atk,
+      speed:this.v25.stats.player.speed
+     }:null,
+     defenderStats:this.v25?.stats?.enemy?{
+      def:this.v25.stats.enemy.def,accuracy:this.v25.stats.enemy.accuracy
+     }:null,
      time:performance.now()};
    }
   }
