@@ -74,6 +74,7 @@
    this.v47RecoveredDashes=(this.v47RecoveredDashes||[]).filter(x=>x.until>now);
    this.v47RecoveredDashes.push({at:now,until:now+860,owner,victim,
     start:[this.player.x,this.player.y]});
+   report.recoveredBasicDashes++;
   }
   const accepted=!!(active&&selected&&battle?.active&&
    (resourcesChanged||actorAdvanced||animationBegan||particlesSpawned||legacyZeroDash));
@@ -89,34 +90,6 @@
     this.v474QueuedMove={slot,b:battle,owner,at:now,until:now+2200};
     report.queuedDuringWindup++;
     return result;
-   }
-   // V47.5: Legacy wrappers sometimes silently discard valid physical
-   // punches without even starting an attack or consuming resources.
-   // Respect preparation, pause, fainting, and throttling. Reconstruct the
-   // core's physical dash ONLY if no original action occurred.
-   const basicDash=active&&selected?.kind==='dash'&&Number(selected.power)>0&&
-    Number(battle.energy)>=Number(selected.cost||0)&&
-    Number(cooldowns[slot]||0)<=now&&
-    owner?.hp>0&&victim?.hp>0&&(!this.v33Windup||this.v33Windup.until<=now)&&
-    !battle?.v301Fainting;
-   if(basicDash){
-    const last=this.v475LastBasicDash||0;
-    if(now-last>=490){
-     this.v475LastBasicDash=now;
-     const cost=Math.max(0,Number(selected.cost)||0),cd=Math.max(0,Number(selected.cd)||0);
-     if(cost)battle.energy-=cost;
-     if(cd)cooldowns[slot]=now+cd;
-     report.casts++;report.lastCast=selected.name;
-     if(!cost&&!cd)report.zeroCostRecognized++;
-     report.recoveredBasicDashes++;
-     this.attackActs.player=Math.max(Number(this.attackActs.player)||0,(this.time||0)+.43);
-     this.v475RecoveredDash={b:battle,owner,at:now,until:now+680};
-     this.v47ContactToLand=(this.v47ContactToLand||[]).filter(f=>f.until>now);
-     this.v47ContactToLand.push({
-      at:now+320,until:now+2250,owner,victim,hpBefore:priorHP,
-      type:selected.type,power:selected.power,name:selected.name
-     });
-    }
    }
    return result;
   }
@@ -163,23 +136,6 @@
    }
   }
   return result;
- };
- // Only the recovered basic physical dash needs a synchronized visual
- // follow-through. The original approved sprite attack painters are untouched.
- const v475BasicDashDraw=BattleEngine.prototype.draw;
- BattleEngine.prototype.draw=function(now){
-  const dash=this.v475RecoveredDash,actor=this.player,target=this.enemy;
-  if(!dash||dash.b!==battle||dash.owner!==current()||now>=dash.until||
-     !actor||!target)return v475BasicDashDraw.apply(this,arguments);
-  const ox=actor.x,oy=actor.y;
-  const t=Math.max(0,Math.min(1,(now-dash.at)/680));
-  const motion=Math.max(0,Math.min(1,(t-.10)/.30))*
-               (1-Math.max(0,Math.min(1,(t-.61)/.28)));
-  const dx=target.x-ox,dy=target.y-oy,dist=Math.hypot(dx,dy)||1;
-  const travel=Math.max(0,dist-(this.h||560)*.087)*motion;
-  actor.x+=dx/dist*travel;actor.y+=dy/dist*travel;
-  try{return v475BasicDashDraw.apply(this,arguments)}
-  finally{actor.x=ox;actor.y=oy}
  };
  const savedUpdate=BattleEngine.prototype.update;
  BattleEngine.prototype.update=function(dt,now){
