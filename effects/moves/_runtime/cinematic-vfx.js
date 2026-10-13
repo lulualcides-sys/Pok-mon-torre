@@ -241,11 +241,7 @@ function create({app,root,f,name,type,kind,cat,tex,particles}){
  const emitterRoot=new PIXI.Container(),burstRoot=new PIXI.Container();
  root.addChild(emitterRoot,burstRoot);
  const emitterTex=particleTexture(app.renderer,style==='cannon'?'steel':style,tex);
- const particleColors=(type==='steel'?[0xa9d3e9,0xffffff,0x63839e]:
-   type==='water'?[0x31b1ed,0xe9ffff,0x286aa6]:
-   (type==='fire'?[0xff8f39,0xffe5ab,0xc43b16]:
-   (type==='grass'?[0x9ded69,0xf4ffd6,0x3a8d55]:
-    [0xb3a4f5,0xffffff,0x7563af])));
+ const particleColors=(palettes[type]||palettes.normal).map(c=>parseInt(c.slice(1),16));
  const trail=particles(emitterRoot,emitterTex,particleColors,false);
  const burst=particles(burstRoot,emitterTex,particleColors,true);
  const shaderNodes=[dust,charge,ribbon,form,atmosphere,explosion,cut,extra].filter(Boolean);
@@ -322,6 +318,6 @@ function create({app,root,f,name,type,kind,cat,tex,particles}){
  }
  return {draw,trail,burst,style,shaderCount:shaderNodes.length,originalFrames:originalSprites.length};
 }
-return {create,profile,diagnostics:()=>({version:'35.90',rendering:'GPU fragment shaders',
+return {create,profile,makeShader:shaderSprite,diagnostics:()=>({version:'35.90',rendering:'GPU fragment shaders',
  families:31,phases:['charge','execution','collision','afterglow']})};
 })();

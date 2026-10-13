@@ -51,3 +51,7 @@ A camada visual principal foi substituída por `_runtime/cinematic-vfx.js`, um c
 Sem alteração no motor de dano, salvamentos, arena, atributos ou cooldowns. Entre os estilos revisados por nome estão Canhão de Ferro (munição metálica), Surf (onda com espuma), Fire Blast (sprites reais de explosão flamejante), Thunderbolt (relâmpagos ramificados), cortes, água, gelo e o conjunto Hyper/Aurora/Ice/Solar Beam. Os outros golpes modulares usam as mesmas famílias visuais compatíveis com seu nome e tipo.
 
 Os shaders têm suporte de baixa complexidade (ruído 4 oitavas) para celulares; efeitos são criados somente quando um golpe é disparado. Sem necessidade de instalação ou edição local. Diagnóstico de estilos: `PokemonTorrePixiFX()`.
+
+## V35.91 — Tri Attack + partículas de 18 tipos
+
+O módulo independente `tri-attack/index.js` exibe três feixes simultâneos reais: fogo vermelho/laranja, eletricidade amarela e gelo azul com sprites PixiJS filtrados pela GPU, três trilhas de partículas e três explosões que convergem, mantendo **um só evento de dano no motor**. O catálogo reconhece `Tri Ataque` e `Tri Attack`, com duração de animação 1320 ms. Partículas gerais passam a adotar a paleta visual de todos os 18 tipos, eliminando a cor roxa genérica de tipos não-psíquicos.

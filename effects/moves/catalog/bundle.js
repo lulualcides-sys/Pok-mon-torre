@@ -893,7 +893,7 @@ registerMove("catalog_transformar",["Transformar"],(g,f,t,now,s,low)=>drawCatalo
 registerMove("catalog_trevaseternas",["Trevas Eternas"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"trevaseternas","type":"ghost","kind":"area","cat":"special","seed":137}),1100);
 
 // Tri Ataque — V35.84; edição independente deste golpe.
-registerMove("catalog_triataque",["Tri Ataque"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"triataque","type":"normal","kind":"bolt","cat":"special","seed":224}),950);
+registerMove("catalog_triataque",["Tri Ataque","Tri Attack"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"triataque","type":"normal","kind":"bolt","cat":"special","seed":224}),1320);
 
 // Trovão — V35.84; edição independente deste golpe.
 registerMove("catalog_trovao",["Trovão"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"trovao","type":"electric","kind":"homing","cat":"special","seed":61}),950);

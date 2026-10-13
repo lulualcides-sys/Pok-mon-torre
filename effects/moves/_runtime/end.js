@@ -28,7 +28,7 @@ BattleEngine.prototype.useMove=function(i){
  const addedFx=(this.v359Attacks||[]).slice(before).find(f=>f?.move?.name===mv.name);
  if(addedFx){
   // Only the four new beams rescale their existing attack; engine still owns ONE hit.
-  const timing={hyperbeam:[1230,.72],aurorabeam:[1010,.65],icebeam:[1130,.69],solarbeam:[1370,.77]}[k];
+  const timing={hyperbeam:[1230,.72],aurorabeam:[1010,.65],icebeam:[1130,.69],solarbeam:[1370,.77],catalog_triataque:[1320,.78]}[k];
   if(timing){addedFx.duration=timing[0];addedFx.end=addedFx.at+timing[0];addedFx.times=[timing[1]];}
   return result;
  }
