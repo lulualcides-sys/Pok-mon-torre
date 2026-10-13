@@ -1,0 +1,111 @@
+{
+  "receivedAt": "2026-10-13",
+  "images": [
+    {
+      "filename": "1000981190.gif",
+      "type": "terra",
+      "bytes": 48908,
+      "sha256": "266d16bf97f57049cac8898d4c5a621fafa734155d6e2d49b77365e510e01fe9",
+      "width": 700,
+      "height": 400,
+      "frames": 1,
+      "location": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/terra/1000981190.gif",
+      "notes": "Single visual/reference"
+    },
+    {
+      "filename": "1000981191.gif",
+      "type": "terra",
+      "bytes": 586283,
+      "sha256": "4ec038a8300e29f1d037af3e0ac9c960bd844d8fc7dacae52c8c5a07f8ddb87a",
+      "width": 1280,
+      "height": 640,
+      "frames": 9,
+      "location": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/terra/1000981191.gif",
+      "notes": "Animated frames"
+    },
+    {
+      "filename": "1000981198.jpg",
+      "type": "terra",
+      "bytes": 105558,
+      "sha256": "de956b8200397b11b9e3eb2331a9d14a3cdb818688a2dd9f4a6c7e09e1d7eaed",
+      "width": 1800,
+      "height": 1200,
+      "frames": 1,
+      "location": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/terra/1000981198(1).jpg",
+      "notes": "Single visual/reference"
+    },
+    {
+      "filename": "1000981199.webp",
+      "type": "terra",
+      "bytes": 32578,
+      "sha256": "d9cd16fb5e817800c5e89ec0c9572833a52abe6decf7be507e3342be4a157ac8",
+      "width": 720,
+      "height": 480,
+      "frames": 1,
+      "location": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/terra/1000981199(1).webp",
+      "notes": "Single visual/reference"
+    },
+    {
+      "filename": "1000981200.gif",
+      "type": "fogo",
+      "bytes": 244976,
+      "sha256": "c222aeb628b7b77650a410d30a315ec591b68962aafc409800cc0a79f286624b",
+      "width": 1920,
+      "height": 1080,
+      "frames": 1,
+      "location": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fogo/1000981200.gif",
+      "notes": "Single visual/reference"
+    },
+    {
+      "filename": "1000981201.gif",
+      "type": "fogo",
+      "bytes": 235140,
+      "sha256": "ab1360377fb6fcdc8f031acdad261cb816f0f0c6449ef78ab28b581459a412d7",
+      "width": 1920,
+      "height": 1080,
+      "frames": 1,
+      "location": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fogo/1000981201.gif",
+      "notes": "Single visual/reference"
+    },
+    {
+      "filename": "1000981206.gif",
+      "type": "terra",
+      "bytes": 278803,
+      "sha256": "314b6f48c238c9b4bf82f01079d5f6bdf131ee3ec740c89353407fedbb7ed5cd",
+      "width": 1920,
+      "height": 1080,
+      "frames": 1,
+      "location": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/terra/1000981206.gif",
+      "notes": "Single visual/reference"
+    },
+    {
+      "filename": "1000981207.gif",
+      "type": "fogo",
+      "bytes": 612177,
+      "sha256": "5ade05bd8bbdd36e61e72fb259a02028f933b4d1d49529f31d608c9dff5f6380",
+      "width": 1920,
+      "height": 1080,
+      "frames": 14,
+      "location": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fogo/1000981207.gif",
+      "notes": "Animated frames"
+    },
+    {
+      "filename": "1000981208.gif",
+      "type": "fogo",
+      "bytes": 871710,
+      "sha256": "bd7971939e6176fac77c56c344f9dad91925f8253f86af1da7803f1b3e953e2f",
+      "width": 1920,
+      "height": 1080,
+      "frames": 16,
+      "location": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fogo/1000981208.gif",
+      "notes": "Animated frames"
+    }
+  ],
+  "alreadyCataloguedBeforeThisTurn": [
+    "1000981206.gif",
+    "1000981207.gif",
+    "1000981208.gif"
+  ],
+  "newOrCopiedIntoLibrary": 6,
+  "binaryOriginalsOnGithub": false
+}
