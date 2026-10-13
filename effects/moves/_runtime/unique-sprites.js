@@ -12,7 +12,7 @@ const uniqueMoveFX=(()=>{
   const s=new PIXI.Sprite(texture(path));s.anchor.set(.5);s.width=w;s.height=h;s.alpha=alpha;root.addChild(s);return s;
  }
  function preload(paths){if(!window.PIXI?.Texture)return;for(const p of paths)texture(p)}
- function register(names,fn){for(const name of names){const k=key(name);if(scenes.has(k))throw Error('Duplicated scene: '+name);scenes.set(k,fn)}}
+ function register(names,fn){for(const name of names){const k=key(name);if(scenes.has(k)){if(scenes.get(k)!==fn)throw Error('Duplicated scene: '+name);continue;}scenes.set(k,fn)}}
  function create(opts){return scenes.get(key(opts?.name||opts?.f?.move?.name))?.(opts)||null}
  return {register,create,sprite,preload,key,clamp,smooth,lerp,TAU:Math.PI*2,registered:()=>[...scenes.keys()]};
 })();
