@@ -84,7 +84,7 @@ const pixiFX=(()=>{
    app.view.style.cssText='position:fixed;pointer-events:none;touch-action:none;z-index:9000;max-width:none';
    document.body.appendChild(app.view);owner=engine;
    if(typeof spriteAtlas3511!=='undefined'&&spriteAtlas3511.naturalWidth)atlas=PIXI.BaseTexture.from(spriteAtlas3511);
-   app.ticker.add(tick);position(engine);return true;
+   app.ticker.add(tick);position(engine);TriAttackVFX?.preload?.();return true;
   }catch(e){error='PixiJS: '+e.message;reset();return false;}
  }
  function install(f,kind){
