@@ -24,8 +24,13 @@ assert.match(html,/if\(enableElectricPreview\)game=game\.replace/,
  'Safe-mode must not inject V46 scripts into the approved V45 game');
 assert.equal(fire.length+moreFire.length-2,8,'Existing eight fire animations must be preserved');
 const original=Array.from({length:25},(_,i)=>read('parts/p'+String(i).padStart(3,'0')+'.txt')).join('');
+const v32Closing='\n})();\n/* FIM POKEMON TORRE V32 */';
+const typeBridge='effects/moves/_runtime/move-type-hook-v46.js';
+assert.ok(original.includes(v32Closing),'Original private V32 catalogue closing anchor exists');
+assert.match(html,/move-type-hook-v46\.js/,'Loader must inject private-scope V32 typing bridge');
+const privateBridgeGame=original.replace(v32Closing,'\n'+read(typeBridge)+v32Closing);
 const anchor='\nrender();\n})();\n</script>';
-const built=original.replace(anchor,'\n'+[
+const built=privateBridgeGame.replace(anchor,'\n'+[
  ...oldfx,...fire.slice(0,-1),...moreFire,fire.at(-1),...water,...electric
 ].map(read).join('\n')+'\n'+anchor);
 assert.notEqual(built,original,'Game assembly must contain all new source modules');
@@ -101,6 +106,7 @@ const env={
  document:{getElementById:()=>null},
  window:{PokemonTorreV360Paint:()=>false}
 };
+vm.runInNewContext(read(typeBridge),env,{filename:'MoveTypesLexicalBridgeV46'});
 vm.runInNewContext(electricSource,env,{filename:'ElectricSpriteV46'});
 const dex=env.window.PokemonTorreMoveTypesV46;
 const ele=env.window.PokemonTorreElectricV46;
