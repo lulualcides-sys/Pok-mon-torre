@@ -53,7 +53,7 @@ BattleEngine.prototype.draw=function(now){
  const result=previousDraw.call(this,now);
  if(!battle?.active||!this.ctx){this.v3580Visuals=[];return result;}
  this.v3580Visuals=(this.v3580Visuals||[]).filter(f=>f.end>now);
- for(const fx of this.v3580Visuals){const k=pick(fx.move?.name);if(k)paint(this.ctx,fx,now,this,k);}
+ for(const fx of this.v3580Visuals){if(legendaryFireFX.handles(fx)){legendaryFireFX.paint(this.ctx,fx,now,this);continue;}const k=pick(fx.move?.name);if(k)paint(this.ctx,fx,now,this,k);}
  return result;
 };
 window.PokemonTorreMewtwo4FX=()=>({version:'35.83',animatedMoves:['Psíquico','Confusion','Lança-Chamas','Telecinese'],modules:['psychic','confusion','flame','telekinesis'],renderedFrames:{...counts},engine:'Canvas 2D + atlas DS',activeStatus:(engine?.v3580Visuals||[]).length,activeAttacks:(engine?.v359Attacks||[]).filter(f=>!!pick(f?.move?.name)).length});
