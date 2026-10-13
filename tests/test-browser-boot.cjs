@@ -29,7 +29,7 @@ const chrome=process.env.CHROME_BIN||[
  '/usr/bin/chromium-browser'
 ].find(x=>fs.existsSync(x));
 if(!chrome){console.error('SKIP: Chrome/Chromium missing');process.exit(0)}
-async function browserCase(port,query,mobile=false){
+async function browserCase(port,query,mobile=false,combat=false){
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'pokemon-boot-'));
  const child=cp.spawn(chrome,[
   '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
@@ -85,7 +85,26 @@ async function browserCase(port,query,mobile=false){
    await sleep(250);
   }
   const ok=!!(result?.main&&result?.resources?.length>10&&!result?.text?.includes('Não foi possível abrir o jogo'));
-  return {query:query||'default',ok,result,errors:errors.slice(0,7)};
+  let combatResults=null;
+  if(combat&&ok){
+   const cases=[['electric',25,143],['water',9,143],['fire',6,143]];
+   combatResults=[];
+   for(const [name,allyId,foeId] of cases){
+    const expression="(async()=>{const qa=window.PokemonTorreLocalCombatTestV47;"+
+     "if(!qa)return {error:'Combat QA missing'};"+
+     "const initial=qa.start("+allyId+","+foeId+");"+
+     "const fired=qa.cast(0);"+
+     "await new Promise(r=>setTimeout(r,1700));"+
+     "return {initial,fired,final:qa.snapshot()};})()";
+    const response=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
+    const answer=response.result?.result?.value||{error:response.result?.exceptionDetails?.text||'No combat result'};
+    combatResults.push({name,...answer,landed:
+      Number.isFinite(answer?.fired?.hpBefore)&&
+      Number.isFinite(answer?.final?.foeHp)&&
+      answer.final.foeHp<answer.fired.hpBefore});
+   }
+  }
+  return {query:query||'default',ok,result,combatResults,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -117,8 +136,14 @@ server.listen(0,'127.0.0.1',async()=>{
   if(!recovered.ok||recovered.result?.electric||!recovered.result?.url?.includes('safe=1')){
    console.error('FAIL: a missing electric asset should recover to V45 safe mode on phone');process.exitCode=1;
   }
-  if(stable.ok&&experimental.ok&&phone.ok&&recovered.ok)
-   console.log('PASS: V47 desktop/mobile boots; optional electric failure restores safe V45 mode');
+  const combat=await browserCase(port,'?v=47.1-hit-regression',false,true);
+  console.log('BROWSER REAL COMBAT:',JSON.stringify(combat.combatResults));
+  if(!combat.ok||!combat.combatResults?.every(c=>c.landed)){
+   console.error('FAIL: real player bolts must actually reduce enemy HP for electric, water and fire');process.exitCode=1;
+  }
+  if(stable.ok&&experimental.ok&&phone.ok&&recovered.ok&&combat.ok&&
+     combat.combatResults?.every(c=>c.landed))
+   console.log('PASS: Browser boot + automatic recovery + actual HP loss on electric/water/fire attacks');
  }catch(e){console.error('BROWSER TEST EXCEPTION:',e);process.exitCode=1}
  finally{server.close()}
 });
