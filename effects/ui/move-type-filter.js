@@ -75,8 +75,13 @@
    const count=document.createElement('div');count.className='ptTypeCount';bar.insertAdjacentElement('afterend',count);
    // Native search listener runs first; this event callback makes both filters
    // effective without altering its existing implementation.
-   const input=modal.querySelector('#v3566FindMove');
-   if(input)input.addEventListener('input',()=>{term=input.value;apply(modal,list);});
+  }
+  // V35.66 installs search asynchronously. Link it even when search appears
+  // after the type control, and on every editor re-render.
+  const input=modal.querySelector('#v3566FindMove');
+  if(input&&!input.dataset.ptTypeLinked){
+   input.dataset.ptTypeLinked='yes';
+   input.addEventListener('input',()=>{term=input.value;apply(modal,list);});
   }
   apply(modal,list);
  }
