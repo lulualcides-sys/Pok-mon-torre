@@ -26,7 +26,13 @@ const waterSpriteV43=(()=>{
   g.save();g.globalAlpha=alpha;g.imageSmoothingEnabled=false;
   g.translate(x,y);g.rotate(opt.rotation||0);
   if(opt.flipX)g.scale(-1,1);
-  g.drawImage(source,(frame%5)*48,Math.floor(frame/5)*48,48,48,-w/2,-h/2,w,h);
+  // First five frames are the full-width ocean-wave crests. Their true
+  // source pixels occupy only 9 vertical pixels in the source panel;
+  // crop that empty padding so the Tsunami becomes a WATER WALL,
+  // not a flat horizontal line across the arena.
+  const wave=frame<5;
+  g.drawImage(source,(frame%5)*48,wave?19:Math.floor(frame/5)*48,
+   48,wave?10:48,-w/2,-h/2,w,h);
   g.restore();frames[frame]=(frames[frame]||0)+1;return true;
  }
  function mind(g,id,x,y,w,h,opt={}){
