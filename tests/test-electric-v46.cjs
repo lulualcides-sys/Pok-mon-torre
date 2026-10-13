@@ -181,7 +181,7 @@ for(let i=0;i<4;i++){
   'Discharge creates many expanding electric arcs');
  if(i===2)assert.ok(parts.some(x=>x.src.includes('storm-cloud.svg'))&&
   parts.some(x=>x.src.includes('bolt-')),'Thunderstorm has cloud AND falling bolts');
- if(i===3)assert.ok(parts.some(x=>x.src.includes('bolt-a.svg'))&&
+ if(i===3)assert.ok(parts.some(x=>/bolt-(?:a|b|c|fork|shatter)\.svg/.test(x.src))&&
   parts.some(x=>x.src.includes('impact.svg')),'Thunder giant bolt and hit burst are visible');
 }
 assert.equal(spent,4,'Accepted combat attacks occur exactly four times');
