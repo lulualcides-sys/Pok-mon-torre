@@ -1,7 +1,7 @@
-/* Pokemon Torre V35.80 - quatro golpes animados do Mewtwo
+/* Pokemon Torre V35.82 - quatro golpes animados do Mewtwo
    Inserido no fechamento do IIFE original pelo index.html, sem modificar os 25 fragmentos.
    Os golpes ofensivos usam a fila v359 e o painter existente; Telecinese de status
-   usa uma pequena fila exclusiva e o draw do motor. Sem CSS como animação de ataque. */
+   usa uma pequena fila exclusiva e o draw do motor. Sem CSS como animação de ataque; Canvas 2D em tempo real. */
 (function(){
 'use strict';
 // Registro isolado: cada golpe declara seus próprios nomes, duração e animação.

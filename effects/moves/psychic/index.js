@@ -1,21 +1,43 @@
-// Módulo isolado: Psíquico. Não altera golpes vizinhos.
-function drawPsychic(g,f,t,now,s){
- const A=f.from,B=f.to,u=SM(C((t-.06)/.68));const x=M(A[0],B[0],u),y=M(A[1],B[1],u);
- const fade=C(Math.min(t*9,(1-t)*6,1)),hit=C((t-.67)/.26),r=(13+8*Math.sin(t*10))*s;
- glow(g,x,y,r*3.2,'#fffbff','#a93bfa',fade*.88);dot(g,x,y,r,'#c655ff',fade,.0);dot(g,x,y,r*.54,'#ffdeff',fade,4);
- stamp(g,'purple'+(Math.floor(now/70)%32),x,y,24*s,24*s,t*8,fade*.90);
- for(let i=0;i<4;i++){
-  const q=C((t-i*.055)/.70),ox=M(A[0],B[0],SM(q)),oy=M(A[1],B[1],SM(q));
-  ring(g,ox,oy,(11+i*3)*s,'#e8a9ff',fade*(.70-i*.11),1.5*s,.46,now*.004+i*.9);
+// Psíquico — versão V35.82: carga, projétil helicoidal e impacto radial.
+// Isolado: nenhuma alteração no comportamento dos demais golpes.
+function drawPsychic(g,f,t,now,s,low){
+ const A=f.from,B=f.to,beat=now*.009,alpha=C(Math.min(t*9,(1-t)*10));
+ const travel=SM(C((t-.13)/.61)),x=M(A[0],B[0],travel),y=M(A[1],B[1],travel);
+ const charging=C((.27-t)/.25),impact=SM(C((t-.70)/.29));
+ if(charging>0){
+  glow(g,A[0],A[1],42*s,'#fff4ff','#8c2be3',charging*.74);
+  for(let j=0;j<3;j++)ring(g,A[0],A[1],(9+16*(1-charging)+j*7)*s,j%2?'#c94fff':'#f7c8ff',charging*.76,2*s,.52,beat*(j%2?1:-1));
+  for(let j=0;j<8;j++){const a=j*TWO/8+beat,rr=(16+11*(1-charging))*s;star(g,A[0]+Math.cos(a)*rr,A[1]+Math.sin(a)*rr*.67,2.2*s,'#ebb8ff',alpha*charging);}
  }
- for(let j=0;j<12;j++){
-  const th=j*TWO/12+now*.009,rr=(19+j%3*7)*s;
-  dot(g,x+Math.cos(th)*rr,y+Math.sin(th)*rr*.7,(1.5+j%3)*s,j%3?'#fa85f5':'#ffffff',fade*.86,2*s);
-  if(j%2===0)stamp(g,'purple'+((j*4+Math.floor(now/65))%32),x+Math.cos(th)*rr,y+Math.sin(th)*rr*.7,11*s,11*s,th,fade*.73);
+ if(t<.82){
+  const n=low?9:16;
+  for(let ribbon=0;ribbon<3;ribbon++){
+   const pts=[];
+   for(let j=0;j<=n;j++){
+    const q=C(travel-j/(n*2.9)),phase=q*23-beat*1.2+ribbon*TWO/3;
+    pts.push([M(A[0],B[0],q)+Math.cos(phase)*9*s*(.35+q),M(A[1],B[1],q)+Math.sin(phase)*9*s*(.35+q)]);
+   }
+   line(g,pts,ribbon===0?'#e4a4ff':ribbon===1?'#8c6aff':'#fa69da',(ribbon===0?2.4:1.5)*s,alpha*.55,3*s);
+  }
+  glow(g,x,y,34*s,'#fff6ff','#8d27ef',alpha*.90);
+  ring(g,x,y,19*s,'#ff9eef',alpha,2.5*s,.66,beat);
+  ring(g,x,y,15*s,'#b0a1ff',alpha,2*s,.76,-beat*.76);
+  dot(g,x,y,10*s,'#a947ff',alpha,5*s);
+  dot(g,x,y,5.5*s,'#fff3ff',alpha,7*s);
+  stamp(g,'purple'+(Math.floor(now/75)%32),x,y,21*s,21*s,beat,alpha*.90);
+  for(let j=0;j<(low?7:11);j++){
+   const a=j*2.399+beat*1.3,rr=(15+(j%3)*6)*s;
+   dot(g,x+Math.cos(a)*rr,y+Math.sin(a)*rr,(1.2+j%2)*s,j%2?'#e9b6ff':'#ffffff',alpha*.9,3*s);
+  }
  }
- if(hit>0){glow(g,B[0],B[1],(28+hit*25)*s,'#ffebff','#8e39ef',(1-hit)*.8);
-  for(let j=0;j<3;j++)ring(g,B[0],B[1],(13+hit*(24+j*14))*s,'#efadff',(1-hit)*(.9-j*.20),2*s,.6,now*.002+j);
-  for(let j=0;j<7;j++){const a=j*TWO/7;star(g,B[0]+Math.cos(a)*(14+hit*42)*s,B[1]+Math.sin(a)*(10+hit*34)*s,3.2*s,'#f8d9ff',fade*(1-hit));}}
+ if(impact>0){
+  const fade=1-impact,tx=B[0],ty=B[1];
+  glow(g,tx,ty,(25+33*impact)*s,'#fff9ff','#a231ee',fade*.92);
+  for(let j=0;j<3;j++)ring(g,tx,ty,(10+impact*(25+j*17))*s,j%2?'#fd79f6':'#e7c6ff',fade*(.95-j*.17),2.4*s,.66,beat*.4+j);
+  for(let j=0;j<14;j++){const a=j*TWO/14,rr=(12+43*impact)*s;
+   line(g,[[tx+Math.cos(a)*rr*.4,ty+Math.sin(a)*rr*.4],[tx+Math.cos(a)*rr,ty+Math.sin(a)*rr]],j%2?'#f7a3ff':'#ffffff',(j%2?1.6:2.6)*s,fade*.82,2*s);
+   if(j%3===0)star(g,tx+Math.cos(a)*rr,ty+Math.sin(a)*rr,3*s,'#fff1ff',fade);
+  }
+ }
 }
-
-registerMove('psychic',['Psíquico','Psychic'],drawPsychic,960);
+registerMove('psychic',['Psíquico','Psychic'],drawPsychic,1050);

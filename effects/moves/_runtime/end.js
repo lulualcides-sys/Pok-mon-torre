@@ -39,5 +39,5 @@ BattleEngine.prototype.draw=function(now){
  for(const fx of this.v3580Visuals){const k=pick(fx.move?.name);if(k)paint(this.ctx,fx,now,this,k);}
  return result;
 };
-window.PokemonTorreMewtwo4FX=()=>({version:'35.81',animatedMoves:['Psíquico','Confusion','Lança-Chamas','Telecinese'],modules:[...registry.keys()],renderedFrames:{...counts},activeStatus:(engine?.v3580Visuals||[]).length,activeAttacks:(engine?.v359Attacks||[]).filter(f=>!!pick(f?.move?.name)).length});
+window.PokemonTorreMewtwo4FX=()=>({version:'35.82',animatedMoves:['Psíquico','Confusion','Lança-Chamas','Telecinese'],modules:[...registry.keys()],renderedFrames:{...counts},engine:'Canvas 2D + atlas DS',activeStatus:(engine?.v3580Visuals||[]).length,activeAttacks:(engine?.v359Attacks||[]).filter(f=>!!pick(f?.move?.name)).length});
 })();
