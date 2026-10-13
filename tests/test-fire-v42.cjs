@@ -152,8 +152,8 @@ if(sunnyEvent)engine.draw(sunnyEvent.at+sunnyEvent.duration*.62);
 assert.doesNotMatch(sunnyCode,/draw\(g,'(?:firebolt|fireburst|explosion|explosionBurst)'/,
  'Sunny Day must not stamp explosive/launch sprite groups');
 const fireCode=read('effects/moves/fire-blast/index.js');
-assert.match(fireCode,/const w=100\*s\*growth,h=110\*s\*growth/,'Fire Blast smaller');
-assert.match(fireCode,/const bw=\(30\+/,'Fire Blast thicker');
+assert.match(fireCode,/const w=91\*s\*growth,h=98\*s\*growth/,'Fire Blast smaller');
+assert.match(fireCode,/const bw=\(35\+/,'Fire Blast thicker');
 assert.ok(legacyPainted===0,'No legacy status visuals should reach the renderer');
 const metrics=v42();
 assert.equal(metrics.casts,8);
