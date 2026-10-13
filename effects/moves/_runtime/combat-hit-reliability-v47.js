@@ -56,13 +56,19 @@
   // projectile, attack pose or resource change. Recover this valid PHYSICAL
   // command only, rather than silently ignoring it.
   const legacyZeroDash=!!(active&&selected?.kind==='dash'&&Number(selected.power)>0&&
-   Number(selected.cost||0)<=0&&Number(selected.cd||0)<=0&&
    !resourcesChanged&&!actorAdvanced&&!animationBegan&&!particlesSpawned&&
    current()?.hp>0&&(cooldowns[slot]||0)<=now&&
+   Number(battle.energy)>=Number(selected.cost||0)&&
    (!this.v33Windup||now>=this.v33Windup.until)&&
    now>=Number(this.v47NextZeroDash||0));
   if(legacyZeroDash){
-   this.v47NextZeroDash=now+850; // one physical animation per swing
+   // The older wrapper swallowed the action BEFORE charging its actual
+   // move cost and cooldown. Restore both original move-definition values.
+   const cost=Math.max(0,Number(selected.cost)||0);
+   const cd=Math.max(0,Number(selected.cd)||0);
+   battle.energy=Math.max(0,battle.energy-cost);
+   if(cd>0)cooldowns[slot]=now+cd;
+   this.v47NextZeroDash=now+Math.max(850,cd); // no button-spam
    this.attackActs.player=this.time+.53;
    this.v47RecoveredDashes=(this.v47RecoveredDashes||[]).filter(x=>x.until>now);
    this.v47RecoveredDashes.push({at:now,until:now+860,owner,victim,
