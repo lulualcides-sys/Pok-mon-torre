@@ -1,0 +1,43 @@
+function paint(g,f,now,e,k){
+ if(!f||!Array.isArray(f.from)||!Array.isArray(f.to)||!g)return false;
+ const dur=Math.max(250,f.duration||950),t=C((now-f.at)/dur),s=C((e?.h||420)/430,.62,1.18);
+ const low=!!(e?.fps>0&&e.fps<36);
+ if(t<0||now<f.at||now>f.at+dur+30)return true;
+ g.save();g.imageSmoothingEnabled=false;
+ const entry=registry.get(k);if(!entry){g.restore();return false;}
+ entry.draw(g,f,t,now,s,low);
+ g.restore();counts[k]=(counts[k]||0)+1;return true;
+}
+// Render de golpes ofensivos: pipeline existente. O retorno true impede duplicação por Canvas/PNG antigos.
+const prevPainter=window.PokemonTorreV360Paint;
+window.PokemonTorreV360Paint=function(g,f,now,e){
+ const k=pick(f?.move?.name||f?.name);if(k)return paint(g,f,now,e,k);
+ return typeof prevPainter==='function'?prevPainter(g,f,now,e):false;
+};
+// Status (sem projétil na fila v359) precisa ser animado mesmo quando não causa dano.
+const previousUse=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(i){
+ const mon=battle?.active?current():null,mv=mon&&Number.isInteger(i)?skillSet(mon)?.[i]:null,k=pick(mv?.name);
+ const before=this.v359Attacks?.length||0,energy=battle?.energy,oldCd=Number.isInteger(i)?cooldowns[i]:0,when=performance.now();
+ const result=previousUse.apply(this,arguments);
+ if(!k||!battle?.active)return result;
+ const added=(this.v359Attacks||[]).slice(before).some(f=>f?.move?.name===mv.name);
+ if(added)return result;
+ const accepted=result!==false && (((cooldowns[i]||0)>when&&(cooldowns[i]||0)!==oldCd)||(battle.energy<energy));
+ if(!accepted)return result;
+ const duration=registry.get(k).duration;
+ this.v3580Visuals||=[];
+ this.v3580Visuals.push({move:mv,at:when,end:when+duration,duration,from:[this.player.x,this.player.y-this.h*.13],to:[this.enemy.x,this.enemy.y-this.h*.12]});
+ this.v3580Visuals=this.v3580Visuals.slice(-8);
+ return result;
+};
+const previousDraw=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){
+ const result=previousDraw.call(this,now);
+ if(!battle?.active||!this.ctx){this.v3580Visuals=[];return result;}
+ this.v3580Visuals=(this.v3580Visuals||[]).filter(f=>f.end>now);
+ for(const fx of this.v3580Visuals){const k=pick(fx.move?.name);if(k)paint(this.ctx,fx,now,this,k);}
+ return result;
+};
+window.PokemonTorreMewtwo4FX=()=>({version:'35.81',animatedMoves:['Psíquico','Confusion','Lança-Chamas','Telecinese'],modules:[...registry.keys()],renderedFrames:{...counts},activeStatus:(engine?.v3580Visuals||[]).length,activeAttacks:(engine?.v359Attacks||[]).filter(f=>!!pick(f?.move?.name)).length});
+})();
