@@ -12,6 +12,10 @@ function paint(g,f,now,e,k){
 const prevPainter=window.PokemonTorreV360Paint;
 window.PokemonTorreV360Paint=function(g,f,now,e){
  const k=pick(f?.move?.name||f?.name);if(k)return paint(g,f,now,e,k);
+ // Protected Psybeam is not in the 312-move catalog. Reuse its existing hit
+ // and render only its new sprite animation; do not double gameplay damage.
+ const specialName=uniqueMoveFX.key(f?.move?.name||f?.name);
+ if(specialName==='psybeam'&&pixiFX.paint(f,e,'special_psybeam'))return true;
  return typeof prevPainter==='function'?prevPainter(g,f,now,e):false;
 };
 // Status (sem projétil na fila v359) precisa ser animado mesmo quando não causa dano.
