@@ -25,14 +25,19 @@ const pump=read('effects/moves/hydro-pump/index.js');
 const thought=read('effects/moves/amnesia/thought.svg');
 assert.match(thought,/<svg[^>]+shape-rendering="crispEdges"/,'Amnesia must use real pixel-art symbol');
 assert.match(tsunami,/waterWall:true/,'Tsunami is a real vertical advancing wave');
-assert.match(tsunami,/tsunamiWaveV441/,'Tsunami must use the large coherent curved wave sprite');
+assert.match(tsunami,/tsunamiWaveV442/,'Animated Tsunami sprite must load independently');
+assert.match(tsunami,/const strips=22/,'Tsunami must animate at least 22 columns of its own wave');
+assert.match(tsunami,/Math\.sin\(ms\*\.007\+i\*\.46\)/,'Wave crest columns must have temporal deformation');
 assert.match(read('effects/moves/tsunami/wave.svg'),/<svg[^>]+shape-rendering="crispEdges"/,'Wave must be pixel art');
 assert.match(pump,/pressureStream:true/,'Hydro Pump has its own continuous jet');
-assert.match(pump,/hydroJetV441/,'Hydro Pump must use ONE unbroken pixel-water sprite');
+assert.match(pump,/hydroJetV442/,'Hydro Pump sprite must load independently');
+assert.match(pump,/for\(const side of \[-1,1\]\)/,'Exactly two mirrored streams');
+assert.match(pump,/const offset=side\*converge/,'Both streams must converge at common point');
+assert.match(pump,/if\(head>joinAt\)/,'Streams must connect into shared tip');
 assert.match(read('effects/moves/hydro-pump/jet.svg'),/<svg[^>]+shape-rendering="crispEdges"/,'Jet must be pixel art');
 assert.match(amnesia,/amnesiaMarkV44\.src/,'Amnesia loads its own question-mark sprite');
 assert.doesNotMatch(amnesia,/draw\(g,/,'Amnesia must not paint water at all');
-assert.match(read(files[0]),/version:'44\.0'/);
+assert.match(read(files[0]),/version:'44\.2'/);
 const source=files.map(read).join('\n');
 const fxMatch=html.match(/const fxFiles=(\[[^;]+?\]);let plugin=/);
 const fsMatch=html.match(/const fireSpriteFiles=(\[[\s\S]*?\]);\s*const fireSpriteSections=/);
@@ -62,8 +67,13 @@ class ImageMock{
  set src(s){this.path=s;this.naturalWidth=s.includes('water-original')?240:576;this.naturalHeight=s.includes('water-original')?192:216;this.onload?.();}
 }
 class Graphics{
- save(){}restore(){}translate(){}rotate(){}scale(){}
- drawImage(img,...args){draws.push({img:img.path,args});}
+ constructor(){this.pos=[0,0,0];this.stack=[];}
+ save(){this.stack.push([...this.pos]);}
+ restore(){this.pos=this.stack.pop()||[0,0,0];}
+ translate(x,y){this.pos[0]+=x;this.pos[1]+=y;}
+ rotate(r){this.pos[2]+=r;}
+ scale(){}
+ drawImage(img,...args){draws.push({img:img.path,args,tx:this.pos[0],ty:this.pos[1],angle:this.pos[2]});}
 }
 class Engine{
  constructor(){this.h=560;this.w=940;this.player={x:190,y:350};this.enemy={x:680,y:250};this.ctx=new Graphics();this.v359Attacks=[];this.particles=[];this.rings=[];this.v19Impacts=[];this.v19Beams=[];this.v26Particles=[];}
@@ -93,7 +103,7 @@ const diagnostics=env.window.PokemonTorreWaterV43;
 assert.equal(diagnostics().waterReady,true);
 assert.equal(diagnostics().psychicReady,true);
 assert.equal(diagnostics().registered.length,4);
-assert.equal(diagnostics().version,'44.0','Published water version must be V44');
+assert.equal(diagnostics().version,'44.2','Published water version must be V44.2');
 for(let i=0;i<4;i++){
  now=1000+i*4000;
  const before=draws.length;
@@ -119,8 +129,14 @@ engine.draw(now+1140);
 let tsunamiDraws=draws.slice(startFrame);
 assert.ok(tsunamiDraws.some(x=>x.img.includes('tsunami/wave.svg')),
  'The advancing Tsunami must render a single real full-height wave');
-assert.ok(tsunamiDraws.some(x=>x.img.includes('tsunami/wave.svg')&&x.args[2]>=270&&x.args[3]>=175),
- 'Tsunami crest must be wide AND tall, never the old thin water stripe');
+const waveStrips=tsunamiDraws.filter(x=>x.img.includes('tsunami/wave.svg'));
+assert.equal(waveStrips.length,22,'Tsunami now bends its own wave in 22 separate strips');
+assert.ok(waveStrips.every(x=>x.args[2]<30&&x.args[6]<45),
+ 'No single giant rigid PNG should be stretched over the arena');
+engine.draw(now+1210);
+const waveStripsAfter=draws.slice(startFrame).filter(x=>x.img.includes('tsunami/wave.svg')).slice(-22);
+assert.ok(waveStrips.some((x,i)=>x.args[5]!==waveStripsAfter[i].args[5]),
+ 'Tsunami contour must CHANGE during the cast, not just translate once');
 now=35000;
 engine.useMove(3); // Hydro Pump
 startFrame=draws.length;
@@ -128,8 +144,17 @@ engine.draw(now+930);
 let hydroDraws=draws.slice(startFrame);
 assert.ok(hydroDraws.some(x=>x.img.includes('hydro-pump/jet.svg')),
  'Hydro Pump should render its real single-piece water sprite');
-assert.ok(hydroDraws.some(x=>x.img.includes('hydro-pump/jet.svg')&&x.args[6]>=310&&x.args[7]>=38),
- 'Hydro Pump must draw one LONG THICK jet rather than little scattered bubbles');
+const twinJets=hydroDraws.filter(x=>x.img.includes('hydro-pump/jet.svg'));
+assert.equal(twinJets.length,27,'Two equal 13-section jets must merge into one short section');
+const upper=twinJets.slice(0,13),lower=twinJets.slice(13,26);
+assert.ok(Math.hypot(upper[0].tx-lower[0].tx,upper[0].ty-lower[0].ty)>=25,
+ 'The two jets must visibly begin SEPARATED');
+assert.ok(Math.hypot(upper[12].tx-lower[12].tx,upper[12].ty-lower[12].ty)<8,
+ 'The two thin jets must JOIN near the target');
+assert.ok(upper.every((x,i)=>Math.abs(x.args[7]-lower[i].args[7])<.01),
+ 'Both jet lanes must be the SAME thickness');
+assert.ok(twinJets.every(x=>x.args[7]<=23),
+ 'Both Hydro Pump jets must stay THIN (not another fat laser)');
 now=39000;
 engine.useMove(2); // Amnesia
 startFrame=draws.length;
@@ -142,7 +167,7 @@ assert.ok(amnesiaDraws.every(x=>!x.img.includes('water-original')),
 assert.ok(amnesiaDraws.some(x=>x.img.includes('psychic-original')),
  'Amnesia keeps approved authentic psychic accents');
 assert.equal(engine.player.x,190,'Skull Bash movement restored as before');
-console.log('PASS: V44.1 coherent tidal wave, continuous thick Hydro Pump, self-target Amnesia symbols');
+console.log('PASS: V44.2 animated rolling 22-strip Tsunami; two matching thin Hydro Pump jets converge; approved Amnesia remains');
 
 console.log('PASS: Skull Bash contact, Tsunami wave, Amnesia self-status and Hydro Pump jet');
 console.log(JSON.stringify({version:diagnostics().version,registered:diagnostics().registered,waterFrames:draws.length,previousFire:diagnostics().originalFire}));
