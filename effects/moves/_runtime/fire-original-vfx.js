@@ -56,22 +56,28 @@ const originalFireFX=(()=>{
   const draw=(gname,k,x,y,w,h,a=1,theta=0,flip=false)=>stamp(g,id(gname,k),x,y,w*scale,h*scale,a,theta,flip);
   g.save();g.imageSmoothingEnabled=false;
   if(kind==='punch'){
-   // Brief ignition at the attacking Pokemon: a FIRE PUNCH hits at close range.
-   const ignition=1-ease((t-.28)/.12);
-   draw('flame',0,A[0]+nx*9,A[1]+ny*9,30,38,ignition*.87,angle);
-   // Compact advancing fire fist: no 500px fire laser.
-   const step=ease((t-.19)/.40);
-   const show=ease((t-.16)/.12)*(1-ease((t-.72)/.14));
-   const x=lerp(A[0],B[0],step),y=lerp(A[1],B[1],step);
-   draw('punch',Math.min(5,Math.floor(step*6)),x,y,39,40,show*.95,angle*.16);
-   if(step>.38&&step<.95){
-    const trail=.17+step*.35;
-    draw('punchFlame',Math.min(5,frame%7),lerp(A[0],B[0],trail),lerp(A[1],B[1],trail),19,22,show*.48);
-   }
-   const hit=ease((t-.50)/.13),out=1-ease((t-.79)/.15);
+   // Fire Punch is a CONTACT attack. The monster itself approaches via the
+   // existing v352Contact movement, then retracts. These art frames are only
+   // a small burning fist at the moving monster / opponent, not a projectile.
+   const motionStart=.06,motionHit=.49;
+   const charge=1-ease((t-.15)/.14);
+   draw('flame',0,A[0]+nx*10,A[1]+ny*10,27,34,charge*.78,angle);
+   const step=ease((t-motionStart)/.39);
+   const recoil=1-ease((t-.57)/.33);
+   // The attacker's movement stops 64px before the enemy.
+   const dist=Math.max(0,len-64),pos=dist*step*recoil/Math.max(1,len);
+   const x=lerp(A[0],B[0],pos)+Math.cos(angle)*17;
+   const y=lerp(A[1],B[1],pos)+Math.sin(angle)*17;
+   const active=ease((t-.11)/.13)*(1-ease((t-.57)/.27));
+   draw('punchFlame',Math.floor(age/70),x,y,29,31,active*.83,angle*.14);
+   // Impact is drawn ONLY where the Pokémon makes contact.
+   const hit=ease((t-.44)/.11),out=1-ease((t-.77)/.13);
    if(hit>0){
-    draw('punch',Math.min(6,Math.floor(Math.max(0,t-.51)*18)),B[0],B[1],52,52,hit*out*.90,angle*.1);
-    draw('punchFlame',Math.min(6,frame%7),B[0]+nx*8,B[1]+ny*6,38,41,hit*out*.74);
+    const contactX=B[0]-Math.cos(angle)*27,contactY=B[1]-Math.sin(angle)*27;
+    draw('punch',Math.min(6,Math.floor(Math.max(0,t-.44)*19)),contactX,contactY,
+      48,49,hit*out*.95,angle*.12);
+    draw('punchFlame',Math.min(6,frame%7),contactX+nx*7,contactY+ny*5,
+      32,35,hit*out*.71);
    }
   }else if(kind==='spin'){
    // Real FIRE TORNADO plus the artist's animated FIRE RING at the target.

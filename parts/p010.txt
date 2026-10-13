@@ -311,6 +311,9 @@ const isRazor=s=>/razorleaf|folhanavalha|folhasnavalha|folhascortantes|folhanava
 const isMelee=s=>{
  const n=norm(s?.name);
  if(!s||s.power<=0||s.cat==='status')return false;
+ // Fire Punch is a physical close-range strike, despite the word 'fogo'.
+ // Other fire moves retain their current ranged behavior.
+ if(n==='punhodefogo'||n==='firepunch')return true;
  if(s.type==='fighting')return !/aurasphere|focusblast|vacuumwave|esferaaura|ondadevacuo/.test(n);
  if(/^(earthquake|terremoto|magnitude|rockslide|avalanche|bulldoze|deslizamentodepedra)/.test(n))return false;
  if(isRazor(s))return false;
