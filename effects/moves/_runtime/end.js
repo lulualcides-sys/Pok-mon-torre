@@ -5,7 +5,7 @@ function paint(g,f,now,e,k){
  if(t<0||now<f.at||now>f.at+dur+30)return true;
  g.save();g.imageSmoothingEnabled=false;
  const entry=registry.get(k);if(!entry){g.restore();return false;}
- entry.draw(g,f,t,now,s,low);
+ if(!pixiFX.paint(f,e,k))entry.draw(g,f,t,now,s,low);
  g.restore();counts[k]=(counts[k]||0)+1;return true;
 }
 // Render de golpes ofensivos: pipeline existente. O retorno true impede duplicação por Canvas/PNG antigos.
@@ -42,6 +42,7 @@ BattleEngine.prototype.useMove=function(i){
 };
 const previousDraw=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
+ pixiFX.ensure(this);
  const result=previousDraw.call(this,now);
  if(!battle?.active||!this.ctx){this.v3580Visuals=[];return result;}
  this.v3580Visuals=(this.v3580Visuals||[]).filter(f=>f.end>now);
@@ -60,4 +61,5 @@ window.PokemonTorreBeamFX=()=>({
 
 window.PokemonTorreCatalogFX=()=>({version:'35.84',registered:([...registry.keys()].filter(k=>k.startsWith('catalog_'))).length,approved:8,allRegistered:registry.size,active:(engine?.v359Attacks||[]).filter(f=>pick(f?.move?.name)?.startsWith('catalog_')).length,frames:Object.fromEntries(Object.entries(counts).filter(([k])=>k.startsWith('catalog_'))),engine:'Canvas 2D + DS sprites'});
 
+window.PokemonTorrePixiFX=()=>pixiFX.diagnostics();
 })();

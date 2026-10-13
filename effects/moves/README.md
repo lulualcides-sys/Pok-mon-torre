@@ -29,3 +29,11 @@ O carregador da página injeta os oito módulos no IIFE original. A alteração 
 - `catalog/manifest.json` lista nome, tipo, categoria, estilo e caminho individual para refinamento posterior.
 - Não altera dano, recarga, energia, alcance, os 25 fragmentos originais nem o carregamento de sprites pré-existente.
 - Painel: `PokemonTorreCatalogFX()` no console. Efeitos do catálogo são **primeira versão visual**, sujeitos a revisão no jogo.
+
+## V35.85 — Migração dos golpes para WebGL
+
+Todos os 320 golpes registrados em módulos independentes agora **priorizam** o renderer PixiJS 7.4.3 (WebGL), convertendo os sprites existentes em `PIXI.AnimatedSprite` e aplicando `@pixi/particle-emitter` 5.0.10 para partículas reais no ciclo da animação. A camada é única, transparente, acompanha a arena e é destruída ao sair da batalha. A rotina de dano e o catálogo original permanecem inalterados.
+
+**Fallback:** caso Pixi/WebGL/emitter ou o atlas não estejam disponíveis, o renderizador Canvas anterior continua funcionando para que os golpes não desapareçam. O novo renderer é exibido por padrão onde WebGL está disponível. Verificação no console: `PokemonTorrePixiFX()`.
+
+LibreSprite é ferramenta de criação/edição de sprites, não de renderização no navegador. O projeto reaproveita o atlas DS original como fonte e documenta como editá-lo pelo LibreSprite, mas o executável LibreSprite não está disponível nesta sessão.
