@@ -10,7 +10,7 @@
   contactFollowThrough:0,missingCollisionRecovered:0,realHits:0,
   ignoredOldShots:0,waitedForInvincibility:0,zeroCostRecognized:0,
   queuedDuringWindup:0,replayedQueued:0,discardedQueued:0,
-  recoveredBasicDashes:0,
+  recoveredBasicDashes:0,updateTicks:0,drawTicks:0,contactChecks:0,lastContactCheck:null,
   lastHit:null,lastCast:null};
  const savedHit=BattleEngine.prototype.hitTarget;
  BattleEngine.prototype.hitTarget=function(who,type,power){
@@ -143,6 +143,7 @@
  };
  const savedUpdate=BattleEngine.prototype.update;
  BattleEngine.prototype.update=function(dt,now){
+  report.updateTicks++;
   const ready=battle?.active&&!battle.paused&&current()?.hp>0&&foe()?.hp>0;
   if(ready&&this.enemy){
    const x=this.enemy.x,y=this.enemy.y;
@@ -196,6 +197,8 @@
   // and resistance logic. No instant fake hit, no double damage, no status hit.
   if(battle?.active&&this.v47ContactToLand?.length){
    const time=performance.now();
+   report.contactChecks++;
+   report.lastContactCheck={source:'update',time,count:this.v47ContactToLand.length};
    const pending=[];
    for(const fx of this.v47ContactToLand){
     if(fx.until<=time||fx.victim!==foe()||fx.owner!==current())continue;
@@ -265,10 +268,13 @@
  // it impossible for the two pathways to deal the same hit twice.
  const v475CollisionFrameDraw=BattleEngine.prototype.draw;
  BattleEngine.prototype.draw=function(now){
+  report.drawTicks++;
   const result=v475CollisionFrameDraw.call(this,now);
   if(!battle?.active||battle.paused||!this.v47ContactToLand?.length)
    return result;
   const tick=performance.now(),remaining=[];
+  report.contactChecks++;
+  report.lastContactCheck={source:'draw',time:tick,count:this.v47ContactToLand.length};
   for(const fx of this.v47ContactToLand){
    if(fx.until<=tick||fx.owner!==current()||fx.victim!==foe())continue;
    if(Number(fx.victim.hp)<fx.hpBefore)continue;
@@ -334,6 +340,10 @@
     projectiles:engine?.projectiles?.length||0,
     running:!!engine?.running,frameTime:engine?.time||0,
     combatClock:performance.now(),
+    updateIsPrototype:engine?.update===BattleEngine.prototype.update,
+    drawIsPrototype:engine?.draw===BattleEngine.prototype.draw,
+    hasOwnUpdate:!!engine&&Object.hasOwn(engine,'update'),
+    hasOwnDraw:!!engine&&Object.hasOwn(engine,'draw'),
     contactQueue:(engine?.v47ContactToLand||[]).map(x=>({
      at:x.at,until:x.until,hpBefore:x.hpBefore,
      ownerMatches:x.owner===current(),victimMatches:x.victim===foe()
