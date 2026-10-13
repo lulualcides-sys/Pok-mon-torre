@@ -1,4 +1,4 @@
-/* Pokémon Torre V44.2 — independent Tsunami, Amnesia, Hydro Pump VFX.
+/* Pokémon Torre V44.3 — independent Tsunami, Amnesia, Hydro Pump VFX.
  * Preserves all Fire V42.5 effects, hit calculations, real projectiles,
  * cooldowns, status buffs, enemy attacks and the existing sprite renderer.
  */
@@ -115,7 +115,7 @@
  });
  function versionTag(){
   const tag=document.getElementById('ptFireSpriteV41Badge');
-  if(tag)tag.textContent='SPRITES ÁGUA V44.2 · FOGO V42.5';
+  if(tag)tag.textContent='SPRITES ÁGUA V44.3 · FOGO V42.5';
  }
  versionTag();
 })();
