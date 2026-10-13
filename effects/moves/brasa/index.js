@@ -2,7 +2,7 @@
 fireSpriteV41.add('brasa',{
  key:'brasa',duration:940,contact:false,
  paint(g,f,t,ms,s,K){
-  const {draw,ease,lerp,clamp}=K,A=f.from,B=f.to;
+  const {draw,ease,lerp,clamp}=K,A=f.from,B=f.to,TAU=Math.PI*2;
   const dx=B[0]-A[0],dy=B[1]-A[1],heading=Math.atan2(dy,dx)-Math.PI/2;
   const len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len;
   const fade=1-ease((t-.82)/.18);
