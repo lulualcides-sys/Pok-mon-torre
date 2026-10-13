@@ -31,6 +31,8 @@ BattleEngine.prototype.useMove=function(slot){
  // Legacy catalog status queue must not overlay these four new pixel-art effects.
  if(Array.isArray(this.v3580Visuals))
   this.v3580Visuals=this.v3580Visuals.filter(f=>!K.resolve(f));
+ if(descriptor.status && Array.isArray(this.v3568StatusFX))
+  this.v3568StatusFX=this.v3568StatusFX.filter(f=>!K.resolve(f));
  stats.casts++;stats.lastMove=move.name;
  return result;
 };
@@ -68,12 +70,18 @@ function markVersion(){
   tag.style.cssText='position:fixed;bottom:6px;left:6px;z-index:2147483637;padding:3px 6px;border-radius:5px;background:#102335;color:#b9ddf5;font:700 10px system-ui;pointer-events:none';
   document.body.appendChild(tag);
  }
- tag.textContent='SPRITES FOGO V41';
+ tag.textContent='SPRITES FOGO V42';
 }
 markVersion();
 window.PokemonTorreFireSpriteV41=()=>({
  version:'41.0',engine:'frame-by-frame source GIF atlas 75 frames',
  ...K.diagnostics(),casts:stats.casts,drawEvents:stats.frames,
  active:(engine?.v41FireVisuals||[]).length,lastMove:stats.lastMove,error:stats.lastError||K.diagnostics().error
+});
+window.PokemonTorreFireSpriteV42=()=>({
+ ...window.PokemonTorreFireSpriteV41(),
+ version:'42.0',
+ newMoves:['Fire Blast','Will-O-Wisp','Sunny Day','Brasa'],
+ previousMovesPreserved:['Chamas de Moltres','Rajada Flamejante','Chama Circular','Garra de Fogo']
 });
 })();
