@@ -29,10 +29,10 @@ registerMove("catalog_amnesia",["Amnesia"],(g,f,t,now,s,low)=>drawCatalogMove(g,
 registerMove("catalog_ancientpower",["Ancient Power"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"ancientpower","type":"rock","kind":"bolt","cat":"special","seed":262}),950);
 
 // Aqua Jet — V35.84; edição independente deste golpe.
-registerMove("catalog_aquajet",["Aqua Jet"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"aquajet","type":"water","kind":"dash","cat":"special","seed":296}),820);
+registerMove("catalog_aquajet",["Aqua Jet"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"aquajet","type":"water","kind":"dash","cat":"physical","seed":296}),820);
 
 // Arranhão — V35.84; edição independente deste golpe.
-registerMove("catalog_arranhao",["Arranhão"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"arranhao","type":"bug","kind":"dash","cat":"special","seed":3}),820);
+registerMove("catalog_arranhao",["Arranhão"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"arranhao","type":"normal","kind":"dash","cat":"physical","seed":3}),820);
 
 // Arremesso de Pedra — V35.84; edição independente deste golpe.
 registerMove("catalog_arremessodepedra",["Arremesso de Pedra"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"arremessodepedra","type":"rock","kind":"bolt","cat":"special","seed":263}),950);
@@ -53,7 +53,7 @@ registerMove("catalog_ataqueveloz",["Ataque Veloz"],(g,f,t,now,s,low)=>drawCatal
 registerMove("catalog_aurasphere",["Aura Sphere"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"aurasphere","type":"fighting","kind":"beam","cat":"special","seed":77}),1170);
 
 // Avalanche — V35.84; edição independente deste golpe.
-registerMove("catalog_avalanche",["Avalanche"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"avalanche","type":"rock","kind":"area","cat":"special","seed":264}),1100);
+registerMove("catalog_avalanche",["Avalanche"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"avalanche","type":"ice","kind":"area","cat":"physical","seed":264}),1100);
 
 // Barreira Psíquica — V35.84; edição independente deste golpe.
 registerMove("catalog_barreirapsiquica",["Barreira Psíquica"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"barreirapsiquica","type":"psychic","kind":"shield","cat":"status","seed":246}),1000);
@@ -68,7 +68,7 @@ registerMove("catalog_bicada",["Bicada"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,
 registerMove("catalog_bicobroca",["Bico Broca"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"bicobroca","type":"flying","kind":"dash","cat":"special","seed":117}),820);
 
 // Bind — V35.84; edição independente deste golpe.
-registerMove("catalog_bind",["Bind"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"bind","type":"rock","kind":"bolt","cat":"special","seed":265}),950);
+registerMove("catalog_bind",["Bind"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"bind","type":"normal","kind":"bolt","cat":"physical","seed":265}),950);
 
 // Blizzard — V35.84; edição independente deste golpe.
 registerMove("catalog_blizzard",["Blizzard"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"blizzard","type":"ice","kind":"area","cat":"special","seed":172}),1100);
@@ -125,7 +125,7 @@ registerMove("catalog_canhaometalico",["Canhão Metálico"],(g,f,t,now,s,low)=>d
 registerMove("catalog_canto",["Canto"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"canto","type":"normal","kind":"status","cat":"status","seed":190}),1000);
 
 // Carga Relâmpago — V35.84; edição independente deste golpe.
-registerMove("catalog_cargarelampago",["Carga Relâmpago"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"cargarelampago","type":"electric","kind":"dash","cat":"special","seed":41}),820);
+registerMove("catalog_cargarelampago",["Carga Relâmpago"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"cargarelampago","type":"electric","kind":"dash","cat":"physical","seed":41}),820);
 
 // Cascalho — V35.84; edição independente deste golpe.
 registerMove("catalog_cascalho",["Cascalho"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"cascalho","type":"rock","kind":"pierce","cat":"special","seed":266}),970);
@@ -188,7 +188,7 @@ registerMove("catalog_chuvademeteoritos",["Chuva de Meteoritos"],(g,f,t,now,s,lo
 registerMove("catalog_confuseray",["Confuse Ray"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"confuseray","type":"ghost","kind":"bolt","cat":"special","seed":124}),950);
 
 // Corte — V35.84; edição independente deste golpe.
-registerMove("catalog_corte",["Corte"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"corte","type":"bug","kind":"dash","cat":"special","seed":8}),820);
+registerMove("catalog_corte",["Corte"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"corte","type":"normal","kind":"dash","cat":"physical","seed":8}),820);
 
 // Corte de Aço — V35.84; edição independente deste golpe.
 registerMove("catalog_cortedeaco",["Corte de Aço"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"cortedeaco","type":"steel","kind":"dash","cat":"special","seed":286}),820);
@@ -242,10 +242,10 @@ registerMove("catalog_dragonrage",["Dragon Rage"],(g,f,t,now,s,low)=>drawCatalog
 registerMove("catalog_drainingkiss",["Draining Kiss"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"drainingkiss","type":"fairy","kind":"bolt","cat":"special","seed":67}),950);
 
 // Dream Eater — V35.84; edição independente deste golpe.
-registerMove("catalog_dreameater",["Dream Eater"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"dreameater","type":"ghost","kind":"bolt","cat":"special","seed":125}),950);
+registerMove("catalog_dreameater",["Dream Eater"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"dreameater","type":"psychic","kind":"bolt","cat":"special","seed":125}),950);
 
 // Drill Peck — V35.84; edição independente deste golpe.
-registerMove("catalog_drillpeck",["Drill Peck"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"drillpeck","type":"electric","kind":"bolt","cat":"special","seed":49}),950);
+registerMove("catalog_drillpeck",["Drill Peck"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"drillpeck","type":"flying","kind":"bolt","cat":"physical","seed":49}),950);
 
 // Earth Power — V35.84; edição independente deste golpe.
 registerMove("catalog_earthpower",["Earth Power"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"earthpower","type":"ground","kind":"bolt","cat":"special","seed":158}),950);
@@ -254,7 +254,7 @@ registerMove("catalog_earthpower",["Earth Power"],(g,f,t,now,s,low)=>drawCatalog
 registerMove("catalog_ember",["Ember"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"ember","type":"fire","kind":"bolt","cat":"special","seed":100}),950);
 
 // Encantar — V35.84; edição independente deste golpe.
-registerMove("catalog_encantar",["Encantar"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"encantar","type":"normal","kind":"status","cat":"status","seed":193}),1000);
+registerMove("catalog_encantar",["Encantar"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"encantar","type":"fairy","kind":"status","cat":"status","seed":193}),1000);
 
 // Encanto — V35.84; edição independente deste golpe.
 registerMove("catalog_encanto",["Encanto"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"encanto","type":"fairy","kind":"bolt","cat":"special","seed":68}),950);
@@ -281,10 +281,10 @@ registerMove("catalog_explosaodeestrelas",["Explosão de Estrelas"],(g,f,t,now,s
 registerMove("catalog_explosaomagmatica",["Explosão Magmática"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"explosaomagmatica","type":"fire","kind":"beam","cat":"special","seed":101}),1170);
 
 // Explosion — V35.84; edição independente deste golpe.
-registerMove("catalog_explosion",["Explosion"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"explosion","type":"rock","kind":"bolt","cat":"special","seed":269}),950);
+registerMove("catalog_explosion",["Explosion"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"explosion","type":"normal","kind":"bolt","cat":"physical","seed":269}),950);
 
 // Extreme Speed — V35.84; edição independente deste golpe.
-registerMove("catalog_extremespeed",["Extreme Speed"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"extremespeed","type":"fire","kind":"bolt","cat":"special","seed":102}),950);
+registerMove("catalog_extremespeed",["Extreme Speed"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"extremespeed","type":"normal","kind":"bolt","cat":"physical","seed":102}),950);
 
 // Fagulha — V35.84; edição independente deste golpe.
 registerMove("catalog_fagulha",["Fagulha"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"fagulha","type":"electric","kind":"bolt","cat":"special","seed":50}),950);
@@ -293,13 +293,13 @@ registerMove("catalog_fagulha",["Fagulha"],(g,f,t,now,s,low)=>drawCatalogMove(g,
 registerMove("catalog_fairywind",["Fairy Wind"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"fairywind","type":"fairy","kind":"bolt","cat":"special","seed":70}),950);
 
 // Faísca — V35.84; edição independente deste golpe.
-registerMove("catalog_faisca",["Faísca"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"faisca","type":"electric","kind":"bolt","cat":"special","seed":51}),950);
+registerMove("catalog_faisca",["Faísca"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"faisca","type":"electric","kind":"bolt","cat":"physical","seed":51}),950);
 
 // Faísca de Jolteon — V35.84; edição independente deste golpe.
-registerMove("catalog_faiscadejolteon",["Faísca de Jolteon"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"faiscadejolteon","type":"electric","kind":"bolt","cat":"special","seed":52}),950);
+registerMove("catalog_faiscadejolteon",["Faísca de Jolteon"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"faiscadejolteon","type":"electric","kind":"bolt","cat":"physical","seed":52}),950);
 
 // Faísca do Pikachu — V35.84; edição independente deste golpe.
-registerMove("catalog_faiscadopikachu",["Faísca do Pikachu"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"faiscadopikachu","type":"electric","kind":"bolt","cat":"special","seed":53}),950);
+registerMove("catalog_faiscadopikachu",["Faísca do Pikachu"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"faiscadopikachu","type":"electric","kind":"bolt","cat":"physical","seed":53}),950);
 
 // Fenda Rasa — V35.84; edição independente deste golpe.
 registerMove("catalog_fendarasa",["Fenda Rasa"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"fendarasa","type":"ground","kind":"area","cat":"special","seed":159}),1100);
@@ -341,7 +341,7 @@ registerMove("catalog_futuresight",["Future Sight"],(g,f,t,now,s,low)=>drawCatal
 registerMove("catalog_garradeareia",["Garra de Areia"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"garradeareia","type":"ground","kind":"dash","cat":"special","seed":160}),820);
 
 // Garra de Fogo — V35.84; edição independente deste golpe.
-registerMove("catalog_garradefogo",["Garra de Fogo"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"garradefogo","type":"fire","kind":"dash","cat":"special","seed":105}),820);
+registerMove("catalog_garradefogo",["Garra de Fogo"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"garradefogo","type":"fire","kind":"dash","cat":"physical","seed":105}),820);
 
 // Garra de Metal — V35.84; edição independente deste golpe.
 registerMove("catalog_garrademetal",["Garra de Metal"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"garrademetal","type":"steel","kind":"dash","cat":"special","seed":288}),820);
@@ -464,7 +464,7 @@ registerMove("catalog_lambida",["Lambida"],(g,f,t,now,s,low)=>drawCatalogMove(g,
 registerMove("catalog_laminademetal",["Lâmina de Metal"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"laminademetal","type":"steel","kind":"dash","cat":"special","seed":291}),820);
 
 // Lâmina Prateada — V35.84; edição independente deste golpe.
-registerMove("catalog_laminaprateada",["Lâmina Prateada"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"laminaprateada","type":"steel","kind":"pierce","cat":"special","seed":292}),970);
+registerMove("catalog_laminaprateada",["Lâmina Prateada"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"laminaprateada","type":"bug","kind":"pierce","cat":"special","seed":292}),970);
 
 // Lâminas Cortantes — V35.84; edição independente deste golpe.
 registerMove("catalog_laminascortantes",["Lâminas Cortantes"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"laminascortantes","type":"bug","kind":"pierce","cat":"special","seed":14}),970);
@@ -527,7 +527,7 @@ registerMove("catalog_metalclaw",["Metal Claw"],(g,f,t,now,s,low)=>drawCatalogMo
 registerMove("catalog_metronome",["Metronome"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"metronome","type":"normal","kind":"bolt","cat":"special","seed":209}),950);
 
 // Minimize — V35.84; edição independente deste golpe.
-registerMove("catalog_minimize",["Minimize"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"minimize","type":"poison","kind":"bolt","cat":"special","seed":232}),950);
+registerMove("catalog_minimize",["Minimize"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"minimize","type":"normal","kind":"bolt","cat":"status","seed":232}),950);
 
 // Moonlight — V35.84; edição independente deste golpe.
 registerMove("catalog_moonlight",["Moonlight"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"moonlight","type":"fairy","kind":"bolt","cat":"special","seed":73}),950);
@@ -557,7 +557,7 @@ registerMove("catalog_nightshade",["Night Shade"],(g,f,t,now,s,low)=>drawCatalog
 registerMove("catalog_ondadebolhas",["Onda de Bolhas"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"ondadebolhas","type":"water","kind":"bolt","cat":"special","seed":304}),950);
 
 // Onda de Choque — V35.84; edição independente deste golpe.
-registerMove("catalog_ondadechoque",["Onda de Choque"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"ondadechoque","type":"fighting","kind":"area","cat":"special","seed":88}),1100);
+registerMove("catalog_ondadechoque",["Onda de Choque"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"ondadechoque","type":"electric","kind":"area","cat":"special","seed":88}),1100);
 
 // Onda Dracônica — V35.84; edição independente deste golpe.
 registerMove("catalog_ondadraconica",["Onda Dracônica"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"ondadraconica","type":"dragon","kind":"bolt","cat":"special","seed":34}),950);
@@ -671,10 +671,10 @@ registerMove("catalog_pulsodedragao",["Pulso de Dragão"],(g,f,t,now,s,low)=>dra
 registerMove("catalog_pulsofantasma",["Pulso Fantasma"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"pulsofantasma","type":"ghost","kind":"pierce","cat":"special","seed":133}),970);
 
 // Punho de Fogo — V35.84; edição independente deste golpe.
-registerMove("catalog_punhodefogo",["Punho de Fogo"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"punhodefogo","type":"fire","kind":"dash","cat":"special","seed":107}),820);
+registerMove("catalog_punhodefogo",["Punho de Fogo"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"punhodefogo","type":"fire","kind":"dash","cat":"physical","seed":107}),820);
 
 // Quick Attack — V35.84; edição independente deste golpe.
-registerMove("catalog_quickattack",["Quick Attack"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"quickattack","type":"electric","kind":"bolt","cat":"special","seed":55}),950);
+registerMove("catalog_quickattack",["Quick Attack"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"quickattack","type":"normal","kind":"bolt","cat":"physical","seed":55}),950);
 
 // Raio — V35.84; edição independente deste golpe.
 registerMove("catalog_raio",["Raio"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"raio","type":"electric","kind":"bolt","cat":"special","seed":56}),950);
@@ -704,7 +704,7 @@ registerMove("catalog_rajadaflamejante",["Rajada Flamejante"],(g,f,t,now,s,low)=
 registerMove("catalog_rajadaignea",["Rajada Ígnea"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"rajadaignea","type":"fire","kind":"pierce","cat":"special","seed":109}),970);
 
 // Rapid Spin — V35.84; edição independente deste golpe.
-registerMove("catalog_rapidspin",["Rapid Spin"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"rapidspin","type":"water","kind":"hazard","cat":"special","seed":309}),1040);
+registerMove("catalog_rapidspin",["Rapid Spin"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"rapidspin","type":"normal","kind":"hazard","cat":"physical","seed":309}),1040);
 
 // Rastro de Fogo — V35.84; edição independente deste golpe.
 registerMove("catalog_rastrodefogo",["Rastro de Fogo"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"rastrodefogo","type":"fire","kind":"hazard","cat":"special","seed":110}),1040);
@@ -764,10 +764,10 @@ registerMove("catalog_scaryface",["Scary Face"],(g,f,t,now,s,low)=>drawCatalogMo
 registerMove("catalog_screech",["Screech"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"screech","type":"normal","kind":"status","cat":"status","seed":216}),1000);
 
 // Skull Bash — V35.84; edição independente deste golpe.
-registerMove("catalog_skullbash",["Skull Bash"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"skullbash","type":"water","kind":"bolt","cat":"special","seed":311}),950);
+registerMove("catalog_skullbash",["Skull Bash"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"skullbash","type":"normal","kind":"bolt","cat":"physical","seed":311}),950);
 
 // Slam — V35.84; edição independente deste golpe.
-registerMove("catalog_slam",["Slam"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"slam","type":"bug","kind":"dash","cat":"special","seed":20}),820);
+registerMove("catalog_slam",["Slam"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"slam","type":"normal","kind":"dash","cat":"physical","seed":20}),820);
 
 // Sleep Powder — V35.84; edição independente deste golpe.
 registerMove("catalog_sleeppowder",["Sleep Powder"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"sleeppowder","type":"grass","kind":"status","cat":"status","seed":152}),1000);
@@ -788,7 +788,7 @@ registerMove("catalog_socodeterra",["Soco de Terra"],(g,f,t,now,s,low)=>drawCata
 registerMove("catalog_socodinamico",["Soco Dinâmico"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"socodinamico","type":"fighting","kind":"dash","cat":"special","seed":90}),820);
 
 // Soco Rápido — V35.84; edição independente deste golpe.
-registerMove("catalog_socorapido",["Soco Rápido"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"socorapido","type":"fighting","kind":"dash","cat":"special","seed":91}),820);
+registerMove("catalog_socorapido",["Soco Rápido"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"socorapido","type":"fighting","kind":"dash","cat":"physical","seed":91}),820);
 
 // Soco Sísmico — V35.84; edição independente deste golpe.
 registerMove("catalog_socosismico",["Soco Sísmico"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"socosismico","type":"fighting","kind":"area","cat":"special","seed":92}),1100);
@@ -863,7 +863,7 @@ registerMove("catalog_tempestademetalica",["Tempestade Metálica"],(g,f,t,now,s,
 registerMove("catalog_tempestadepsiquica",["Tempestade Psíquica"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"tempestadepsiquica","type":"psychic","kind":"area","cat":"special","seed":260}),1100);
 
 // Thrash — V35.84; edição independente deste golpe.
-registerMove("catalog_thrash",["Thrash"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"thrash","type":"poison","kind":"bolt","cat":"special","seed":240}),950);
+registerMove("catalog_thrash",["Thrash"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"thrash","type":"normal","kind":"bolt","cat":"physical","seed":240}),950);
 
 // Thunder — V35.84; edição independente deste golpe.
 registerMove("catalog_thunder",["Thunder"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"thunder","type":"electric","kind":"homing","cat":"special","seed":58}),950);
@@ -881,7 +881,7 @@ registerMove("catalog_toxic",["Toxic"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,
 registerMove("catalog_toxinapesada",["Toxina Pesada"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"toxinapesada","type":"poison","kind":"bolt","cat":"special","seed":242}),950);
 
 // Transform — V35.84; edição independente deste golpe.
-registerMove("catalog_transform",["Transform"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"transform","type":"psychic","kind":"bolt","cat":"special","seed":261}),950);
+registerMove("catalog_transform",["Transform"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"transform","type":"normal","kind":"bolt","cat":"status","seed":261}),950);
 
 // Transformação — V35.84; edição independente deste golpe.
 registerMove("catalog_transformacao",["Transformação"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"transformacao","type":"normal","kind":"illusion","cat":"status","seed":222}),950);
@@ -920,10 +920,10 @@ registerMove("catalog_ventogelado",["Vento Gelado"],(g,f,t,now,s,low)=>drawCatal
 registerMove("catalog_vinewhip",["Vine Whip"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"vinewhip","type":"grass","kind":"bolt","cat":"special","seed":156}),950);
 
 // Volt Tackle — V35.84; edição independente deste golpe.
-registerMove("catalog_volttackle",["Volt Tackle"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"volttackle","type":"electric","kind":"bolt","cat":"special","seed":63}),950);
+registerMove("catalog_volttackle",["Volt Tackle"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"volttackle","type":"electric","kind":"bolt","cat":"physical","seed":63}),950);
 
 // Voz Encantadora — V35.84; edição independente deste golpe.
-registerMove("catalog_vozencantadora",["Voz Encantadora"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"vozencantadora","type":"normal","kind":"bolt","cat":"special","seed":225}),950);
+registerMove("catalog_vozencantadora",["Voz Encantadora"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"vozencantadora","type":"fairy","kind":"bolt","cat":"special","seed":225}),950);
 
 // Will-O-Wisp — V35.84; edição independente deste golpe.
 registerMove("catalog_willowisp",["Will-O-Wisp"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"willowisp","type":"fire","kind":"status","cat":"status","seed":113}),1000);
