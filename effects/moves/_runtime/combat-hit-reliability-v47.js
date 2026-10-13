@@ -7,7 +7,7 @@
 (function(){
  'use strict';
  const report={version:'47.1',casts:0,projectileCorrections:0,beamsAligned:0,
-  contactFollowThrough:0,realHits:0,lastHit:null,lastCast:null};
+  contactFollowThrough:0,missingCollisionRecovered:0,realHits:0,lastHit:null,lastCast:null};
  const savedHit=BattleEngine.prototype.hitTarget;
  BattleEngine.prototype.hitTarget=function(who,type,power){
   const victim=battle?.active?(who==='enemy'?foe():current()):null;
@@ -50,6 +50,17 @@
    this.v47ContactToLand.push({
     at:now+.37*1000,until:now+1100,owner,victim,
     type:selected.type,power:selected.power,name:selected.name
+   });
+  }else if(Number(selected.power)>0&&!spriteContact&&selected.kind!=='dash'&&
+      victim===foe()&&Number(victim?.hp)>=priorHP){
+   // Some older visual-move overrides consume cooldown and play an animation
+   // without ever spawning a REAL projectile / beam. Recover ONLY those casts.
+   // A real projectile/beam, or a previous damage event, cancels the fallback.
+   this.v47MissingCollisions=(this.v47MissingCollisions||[]).filter(x=>x.until>now);
+   this.v47MissingCollisions.push({
+    at:now+870,until:now+1850,owner,victim,type:selected.type,
+    power:selected.power,hpBefore:priorHP,
+    sawPhysics:false,name:selected.name
    });
   }
   return result;
@@ -100,12 +111,34 @@
    }
    this.v47ContactToLand=pending;
   }
+  // A reliable impact, not a fake visual number: use the same damage()
+  // and immunities as the base game if NO collision actor was ever created.
+  if(battle?.active&&this.v47MissingCollisions?.length){
+   const time=performance.now(),pending=[];
+   for(const fx of this.v47MissingCollisions){
+    if(fx.until<=time||fx.victim!==foe()||fx.owner!==current())continue;
+    if(this.projectiles?.some(p=>p.from==='player'&&p.life>0)||
+       this.telegraph?.from==='player')fx.sawPhysics=true;
+    if(Number(fx.victim.hp)<fx.hpBefore)continue;
+    if(time<fx.at||(this.enemy?.inv||0)>0){
+     pending.push(fx);continue;
+    }
+    if(!fx.sawPhysics){
+     const hp=Number(fx.victim.hp);
+     this.hitTarget('enemy',fx.type,fx.power);
+     // Drop the fallback after one REAL hit attempt (including immunity).
+     if(Number(fx.victim.hp)<hp)report.missingCollisionRecovered++;
+    }
+   }
+   this.v47MissingCollisions=pending;
+  }
   return result;
  };
  window.PokemonTorreCombatV47=()=>({
   ...report,active:!!battle?.active,
   enemyHp:battle?.active?foe()?.hp:null,
-  pendingContact:engine?.v47ContactToLand?.length||0
+  pendingContact:engine?.v47ContactToLand?.length||0,
+  pendingMissingCollision:engine?.v47MissingCollisions?.length||0
  });
  // Deterministic real-browser regression harness available ONLY on localhost.
  // No production site visitor can start test battles or alter saved creatures.
