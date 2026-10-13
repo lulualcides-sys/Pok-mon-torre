@@ -1,0 +1,2569 @@
+{
+  "version": "35.84",
+  "source": "catalog V35.68 CONFIG from original 25 parts",
+  "generatedAt": "2026-10-13",
+  "protected": [
+    "abaloterrestre",
+    "aerialace",
+    "ataquedeasa",
+    "aurorabeam",
+    "bolasombria",
+    "bombadelodo",
+    "boneclub",
+    "bonemerang",
+    "brickbreak",
+    "cachoeira",
+    "ceutempestuoso",
+    "chutebaixo",
+    "chuvadedanca",
+    "closecombat",
+    "confusao",
+    "confusion",
+    "crosschop",
+    "dancadaspetalas",
+    "dynamicpunch",
+    "earthquake",
+    "explosaodefogo",
+    "fireblast",
+    "flamethrower",
+    "fly",
+    "folhanavalha",
+    "furacao",
+    "furiaancestral",
+    "gust",
+    "hidrobomba",
+    "hiperraio",
+    "hurricane",
+    "hydropump",
+    "hyperbeam",
+    "icebeam",
+    "labaredafinal",
+    "lancachamas",
+    "lowkick",
+    "mordida",
+    "petaldance",
+    "psiquico",
+    "psybeam",
+    "psychic",
+    "quebratijolo",
+    "raindance",
+    "raioaurora",
+    "raiodaaurora",
+    "raiodegelo",
+    "raiosolar",
+    "razorleaf",
+    "shadowball",
+    "sludgebomb",
+    "sococruzado",
+    "solarbeam",
+    "soprodedragao",
+    "surf",
+    "telecinese",
+    "telekinesis",
+    "tempestadedeneve",
+    "terremoto",
+    "tremor",
+    "tsunami",
+    "waterfall",
+    "wingattack"
+  ],
+  "newMoveCount": 312,
+  "moves": [
+    {
+      "id": "absorver",
+      "name": "Absorver",
+      "type": "grass",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/absorver/index.js"
+    },
+    {
+      "id": "acid",
+      "name": "Acid",
+      "type": "poison",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/acid/index.js"
+    },
+    {
+      "id": "acido",
+      "name": "Ácido",
+      "type": "poison",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/acido/index.js"
+    },
+    {
+      "id": "aerocorte",
+      "name": "Aerocorte",
+      "type": "flying",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/aerocorte/index.js"
+    },
+    {
+      "id": "agility",
+      "name": "Agility",
+      "type": "psychic",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/agility/index.js"
+    },
+    {
+      "id": "agulhas",
+      "name": "Agulhas",
+      "type": "bug",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/agulhas/index.js"
+    },
+    {
+      "id": "agulhasvelozes",
+      "name": "Agulhas Velozes",
+      "type": "bug",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/agulhasvelozes/index.js"
+    },
+    {
+      "id": "airslash",
+      "name": "Air Slash",
+      "type": "flying",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/airslash/index.js"
+    },
+    {
+      "id": "amnesia",
+      "name": "Amnesia",
+      "type": "psychic",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/amnesia/index.js"
+    },
+    {
+      "id": "ancientpower",
+      "name": "Ancient Power",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ancientpower/index.js"
+    },
+    {
+      "id": "aquajet",
+      "name": "Aqua Jet",
+      "type": "water",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/aquajet/index.js"
+    },
+    {
+      "id": "arranhao",
+      "name": "Arranhão",
+      "type": "bug",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/arranhao/index.js"
+    },
+    {
+      "id": "arremessodepedra",
+      "name": "Arremesso de Pedra",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/arremessodepedra/index.js"
+    },
+    {
+      "id": "assombracao",
+      "name": "Assombração",
+      "type": "ghost",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/assombracao/index.js"
+    },
+    {
+      "id": "ataquedeinseto",
+      "name": "Ataque de Inseto",
+      "type": "bug",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/ataquedeinseto/index.js"
+    },
+    {
+      "id": "ataqueduplo",
+      "name": "Ataque Duplo",
+      "type": "normal",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/ataqueduplo/index.js"
+    },
+    {
+      "id": "ataqueveloz",
+      "name": "Ataque Veloz",
+      "type": "normal",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ataqueveloz/index.js"
+    },
+    {
+      "id": "aurasphere",
+      "name": "Aura Sphere",
+      "type": "fighting",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/aurasphere/index.js"
+    },
+    {
+      "id": "avalanche",
+      "name": "Avalanche",
+      "type": "rock",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/avalanche/index.js"
+    },
+    {
+      "id": "barreirapsiquica",
+      "name": "Barreira Psíquica",
+      "type": "psychic",
+      "kind": "shield",
+      "cat": "status",
+      "path": "effects/moves/catalog/barreirapsiquica/index.js"
+    },
+    {
+      "id": "barrier",
+      "name": "Barrier",
+      "type": "psychic",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/barrier/index.js"
+    },
+    {
+      "id": "bicada",
+      "name": "Bicada",
+      "type": "flying",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/bicada/index.js"
+    },
+    {
+      "id": "bicobroca",
+      "name": "Bico Broca",
+      "type": "flying",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/bicobroca/index.js"
+    },
+    {
+      "id": "bind",
+      "name": "Bind",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/bind/index.js"
+    },
+    {
+      "id": "blizzard",
+      "name": "Blizzard",
+      "type": "ice",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/blizzard/index.js"
+    },
+    {
+      "id": "bolhas",
+      "name": "Bolhas",
+      "type": "water",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/bolhas/index.js"
+    },
+    {
+      "id": "bombadesementes",
+      "name": "Bomba de Sementes",
+      "type": "grass",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/bombadesementes/index.js"
+    },
+    {
+      "id": "brasa",
+      "name": "Brasa",
+      "type": "fire",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/brasa/index.js"
+    },
+    {
+      "id": "brasaviva",
+      "name": "Brasa Viva",
+      "type": "fire",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/brasaviva/index.js"
+    },
+    {
+      "id": "brilhomagico",
+      "name": "Brilho Mágico",
+      "type": "fairy",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/brilhomagico/index.js"
+    },
+    {
+      "id": "bubblebeam",
+      "name": "Bubble Beam",
+      "type": "water",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/bubblebeam/index.js"
+    },
+    {
+      "id": "bugbite",
+      "name": "Bug Bite",
+      "type": "bug",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/bugbite/index.js"
+    },
+    {
+      "id": "bugbuzz",
+      "name": "Bug Buzz",
+      "type": "bug",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/bugbuzz/index.js"
+    },
+    {
+      "id": "bulkup",
+      "name": "Bulk Up",
+      "type": "fighting",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/bulkup/index.js"
+    },
+    {
+      "id": "cabecada",
+      "name": "Cabeçada",
+      "type": "normal",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/cabecada/index.js"
+    },
+    {
+      "id": "cacodegelo",
+      "name": "Caco de Gelo",
+      "type": "ice",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/cacodegelo/index.js"
+    },
+    {
+      "id": "calmmind",
+      "name": "Calm Mind",
+      "type": "psychic",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/calmmind/index.js"
+    },
+    {
+      "id": "campoeletrico",
+      "name": "Campo Elétrico",
+      "type": "electric",
+      "kind": "hazard",
+      "cat": "special",
+      "path": "effects/moves/catalog/campoeletrico/index.js"
+    },
+    {
+      "id": "campogelado",
+      "name": "Campo Gelado",
+      "type": "ice",
+      "kind": "hazard",
+      "cat": "special",
+      "path": "effects/moves/catalog/campogelado/index.js"
+    },
+    {
+      "id": "canhaodeferro",
+      "name": "Canhão de Ferro",
+      "type": "steel",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/canhaodeferro/index.js"
+    },
+    {
+      "id": "canhaometalico",
+      "name": "Canhão Metálico",
+      "type": "steel",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/canhaometalico/index.js"
+    },
+    {
+      "id": "canto",
+      "name": "Canto",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/canto/index.js"
+    },
+    {
+      "id": "cargarelampago",
+      "name": "Carga Relâmpago",
+      "type": "electric",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/cargarelampago/index.js"
+    },
+    {
+      "id": "cascalho",
+      "name": "Cascalho",
+      "type": "rock",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/cascalho/index.js"
+    },
+    {
+      "id": "casulo",
+      "name": "Casulo",
+      "type": "bug",
+      "kind": "guard",
+      "cat": "status",
+      "path": "effects/moves/catalog/casulo/index.js"
+    },
+    {
+      "id": "caudadeagua",
+      "name": "Cauda de Água",
+      "type": "water",
+      "kind": "bolt",
+      "cat": "physical",
+      "path": "effects/moves/catalog/caudadeagua/index.js"
+    },
+    {
+      "id": "chama",
+      "name": "Chama",
+      "type": "fire",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/chama/index.js"
+    },
+    {
+      "id": "chamaardente",
+      "name": "Chama Ardente",
+      "type": "fire",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/chamaardente/index.js"
+    },
+    {
+      "id": "chamacircular",
+      "name": "Chama Circular",
+      "type": "fire",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/chamacircular/index.js"
+    },
+    {
+      "id": "chamasdemoltres",
+      "name": "Chamas de Moltres",
+      "type": "fire",
+      "kind": "hazard",
+      "cat": "special",
+      "path": "effects/moves/catalog/chamasdemoltres/index.js"
+    },
+    {
+      "id": "charge",
+      "name": "Charge",
+      "type": "electric",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/charge/index.js"
+    },
+    {
+      "id": "charm",
+      "name": "Charm",
+      "type": "fairy",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/charm/index.js"
+    },
+    {
+      "id": "chicotedevinha",
+      "name": "Chicote de Vinha",
+      "type": "grass",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/chicotedevinha/index.js"
+    },
+    {
+      "id": "chicoteduplo",
+      "name": "Chicote Duplo",
+      "type": "grass",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/chicoteduplo/index.js"
+    },
+    {
+      "id": "chicotesemarea",
+      "name": "Chicotes em Área",
+      "type": "grass",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/chicotesemarea/index.js"
+    },
+    {
+      "id": "choque",
+      "name": "Choque",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/choque/index.js"
+    },
+    {
+      "id": "choquedotrovao",
+      "name": "Choque do Trovão",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/choquedotrovao/index.js"
+    },
+    {
+      "id": "choquemagnetico",
+      "name": "Choque Magnético",
+      "type": "electric",
+      "kind": "homing",
+      "cat": "special",
+      "path": "effects/moves/catalog/choquemagnetico/index.js"
+    },
+    {
+      "id": "choquemetalico",
+      "name": "Choque Metálico",
+      "type": "steel",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/choquemetalico/index.js"
+    },
+    {
+      "id": "chute",
+      "name": "Chute",
+      "type": "fighting",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/chute/index.js"
+    },
+    {
+      "id": "chutealto",
+      "name": "Chute Alto",
+      "type": "fighting",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/chutealto/index.js"
+    },
+    {
+      "id": "chuvademeteoritos",
+      "name": "Chuva de Meteoritos",
+      "type": "rock",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/chuvademeteoritos/index.js"
+    },
+    {
+      "id": "confuseray",
+      "name": "Confuse Ray",
+      "type": "ghost",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/confuseray/index.js"
+    },
+    {
+      "id": "corte",
+      "name": "Corte",
+      "type": "bug",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/corte/index.js"
+    },
+    {
+      "id": "cortedeaco",
+      "name": "Corte de Aço",
+      "type": "steel",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/cortedeaco/index.js"
+    },
+    {
+      "id": "cortex",
+      "name": "Corte X",
+      "type": "bug",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/cortex/index.js"
+    },
+    {
+      "id": "crunch",
+      "name": "Crunch",
+      "type": "dark",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/crunch/index.js"
+    },
+    {
+      "id": "dazzlinggleam",
+      "name": "Dazzling Gleam",
+      "type": "fairy",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/dazzlinggleam/index.js"
+    },
+    {
+      "id": "defensecurl",
+      "name": "Defense Curl",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/defensecurl/index.js"
+    },
+    {
+      "id": "descarga",
+      "name": "Descarga",
+      "type": "electric",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/descarga/index.js"
+    },
+    {
+      "id": "descargaeletrica",
+      "name": "Descarga Elétrica",
+      "type": "electric",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/descargaeletrica/index.js"
+    },
+    {
+      "id": "deslizamento",
+      "name": "Deslizamento",
+      "type": "rock",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/deslizamento/index.js"
+    },
+    {
+      "id": "dig",
+      "name": "Dig",
+      "type": "ground",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/dig/index.js"
+    },
+    {
+      "id": "discharge",
+      "name": "Discharge",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/discharge/index.js"
+    },
+    {
+      "id": "doubleteam",
+      "name": "Double Team",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/doubleteam/index.js"
+    },
+    {
+      "id": "dragonbreath",
+      "name": "Dragon Breath",
+      "type": "dragon",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/dragonbreath/index.js"
+    },
+    {
+      "id": "dragonclaw",
+      "name": "Dragon Claw",
+      "type": "dragon",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/dragonclaw/index.js"
+    },
+    {
+      "id": "dragondance",
+      "name": "Dragon Dance",
+      "type": "dragon",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/dragondance/index.js"
+    },
+    {
+      "id": "dragonpulse",
+      "name": "Dragon Pulse",
+      "type": "dragon",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/dragonpulse/index.js"
+    },
+    {
+      "id": "dragonrage",
+      "name": "Dragon Rage",
+      "type": "dragon",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/dragonrage/index.js"
+    },
+    {
+      "id": "drainingkiss",
+      "name": "Draining Kiss",
+      "type": "fairy",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/drainingkiss/index.js"
+    },
+    {
+      "id": "dreameater",
+      "name": "Dream Eater",
+      "type": "ghost",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/dreameater/index.js"
+    },
+    {
+      "id": "drillpeck",
+      "name": "Drill Peck",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/drillpeck/index.js"
+    },
+    {
+      "id": "earthpower",
+      "name": "Earth Power",
+      "type": "ground",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/earthpower/index.js"
+    },
+    {
+      "id": "ember",
+      "name": "Ember",
+      "type": "fire",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ember/index.js"
+    },
+    {
+      "id": "encantar",
+      "name": "Encantar",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/encantar/index.js"
+    },
+    {
+      "id": "encanto",
+      "name": "Encanto",
+      "type": "fairy",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/encanto/index.js"
+    },
+    {
+      "id": "endurecer",
+      "name": "Endurecer",
+      "type": "normal",
+      "kind": "guard",
+      "cat": "status",
+      "path": "effects/moves/catalog/endurecer/index.js"
+    },
+    {
+      "id": "enxame",
+      "name": "Enxame",
+      "type": "bug",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/enxame/index.js"
+    },
+    {
+      "id": "esferaescura",
+      "name": "Esfera Escura",
+      "type": "ghost",
+      "kind": "homing",
+      "cat": "special",
+      "path": "effects/moves/catalog/esferaescura/index.js"
+    },
+    {
+      "id": "esporos",
+      "name": "Esporos",
+      "type": "grass",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/esporos/index.js"
+    },
+    {
+      "id": "estilhacosdegelo",
+      "name": "Estilhaços de Gelo",
+      "type": "ice",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/estilhacosdegelo/index.js"
+    },
+    {
+      "id": "explosaodeestrelas",
+      "name": "Explosão de Estrelas",
+      "type": "fairy",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/explosaodeestrelas/index.js"
+    },
+    {
+      "id": "explosaomagmatica",
+      "name": "Explosão Magmática",
+      "type": "fire",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/explosaomagmatica/index.js"
+    },
+    {
+      "id": "explosion",
+      "name": "Explosion",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/explosion/index.js"
+    },
+    {
+      "id": "extremespeed",
+      "name": "Extreme Speed",
+      "type": "fire",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/extremespeed/index.js"
+    },
+    {
+      "id": "fagulha",
+      "name": "Fagulha",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/fagulha/index.js"
+    },
+    {
+      "id": "fairywind",
+      "name": "Fairy Wind",
+      "type": "fairy",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/fairywind/index.js"
+    },
+    {
+      "id": "faisca",
+      "name": "Faísca",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/faisca/index.js"
+    },
+    {
+      "id": "faiscadejolteon",
+      "name": "Faísca de Jolteon",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/faiscadejolteon/index.js"
+    },
+    {
+      "id": "faiscadopikachu",
+      "name": "Faísca do Pikachu",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/faiscadopikachu/index.js"
+    },
+    {
+      "id": "fendarasa",
+      "name": "Fenda Rasa",
+      "type": "ground",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/fendarasa/index.js"
+    },
+    {
+      "id": "ferraoduplo",
+      "name": "Ferrão Duplo",
+      "type": "bug",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/ferraoduplo/index.js"
+    },
+    {
+      "id": "ferraovenenoso",
+      "name": "Ferrão Venenoso",
+      "type": "poison",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ferraovenenoso/index.js"
+    },
+    {
+      "id": "ferroada",
+      "name": "Ferroada",
+      "type": "bug",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/ferroada/index.js"
+    },
+    {
+      "id": "firespin",
+      "name": "Fire Spin",
+      "type": "fire",
+      "kind": "hazard",
+      "cat": "special",
+      "path": "effects/moves/catalog/firespin/index.js"
+    },
+    {
+      "id": "flashcannon",
+      "name": "Flash Cannon",
+      "type": "steel",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/flashcannon/index.js"
+    },
+    {
+      "id": "focusenergy",
+      "name": "Focus Energy",
+      "type": "normal",
+      "kind": "shield",
+      "cat": "status",
+      "path": "effects/moves/catalog/focusenergy/index.js"
+    },
+    {
+      "id": "fogofatuo",
+      "name": "Fogo-Fátuo",
+      "type": "fire",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/fogofatuo/index.js"
+    },
+    {
+      "id": "folhascortantes",
+      "name": "Folhas Cortantes",
+      "type": "grass",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/folhascortantes/index.js"
+    },
+    {
+      "id": "fragmentosdegelo",
+      "name": "Fragmentos de Gelo",
+      "type": "ice",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/fragmentosdegelo/index.js"
+    },
+    {
+      "id": "furycutter",
+      "name": "Fury Cutter",
+      "type": "bug",
+      "kind": "bolt",
+      "cat": "physical",
+      "path": "effects/moves/catalog/furycutter/index.js"
+    },
+    {
+      "id": "futuresight",
+      "name": "Future Sight",
+      "type": "psychic",
+      "kind": "homing",
+      "cat": "special",
+      "path": "effects/moves/catalog/futuresight/index.js"
+    },
+    {
+      "id": "garradeareia",
+      "name": "Garra de Areia",
+      "type": "ground",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/garradeareia/index.js"
+    },
+    {
+      "id": "garradefogo",
+      "name": "Garra de Fogo",
+      "type": "fire",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/garradefogo/index.js"
+    },
+    {
+      "id": "garrademetal",
+      "name": "Garra de Metal",
+      "type": "steel",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/garrademetal/index.js"
+    },
+    {
+      "id": "garradraconica",
+      "name": "Garra Dracônica",
+      "type": "dragon",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/garradraconica/index.js"
+    },
+    {
+      "id": "garrasombria",
+      "name": "Garra Sombria",
+      "type": "ghost",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/garrasombria/index.js"
+    },
+    {
+      "id": "geadapersistente",
+      "name": "Geada Persistente",
+      "type": "ice",
+      "kind": "hazard",
+      "cat": "special",
+      "path": "effects/moves/catalog/geadapersistente/index.js"
+    },
+    {
+      "id": "girodefogo",
+      "name": "Giro de Fogo",
+      "type": "fire",
+      "kind": "hazard",
+      "cat": "special",
+      "path": "effects/moves/catalog/girodefogo/index.js"
+    },
+    {
+      "id": "golpeconcentrado",
+      "name": "Golpe Concentrado",
+      "type": "fighting",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/golpeconcentrado/index.js"
+    },
+    {
+      "id": "golpedeaura",
+      "name": "Golpe de Aura",
+      "type": "fighting",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/golpedeaura/index.js"
+    },
+    {
+      "id": "golpedecorpo",
+      "name": "Golpe de Corpo",
+      "type": "normal",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/golpedecorpo/index.js"
+    },
+    {
+      "id": "golpedekarate",
+      "name": "Golpe de Karatê",
+      "type": "fighting",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/golpedekarate/index.js"
+    },
+    {
+      "id": "golpedeveneno",
+      "name": "Golpe de Veneno",
+      "type": "poison",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/golpedeveneno/index.js"
+    },
+    {
+      "id": "golpeduplo",
+      "name": "Golpe Duplo",
+      "type": "normal",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/golpeduplo/index.js"
+    },
+    {
+      "id": "golpefurioso",
+      "name": "Golpe Furioso",
+      "type": "fighting",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/golpefurioso/index.js"
+    },
+    {
+      "id": "golperapido",
+      "name": "Golpe Rápido",
+      "type": "normal",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/golperapido/index.js"
+    },
+    {
+      "id": "grandefissura",
+      "name": "Grande Fissura",
+      "type": "ground",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/grandefissura/index.js"
+    },
+    {
+      "id": "growl",
+      "name": "Growl",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/growl/index.js"
+    },
+    {
+      "id": "growth",
+      "name": "Growth",
+      "type": "grass",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/growth/index.js"
+    },
+    {
+      "id": "harden",
+      "name": "Harden",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/harden/index.js"
+    },
+    {
+      "id": "haze",
+      "name": "Haze",
+      "type": "ice",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/haze/index.js"
+    },
+    {
+      "id": "headbutt",
+      "name": "Headbutt",
+      "type": "normal",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/headbutt/index.js"
+    },
+    {
+      "id": "hex",
+      "name": "Hex",
+      "type": "ghost",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/hex/index.js"
+    },
+    {
+      "id": "hiperpresa",
+      "name": "Hiper Presa",
+      "type": "normal",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/hiperpresa/index.js"
+    },
+    {
+      "id": "hiperraiodragao",
+      "name": "Hiper Raio Dragão",
+      "type": "dragon",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/hiperraiodragao/index.js"
+    },
+    {
+      "id": "hypnosis",
+      "name": "Hypnosis",
+      "type": "psychic",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/hypnosis/index.js"
+    },
+    {
+      "id": "iceshard",
+      "name": "Ice Shard",
+      "type": "ice",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/iceshard/index.js"
+    },
+    {
+      "id": "impactoestelar",
+      "name": "Impacto Estelar",
+      "type": "normal",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/impactoestelar/index.js"
+    },
+    {
+      "id": "impactofeerico",
+      "name": "Impacto Féerico",
+      "type": "fairy",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/impactofeerico/index.js"
+    },
+    {
+      "id": "impactoglacial",
+      "name": "Impacto Glacial",
+      "type": "ice",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/impactoglacial/index.js"
+    },
+    {
+      "id": "impactopoderoso",
+      "name": "Impacto Poderoso",
+      "type": "normal",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/impactopoderoso/index.js"
+    },
+    {
+      "id": "impactosupersonico",
+      "name": "Impacto Supersônico",
+      "type": "normal",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/impactosupersonico/index.js"
+    },
+    {
+      "id": "investida",
+      "name": "Investida",
+      "type": "normal",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/investida/index.js"
+    },
+    {
+      "id": "investidadragao",
+      "name": "Investida Dragão",
+      "type": "dragon",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/investidadragao/index.js"
+    },
+    {
+      "id": "investidaforte",
+      "name": "Investida Forte",
+      "type": "fighting",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/investidaforte/index.js"
+    },
+    {
+      "id": "irondefense",
+      "name": "Iron Defense",
+      "type": "steel",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/irondefense/index.js"
+    },
+    {
+      "id": "irontail",
+      "name": "Iron Tail",
+      "type": "steel",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/irontail/index.js"
+    },
+    {
+      "id": "jatodagua",
+      "name": "Jato d’Água",
+      "type": "water",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/jatodagua/index.js"
+    },
+    {
+      "id": "jatodeagua",
+      "name": "Jato de Água",
+      "type": "water",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/jatodeagua/index.js"
+    },
+    {
+      "id": "karatechop",
+      "name": "Karate Chop",
+      "type": "fighting",
+      "kind": "bolt",
+      "cat": "physical",
+      "path": "effects/moves/catalog/karatechop/index.js"
+    },
+    {
+      "id": "lamacorrosiva",
+      "name": "Lama Corrosiva",
+      "type": "poison",
+      "kind": "hazard",
+      "cat": "special",
+      "path": "effects/moves/catalog/lamacorrosiva/index.js"
+    },
+    {
+      "id": "lambida",
+      "name": "Lambida",
+      "type": "ghost",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/lambida/index.js"
+    },
+    {
+      "id": "laminademetal",
+      "name": "Lâmina de Metal",
+      "type": "steel",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/laminademetal/index.js"
+    },
+    {
+      "id": "laminaprateada",
+      "name": "Lâmina Prateada",
+      "type": "steel",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/laminaprateada/index.js"
+    },
+    {
+      "id": "laminascortantes",
+      "name": "Lâminas Cortantes",
+      "type": "bug",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/laminascortantes/index.js"
+    },
+    {
+      "id": "lancadeareia",
+      "name": "Lança de Areia",
+      "type": "ground",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/lancadeareia/index.js"
+    },
+    {
+      "id": "lancamentodeareia",
+      "name": "Lançamento de Areia",
+      "type": "ground",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/lancamentodeareia/index.js"
+    },
+    {
+      "id": "leechlife",
+      "name": "Leech Life",
+      "type": "bug",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/leechlife/index.js"
+    },
+    {
+      "id": "leechseed",
+      "name": "Leech Seed",
+      "type": "grass",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/leechseed/index.js"
+    },
+    {
+      "id": "leer",
+      "name": "Leer",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/leer/index.js"
+    },
+    {
+      "id": "lick",
+      "name": "Lick",
+      "type": "ghost",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/lick/index.js"
+    },
+    {
+      "id": "lightscreen",
+      "name": "Light Screen",
+      "type": "psychic",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/lightscreen/index.js"
+    },
+    {
+      "id": "lodotoxico",
+      "name": "Lodo Tóxico",
+      "type": "poison",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/lodotoxico/index.js"
+    },
+    {
+      "id": "luzdalua",
+      "name": "Luz da Lua",
+      "type": "fairy",
+      "kind": "recover",
+      "cat": "status",
+      "path": "effects/moves/catalog/luzdalua/index.js"
+    },
+    {
+      "id": "machpunch",
+      "name": "Mach Punch",
+      "type": "fighting",
+      "kind": "bolt",
+      "cat": "physical",
+      "path": "effects/moves/catalog/machpunch/index.js"
+    },
+    {
+      "id": "maldicaoespectral",
+      "name": "Maldição Espectral",
+      "type": "ghost",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/maldicaoespectral/index.js"
+    },
+    {
+      "id": "martelada",
+      "name": "Martelada",
+      "type": "water",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/martelada/index.js"
+    },
+    {
+      "id": "martelorochoso",
+      "name": "Martelo Rochoso",
+      "type": "rock",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/martelorochoso/index.js"
+    },
+    {
+      "id": "megadreno",
+      "name": "Mega Dreno",
+      "type": "grass",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/megadreno/index.js"
+    },
+    {
+      "id": "megahorn",
+      "name": "Megahorn",
+      "type": "bug",
+      "kind": "bolt",
+      "cat": "physical",
+      "path": "effects/moves/catalog/megahorn/index.js"
+    },
+    {
+      "id": "megasoco",
+      "name": "Mega Soco",
+      "type": "normal",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/megasoco/index.js"
+    },
+    {
+      "id": "mergulho",
+      "name": "Mergulho",
+      "type": "water",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/mergulho/index.js"
+    },
+    {
+      "id": "metalclaw",
+      "name": "Metal Claw",
+      "type": "steel",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/metalclaw/index.js"
+    },
+    {
+      "id": "metronome",
+      "name": "Metronome",
+      "type": "normal",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/metronome/index.js"
+    },
+    {
+      "id": "minimize",
+      "name": "Minimize",
+      "type": "poison",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/minimize/index.js"
+    },
+    {
+      "id": "moonlight",
+      "name": "Moonlight",
+      "type": "fairy",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/moonlight/index.js"
+    },
+    {
+      "id": "mudshot",
+      "name": "Mud Shot",
+      "type": "ground",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/mudshot/index.js"
+    },
+    {
+      "id": "mudslap",
+      "name": "Mud-Slap",
+      "type": "ground",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/mudslap/index.js"
+    },
+    {
+      "id": "nevasca",
+      "name": "Nevasca",
+      "type": "ice",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/nevasca/index.js"
+    },
+    {
+      "id": "nevascaemarea",
+      "name": "Nevasca em Área",
+      "type": "ice",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/nevascaemarea/index.js"
+    },
+    {
+      "id": "nevoatoxica",
+      "name": "Névoa Tóxica",
+      "type": "poison",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/nevoatoxica/index.js"
+    },
+    {
+      "id": "nevoavenenosa",
+      "name": "Névoa Venenosa",
+      "type": "poison",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/nevoavenenosa/index.js"
+    },
+    {
+      "id": "nightshade",
+      "name": "Night Shade",
+      "type": "ghost",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/nightshade/index.js"
+    },
+    {
+      "id": "ondadebolhas",
+      "name": "Onda de Bolhas",
+      "type": "water",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ondadebolhas/index.js"
+    },
+    {
+      "id": "ondadechoque",
+      "name": "Onda de Choque",
+      "type": "fighting",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/ondadechoque/index.js"
+    },
+    {
+      "id": "ondadraconica",
+      "name": "Onda Dracônica",
+      "type": "dragon",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ondadraconica/index.js"
+    },
+    {
+      "id": "ondaeletrica",
+      "name": "Onda Elétrica",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ondaeletrica/index.js"
+    },
+    {
+      "id": "ondagigante",
+      "name": "Onda Gigante",
+      "type": "water",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/ondagigante/index.js"
+    },
+    {
+      "id": "ondamental",
+      "name": "Onda Mental",
+      "type": "psychic",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ondamental/index.js"
+    },
+    {
+      "id": "ondapsiquica",
+      "name": "Onda Psíquica",
+      "type": "psychic",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ondapsiquica/index.js"
+    },
+    {
+      "id": "orbemistico",
+      "name": "Orbe Místico",
+      "type": "psychic",
+      "kind": "homing",
+      "cat": "special",
+      "path": "effects/moves/catalog/orbemistico/index.js"
+    },
+    {
+      "id": "osso",
+      "name": "Osso",
+      "type": "ground",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/osso/index.js"
+    },
+    {
+      "id": "ossobumerangue",
+      "name": "Osso Bumerangue",
+      "type": "ground",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/ossobumerangue/index.js"
+    },
+    {
+      "id": "outrage",
+      "name": "Outrage",
+      "type": "dragon",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/outrage/index.js"
+    },
+    {
+      "id": "parededeaco",
+      "name": "Parede de Aço",
+      "type": "steel",
+      "kind": "shield",
+      "cat": "status",
+      "path": "effects/moves/catalog/parededeaco/index.js"
+    },
+    {
+      "id": "pedra",
+      "name": "Pedra",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/pedra/index.js"
+    },
+    {
+      "id": "pedraafiada",
+      "name": "Pedra Afiada",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/pedraafiada/index.js"
+    },
+    {
+      "id": "pedrada",
+      "name": "Pedrada",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/pedrada/index.js"
+    },
+    {
+      "id": "pedrasemarea",
+      "name": "Pedras em Área",
+      "type": "rock",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/pedrasemarea/index.js"
+    },
+    {
+      "id": "petalas",
+      "name": "Pétalas",
+      "type": "grass",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/petalas/index.js"
+    },
+    {
+      "id": "petalascortantes",
+      "name": "Pétalas Cortantes",
+      "type": "grass",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/petalascortantes/index.js"
+    },
+    {
+      "id": "picada",
+      "name": "Picada",
+      "type": "bug",
+      "kind": "dash",
+      "cat": "physical",
+      "path": "effects/moves/catalog/picada/index.js"
+    },
+    {
+      "id": "picadatoxica",
+      "name": "Picada Tóxica",
+      "type": "poison",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/picadatoxica/index.js"
+    },
+    {
+      "id": "picadavenenosa",
+      "name": "Picada Venenosa",
+      "type": "poison",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/picadavenenosa/index.js"
+    },
+    {
+      "id": "pinmissile",
+      "name": "Pin Missile",
+      "type": "bug",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/pinmissile/index.js"
+    },
+    {
+      "id": "pique",
+      "name": "Pique",
+      "type": "flying",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/pique/index.js"
+    },
+    {
+      "id": "pistoladagua",
+      "name": "Pistola d’Água",
+      "type": "water",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/pistoladagua/index.js"
+    },
+    {
+      "id": "podegelo",
+      "name": "Pó de Gelo",
+      "type": "ice",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/podegelo/index.js"
+    },
+    {
+      "id": "poderdalua",
+      "name": "Poder da Lua",
+      "type": "fairy",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/poderdalua/index.js"
+    },
+    {
+      "id": "poderterrestre",
+      "name": "Poder Terrestre",
+      "type": "ground",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/poderterrestre/index.js"
+    },
+    {
+      "id": "podosono",
+      "name": "Pó do Sono",
+      "type": "grass",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/podosono/index.js"
+    },
+    {
+      "id": "poisonjab",
+      "name": "Poison Jab",
+      "type": "poison",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/poisonjab/index.js"
+    },
+    {
+      "id": "poisonpowder",
+      "name": "Poison Powder",
+      "type": "poison",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/poisonpowder/index.js"
+    },
+    {
+      "id": "pomistico",
+      "name": "Pó Místico",
+      "type": "bug",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/pomistico/index.js"
+    },
+    {
+      "id": "premonicao",
+      "name": "Premonição",
+      "type": "psychic",
+      "kind": "homing",
+      "cat": "special",
+      "path": "effects/moves/catalog/premonicao/index.js"
+    },
+    {
+      "id": "protect",
+      "name": "Protect",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/protect/index.js"
+    },
+    {
+      "id": "psicocorte",
+      "name": "Psicocorte",
+      "type": "psychic",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/psicocorte/index.js"
+    },
+    {
+      "id": "pulsacaomental",
+      "name": "Pulsação Mental",
+      "type": "psychic",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/pulsacaomental/index.js"
+    },
+    {
+      "id": "pulsodagua",
+      "name": "Pulso d’Água",
+      "type": "water",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/pulsodagua/index.js"
+    },
+    {
+      "id": "pulsodeagua",
+      "name": "Pulso de Água",
+      "type": "water",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/pulsodeagua/index.js"
+    },
+    {
+      "id": "pulsodedragao",
+      "name": "Pulso de Dragão",
+      "type": "dragon",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/pulsodedragao/index.js"
+    },
+    {
+      "id": "pulsofantasma",
+      "name": "Pulso Fantasma",
+      "type": "ghost",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/pulsofantasma/index.js"
+    },
+    {
+      "id": "punhodefogo",
+      "name": "Punho de Fogo",
+      "type": "fire",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/punhodefogo/index.js"
+    },
+    {
+      "id": "quickattack",
+      "name": "Quick Attack",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/quickattack/index.js"
+    },
+    {
+      "id": "raio",
+      "name": "Raio",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/raio/index.js"
+    },
+    {
+      "id": "raiocongelante",
+      "name": "Raio Congelante",
+      "type": "ice",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/raiocongelante/index.js"
+    },
+    {
+      "id": "raioencantado",
+      "name": "Raio Encantado",
+      "type": "fairy",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/raioencantado/index.js"
+    },
+    {
+      "id": "raivadodragao",
+      "name": "Raiva do Dragão",
+      "type": "dragon",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/raivadodragao/index.js"
+    },
+    {
+      "id": "raizesviolentas",
+      "name": "Raízes Violentas",
+      "type": "grass",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/raizesviolentas/index.js"
+    },
+    {
+      "id": "rajada",
+      "name": "Rajada",
+      "type": "flying",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/rajada/index.js"
+    },
+    {
+      "id": "rajadaacida",
+      "name": "Rajada Ácida",
+      "type": "poison",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/rajadaacida/index.js"
+    },
+    {
+      "id": "rajadaflamejante",
+      "name": "Rajada Flamejante",
+      "type": "fire",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/rajadaflamejante/index.js"
+    },
+    {
+      "id": "rajadaignea",
+      "name": "Rajada Ígnea",
+      "type": "fire",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/rajadaignea/index.js"
+    },
+    {
+      "id": "rapidspin",
+      "name": "Rapid Spin",
+      "type": "water",
+      "kind": "hazard",
+      "cat": "special",
+      "path": "effects/moves/catalog/rapidspin/index.js"
+    },
+    {
+      "id": "rastrodefogo",
+      "name": "Rastro de Fogo",
+      "type": "fire",
+      "kind": "hazard",
+      "cat": "special",
+      "path": "effects/moves/catalog/rastrodefogo/index.js"
+    },
+    {
+      "id": "recover",
+      "name": "Recover",
+      "type": "normal",
+      "kind": "recover",
+      "cat": "status",
+      "path": "effects/moves/catalog/recover/index.js"
+    },
+    {
+      "id": "recuperar",
+      "name": "Recuperar",
+      "type": "normal",
+      "kind": "recover",
+      "cat": "status",
+      "path": "effects/moves/catalog/recuperar/index.js"
+    },
+    {
+      "id": "reflect",
+      "name": "Reflect",
+      "type": "psychic",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/reflect/index.js"
+    },
+    {
+      "id": "rest",
+      "name": "Rest",
+      "type": "psychic",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/rest/index.js"
+    },
+    {
+      "id": "roar",
+      "name": "Roar",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/roar/index.js"
+    },
+    {
+      "id": "rochedo",
+      "name": "Rochedo",
+      "type": "rock",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/rochedo/index.js"
+    },
+    {
+      "id": "rockblast",
+      "name": "Rock Blast",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "physical",
+      "path": "effects/moves/catalog/rockblast/index.js"
+    },
+    {
+      "id": "rockslide",
+      "name": "Rock Slide",
+      "type": "rock",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/rockslide/index.js"
+    },
+    {
+      "id": "rockthrow",
+      "name": "Rock Throw",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "physical",
+      "path": "effects/moves/catalog/rockthrow/index.js"
+    },
+    {
+      "id": "rocktomb",
+      "name": "Rock Tomb",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "physical",
+      "path": "effects/moves/catalog/rocktomb/index.js"
+    },
+    {
+      "id": "rodadefogo",
+      "name": "Roda de Fogo",
+      "type": "fire",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/rodadefogo/index.js"
+    },
+    {
+      "id": "roost",
+      "name": "Roost",
+      "type": "flying",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/roost/index.js"
+    },
+    {
+      "id": "safeguard",
+      "name": "Safeguard",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/safeguard/index.js"
+    },
+    {
+      "id": "salpicar",
+      "name": "Salpicar",
+      "type": "water",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/salpicar/index.js"
+    },
+    {
+      "id": "sandattack",
+      "name": "Sand Attack",
+      "type": "ground",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/sandattack/index.js"
+    },
+    {
+      "id": "sandstorm",
+      "name": "Sandstorm",
+      "type": "rock",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/sandstorm/index.js"
+    },
+    {
+      "id": "scaryface",
+      "name": "Scary Face",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/scaryface/index.js"
+    },
+    {
+      "id": "screech",
+      "name": "Screech",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/screech/index.js"
+    },
+    {
+      "id": "skullbash",
+      "name": "Skull Bash",
+      "type": "water",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/skullbash/index.js"
+    },
+    {
+      "id": "slam",
+      "name": "Slam",
+      "type": "bug",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/slam/index.js"
+    },
+    {
+      "id": "sleeppowder",
+      "name": "Sleep Powder",
+      "type": "grass",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/sleeppowder/index.js"
+    },
+    {
+      "id": "smokescreen",
+      "name": "Smokescreen",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/smokescreen/index.js"
+    },
+    {
+      "id": "soco",
+      "name": "Soco",
+      "type": "fighting",
+      "kind": "dash",
+      "cat": "physical",
+      "path": "effects/moves/catalog/soco/index.js"
+    },
+    {
+      "id": "socodepedra",
+      "name": "Soco de Pedra",
+      "type": "rock",
+      "kind": "dash",
+      "cat": "physical",
+      "path": "effects/moves/catalog/socodepedra/index.js"
+    },
+    {
+      "id": "socodeterra",
+      "name": "Soco de Terra",
+      "type": "ground",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/socodeterra/index.js"
+    },
+    {
+      "id": "socodinamico",
+      "name": "Soco Dinâmico",
+      "type": "fighting",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/socodinamico/index.js"
+    },
+    {
+      "id": "socorapido",
+      "name": "Soco Rápido",
+      "type": "fighting",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/socorapido/index.js"
+    },
+    {
+      "id": "socosismico",
+      "name": "Soco Sísmico",
+      "type": "fighting",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/socosismico/index.js"
+    },
+    {
+      "id": "sombra",
+      "name": "Sombra",
+      "type": "ghost",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/sombra/index.js"
+    },
+    {
+      "id": "sombranoturna",
+      "name": "Sombra Noturna",
+      "type": "ghost",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/sombranoturna/index.js"
+    },
+    {
+      "id": "sombraviva",
+      "name": "Sombra Viva",
+      "type": "ghost",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/sombraviva/index.js"
+    },
+    {
+      "id": "soprocongelante",
+      "name": "Sopro Congelante",
+      "type": "ice",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/soprocongelante/index.js"
+    },
+    {
+      "id": "soprododragao",
+      "name": "Sopro do Dragão",
+      "type": "dragon",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/soprododragao/index.js"
+    },
+    {
+      "id": "stoneedge",
+      "name": "Stone Edge",
+      "type": "rock",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/stoneedge/index.js"
+    },
+    {
+      "id": "stringshot",
+      "name": "String Shot",
+      "type": "bug",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/stringshot/index.js"
+    },
+    {
+      "id": "stunspore",
+      "name": "Stun Spore",
+      "type": "grass",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/stunspore/index.js"
+    },
+    {
+      "id": "submission",
+      "name": "Submission",
+      "type": "fighting",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/submission/index.js"
+    },
+    {
+      "id": "sunnyday",
+      "name": "Sunny Day",
+      "type": "fire",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/sunnyday/index.js"
+    },
+    {
+      "id": "supersonic",
+      "name": "Supersonic",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/supersonic/index.js"
+    },
+    {
+      "id": "swift",
+      "name": "Swift",
+      "type": "normal",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/swift/index.js"
+    },
+    {
+      "id": "swordsdance",
+      "name": "Swords Dance",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/swordsdance/index.js"
+    },
+    {
+      "id": "synthesis",
+      "name": "Synthesis",
+      "type": "grass",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/synthesis/index.js"
+    },
+    {
+      "id": "tailwhip",
+      "name": "Tail Whip",
+      "type": "normal",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/tailwhip/index.js"
+    },
+    {
+      "id": "tapadelama",
+      "name": "Tapa de Lama",
+      "type": "ground",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/tapadelama/index.js"
+    },
+    {
+      "id": "teiacortante",
+      "name": "Teia Cortante",
+      "type": "bug",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/teiacortante/index.js"
+    },
+    {
+      "id": "tempestadedefolhas",
+      "name": "Tempestade de Folhas",
+      "type": "grass",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/tempestadedefolhas/index.js"
+    },
+    {
+      "id": "tempestadedeinsetos",
+      "name": "Tempestade de Insetos",
+      "type": "bug",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/tempestadedeinsetos/index.js"
+    },
+    {
+      "id": "tempestadederaios",
+      "name": "Tempestade de Raios",
+      "type": "electric",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/tempestadederaios/index.js"
+    },
+    {
+      "id": "tempestadedraconica",
+      "name": "Tempestade Dracônica",
+      "type": "dragon",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/tempestadedraconica/index.js"
+    },
+    {
+      "id": "tempestademetalica",
+      "name": "Tempestade Metálica",
+      "type": "steel",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/tempestademetalica/index.js"
+    },
+    {
+      "id": "tempestadepsiquica",
+      "name": "Tempestade Psíquica",
+      "type": "psychic",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/tempestadepsiquica/index.js"
+    },
+    {
+      "id": "thrash",
+      "name": "Thrash",
+      "type": "poison",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/thrash/index.js"
+    },
+    {
+      "id": "thunder",
+      "name": "Thunder",
+      "type": "electric",
+      "kind": "homing",
+      "cat": "special",
+      "path": "effects/moves/catalog/thunder/index.js"
+    },
+    {
+      "id": "thunderbolt",
+      "name": "Thunderbolt",
+      "type": "electric",
+      "kind": "beam",
+      "cat": "special",
+      "path": "effects/moves/catalog/thunderbolt/index.js"
+    },
+    {
+      "id": "thunderwave",
+      "name": "Thunder Wave",
+      "type": "electric",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/thunderwave/index.js"
+    },
+    {
+      "id": "toxic",
+      "name": "Toxic",
+      "type": "poison",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/toxic/index.js"
+    },
+    {
+      "id": "toxinapesada",
+      "name": "Toxina Pesada",
+      "type": "poison",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/toxinapesada/index.js"
+    },
+    {
+      "id": "transform",
+      "name": "Transform",
+      "type": "psychic",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/transform/index.js"
+    },
+    {
+      "id": "transformacao",
+      "name": "Transformação",
+      "type": "normal",
+      "kind": "illusion",
+      "cat": "status",
+      "path": "effects/moves/catalog/transformacao/index.js"
+    },
+    {
+      "id": "transformar",
+      "name": "Transformar",
+      "type": "normal",
+      "kind": "illusion",
+      "cat": "status",
+      "path": "effects/moves/catalog/transformar/index.js"
+    },
+    {
+      "id": "trevaseternas",
+      "name": "Trevas Eternas",
+      "type": "ghost",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/trevaseternas/index.js"
+    },
+    {
+      "id": "triataque",
+      "name": "Tri Ataque",
+      "type": "normal",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/triataque/index.js"
+    },
+    {
+      "id": "trovao",
+      "name": "Trovão",
+      "type": "electric",
+      "kind": "homing",
+      "cat": "special",
+      "path": "effects/moves/catalog/trovao/index.js"
+    },
+    {
+      "id": "trovaoteleguiado",
+      "name": "Trovão Teleguiado",
+      "type": "electric",
+      "kind": "homing",
+      "cat": "special",
+      "path": "effects/moves/catalog/trovaoteleguiado/index.js"
+    },
+    {
+      "id": "vendaval",
+      "name": "Vendaval",
+      "type": "flying",
+      "kind": "area",
+      "cat": "special",
+      "path": "effects/moves/catalog/vendaval/index.js"
+    },
+    {
+      "id": "venoshock",
+      "name": "Venoshock",
+      "type": "poison",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/venoshock/index.js"
+    },
+    {
+      "id": "ventocortante",
+      "name": "Vento Cortante",
+      "type": "flying",
+      "kind": "pierce",
+      "cat": "special",
+      "path": "effects/moves/catalog/ventocortante/index.js"
+    },
+    {
+      "id": "ventodefada",
+      "name": "Vento de Fada",
+      "type": "fairy",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ventodefada/index.js"
+    },
+    {
+      "id": "ventogelado",
+      "name": "Vento Gelado",
+      "type": "ice",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/ventogelado/index.js"
+    },
+    {
+      "id": "vinewhip",
+      "name": "Vine Whip",
+      "type": "grass",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/vinewhip/index.js"
+    },
+    {
+      "id": "volttackle",
+      "name": "Volt Tackle",
+      "type": "electric",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/volttackle/index.js"
+    },
+    {
+      "id": "vozencantadora",
+      "name": "Voz Encantadora",
+      "type": "normal",
+      "kind": "bolt",
+      "cat": "special",
+      "path": "effects/moves/catalog/vozencantadora/index.js"
+    },
+    {
+      "id": "willowisp",
+      "name": "Will-O-Wisp",
+      "type": "fire",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/willowisp/index.js"
+    },
+    {
+      "id": "withdraw",
+      "name": "Withdraw",
+      "type": "water",
+      "kind": "status",
+      "cat": "status",
+      "path": "effects/moves/catalog/withdraw/index.js"
+    },
+    {
+      "id": "xscissor",
+      "name": "X-Scissor",
+      "type": "bug",
+      "kind": "dash",
+      "cat": "special",
+      "path": "effects/moves/catalog/xscissor/index.js"
+    }
+  ]
+}

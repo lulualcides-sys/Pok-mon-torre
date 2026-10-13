@@ -19,3 +19,13 @@ Console de diagnóstico: `PokemonTorreMewtwo4FX()` mostra os módulos e quadros 
 - **Solar Beam / Raio Solar** (`solar-beam/index.js`): concentração da luz solar, raio verde/dourado e folhas reais do atlas DS — 1370 ms, dano único aos 77%.
 
 O carregador da página injeta os oito módulos no IIFE original. A alteração da duração atinge **somente** estes quatro novos golpes, preservando os outros ataques e o mecanismo de dano do motor. Para verificar o registro e a contagem de quadros, executar `PokemonTorreBeamFX()` no console da batalha. Sem dependências adicionais, PNGs externos, CSS de ataque ou alterações nos 25 fragmentos originais.
+
+## V35.84 — Patch único para o catálogo restante
+
+- 312 golpes adicionais do catálogo original, cada um com `catalog/<id>/index.js` independente.
+- Fonte de verdade: nomes no `CONFIG` de V35.68, com aliases normalizados.
+- O carregamento de navegador usa **um único `catalog/bundle.js`** gerado com a concatenação das pastas para evitar centenas de requisições HTTP. `catalog/painter.js` fornece os desenhos procedurais por tipo/estilo (dash, bolt, pierce, beam, area, hazard, status, recover).
+- Os **8 golpes modulares anteriores**, os efeitos legados protegidos da V35.67 e os golpes de acabamento recente (Mordida, Labareda Final, Tsunami, Sopro de Dragão, Psybeam, Tempestade de Neve, Fúria Ancestral e Céu Tempestuoso) não são interceptados.
+- `catalog/manifest.json` lista nome, tipo, categoria, estilo e caminho individual para refinamento posterior.
+- Não altera dano, recarga, energia, alcance, os 25 fragmentos originais nem o carregamento de sprites pré-existente.
+- Painel: `PokemonTorreCatalogFX()` no console. Efeitos do catálogo são **primeira versão visual**, sujeitos a revisão no jogo.

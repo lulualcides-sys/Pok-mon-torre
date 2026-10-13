@@ -21,6 +21,10 @@ BattleEngine.prototype.useMove=function(i){
  const before=this.v359Attacks?.length||0,energy=battle?.energy,oldCd=Number.isInteger(i)?cooldowns[i]:0,when=performance.now();
  const result=previousUse.apply(this,arguments);
  if(!k||!battle?.active)return result;
+ // Avoid double-painting the older automatic STATUS effects for registered catalog moves.
+ if(k.startsWith('catalog_')&&Array.isArray(this.v3568StatusFX)){
+  this.v3568StatusFX=this.v3568StatusFX.filter(fx=>pick(fx?.move?.name||fx?.name)!==k);
+ }
  const addedFx=(this.v359Attacks||[]).slice(before).find(f=>f?.move?.name===mv.name);
  if(addedFx){
   // Only the four new beams rescale their existing attack; engine still owns ONE hit.
@@ -53,5 +57,7 @@ window.PokemonTorreBeamFX=()=>({
  activeAttacks:(engine?.v359Attacks||[]).filter(f=>['hyperbeam','aurorabeam','icebeam','solarbeam'].includes(pick(f?.move?.name))).length,
  engine:'Canvas 2D + existing DS atlas'
 });
+
+window.PokemonTorreCatalogFX=()=>({version:'35.84',registered:([...registry.keys()].filter(k=>k.startsWith('catalog_'))).length,approved:8,allRegistered:registry.size,active:(engine?.v359Attacks||[]).filter(f=>pick(f?.move?.name)?.startsWith('catalog_')).length,frames:Object.fromEntries(Object.entries(counts).filter(([k])=>k.startsWith('catalog_'))),engine:'Canvas 2D + DS sprites'});
 
 })();
