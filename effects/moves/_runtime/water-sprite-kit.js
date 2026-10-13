@@ -1,4 +1,4 @@
-/* Pokemon Torre V44.3 — improved original-frame water/status sprite renderer.
+/* Pokemon Torre V45 — improved original-frame water/status sprite renderer.
  * Source tiles isolated from ORIGINAL water images supplied by the player:
  * water_pixel_splash_sheet.png and large_water_elemental_and_waves_spritesheet.png.
  * 20 original-source pixel frames of 48x48, five columns. No procedural Canvas circles/CSS.
@@ -49,7 +49,17 @@ const waterSpriteV43=(()=>{
   const key=norm(name);if(sprites.has(key)||typeof descriptor?.paint!=='function')throw Error('Duplicate water move '+key);
   sprites.set(key,Object.freeze(descriptor));
  }
- function resolve(fx){return sprites.get(norm(fx?.move?.name||fx?.name))||null;}
+ // The game catalog uses both Portuguese spellings and official English aliases.
+ // Aliases map to ONE registered animation; no duplicate VFX instances are added.
+ const moveAlias={
+  'aguajet':'aquajet','pulsodeagua':'pulsodagua','waterpulse':'pulsodagua',
+  'aquatail':'caudadeagua','watergun':'jatodagua',
+  'pistoladagua':'jatodagua','jatodeagua':'jatodagua'
+ };
+ function resolve(fx){
+  const name=norm(fx?.move?.name||fx?.name);
+  return sprites.get(moveAlias[name]||name)||null;
+ }
  function paint(g,fx,now,engine){
   const d=resolve(fx);if(!d)return false;
   if(!Array.isArray(fx.from)||!Array.isArray(fx.to)||!Number.isFinite(now)||now<fx.at)return true;
@@ -60,7 +70,7 @@ const waterSpriteV43=(()=>{
   return true;
  }
  return {add,resolve,paint,draw,mind,clamp,ease,lerp,source,psychic,
-  diagnostics:()=>({version:'44.3',mode:'original sprites + isolated casts',
+  diagnostics:()=>({version:'45.0',mode:'original sprites + isolated casts',
    waterReady:!!source.naturalWidth,psychicReady:!!psychic.naturalWidth,
    registered:[...sprites.keys()],casts:{...counters},frames:{...frames},error})};
 })();
