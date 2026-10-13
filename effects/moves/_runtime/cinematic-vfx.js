@@ -80,12 +80,12 @@ void main(){
   float bend=.23*sin(p.x*8.+tm*12.)+.095*sin(p.x*22.-tm*19.)+.08*(n-.5);
   float branch1=bend+.33*sin(p.x*6.+tm*5.);
   float branch2=bend-.29*cos(p.x*7.-tm*3.);
-  float main=glow(p.y-bend,.033);
+  float core=glow(p.y-bend,.033);
   float sub=(glow(p.y-branch1,.024)+glow(p.y-branch2,.021))*.43;
-  a=main+sub+glow(p.y-bend,.15)*.45;
-  h=main*1.5+sub*.5;
+  a=core+sub+glow(p.y-bend,.15)*.45;
+  h=core*1.5+sub*.5;
   spark=pow(max(0.,sin(p.x*53.+tm*21.)),17.)*glow(p.y-bend,.23);
-  cool=main;
+  cool=core;
  }
  // 5: sharp curved arc slash with motion-blurred luminous edges
  else if(uMode<5.5){
@@ -99,13 +99,13 @@ void main(){
  // 6: metal slug / steel energy shell with specular highlight & faceted facets
  else if(uMode<6.5){
   vec2 q=vec2(p.x/.92,p.y/.69);
-  float d=length(q),surface=smoothstep(.99,.89,d);
+  float d=length(q),surface=(1.-smoothstep(.89,.99,d));
   a=surface*.98+glow(d-.93,.10)*.32;
   float gleam=glow(q.y+.34+.16*q.x,.18)*smoothstep(-.9,-.1,q.x);
   float facet=smoothstep(.17,.82,noise(floor(q*vec2(10.,7.))+.31));
   h=gleam*1.20+glow(d-.89,.055)*.75;
   spark=facet*.30*surface;
-  cool=gleam+smoothstep(.3,-.55,q.y)*.46;
+  cool=gleam+(1.-smoothstep(-.55,.3,q.y))*.46;
   a*=1.-smoothstep(.90,1.15,d);
  }
  // 7: fiery turbulent flames + turbulent uplift
