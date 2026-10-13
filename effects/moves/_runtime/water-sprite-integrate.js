@@ -1,4 +1,4 @@
-/* Pokémon Torre V43 — isolated water/psychic animation bridge.
+/* Pokémon Torre V44 — independent Tsunami, Amnesia, Hydro Pump VFX.
  * Preserves all Fire V42.5 effects, hit calculations, real projectiles,
  * cooldowns, status buffs, enemy attacks and the existing sprite renderer.
  */
@@ -110,7 +110,7 @@
  });
  function versionTag(){
   const tag=document.getElementById('ptFireSpriteV41Badge');
-  if(tag)tag.textContent='SPRITES ÁGUA V43 · FOGO V42.5';
+  if(tag)tag.textContent='SPRITES ÁGUA V44 · FOGO V42.5';
  }
  versionTag();
 })();
