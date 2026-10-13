@@ -4,7 +4,7 @@ const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f
 const html=read('index.html');
 const realCombatScript=read('effects/moves/_runtime/combat-hit-reliability-v47.js');
 new vm.Script(realCombatScript,{filename:'V47.5RealHitEngine'});
-assert.match(realCombatScript,/version:'47\.5'/,'Current hit engine version');
+assert.match(realCombatScript,/version:'47\.6'/,'Current one-shot contact engine version');
 assert.match(html,/combat-hit-reliability-v47\.js/,'Real hit module must load');
 assert.equal((realCombatScript.match(/const savedDraw=/g)||[]).length,0,
  'Physical movement code must avoid duplicate draw declarations');
