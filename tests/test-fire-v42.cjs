@@ -37,7 +37,8 @@ for(const p of newFiles){
  assert.doesNotMatch(c,/\.(?:fillRect|arc|lineTo|stroke|createRadialGradient)\s*\(/,
   p+' must use the original sprite images, not procedural drawings');
  assert.match(c,/fireSpriteV41\.add\(/);
- assert.match(c,/draw\(g,/);
+ if(p.includes('/sunny-day/'))assert.match(c,/g\.drawImage\(sunnyDaySpriteV425/,'Sunny uses its own static sprite');
+ else assert.match(c,/draw\(g,/);
 }
 // V42.1 regressions: Fire Blast must read as the original glyph, not explosion.
 const fireBlastCode=read('effects/moves/fire-blast/index.js');
@@ -48,6 +49,11 @@ assert.match(fireBlastCode,/giant "大"/,'Fire Blast classic reference must rema
 assert.doesNotMatch(fireBlastCode,/draw\(g,'explosion/,'Fire Blast must not draw a generic explosion');
 assert.doesNotMatch(sunnyCode,/draw\(g,'(?:explosion|explosionBurst|fireburst)'/,'Sunny Day has no explosive frames');
 assert.match(wispCode,/stickToTarget:true/,'Will-O-Wisp must follow the enemy');
+const sunAsset=read('effects/moves/sunny-day/sun.svg');
+assert.match(sunAsset,/<svg /,'Sunny Day must have a real pixel art solar asset');
+assert.match(sunnyCode,/sun\.svg\?v=42\.5/,'Sunny Day loads a calm new sun sprite');
+assert.doesNotMatch(sunnyCode,/draw\(g,|fireSpriteV41\.draw|['"](?:spinRing|flame|fireburst|explosion)['"]/,
+ 'Sunny Day must NOT draw the fire sprite atlas at all');
 assert.doesNotMatch(wispCode,/blue:false/,'Will-O-Wisp must use blue frames only');
 const png=fs.readFileSync(path.join(root,'effects/moves/fire-original/fire-original-4-atlas.png'));
 assert.equal(png.toString('hex',0,8),'89504e470d0a1a0a');
@@ -81,15 +87,15 @@ class FakeCanvas{
 }
 class FakeImage{
  constructor(){this.width=pngW;this.height=pngH;this.naturalWidth=pngW;this.naturalHeight=pngH;}
- set src(p){this.path=p;this.onload?.();}
+ set src(p){this.path=p;this.__sunnySprite=String(p).includes('/sunny-day/sun.svg');this.onload?.();}
 }
 class FakeContext{
  save(){}restore(){}translate(){}rotate(){}scale(){}
  drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh){hitPixels++;if(img.__isCanvas)bluePixels++;else orangePixels++;
- moveFrameLog.push({blue:!!img.__isCanvas,frame:Math.round(sy/96)*8+Math.round(sx/96),dw,dh});}
+ moveFrameLog.push({blue:!!img.__isCanvas,sun:!!img.__sunnySprite,frame:Math.round(sy/96)*8+Math.round(sx/96),dw,dh});}
 }
 class FakeEngine{
- constructor(){this.h=560;this.w=900;this.player={x:180,y:370};this.enemy={x:680,y:260};this.ctx=new FakeContext();this.particles=[];this.rings=[];this.v26Particles=[];}
+ constructor(){this.h=560;this.w=900;this.player={x:180,y:370};this.enemy={x:680,y:260};this.ctx=new FakeContext();this.particles=[];this.rings=[];this.v26Particles=[];this.projectiles=[];this.v19Beams=[];this.attackActs={enemy:0};this.visibleVisuals=[];}
  useMove(slot){
   if(now<cooldowns[slot]||battle.energy<moves[slot].cost)return false;
   cooldowns[slot]=now+2000;battle.energy-=moves[slot].cost;
@@ -109,6 +115,12 @@ class FakeEngine{
   return true;
  }
  draw(t){drawEvents.push({t,x:this.player.x,y:this.player.y});
+ const nearby=list=>(this[list]||[]).filter(item=>Number.isFinite(item?.x)
+  && Math.abs(item.x-this.enemy.x)<80&&Math.abs(item.y-this.enemy.y+36)<80).length;
+ this.visibleVisuals.push({particlesNear:nearby('particles'),ringsNear:nearby('rings'),
+  projectilesNear:nearby('projectiles'),impactsNear:nearby('v19Impacts'),
+  particlesFar:(this.particles||[]).filter(item=>item?.x===this.player.x).length,
+  enemyAttack:this.attackActs.enemy});
  for(const queue of ['v3568StatusFX','v3580Visuals','v342StatusFx','v344Fx','v19Impacts']){
    for(const fx of (this[queue]||[]))if(fx?.visual||fx?.move?.name==='Will-O-Wisp'||fx?.move?.name==='Sunny Day')legacyPainted++;
  }
@@ -157,7 +169,7 @@ assert.match(fireCode,/const bw=\(35\+/,'Fire Blast thicker');
 assert.ok(legacyPainted===0,'No legacy status visuals should reach the renderer');
 const metrics=v42();
 assert.equal(metrics.casts,8);
-assert.equal(metrics.version,'42.4');
+assert.equal(metrics.version,'42.5');
 assert.equal(metrics.newMoves.length,4);
 assert.equal(metrics.registered.length,8);
 assert.ok(bluePixels>0 && orangePixels>0,'Blue status wisps and fire attacks must render real atlas pixels');
@@ -219,10 +231,47 @@ assert.equal(engine.v41FireVisuals.filter(f=>f.move.name==='Will-O-Wisp').length
 const sunOnlyStart=moveFrameLog.length;
 engine.draw(now+420);
 const sunOnly=moveFrameLog.slice(sunOnlyStart);
-assert.ok(sunOnly.length>0&&sunOnly.every(frame=>!frame.blue),
+assert.ok(sunOnly.length>0&&sunOnly.every(frame=>frame.sun),
  'Sunny Day must never replay blue Will-O-Wisp animations');
 assert.ok(v42().overlapPrevented>=2,'Diagnostics count removed overlapping visual timelines');
 console.log('PASS: cast Sunny then Will, and Will then Sunny, no mixed sprite colors; battle weather unchanged');
+
+
+// V42.5: Enemy continues fighting while Will-O-Wisp's BLUE FIRE alone occupies
+// the foe's sprite area. Rendering hides local particles, but updates can still
+// inspect their ORIGINAL arrays: no damage/projectiles/conditions are deleted.
+now+=8500;
+assert.equal(engine.useMove(wispIndex),true,'Cast Will-O-Wisp for enemy combat masking test');
+const orangeAtEnemy={x:engine.enemy.x,y:engine.enemy.y-47,life:.9,max:.9,color:'#ffae35'};
+const yellowRing={x:engine.enemy.x+9,y:engine.enemy.y-12,life:.6,r:14,color:'#ffe066'};
+const enemyProjectile={x:engine.enemy.x+17,y:engine.enemy.y-30,from:'enemy',life:1,power:17};
+const distantParticle={x:engine.player.x,y:engine.player.y-24,life:1,max:1,color:'#fcebaa'};
+engine.particles.push(orangeAtEnemy,distantParticle);
+engine.rings.push(yellowRing);
+engine.projectiles.push(enemyProjectile);
+engine.attackActs.enemy=999999;
+const projectileListBefore=engine.projectiles,particleListBefore=engine.particles;
+const masksBefore=v42().hiddenNearEnemy;
+const frameStart=moveFrameLog.length;
+engine.draw(now+420);
+const duringBlue=moveFrameLog.slice(frameStart);
+const visual=engine.visibleVisuals.at(-1);
+assert.ok(duringBlue.some(z=>z.blue),'Will-O-Wisp still shows blue flames');
+assert.ok(duringBlue.every(z=>z.blue),'Only blue sprite frames are drawn during blue aura');
+assert.equal(visual.particlesNear,0,'Enemy yellow particles are hidden near blue flame');
+assert.equal(visual.ringsNear,0,'Enemy hit ring hidden near blue flame');
+assert.equal(visual.projectilesNear,0,'Enemy attack projectile icon hidden in blue aura');
+assert.equal(visual.particlesFar,1,'Particles away from foe remain visible');
+assert.equal(visual.enemyAttack,-1,'Old enemy Attack pose aura is masked temporarily');
+assert.strictEqual(engine.projectiles,projectileListBefore,'Enemy projectile list fully restored');
+assert.strictEqual(engine.particles,particleListBefore,'Particles list fully restored');
+assert.ok(engine.projectiles.includes(enemyProjectile),'Enemy attacks not cancelled');
+assert.ok(engine.particles.includes(orangeAtEnemy),'Original particle data not deleted');
+assert.equal(engine.attackActs.enemy,999999,'Enemy attack timer restored after rendering');
+assert.ok(v42().hiddenNearEnemy>masksBefore,'Diagnostics register hidden visuals');
+engine.draw(now+3400);
+assert.ok(engine.visibleVisuals.at(-1).particlesNear>0,'After wisp ends normal visuals resume');
+console.log('PASS: only blue over enemy during Will-O-Wisp, projectiles and damage logic unaffected');
 
 console.log('PASS: V41 preserved; four V42 sprite attacks functional, status overlays removed, no CSS shapes');
 console.log(JSON.stringify({version:metrics.version,drawCounts,frameStamps:hitPixels,blue:bluePixels,orange:orangePixels}));
