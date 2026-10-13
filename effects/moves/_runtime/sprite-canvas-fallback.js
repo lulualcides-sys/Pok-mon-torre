@@ -20,11 +20,28 @@ for(const [prefix,n,hit,decor] of Object.values(defs)){
  for(let j=0;j<n;j++)image(prefix+j+'.svg');
  image(hit);image(decor);
 }
+const inkCache=new WeakMap();
+function inkSilhouette(im){
+ if(inkCache.has(im))return inkCache.get(im);
+ try{
+  const c=document.createElement('canvas'),w=im.naturalWidth,h=im.naturalHeight;
+  c.width=w;c.height=h;
+  const g=c.getContext('2d');g.drawImage(im,0,0,w,h);
+  g.globalCompositeOperation='source-in';g.fillStyle='#05080c';g.fillRect(0,0,w,h);
+  inkCache.set(im,c);return c;
+ }catch(err){return null;}
+}
 function stamp(ctx,im,x,y,w,h,rot,alpha,left=false){
  if(!im?.complete||!im.naturalWidth||w<=0||alpha<=.01)return false;
  ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.globalAlpha=Math.max(0,Math.min(1,alpha));
- ctx.shadowColor='rgba(0,0,0,.82)';ctx.shadowBlur=4;ctx.shadowOffsetX=2;ctx.shadowOffsetY=3;
- ctx.drawImage(im,left?0:-w/2,-h/2,w,h);ctx.restore();return true;
+ const offset=left?0:-w/2,silhouette=inkSilhouette(im);
+ if(silhouette){
+  // Actual two-dimensional sprite contour; zero generic paths.
+  for(const [ox,oy] of [[-1.7,0],[1.7,0],[0,-1.7],[0,1.7]])
+   ctx.drawImage(silhouette,offset+ox,-h/2+oy,w,h);
+ }
+ ctx.shadowColor='rgba(0,0,0,.73)';ctx.shadowBlur=3;ctx.shadowOffsetX=2;ctx.shadowOffsetY=3;
+ ctx.drawImage(im,offset,-h/2,w,h);ctx.restore();return true;
 }
 function paint(ctx,fx,now){
  const n=normalize(fx?.move?.name||fx?.name),d=defs[n],A=fx?.from,B=fx?.to;
