@@ -1,11 +1,23 @@
-/* V42.3 combat bridge: original sprites only for three refined moves; preserve approved gameplay. */
+/* V42.4 combat bridge: keep Will-O-Wisp and Sunny Day visual timelines mutually exclusive. */
 (function(){
 'use strict';
 const K=fireSpriteV41;
-const stats={casts:0,frames:0,lastMove:'',lastError:'',removedLegacy:0};
+const stats={casts:0,frames:0,lastMove:'',lastError:'',removedLegacy:0,overlapPrevented:0};
 // Only these three visual replacements are controlled; gameplay status stays intact.
 const correctedKeys=new Set(['fireBlast','sunnyDay','willOWisp']);
 const statusKeys=new Set(['sunnyDay','willOWisp']);
+// Weather mechanics may remain active, but the SUN and BLUE STATUS visual overlays
+// must never run concurrently. Other fire move timelines stay unchanged.
+function isExclusiveStatus(f){return statusKeys.has(K.resolve(f)?.key);}
+function keepOnlyCurrentStatus(events){
+ const selected=events.filter(isExclusiveStatus);
+ if(selected.length<=1)return events;
+ let latest=selected[0];
+ for(const f of selected.slice(1))if((f.at||0)>=(latest.at||0))latest=f;
+ const filtered=events.filter(f=>!isExclusiveStatus(f)||f===latest);
+ stats.overlapPrevented+=events.length-filtered.length;
+ return filtered;
+}
 const legacyArrays=[
  'v3568StatusFX','v3580Visuals','v356FX','v352FX','v352OtherFX',
  'v343Named','v344Fx','v342StatusFx','v351Effects','v346Attacks',
@@ -88,6 +100,14 @@ BattleEngine.prototype.useMove=function(slot){
   from:[this.player.x,this.player.y-this.h*.13],to:[this.enemy.x,this.enemy.y-this.h*.12],
   target:descriptor.stickToTarget?foe():null};
  this.v41FireVisuals=(this.v41FireVisuals||[]).filter(f=>f.battle===b&&f.end>now);
+ if(isExclusiveStatus(event)){
+  // A newly cast Will-O-Wisp cancels only Sunny Day's old on-screen SUN
+  // animation (or a previous wisp animation), and vice versa.
+  // Do not touch battle.v32Weather, damage, cooldowns or other statuses.
+  const before=this.v41FireVisuals.length;
+  this.v41FireVisuals=this.v41FireVisuals.filter(f=>!isExclusiveStatus(f));
+  stats.overlapPrevented+=before-this.v41FireVisuals.length;
+ }
  this.v41FireVisuals.push(event);
  this.v41FireVisuals=this.v41FireVisuals.slice(-8);
  // Legacy catalog status queue must not overlay these four new pixel-art effects.
@@ -102,8 +122,10 @@ const previousDraw=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
  const valid=!!battle?.active;
  const queued=this.v41FireVisuals||[];
- const active=valid?queued.filter(f=>f.battle===battle&&f.end>now&&f.owner===current()&&
-  (!K.resolve(f)?.stickToTarget||f.target===foe())):[];
+ const active=valid?keepOnlyCurrentStatus(queued.filter(f=>
+  f.battle===battle&&f.end>now&&f.owner===current()&&
+  (!K.resolve(f)?.stickToTarget||f.target===foe())
+ )):[];
  this.v41FireVisuals=active;
  // The older status animation can be queued again during combat updates.
  if(active.some(f=>correctedKeys.has(K.resolve(f)?.key)))scrubReplacedEffects(this);
@@ -147,7 +169,7 @@ function markVersion(){
   tag.style.cssText='position:fixed;bottom:6px;left:6px;z-index:2147483637;padding:3px 6px;border-radius:5px;background:#102335;color:#b9ddf5;font:700 10px system-ui;pointer-events:none';
   document.body.appendChild(tag);
  }
- tag.textContent='SPRITES FOGO V42.3';
+ tag.textContent='SPRITES FOGO V42.4';
 }
 markVersion();
 window.PokemonTorreFireSpriteV41=()=>({
@@ -157,9 +179,11 @@ window.PokemonTorreFireSpriteV41=()=>({
 });
 window.PokemonTorreFireSpriteV42=()=>({
  ...window.PokemonTorreFireSpriteV41(),
- version:'42.3',
+ version:'42.4',
  newMoves:['Fire Blast','Will-O-Wisp','Sunny Day','Brasa'],
  previousMovesPreserved:['Chamas de Moltres','Rajada Flamejante','Chama Circular','Garra de Fogo'],
- willOWispFollowsEnemy:true,suppressedLegacy:stats.removedLegacy
+ willOWispFollowsEnemy:true,suppressedLegacy:stats.removedLegacy,
+ overlapPrevented:stats.overlapPrevented,
+ exclusiveStatusVisuals:['Sunny Day','Will-O-Wisp']
 });
 })();
