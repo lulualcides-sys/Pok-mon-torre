@@ -89,7 +89,7 @@ const pixiFX=(()=>{
  }
  function install(f,kind){
   if(effects.has(f))return effects.get(f);
-  if(!atlas)return null;
+  // Geometry-based semantic effects work even while the legacy DS sprite atlas loads.
   const m=f.move||{},typ=m.type||'normal',col=themes[typ]||themes.normal;
   // Use each move name before the type: every catalog move gets a semantic WebGL scene.
   const root=new PIXI.Container();app.stage.addChild(root);
@@ -101,6 +101,7 @@ const pixiFX=(()=>{
    effects.set(f,o);return o;
   }
   root.destroy({children:true});
+  if(!atlas)return null;
   const seq=sequence(m.kind,typ,m.name||f.name);
   if(!seq.length)return null;
   if(effects.size>=16){const first=effects.keys().next().value;dispose(effects.get(first));effects.delete(first);}

@@ -17,6 +17,8 @@ const palette={
  flying:[0xe1f9ff,0x8fcced,0x6393bb],fairy:[0xfff0fa,0xf2a0d7,0xba67a1]
 };
 const C=n=>Math.min(1,Math.max(0,n)),M=(a,b,q)=>a+(b-a)*q,PI=Math.PI,TAU=PI*2;
+// Cache one GPU particle atlas per renderer/style/type, not a new texture on every cast.
+const particleTextures=new WeakMap();
 const profiles={
  'canhaodeferro':'cannon','canhaometalico':'cannon','flashcannon':'cannon',
  'fireblast':'fireglyph','explosaodefogo':'fireglyph',
@@ -123,6 +125,9 @@ function bolt(g,A,B,t,c,seed,thick=6){
  g.lineStyle(Math.max(2,thick*.37),c[0],1);g.moveTo(...points[0]);for(let i=1;i<points.length;i++)g.lineTo(...points[i]);
 }
 function makeTexture(app,style,type){
+ let textures=particleTextures.get(app.renderer);
+ if(!textures){textures=new Map();particleTextures.set(app.renderer,textures);}
+ const key=style+'|'+type;if(textures.has(key))return textures.get(key);
  const t=palette[type]||palette.normal;
  const g=new PIXI.Graphics();
  if(style==='cannon'||type==='steel')fragment(g,15,15,12,.6,t);
@@ -134,7 +139,7 @@ function makeTexture(app,style,type){
  else if(style==='sludge')water(g,15,15,10,t);
  else star(g,15,15,10,t[0]);
  const tex=app.renderer.generateTexture(g,{resolution:1.3,region:new PIXI.Rectangle(0,0,30,30)});
- g.destroy();return tex;
+ g.destroy();textures.set(key,tex);return tex;
 }
 function create(opts){
  const {app,root,f,name,type,kind,cat,tex,particles}=opts,styleName=style(name,type,kind,cat);
