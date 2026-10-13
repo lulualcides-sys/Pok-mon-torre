@@ -6,11 +6,12 @@
  */
 (function(){
  'use strict';
- const report={version:'47.6',casts:0,projectileCorrections:0,beamsAligned:0,
+ const report={version:'47.7',casts:0,projectileCorrections:0,beamsAligned:0,
   contactFollowThrough:0,missingCollisionRecovered:0,realHits:0,
   ignoredOldShots:0,waitedForInvincibility:0,zeroCostRecognized:0,
   queuedDuringWindup:0,replayedQueued:0,discardedQueued:0,
-  recoveredBasicDashes:0,timerContactHits:0,contactConfirmedByUpdate:0,updateTicks:0,drawTicks:0,contactChecks:0,lastContactCheck:null,
+  recoveredBasicDashes:0,timerContactHits:0,contactConfirmedByUpdate:0,
+  contactAttemptFailures:0,lastContactAttempt:null,updateTicks:0,drawTicks:0,contactChecks:0,lastContactCheck:null,
   hitAttempts:0,hitAttemptsNoHP:0,lastZeroHit:null,
   lastHit:null,lastCast:null};
  const savedHit=BattleEngine.prototype.hitTarget;
@@ -54,12 +55,22 @@
        now<event.at?event.at-now:70)));
     return;
    }
-   event.settled=true;
-   const before=Number(event.victim.hp);
+   const before=Number(event.victim.hp),inv=Number(engine.enemy?.inv||0);
    engine.hitTarget('enemy',event.type,event.power);
-   if(Number(event.victim.hp)<before){
+   const after=Number(event.victim.hp);
+   event.attempts=(event.attempts||0)+1;
+   report.lastContactAttempt={source:'timer',name:event.name,at:now,before,after,
+    inv,attempts:event.attempts};
+   if(after<before){
+    event.settled=true;
     report.contactFollowThrough++;
     report.timerContactHits++;
+   }else if(event.attempts<12&&now+100<event.until){
+    report.contactAttemptFailures++;
+    setTimeout(check,90);
+    return;
+   }else{
+    event.settled=true;
    }
    engine.v47ContactToLand=(engine.v47ContactToLand||[]).filter(x=>x!==event);
   };
@@ -248,13 +259,21 @@
      if(this.enemy.inv>0)report.waitedForInvincibility++;
      pending.push(fx);continue;
     }
-    const hp=Number(fx.victim.hp);
-    fx.settled=true;
+    const hp=Number(fx.victim.hp),inv=Number(this.enemy?.inv||0);
     this.hitTarget('enemy',fx.type,fx.power);
-    if(Number(fx.victim.hp)<hp){
+    const after=Number(fx.victim.hp);
+    fx.attempts=(fx.attempts||0)+1;
+    report.lastContactAttempt={source:'update',name:fx.name,at:time,before:hp,
+     after,inv,attempts:fx.attempts};
+    if(after<hp){
+     fx.settled=true;
      report.contactFollowThrough++;
      report.contactConfirmedByUpdate++;
-    }
+    }else if(fx.attempts<12&&time+100<fx.until){
+     report.contactAttemptFailures++;
+     fx.at=time+90;
+     pending.push(fx);
+    }else fx.settled=true;
    }
    this.v47ContactToLand=pending;
   }
