@@ -11,6 +11,7 @@
   ignoredOldShots:0,waitedForInvincibility:0,zeroCostRecognized:0,
   queuedDuringWindup:0,replayedQueued:0,discardedQueued:0,
   recoveredBasicDashes:0,timerContactHits:0,contactConfirmedByUpdate:0,updateTicks:0,drawTicks:0,contactChecks:0,lastContactCheck:null,
+  hitAttempts:0,hitAttemptsNoHP:0,lastZeroHit:null,
   lastHit:null,lastCast:null};
  const savedHit=BattleEngine.prototype.hitTarget;
  BattleEngine.prototype.hitTarget=function(who,type,power){
@@ -18,6 +19,17 @@
   const before=Number(victim?.hp);
   const result=savedHit.apply(this,arguments);
   const after=Number(victim?.hp);
+  if(who==='enemy'){
+   report.hitAttempts++;
+   if(Number.isFinite(before)&&Number.isFinite(after)&&after>=before){
+    report.hitAttemptsNoHP++;
+    report.lastZeroHit={type,power,monId:current()?.id,foeId:foe()?.id,
+     targetInv:this.enemy?.inv,playerInv:this.player?.inv,
+     hpBefore:before,hpAfter:after,battlePaused:battle?.paused,
+     targetId:this.enemy?.id,foeMatches:victim===foe(),
+     time:performance.now()};
+   }
+  }
   if(Number.isFinite(before)&&Number.isFinite(after)&&after<before){
    report.realHits++;
    report.lastHit={who,type,damage:before-after,time:performance.now()};
