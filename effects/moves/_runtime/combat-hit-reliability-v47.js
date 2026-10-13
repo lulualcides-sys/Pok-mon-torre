@@ -36,10 +36,16 @@
       (Number(cooldowns[slot]||0)>now&&Number(cooldowns[slot]||0)!==priorCooldown)));
   if(!accepted)return result;
   report.casts++;report.lastCast=selected.name;
-  // Only physical dash moves receive a delayed *real* contact callback.
-  // The core dash handler frequently stops too far from the enemy to hit.
-  if(selected.kind==='dash'&&Number(selected.power)>0&&victim===foe()&&
-    Number(victim?.hp)>=priorHP){
+  // The real game catalogue marks some physical moves (e.g. Faísca,
+  // Aqua Tail) as "bolt", although the approved animations are body contact.
+  // Check their visual registration; don't trust the obsolete kind alone.
+  const spriteContact=Boolean(
+   (typeof electricSpriteV46!=='undefined'&&electricSpriteV46.resolve(selected)?.contact)||
+   (typeof waterSpriteV43!=='undefined'&&waterSpriteV43.resolve(selected)?.contact)||
+   (typeof fireSpriteV41!=='undefined'&&fireSpriteV41.resolve(selected)?.contact)
+  );
+  if((selected.kind==='dash'||spriteContact)&&Number(selected.power)>0&&
+    victim===foe()&&Number(victim?.hp)>=priorHP){
    this.v47ContactToLand=(this.v47ContactToLand||[]).filter(f=>f.until>now);
    this.v47ContactToLand.push({
     at:now+.37*1000,until:now+1100,owner,victim,
