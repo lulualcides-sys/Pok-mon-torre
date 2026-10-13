@@ -18,8 +18,8 @@ assert.deepEqual(electric,[
  'effects/moves/_runtime/move-type-canon-v46.js'
 ]);
 assert.equal(water.length,10,'Existing eight water animations must be preserved');
-assert.match(html,/const enableElectricPreview=new URLSearchParams\(location\.search\)\.get\('electric46'\)==='1'/,
- 'Broken V46 must be opt-in while the stable game boots');
+assert.match(html,/const enableElectricPreview=new URLSearchParams\(location\.search\)\.get\('safe'\)!=='1'/,
+ 'Fixed V46 should boot by default and allow explicit safe=1 fallback');
 assert.match(html,/if\(enableElectricPreview\)game=game\.replace/,
  'Safe-mode must not inject V46 scripts into the approved V45 game');
 assert.equal(fire.length+moreFire.length-2,8,'Existing eight fire animations must be preserved');
