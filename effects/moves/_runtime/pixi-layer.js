@@ -93,7 +93,13 @@ const pixiFX=(()=>{
   const m=f.move||{},typ=m.type||'normal',col=themes[typ]||themes.normal;
   // Use each move name before the type: every catalog move gets a semantic WebGL scene.
   const root=new PIXI.Container();app.stage.addChild(root);
-  const sem=semanticVFX.create({app,root,f,name:m.name||f.name||'',type:typ,
+  // Cinematic shader scenes are the primary graphics; old geometric scenes
+  // are only a compatibility fallback if a device cannot create the GPU scene.
+  let sem=null;
+  try{sem=cinematicVFX.create({app,root,f,name:m.name||f.name||'',type:typ,
+    kind:m.kind||f.kind,cat:m.cat,tex,particles});}
+  catch(exc){error='Cinematic startup: '+exc.message;sem=null;}
+  if(!sem)sem=semanticVFX.create({app,root,f,name:m.name||f.name||'',type:typ,
     kind:m.kind||f.kind,cat:m.cat,tex,particles});
   if(sem){
    const o={f,root,semantic:sem,trail:sem.trail,burst:sem.burst,started:performance.now(),
