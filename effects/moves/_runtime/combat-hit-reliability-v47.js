@@ -303,6 +303,9 @@
     foe:foe()?.id,foeHp:foe()?.hp,playerHp:current()?.hp,
     moves:battle?.active?skillSet(current()).map(m=>({name:m.name,kind:m.kind,power:m.power,type:m.type})):[],
     projectiles:engine?.projectiles?.length||0,
+    running:!!engine?.running,frameTime:engine?.time||0,
+    enemyInv:engine?.enemy?.inv||0,
+    windup:engine?.v33Windup?.until||null,
     stats:window.PokemonTorreCombatV47()
    };}
   };
