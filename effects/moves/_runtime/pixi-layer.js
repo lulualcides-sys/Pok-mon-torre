@@ -5,7 +5,8 @@ const pixiFX=(()=>{
  const effects=new Map(),drawn=Object.create(null);
  let app=null,owner=null,atlas=null,cache=new Map(),frames=0,emitterCount=0,error='',lastRect='';
  const clamp=v=>Math.min(1,Math.max(0,v)),mix=(a,b,u)=>a+(b-a)*u;
- const hasGPU=()=>!!(window.PIXI?.Application&&window.PIXI?.particles?.Emitter&&window.PIXI?.utils?.isWebGLSupported?.());
+ // Particle library is optional. A blocked emitter must not disable our sprite effects.
+ const hasGPU=()=>!!(window.PIXI?.Application&&window.PIXI?.utils?.isWebGLSupported?.());
  function tex(key){
   if(cache.has(key))return cache.get(key);
   const area=typeof spriteFrames3511!=='undefined'&&spriteFrames3511[key];
@@ -34,7 +35,7 @@ const pixiFX=(()=>{
   sp.blendMode=PIXI.BLEND_MODES.ADD;sp.animationSpeed=.20;sp.play();root.addChild(sp);return sp;
  }
  function particles(root,texture,color,burst){
-  if(!texture)return null;
+  if(!texture||!window.PIXI?.particles?.Emitter)return null;
   const hex=n=>n.toString(16).padStart(6,'0');
   try{
    const em=new PIXI.particles.Emitter(root,{

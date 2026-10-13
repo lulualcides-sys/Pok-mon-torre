@@ -7,7 +7,7 @@ const uniqueMoveFX=(()=>{
  const clamp=t=>Math.min(1,Math.max(0,t));
  const smooth=t=>{t=clamp(t);return t*t*(3-2*t)};
  const lerp=(a,b,t)=>a+(b-a)*t;
- function texture(path){if(!textureCache.has(path))textureCache.set(path,PIXI.Texture.from('effects/moves/'+path));return textureCache.get(path)}
+ function texture(path){if(!textureCache.has(path))textureCache.set(path,PIXI.Texture.from('effects/moves/'+path+'?build=v3605'));return textureCache.get(path)}
  function sprite(root,path,w,h,alpha=0){
   const s=new PIXI.Sprite(texture(path));s.anchor.set(.5);s.width=w;s.height=h;s.alpha=alpha;root.addChild(s);return s;
  }
