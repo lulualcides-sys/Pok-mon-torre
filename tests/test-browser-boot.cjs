@@ -95,6 +95,7 @@ async function browserCase(port,query,mobile=false,combat=false){
      ['grass-bulbasaur',1,143,-1,{type:'grass'}],
      ['psychic-mewtwo',150,143,-1,{type:'psychic'}],
      ['fighting-machamp',68,143,-1,{type:'fighting'}],
+     ['fighting-machamp-queued',68,143,0,{simulateWindup:true}],
      ['rock-onix',95,143,-1,{type:'rock'}],
      ['flying-pidgeot',18,143,-1,{type:'flying'}]];
    combatResults=[];
@@ -152,7 +153,8 @@ server.listen(0,'127.0.0.1',async()=>{
    console.error('FAIL: real player bolts must actually reduce enemy HP for electric (Spark/Pikachu/Thunder), Water Gun/Hydro and fire');process.exitCode=1;
   }
   if(stable.ok&&experimental.ok&&phone.ok&&recovered.ok&&combat.ok&&
-     combat.combatResults?.every(c=>c.landed))
+     combat.combatResults?.every(c=>c.landed)&&
+     combat.combatResults.some(c=>c.name==='fighting-machamp-queued'&&c.final?.stats?.replayedQueued>0))
    console.log('PASS: V47.2 real browser HP reduction for electric, water, fire, grass, psychic, fighting, rock and flying; moving foe and stale projectiles');
  }catch(e){console.error('BROWSER TEST EXCEPTION:',e);process.exitCode=1}
  finally{server.close()}
