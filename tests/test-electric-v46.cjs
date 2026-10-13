@@ -4,7 +4,9 @@ const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f
 const html=read('index.html');
 const realCombatScript=read('effects/moves/_runtime/combat-hit-reliability-v47.js');
 new vm.Script(realCombatScript,{filename:'V47.6RealHitEngine'});
-assert.match(realCombatScript,/version:'47\.7'/,'Current hit engine retries blocked physical contacts');
+assert.match(realCombatScript,/version:'47\.8'/,'Current hit engine must synchronize melee range before collision');
+assert.match(realCombatScript,/function landPhysicalContact\(/,'Melee hit must align with original physical collision guard');
+assert.match(realCombatScript,/meleeRangeAligned/,'Range alignment must have diagnostics');
 assert.match(html,/combat-hit-reliability-v47\.js/,'Real hit module must load');
 assert.equal((realCombatScript.match(/const savedDraw=/g)||[]).length,0,
  'Physical movement code must avoid duplicate draw declarations');
