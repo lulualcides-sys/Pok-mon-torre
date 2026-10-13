@@ -55,4 +55,4 @@ function drawFlame(g,f,t,now,s,low){
   if(t>.75){const z=C((t-.75)/.25);ring(g,x,y,(17+28*z)*s,'#ffd26d',alpha*(1-z),2.3*s,.72);}
  }
 }
-registerMove('flame',['Lança-Chamas','Lanca Chamas','Flamethrower'],drawFlame,1100);
+registerMove('flame',['Lança-Chamas','Flamethrower'],drawFlame,1100);
