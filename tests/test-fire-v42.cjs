@@ -157,7 +157,7 @@ assert.match(fireCode,/const bw=\(30\+/,'Fire Blast thicker');
 assert.ok(legacyPainted===0,'No legacy status visuals should reach the renderer');
 const metrics=v42();
 assert.equal(metrics.casts,8);
-assert.equal(metrics.version,'42.2');
+assert.equal(metrics.version,'42.3');
 assert.equal(metrics.newMoves.length,4);
 assert.equal(metrics.registered.length,8);
 assert.ok(bluePixels>0 && orangePixels>0,'Blue status wisps and fire attacks must render real atlas pixels');
