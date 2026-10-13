@@ -44,10 +44,20 @@ for(const f of electric.slice(1,5)){
  assert.doesNotMatch(src,/\.(?:fillRect|arc|lineTo|stroke|createLinearGradient|createRadialGradient)\s*\(/,
   'No generic procedural Canvas effects in '+f);
 }
-for(const n of ['bolt-a','bolt-b','bolt-c','arc','impact','spark','storm-cloud']){
+for(const n of ['bolt-a','bolt-b','bolt-c','bolt-fork','bolt-shatter','arc','impact','spark','storm-cloud']){
  const svg=read('effects/moves/electric-original/'+n+'.svg');
  assert.match(svg,/<svg[^>]+shape-rendering="crispEdges"/,'Sprite '+n+' must remain pixel-crisp');
 }
+assert.match(html,/id="pt-progress"/,'Loading progress bar required');
+assert.match(html,/id="pt-bar-fill"/,'Loading bar must have filling indicator');
+assert.match(html,/id="pt-percent"/,'Loading percent required');
+assert.doesNotMatch(html,/Carregando arquivos:.*completed\+'\/'\+total/,
+ 'No raw 0/25 counter can be shown');
+const electricKit=read('effects/moves/_runtime/electric-sprite-kit.js');
+assert.match(electricKit,/function burst\(/,'Electric impacts must use authored plasma sprite frames');
+const thunderSource=read('effects/moves/trovao/index.js');
+assert.match(thunderSource,/bolt-fork/,'Thunder has animation variation');
+assert.match(thunderSource,/Math\.floor\(ms\/70\)/,'Thunder changes frames every 70ms');
 const catalog=read('effects/moves/catalog/bundle.js');
 for(const [id,type] of [['drillpeck','flying'],['quickattack','normal'],['skullbash','normal'],
  ['arranhao','normal'],['avalanche','ice'],['rapidspin','normal'],['dreameater','psychic'],
@@ -144,7 +154,7 @@ const ordinary=env.v32Catalogue({id:25,level:50});
 assert.equal(ordinary.find(x=>x.move.name==='Skull Bash').move.type,'normal');
 assert.equal(env.skillSet(mon)[0].cat,'physical','Spark is correctly physical');
 assert.equal(ele().registered.length,4);
-for(const key of ['bolt-a','bolt-b','bolt-c','arc','spark','impact','storm-cloud'])
+for(const key of ['bolt-a','bolt-b','bolt-c','bolt-fork','bolt-shatter','arc','spark','impact','storm-cloud'])
  assert.equal(ele().ready[key],true,'Asset loaded '+key);
 const effectsByMove={};
 for(let i=0;i<4;i++){
