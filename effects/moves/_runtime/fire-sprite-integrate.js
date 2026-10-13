@@ -1,4 +1,4 @@
-/* V42.2 combat bridge: preserve approved moves and isolate new sprite visuals from old animations. */
+/* V42.3 combat bridge: original sprites only for three refined moves; preserve approved gameplay. */
 (function(){
 'use strict';
 const K=fireSpriteV41;
@@ -9,13 +9,15 @@ const statusKeys=new Set(['sunnyDay','willOWisp']);
 const legacyArrays=[
  'v3568StatusFX','v3580Visuals','v356FX','v352FX','v352OtherFX',
  'v343Named','v344Fx','v342StatusFx','v351Effects','v346Attacks',
- 'v354SpecialAttacks','v343StatusFx','v344StatusFX'
+ 'v354SpecialAttacks','v343StatusFx','v344StatusFX',
+ 'v25StatusFX','v26StatusFX','v30StatusFX','v32WeatherFX','v348StatusFX'
 ];
 const castOnlyVisuals=['particles','rings','v26Particles','v19Impacts','v19Beams'];
 function moveKey(f){
  if(!f||typeof f!=='object')return '';
  const candidates=[f.move?.name,f.move,f.name,f.moveName,f.skillName,
-  f.attackName,f.skill?.name,f.attack?.name,f.originalMove,f.moveId,f.id];
+  f.attackName,f.skill?.name,f.attack?.name,f.originalMove,f.moveId,f.id,
+  f.label,f.statusName,f.sourceMove,f.sourceMoveName,f.meta?.moveName];
  for(const name of candidates){
   if(typeof name!=='string')continue;
   const found=K.resolve({name});
@@ -124,8 +126,14 @@ BattleEngine.prototype.draw=function(now){
   actor.y+=dy/len*distance;
  }
  let result;
- try{result=previousDraw.call(this,now);}
- finally{if(actor&&contact){actor.x=originalX;actor.y=originalY;}}
+ try{
+  result=previousDraw.call(this,now);
+ }finally{
+  if(actor&&contact){actor.x=originalX;actor.y=originalY;}
+  // Some old painters queue their status VFX during draw(). Purge after rendering
+  // as well, so they cannot be replayed in subsequent frames.
+  if(active.some(f=>statusKeys.has(K.resolve(f)?.key)))scrubReplacedEffects(this,true);
+ }
  if(!valid||!this.ctx)return result;
  for(const fx of active){
   if(K.paint(this.ctx,fx,now,this))stats.frames++;
@@ -139,7 +147,7 @@ function markVersion(){
   tag.style.cssText='position:fixed;bottom:6px;left:6px;z-index:2147483637;padding:3px 6px;border-radius:5px;background:#102335;color:#b9ddf5;font:700 10px system-ui;pointer-events:none';
   document.body.appendChild(tag);
  }
- tag.textContent='SPRITES FOGO V42.2';
+ tag.textContent='SPRITES FOGO V42.3';
 }
 markVersion();
 window.PokemonTorreFireSpriteV41=()=>({
@@ -149,7 +157,7 @@ window.PokemonTorreFireSpriteV41=()=>({
 });
 window.PokemonTorreFireSpriteV42=()=>({
  ...window.PokemonTorreFireSpriteV41(),
- version:'42.2',
+ version:'42.3',
  newMoves:['Fire Blast','Will-O-Wisp','Sunny Day','Brasa'],
  previousMovesPreserved:['Chamas de Moltres','Rajada Flamejante','Chama Circular','Garra de Fogo'],
  willOWispFollowsEnemy:true,suppressedLegacy:stats.removedLegacy
