@@ -39,6 +39,16 @@ for(const p of newFiles){
  assert.match(c,/fireSpriteV41\.add\(/);
  assert.match(c,/draw\(g,/);
 }
+// V42.1 regressions: Fire Blast must read as the original glyph, not explosion.
+const fireBlastCode=read('effects/moves/fire-blast/index.js');
+const sunnyCode=read('effects/moves/sunny-day/index.js');
+const wispCode=read('effects/moves/will-o-wisp/index.js');
+assert.match(fireBlastCode,/const strokes=/,'Fire Blast must build the original 大 silhouette');
+assert.match(fireBlastCode,/giant "大"/,'Fire Blast classic reference must remain explicit');
+assert.doesNotMatch(fireBlastCode,/draw\(g,'explosion/,'Fire Blast must not draw a generic explosion');
+assert.doesNotMatch(sunnyCode,/draw\(g,'(?:explosion|explosionBurst|fireburst)'/,'Sunny Day has no explosive frames');
+assert.match(wispCode,/stickToTarget:true/,'Will-O-Wisp must follow the enemy');
+assert.doesNotMatch(wispCode,/blue:false/,'Will-O-Wisp must use blue frames only');
 const png=fs.readFileSync(path.join(root,'effects/moves/fire-original/fire-original-4-atlas.png'));
 assert.equal(png.toString('hex',0,8),'89504e470d0a1a0a');
 const pngW=png.readUInt32BE(16),pngH=png.readUInt32BE(20);
@@ -77,10 +87,11 @@ class FakeContext{
  drawImage(img){hitPixels++;if(img.__isCanvas)bluePixels++;else orangePixels++;}
 }
 class FakeEngine{
- constructor(){this.h=560;this.w=900;this.player={x:180,y:370};this.enemy={x:680,y:260};this.ctx=new FakeContext();}
+ constructor(){this.h=560;this.w=900;this.player={x:180,y:370};this.enemy={x:680,y:260};this.ctx=new FakeContext();this.particles=[];this.rings=[];this.v26Particles=[];}
  useMove(slot){
   if(now<cooldowns[slot]||battle.energy<moves[slot].cost)return false;
   cooldowns[slot]=now+2000;battle.energy-=moves[slot].cost;
+  if(moves[slot].name==='Will-O-Wisp')this.particles.push({legacy:'old-orange-effect'});
   if(moves[slot].kind==='status'){
    this.v3568StatusFX=[{move:{name:moves[slot].name}}];
    this.v3580Visuals=[{move:{name:moves[slot].name}}];
@@ -119,11 +130,36 @@ const drawCounts={};
 });
 const metrics=v42();
 assert.equal(metrics.casts,8);
-assert.equal(metrics.version,'42.0');
+assert.equal(metrics.version,'42.1');
 assert.equal(metrics.newMoves.length,4);
 assert.equal(metrics.registered.length,8);
 assert.ok(bluePixels>0 && orangePixels>0,'Blue status wisps and fire attacks must render real atlas pixels');
 assert.ok(metrics.paintCounts.fireBlast>0&&metrics.paintCounts.willOWisp>0&&metrics.paintCounts.sunnyDay>0&&metrics.paintCounts.brasa>0);
 assert.ok(drawEvents[2*3].x>baseX,'Existing Fire Claw contact motion still works');
+// Cast Will-O-Wisp again and make the enemy MOVE while the status is active.
+now+=7000;
+const wispIndex=oldMoves.length+1;
+engine.enemy.x=680;engine.enemy.y=260;
+assert.equal(engine.useMove(wispIndex),true);
+const wisp=engine.v41FireVisuals.at(-1);
+assert.equal(wisp.duration,3300);
+assert.equal(engine.particles.length,0,'Old unlabelled red cast particles removed');
+engine.v3568StatusFX.push({move:{name:'Will-O-Wisp'}});
+engine.v3580Visuals.push({move:{name:'Will-O-Wisp'}});
+engine.enemy.x+=93;engine.enemy.y-=17;
+const beforeBlue=bluePixels,beforeOrange=orangePixels;
+engine.draw(now+wisp.duration*.86);
+assert.equal(wisp.to[0],engine.enemy.x,'Blue wisps track enemy horizontal motion');
+assert.equal(wisp.to[1],engine.enemy.y-Math.max(26,engine.h*.12),
+ 'Blue wisps hover ABOVE moving opponent');
+assert.ok(bluePixels>beforeBlue,'Blue flames persist near the END of the move');
+assert.equal(orangePixels,beforeOrange,'Will-O-Wisp paints NO orange flame or old effect');
+assert.equal(engine.v3568StatusFX.length,0,'Requeued legacy status FX hidden during draw');
+assert.equal(engine.v3580Visuals.length,0,'Requeued generic catalog FX hidden during draw');
+engine.draw(now+wisp.duration-1);
+const atEnd=hitPixels;
+engine.draw(now+wisp.duration+1);
+assert.equal(hitPixels,atEnd,'Flames disappear only once the effect ends');
+
 console.log('PASS: V41 preserved; four V42 sprite attacks functional, status overlays removed, no CSS shapes');
 console.log(JSON.stringify({version:metrics.version,drawCounts,frameStamps:hitPixels,blue:bluePixels,orange:orangePixels}));
