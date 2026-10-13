@@ -157,7 +157,7 @@ assert.match(fireCode,/const bw=\(35\+/,'Fire Blast thicker');
 assert.ok(legacyPainted===0,'No legacy status visuals should reach the renderer');
 const metrics=v42();
 assert.equal(metrics.casts,8);
-assert.equal(metrics.version,'42.3');
+assert.equal(metrics.version,'42.4');
 assert.equal(metrics.newMoves.length,4);
 assert.equal(metrics.registered.length,8);
 assert.ok(bluePixels>0 && orangePixels>0,'Blue status wisps and fire attacks must render real atlas pixels');
@@ -188,6 +188,41 @@ engine.draw(now+wisp.duration-1);
 const atEnd=hitPixels;
 engine.draw(now+wisp.duration+1);
 assert.equal(hitPixels,atEnd,'Flames disappear only once the effect ends');
+
+
+// V42.4: Reproduce the reported bug: Sunny Day is still playing when Will-O-Wisp is cast.
+// Only the new blue wisps must be visible; the actual sunny weather can remain active.
+const sunnyIndex=oldMoves.length+2;
+now+=10000;
+battle.v32Weather='sunny';
+assert.equal(engine.useMove(sunnyIndex),true,'Sunny Day starts normally');
+const firstSunny=engine.v41FireVisuals.at(-1);
+assert.equal(firstSunny.move.name,'Sunny Day');
+now+=480; // deliberately overlap (Sunny duration = 4,800 ms)
+assert.equal(engine.useMove(wispIndex),true,'Will-O-Wisp starts while Sunny Day visual is active');
+assert.equal(battle.v32Weather,'sunny','Weather mechanics not altered by visual isolation');
+assert.equal(engine.v41FireVisuals.filter(f=>f.move.name==='Sunny Day').length,0,
+ 'Casting Will-O-Wisp must remove the previous Sunny Day animation');
+const blueOnlyStart=moveFrameLog.length;
+engine.draw(now+230);
+const blueOnly=moveFrameLog.slice(blueOnlyStart);
+assert.ok(blueOnly.length>0,'Will-O-Wisp must still animate');
+assert.ok(blueOnly.every(frame=>frame.blue),
+ 'No orange sun frames may be painted during Will-O-Wisp');
+assert.equal(engine.v41FireVisuals.filter(f=>f.move.name==='Will-O-Wisp').length,1);
+// Opposite direction: casting Sunny Day while Will-O-Wisp is active must never
+// show blue status flames over the solar effect.
+now+=550;
+assert.equal(engine.useMove(sunnyIndex),true,'Sunny Day may replace Will-O-Wisp visuals');
+assert.equal(engine.v41FireVisuals.filter(f=>f.move.name==='Will-O-Wisp').length,0,
+ 'Sunny Day takes over status visual without re-triggering Will-O-Wisp');
+const sunOnlyStart=moveFrameLog.length;
+engine.draw(now+420);
+const sunOnly=moveFrameLog.slice(sunOnlyStart);
+assert.ok(sunOnly.length>0&&sunOnly.every(frame=>!frame.blue),
+ 'Sunny Day must never replay blue Will-O-Wisp animations');
+assert.ok(v42().overlapPrevented>=2,'Diagnostics count removed overlapping visual timelines');
+console.log('PASS: cast Sunny then Will, and Will then Sunny, no mixed sprite colors; battle weather unchanged');
 
 console.log('PASS: V41 preserved; four V42 sprite attacks functional, status overlays removed, no CSS shapes');
 console.log(JSON.stringify({version:metrics.version,drawCounts,frameStamps:hitPixels,blue:bluePixels,orange:orangePixels}));
