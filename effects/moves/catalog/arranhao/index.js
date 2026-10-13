@@ -1,2 +1,2 @@
 // Arranhão — V35.84; edição independente deste golpe.
-registerMove("catalog_arranhao",["Arranhão"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"arranhao","type":"bug","kind":"dash","cat":"special","seed":3}),820);
+registerMove("catalog_arranhao",["Arranhão"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"arranhao","type":"normal","kind":"dash","cat":"physical","seed":3}),820);
