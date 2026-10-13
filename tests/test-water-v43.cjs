@@ -16,6 +16,21 @@ assert.equal(png.toString('hex',0,8),'89504e470d0a1a0a','Source water atlas must
 assert.equal(png.readUInt32BE(16),240,'Atlas must be 5 x 48px');
 assert.equal(png.readUInt32BE(20),192,'Atlas must be 4 x 48px');
 assert.match(read(files[0]),/source\.src='effects\/moves\/water-original\/water-original-v43-atlas\.png\?v=43\.1'/);
+// V44: only the three rejected moves were rewritten; Skull Bash stays approved.
+const skull=read('effects/moves/skull-bash/index.js');
+assert.match(skull,/key:'skullBash',duration:1120,contact:true/);
+const tsunami=read('effects/moves/tsunami/index.js');
+const amnesia=read('effects/moves/amnesia/index.js');
+const pump=read('effects/moves/hydro-pump/index.js');
+const thought=read('effects/moves/amnesia/thought.svg');
+assert.match(thought,/<svg[^>]+shape-rendering="crispEdges"/,'Amnesia must use real pixel-art symbol');
+assert.match(tsunami,/waterWall:true/,'Tsunami is a real vertical advancing wave');
+assert.match(tsunami,/crestY/,'Tsunami needs an elevated crest');
+assert.match(pump,/pressureStream:true/,'Hydro Pump has its own continuous jet');
+assert.match(pump,/count=16/,'Hydro Pump uses densely overlapping water source frames');
+assert.match(amnesia,/amnesiaMarkV44\.src/,'Amnesia loads its own question-mark sprite');
+assert.doesNotMatch(amnesia,/draw\(g,/,'Amnesia must not paint water at all');
+assert.match(read(files[0]),/version:'44\.0'/);
 const source=files.map(read).join('\n');
 const fxMatch=html.match(/const fxFiles=(\[[^;]+?\]);let plugin=/);
 const fsMatch=html.match(/const fireSpriteFiles=(\[[\s\S]*?\]);\s*const fireSpriteSections=/);
@@ -76,6 +91,7 @@ const diagnostics=env.window.PokemonTorreWaterV43;
 assert.equal(diagnostics().waterReady,true);
 assert.equal(diagnostics().psychicReady,true);
 assert.equal(diagnostics().registered.length,4);
+assert.equal(diagnostics().version,'44.0','Published water version must be V44');
 for(let i=0;i<4;i++){
  now=1000+i*4000;
  const before=draws.length;
@@ -91,5 +107,38 @@ assert.equal(engine.player.x,190,'Physical dash must restore the player position
 assert.equal((engine.v3568StatusFX||[]).length,0,'Old Amnesia overlay suppressed');
 assert.ok(draws.some(f=>f.img.includes('water-original')),'Actual original water source sprites drawn');
 assert.ok(draws.some(f=>f.img.includes('psychic-original')),'Amnesia uses approved psychic original sprite');
+
+// V44: test at peak animation: NO more tiny strips, dispersed bubbles or
+// psychic orbit explosion; each cast must stamp its own source sprites.
+now=31000;
+engine.useMove(1); // Tsunami
+let startFrame=draws.length;
+engine.draw(now+1140);
+let tsunamiDraws=draws.slice(startFrame);
+assert.ok(tsunamiDraws.length>=20,'Tsunami has layered crest and whitewater');
+assert.ok(tsunamiDraws.some(x=>x.img.includes('water-original')&&x.args[6]>=225&&x.args[7]>=105),
+ 'The wave must be wide AND tall; cannot be a thin water stripe');
+now=35000;
+engine.useMove(3); // Hydro Pump
+startFrame=draws.length;
+engine.draw(now+930);
+let hydroDraws=draws.slice(startFrame);
+assert.ok(hydroDraws.length>=21,'Hydro Pump must be a continuous 16-segment water cannon');
+assert.ok(hydroDraws.some(x=>x.img.includes('water-original')&&x.args[6]>=84),
+ 'The jet segments must overlap into a thick uninterrupted stream');
+now=39000;
+engine.useMove(2); // Amnesia
+startFrame=draws.length;
+engine.draw(now+990);
+const amnesiaDraws=draws.slice(startFrame);
+assert.ok(amnesiaDraws.some(x=>x.img.includes('amnesia/thought.svg')),
+ 'Amnesia must show dedicated crisp pixel-art question marks');
+assert.ok(amnesiaDraws.every(x=>!x.img.includes('water-original')),
+ 'Amnesia must never use water splashes');
+assert.ok(amnesiaDraws.some(x=>x.img.includes('psychic-original')),
+ 'Amnesia keeps approved authentic psychic accents');
+assert.equal(engine.player.x,190,'Skull Bash movement restored as before');
+console.log('PASS: V44 big Tsunami crest, continuous Hydro Pump, self-target Amnesia symbols');
+
 console.log('PASS: Skull Bash contact, Tsunami wave, Amnesia self-status and Hydro Pump jet');
 console.log(JSON.stringify({version:diagnostics().version,registered:diagnostics().registered,waterFrames:draws.length,previousFire:diagnostics().originalFire}));
