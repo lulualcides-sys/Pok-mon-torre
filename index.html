@@ -30,7 +30,7 @@ body:before{content:"";position:fixed;inset:0;background:repeating-linear-gradie
 <div class="pt-foot"><a href="?safe=1" id="pt-safe-link">Abrir modo seguro</a><a href="https://github.com/lulualcides-sys/Pok-mon-torre/issues" target="_blank" rel="noopener">Relatar problema</a></div>
 </main><script>
 const ptProgress=(value,phase)=>{const pct=Math.max(0,Math.min(100,Math.round(value)));const fill=document.getElementById('pt-bar-fill'),label=document.getElementById('pt-status'),number=document.getElementById('pt-percent'),bar=document.getElementById('pt-progress');if(fill)fill.style.width=pct+'%';if(label&&phase)label.textContent=phase;if(number)number.textContent=pct+'%';if(bar)bar.setAttribute('aria-valuenow',String(pct));};
-(async()=>{ptProgress(2,'Iniciando Pokémon Torre…');const total=25;const paths=Array.from({length:total},(_,i)=>'parts/p'+String(i).padStart(3,'0')+'.txt');let completed=0;const pieces=await Promise.all(paths.map(async path=>{const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-7-real-contact-retry',{cache:'no-store'});if(!response.ok)throw Error('Falha '+response.status+' ao carregar '+path);const txt=await response.text();completed++;ptProgress(5+completed/total*46,'Carregando recursos do jogo…');return txt}));ptProgress(52,'Montando o campo de batalha…');let game=pieces.join('');if(!game.startsWith('<!doctype html>')&&!game.startsWith('<!DOCTYPE html>'))throw Error('Conteúdo do jogo não encontrado');if(!game.includes('PokemonTorreV3579Diagnostics'))throw Error('Versão do jogo incompleta');ptProgress(60,'Preparando efeitos e animações…');const fxFiles=["effects/moves/_runtime/begin.js","effects/moves/psychic/index.js","effects/moves/confusion/index.js","effects/moves/flamethrower/index.js","effects/moves/telekinesis/index.js","effects/moves/_runtime/beam-kit.js","effects/moves/hyper-beam/index.js","effects/moves/aurora-beam/index.js","effects/moves/ice-beam/index.js","effects/moves/solar-beam/index.js","effects/moves/catalog/painter.js","effects/moves/catalog/bundle.js","effects/moves/_runtime/semantic-vfx.js","effects/moves/_runtime/cinematic-vfx.js","effects/moves/tri-attack/index.js","effects/moves/_runtime/pixi-layer.js","effects/ui/move-type-filter.js","effects/moves/_runtime/original-gba-vfx.js","effects/moves/_runtime/fire-original-vfx.js","effects/moves/_runtime/legendary-fire-vfx.js","effects/moves/_runtime/end.js"];let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-7-real-contact-retry',{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.warn('Efeitos modulares indisponíveis; usando V35.80',error);plugin=await fetch('effects/mewtwo-4moves-v3580.js',{cache:'no-store'}).then(r=>r.ok?r.text():null).catch(()=>null);}if(plugin){const anchor='\nrender();\n})();\n</scr'+'ipt>';if(game.includes(anchor)&&plugin.includes('PokemonTorreMewtwo4FX'))game=game.replace(anchor,'\n'+plugin+'\n'+anchor);else console.warn('Pacote V35.80 não pôde ser inserido; carregando o jogo original.');}// Sprite-only fire effects V41 + V42.5: 8 isolated original-GIF animations.
+(async()=>{ptProgress(2,'Iniciando Pokémon Torre…');const total=25;const paths=Array.from({length:total},(_,i)=>'parts/p'+String(i).padStart(3,'0')+'.txt');let completed=0;const pieces=await Promise.all(paths.map(async path=>{const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-8-melee-range-alignment',{cache:'no-store'});if(!response.ok)throw Error('Falha '+response.status+' ao carregar '+path);const txt=await response.text();completed++;ptProgress(5+completed/total*46,'Carregando recursos do jogo…');return txt}));ptProgress(52,'Montando o campo de batalha…');let game=pieces.join('');if(!game.startsWith('<!doctype html>')&&!game.startsWith('<!DOCTYPE html>'))throw Error('Conteúdo do jogo não encontrado');if(!game.includes('PokemonTorreV3579Diagnostics'))throw Error('Versão do jogo incompleta');ptProgress(60,'Preparando efeitos e animações…');const fxFiles=["effects/moves/_runtime/begin.js","effects/moves/psychic/index.js","effects/moves/confusion/index.js","effects/moves/flamethrower/index.js","effects/moves/telekinesis/index.js","effects/moves/_runtime/beam-kit.js","effects/moves/hyper-beam/index.js","effects/moves/aurora-beam/index.js","effects/moves/ice-beam/index.js","effects/moves/solar-beam/index.js","effects/moves/catalog/painter.js","effects/moves/catalog/bundle.js","effects/moves/_runtime/semantic-vfx.js","effects/moves/_runtime/cinematic-vfx.js","effects/moves/tri-attack/index.js","effects/moves/_runtime/pixi-layer.js","effects/ui/move-type-filter.js","effects/moves/_runtime/original-gba-vfx.js","effects/moves/_runtime/fire-original-vfx.js","effects/moves/_runtime/legendary-fire-vfx.js","effects/moves/_runtime/end.js"];let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-8-melee-range-alignment',{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.warn('Efeitos modulares indisponíveis; usando V35.80',error);plugin=await fetch('effects/mewtwo-4moves-v3580.js',{cache:'no-store'}).then(r=>r.ok?r.text():null).catch(()=>null);}if(plugin){const anchor='\nrender();\n})();\n</scr'+'ipt>';if(game.includes(anchor)&&plugin.includes('PokemonTorreMewtwo4FX'))game=game.replace(anchor,'\n'+plugin+'\n'+anchor);else console.warn('Pacote V35.80 não pôde ser inserido; carregando o jogo original.');}// Sprite-only fire effects V41 + V42.5: 8 isolated original-GIF animations.
 ptProgress(68,'Carregando sprites de fogo…');const fireSpriteFiles=[
  "effects/moves/_runtime/fire-sprite-kit.js",
  "effects/moves/chamas-de-moltres/index.js",
@@ -40,7 +40,7 @@ ptProgress(68,'Carregando sprites de fogo…');const fireSpriteFiles=[
  "effects/moves/_runtime/fire-sprite-integrate.js"
 ];
 const fireSpriteSections=await Promise.all(fireSpriteFiles.map(async path=>{
- const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-7-real-contact-retry',{cache:'no-store'});
+ const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-8-melee-range-alignment',{cache:'no-store'});
  if(!response.ok)throw Error('Falha ao carregar sprite '+path+' ('+response.status+')');
  return response.text();
 }));
@@ -51,7 +51,7 @@ const nextFourFireMoves=[
  "effects/moves/brasa/index.js"
 ];
 const extraFireSections=await Promise.all(nextFourFireMoves.map(async path=>{
- const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-7-real-contact-retry',{cache:'no-store'});
+ const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-8-melee-range-alignment',{cache:'no-store'});
  if(!response.ok)throw Error('Novo golpe não carregou: '+path+' ('+response.status+')');
  return response.text();
 }));
@@ -79,7 +79,7 @@ ptProgress(76,'Carregando golpes de água…');const waterSpriteFiles=[
  "effects/moves/_runtime/water-sprite-integrate.js"
 ];
 const waterSpriteSections=await Promise.all(waterSpriteFiles.map(async path=>{
- const response=await fetch(path+'?build=water-sprites-v45-v47-7-real-contact-retry',{cache:'no-store'});
+ const response=await fetch(path+'?build=water-sprites-v45-v47-8-melee-range-alignment',{cache:'no-store'});
  if(!response.ok)throw Error('Falha ao carregar ataque de água '+path+' ('+response.status+')');
  return response.text();
 }));
@@ -101,7 +101,7 @@ ptProgress(84,'Preparando efeitos elétricos…');const electricV46Files=[
 ];
 const enableElectricPreview=new URLSearchParams(location.search).get('safe')!=='1';
 const electricV46Parts=enableElectricPreview?await Promise.all(electricV46Files.map(async path=>{
- const response=await fetch(path+'?build=electric-sprites-v47-7-real-contact-retry',{cache:'no-store'});
+ const response=await fetch(path+'?build=electric-sprites-v47-8-melee-range-alignment',{cache:'no-store'});
  if(!response.ok)throw Error('Golpe eletrico V46 nao carregou: '+path+' ('+response.status+')');
  return response.text();
 })):[];
@@ -113,7 +113,7 @@ if(enableElectricPreview){
  // Attach the move catalogue installer INSIDE the original V32 scope.
  // V46's global plugin cannot access that private v32Catalogue binding.
  const v32Closing='\n})();\n/* FIM POKEMON TORRE V32 */';
- const hookResponse=await fetch('effects/moves/_runtime/move-type-hook-v46.js?build=v47-7-real-contact-retry',{cache:'no-store'});
+ const hookResponse=await fetch('effects/moves/_runtime/move-type-hook-v46.js?build=v47-8-melee-range-alignment',{cache:'no-store'});
  if(!hookResponse.ok)throw Error('V46: instalador interno não carregou '+hookResponse.status);
  if(!game.includes(v32Closing))throw Error('V46: fechamento do catálogo V32 não encontrado');
  game=game.replace(v32Closing,'\n'+await hookResponse.text()+v32Closing);
@@ -123,7 +123,7 @@ if(enableElectricPreview)game=game.replace(fireSpriteAnchor,'\n'+electricV46Plug
  // Register LAST, after all previous BattleEngine/useMove wrappers, so hits
  // are calculated from the final accepted moves, not from a fake VFX overlay.
 const combatHitResponse=await fetch(
- 'effects/moves/_runtime/combat-hit-reliability-v47.js?build=47-7-real-contact-retry',
+ 'effects/moves/_runtime/combat-hit-reliability-v47.js?build=47-8-melee-range-alignment',
  {cache:'no-store'});
 if(combatHitResponse.ok){
  const combatHitPlugin=await combatHitResponse.text();
