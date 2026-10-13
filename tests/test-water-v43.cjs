@@ -8,6 +8,10 @@ const files=[
 'effects/moves/tsunami/index.js',
 'effects/moves/amnesia/index.js',
 'effects/moves/hydro-pump/index.js',
+'effects/moves/aqua-jet/index.js',
+'effects/moves/water-pulse/index.js',
+'effects/moves/aqua-tail/index.js',
+'effects/moves/water-gun/index.js',
 'effects/moves/_runtime/water-sprite-integrate.js'
 ];
 for(const f of files)assert.ok(html.includes('"'+f+'"'),'Missing water module in production loader '+f);
@@ -46,7 +50,7 @@ assert.match(pump,/const converge=1-ease\(\(u-\.19\)\/\(joinAt-\.19\)\)/,
 assert.match(read('effects/moves/hydro-pump/jet.svg'),/<svg[^>]+shape-rendering="crispEdges"/,'Jet must be pixel art');
 assert.match(amnesia,/amnesiaMarkV44\.src/,'Amnesia loads its own question-mark sprite');
 assert.doesNotMatch(amnesia,/draw\(g,/,'Amnesia must not paint water at all');
-assert.match(read(files[0]),/version:'44\.3'/);
+assert.match(read(files[0]),/version:'45\.0'/);
 const source=files.map(read).join('\n');
 const fxMatch=html.match(/const fxFiles=(\[[^;]+?\]);let plugin=/);
 const fsMatch=html.match(/const fireSpriteFiles=(\[[\s\S]*?\]);\s*const fireSpriteSections=/);
@@ -111,8 +115,8 @@ assert.equal(typeof env.window.PokemonTorreWaterV43,'function');
 const diagnostics=env.window.PokemonTorreWaterV43;
 assert.equal(diagnostics().waterReady,true);
 assert.equal(diagnostics().psychicReady,true);
-assert.equal(diagnostics().registered.length,4);
-assert.equal(diagnostics().version,'44.3','Published water version must be V44.3');
+assert.equal(diagnostics().registered.length,8);
+assert.equal(diagnostics().version,'45.0','Published water version must be V45');
 for(let i=0;i<4;i++){
  now=1000+i*4000;
  const before=draws.length;
@@ -189,6 +193,77 @@ assert.ok(amnesiaDraws.some(x=>x.img.includes('psychic-original')),
  'Amnesia keeps approved authentic psychic accents');
 assert.equal(engine.player.x,190,'Skull Bash movement restored as before');
 console.log('PASS: V44.3 Tsunami with animated 3/4 angled front; twin Hydro jets merge at 62%; Amnesia and Skull Bash unchanged');
+
+
+// V45 — four NEW sprites/animations must run independently, not replace
+// the previously approved four, and their aliases must resolve.
+const newPaths=[
+ 'effects/moves/aqua-jet/index.js',
+ 'effects/moves/water-pulse/index.js',
+ 'effects/moves/aqua-tail/index.js',
+ 'effects/moves/water-gun/index.js'
+];
+const newNames=['Aqua Jet','Pulso d’Água','Cauda de Água','Jato d’Água'];
+const descriptors=['aquaJet','waterPulse','aquaTail','waterGun'];
+for(let i=0;i<4;i++){
+ const contents=read(newPaths[i]);
+ assert.match(contents,new RegExp("key:'"+descriptors[i]+"'"));
+ assert.doesNotMatch(contents,/\.(?:arc|fillRect|lineTo|stroke|createLinearGradient|createRadialGradient)\s*\(/,
+  'New moves must be rendered using genuine sprite frames, not generic CSS/Canvas');
+ desc.push({name:newNames[i],cost:10,cd:1300,kind:'bolt'});
+ cooldowns.push(0);
+}
+assert.match(read(newPaths[1]),/orbPulse:true/,'Water Pulse must be a rotating orb');
+assert.match(read(newPaths[0]),/contactStyle:'surge'/,'Aqua Jet requires physical dash');
+assert.match(read(newPaths[2]),/contactStyle:'tail'/,'Aqua Tail is physical contact');
+assert.match(read(newPaths[3]),/stream:true/,'Jato d’Água is a SINGLE slim jet');
+assert.match(read(newPaths[3]),/water-gun-45/,'Water Gun uses dedicated stream cache');
+const priorDamages=damages;
+const priorCast=diagnostics().castsAccepted;
+for(let i=4;i<8;i++){
+ now=44000+(i-4)*4100;
+ const before=draws.length;
+ const beforeX=engine.player.x;
+ assert.equal(engine.useMove(i),true,'V45 new move accepted: '+newNames[i-4]);
+ assert.equal(env.window.PokemonTorreV360Paint(engine.ctx,{move:{name:newNames[i-4]}},now,engine),true,
+  'Generic old painter must NOT draw '+newNames[i-4]);
+ engine.draw(now+(i===5?850:i===7?690:600));
+ assert.equal(engine.player.x,beforeX,'Player coordinates restored after '+newNames[i-4]);
+ assert.ok(draws.length>before,'Original source pixel sprites must draw for '+newNames[i-4]);
+ const current=engine.v43WaterFX.at(-1);
+ assert.equal(current.move.name,newNames[i-4]);
+ if(i===4||i===6){
+  assert.ok(current.actor&&current.actor[0]>beforeX+45,
+   'Pokemon actually charges forward for '+newNames[i-4]);
+ }
+ if(i===5)assert.ok(draws.slice(before).length>=20,
+  'Water Pulse must display animated rings instead of static flat PNG');
+ if(i===7){
+  assert.ok(draws.slice(before).some(x=>x.img?.includes('hydro-pump/jet.svg')),
+   'Jato d’Água must show a continuous but THIN source-sprite water jet');
+ }
+}
+assert.equal(damages,priorDamages+40,'Each NEW offensive move keeps normal damage');
+assert.equal(diagnostics().registered.length,8,'Four approved + four new moves are independent');
+assert.equal(diagnostics().castsAccepted,priorCast+4,'Each new move casts once');
+assert.equal(diagnostics().originalFire,'42.5','Approved fire attacks remain unchanged');
+// Spelling variants in game/translation must not create a missing-effect cast.
+const aliases=[
+ ['Água Jet','aquaJet'],['Pulso de Água','waterPulse'],
+ ['Water Pulse','waterPulse'],['Aqua Tail','aquaTail'],
+ ['Water Gun','waterGun'],['Pistola d’Água','waterGun']
+];
+for(const [name,key] of aliases){
+ desc[5].name=name;
+ now+=2400;
+ assert.equal(engine.useMove(5),true,'Variant cast should not break for '+name);
+ assert.equal(engine.v43WaterFX.at(-1).move.name,name);
+ const before=draws.length;
+ engine.draw(now+540);
+ assert.ok(draws.length>before,'Variant name must produce sprites for '+name);
+}
+desc[5].name=newNames[1];
+console.log('PASS: V45 Aqua Jet real dash, Water Pulse orb, Aqua Tail physical arc, single thin Water Gun; aliases and V44.3 preserved');
 
 console.log('PASS: Skull Bash contact, Tsunami wave, Amnesia self-status and Hydro Pump jet');
 console.log(JSON.stringify({version:diagnostics().version,registered:diagnostics().registered,waterFrames:draws.length,previousFire:diagnostics().originalFire}));
