@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" shape-rendering="crispEdges">
+<title>Sunny Day - sol em pixel art</title>
+<!-- O sol e seus raios sao um sprite unico, fixo: nao ha explosao. -->
+<g fill="#d9792a">
+<path d="M44 2h8v16h-8z M44 78h8v16h-8z M2 44h16v8H2z M78 44h16v8H78z"/>
+<path d="M14 14h8v8h-8z M74 14h8v8h-8z M14 74h8v8h-8z M74 74h8v8h-8z"/>
+</g>
+<g fill="#ffbe47">
+<path d="M44 6h8v12h-8z M44 78h8v12h-8z M6 44h12v8H6z M78 44h12v8H78z"/>
+<path d="M18 18h9v9h-9z M69 18h9v9h-9z M18 69h9v9h-9z M69 69h9v9h-9z"/>
+</g>
+<!-- Contorno em degraus: silhueta de sol redondo, nao uma chama. -->
+<path d="M36 22h24v4h8v6h6v8h4v16h-4v8h-6v6h-8v4H36v-4h-8v-6h-6v-8h-4V40h4v-8h6v-6h8z" fill="#b95b22"/>
+<path d="M36 26h24v4h8v6h4v24h-4v6h-8v4H36v-4h-8v-6h-4V36h4v-6h8z" fill="#f99f27"/>
+<path d="M38 31h20v4h8v7h3v12h-3v7h-8v4H38v-4h-8v-7h-3V42h3v-7h8z" fill="#ffdc63"/>
+<path d="M40 36h16v4h5v6h3v7h-3v5h-5v3H40v-3h-5v-5h-3v-7h3v-6h5z" fill="#fff4b1"/>
+<path d="M38 40h7v6h-7z M45 35h10v5H45z" fill="#fffce8"/>
+</svg>
