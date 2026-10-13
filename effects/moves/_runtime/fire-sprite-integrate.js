@@ -39,7 +39,7 @@ function scrubReplacedEffects(engine,excludeOnlyActiveStatus=false){
 function snapshotCastVisuals(engine){
  const snapshot={};
  for(const prop of [...castOnlyVisuals,...legacyArrays]){
-  if(Array.isArray(engine[prop]))snapshot[prop]=engine[prop].slice();
+  snapshot[prop]=Array.isArray(engine[prop])?engine[prop].slice():[];
  }
  return snapshot;
 }
