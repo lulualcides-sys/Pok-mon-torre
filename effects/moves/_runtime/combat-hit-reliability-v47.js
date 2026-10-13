@@ -116,14 +116,16 @@
    },
    cast(slot=0){
     if(!engine||!battle?.active)return {error:'No active battle'};
-    battle.energy=100;cooldowns[slot]=0;
+    // Test harness must not remain in the tutorial/intro pause state.
+    battle.paused=false;battle.energy=100;cooldowns[slot]=0;
     const selected=skillSet(current())[slot];
     const before=foe().hp;
     engine.useMove(slot);
     return {name:selected?.name,kind:selected?.kind,type:selected?.type,
      hpBefore:before,hpAfter:foe().hp,...this.snapshot()};
    },
-   snapshot(){return {active:!!battle?.active,player:current()?.id,
+   snapshot(){return {active:!!battle?.active,paused:!!battle?.paused,energy:battle?.energy,
+    cooldowns:[...cooldowns],player:current()?.id,
     foe:foe()?.id,foeHp:foe()?.hp,playerHp:current()?.hp,
     moves:battle?.active?skillSet(current()).map(m=>({name:m.name,kind:m.kind,power:m.power,type:m.type})):[],
     projectiles:engine?.projectiles?.length||0,
