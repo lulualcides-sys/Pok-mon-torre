@@ -279,6 +279,11 @@
       vx:0,vy:0,life:4,from:'player',tail:[],type:'water',
       power:1,r:1,shape:'orb'});
     }
+    if(options.simulateWindup){
+     // Simulates the user tapping a valid second move before a heavy attack
+     // finishes preparing. It should queue, not disappear silently.
+     engine.v33Windup={until:performance.now()+240};
+    }
     const before=foe().hp;
     engine.useMove(slot);
     return {name:selected?.name,kind:selected?.kind,type:selected?.type,
