@@ -87,14 +87,18 @@ async function browserCase(port,query,mobile=false,combat=false){
   const ok=!!(result?.main&&result?.resources?.length>10&&!result?.text?.includes('Não foi possível abrir o jogo'));
   let combatResults=null;
   if(combat&&ok){
-   const cases=[['electric-spark',25,143,0],['electric-spark-pikachu',25,143,1],['electric-thunder',25,143,2],['water-gun',9,143,0],['water-hydro',9,143,2],['fire-ember',6,143,0]];
+   const cases=[['electric-spark',25,143,0],['electric-spark-pikachu',25,143,1],
+     ['electric-thunder',25,143,2],['water-gun',9,143,0],
+     ['water-hydro',9,143,2],['fire-ember',6,143,0],
+     ['electric-old-shot',25,143,2,{staleShot:true}],
+     ['water-with-dodging',9,143,0,{allowDodge:true}]];
    combatResults=[];
-   for(const [name,allyId,foeId,slot] of cases){
+   for(const [name,allyId,foeId,slot,options={}] of cases){
     const expression="(async()=>{const qa=window.PokemonTorreLocalCombatTestV47;"+
      "if(!qa)return {error:'Combat QA missing'};"+
-     "const initial=qa.start("+allyId+","+foeId+");"+
-     "const fired=qa.cast("+slot+");"+
-     "await new Promise(r=>setTimeout(r,1700));"+
+     "const initial=qa.start("+allyId+","+foeId+","+JSON.stringify(options)+");"+
+     "const fired=qa.cast("+slot+","+JSON.stringify(options)+");"+
+     "await new Promise(r=>setTimeout(r,2300));"+
      "return {initial,fired,final:qa.snapshot()};})()";
     const response=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
     const answer=response.result?.result?.value||{error:response.result?.exceptionDetails?.text||'No combat result'};
@@ -143,7 +147,7 @@ server.listen(0,'127.0.0.1',async()=>{
   }
   if(stable.ok&&experimental.ok&&phone.ok&&recovered.ok&&combat.ok&&
      combat.combatResults?.every(c=>c.landed))
-   console.log('PASS: Browser boot + automatic recovery + actual HP loss on electric/water/fire attacks');
+   console.log('PASS: V47.2 real browser damage for electric/water/fire, moving enemy dodge and unrelated lingering projectile');
  }catch(e){console.error('BROWSER TEST EXCEPTION:',e);process.exitCode=1}
  finally{server.close()}
 });
