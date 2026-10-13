@@ -51,8 +51,25 @@
   const particlesSpawned=(this.particles?.length||0)>particleBefore;
   const resourcesChanged=Number(battle?.energy)<priorEnergy||
    (Number(cooldowns[slot]||0)>now&&Number(cooldowns[slot]||0)!==priorCooldown);
+  // Some legacy V33/V34 move handlers swallow zero-cost punches entirely:
+  // Soco (Machamp) has 0 cost/0 cd, so the normal cast produces no movement,
+  // projectile, attack pose or resource change. Recover this valid PHYSICAL
+  // command only, rather than silently ignoring it.
+  const legacyZeroDash=!!(active&&selected?.kind==='dash'&&Number(selected.power)>0&&
+   Number(selected.cost||0)<=0&&Number(selected.cd||0)<=0&&
+   !resourcesChanged&&!actorAdvanced&&!animationBegan&&!particlesSpawned&&
+   current()?.hp>0&&(cooldowns[slot]||0)<=now&&
+   (!this.v33Windup||now>=this.v33Windup.until)&&
+   now>=Number(this.v47NextZeroDash||0));
+  if(legacyZeroDash){
+   this.v47NextZeroDash=now+850; // one physical animation per swing
+   this.attackActs.player=this.time+.53;
+   this.v47RecoveredDashes=(this.v47RecoveredDashes||[]).filter(x=>x.until>now);
+   this.v47RecoveredDashes.push({at:now,until:now+860,owner,victim,
+    start:[this.player.x,this.player.y]});
+  }
   const accepted=!!(active&&selected&&battle?.active&&
-   (resourcesChanged||actorAdvanced||animationBegan||particlesSpawned));
+   (resourcesChanged||actorAdvanced||animationBegan||particlesSpawned||legacyZeroDash));
   if(accepted&&!resourcesChanged)report.zeroCostRecognized++;
   if(!accepted){
    // V33's cinematic windup blocks otherwise valid player inputs.
@@ -209,6 +226,25 @@
   gameVersion.textContent='ACERTO REAL V47.3 · ELÉTRICOS V47 · ÁGUA V45';
   gameVersion.title='Colisões reais verificadas. Ativos: sprite e acerto V47.3';
  }
+ // Only for a RECOVERED old zero-cost physical move. The Pokémon really
+ // approaches the enemy on screen during its contact animation; physics still
+ // deals damage via the original hitTarget() in update() (never in draw).
+ const savedDraw=BattleEngine.prototype.draw;
+ BattleEngine.prototype.draw=function(now){
+  const fx=(this.v47RecoveredDashes||[]).findLast?.(x=>
+   x.until>now&&x.owner===current()&&x.victim===foe()&&battle?.active);
+  if(!fx||!this.player||!this.enemy)return savedDraw.call(this,now);
+  const p=this.player,originalX=p.x,originalY=p.y;
+  const t=Math.max(0,Math.min(1,(now-fx.at)/860));
+  const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)};
+  const approach=smooth(t/.40)*(1-smooth((t-.48)/.40));
+  const dx=this.enemy.x-fx.start[0],dy=this.enemy.y-fx.start[1];
+  const len=Math.hypot(dx,dy)||1,reach=Math.max(0,len-Math.max(37,this.h*.08));
+  p.x=fx.start[0]+dx/len*reach*approach;
+  p.y=fx.start[1]+dy/len*reach*approach;
+  try{return savedDraw.call(this,now)}
+  finally{p.x=originalX;p.y=originalY}
+ };
  window.PokemonTorreCombatV47=()=>({
   ...report,active:!!battle?.active,
   enemyHp:battle?.active?foe()?.hp:null,
