@@ -68,4 +68,25 @@ window.PokemonTorreBeamFX=()=>({
 window.PokemonTorreCatalogFX=()=>({version:'35.84',registered:([...registry.keys()].filter(k=>k.startsWith('catalog_'))).length,approved:8,allRegistered:registry.size,active:(engine?.v359Attacks||[]).filter(f=>pick(f?.move?.name)?.startsWith('catalog_')).length,frames:Object.fromEntries(Object.entries(counts).filter(([k])=>k.startsWith('catalog_'))),engine:'Canvas 2D + DS sprites'});
 
 window.PokemonTorrePixiFX=()=>pixiFX.diagnostics();
+
+// Fire Punch contact: advance the actual Pokémon, show the existing approved
+// impact, and retreat. Restore coordinates after paint to avoid gameplay side effects.
+const _firePunchDraw=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){
+ const active=(this.v359Attacks||[]).filter(fx=>{
+  const n=String(fx?.move?.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  return (n==='punhodefogo'||n==='firepunch')&&now>=fx.at&&now<fx.at+Math.max(350,fx.duration||1000);
+ });
+ if(!active.length||!this.player||!this.enemy||!battle?.active)return _firePunchDraw.call(this,now);
+ const fx=active[active.length-1],p=this.player,q=this.enemy,ox=p.x,oy=p.y;
+ const t=Math.max(0,Math.min(1,(now-fx.at)/Math.max(350,fx.duration||1000)));
+ const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)};
+ const reach=smooth((t-.07)/.37)*(1-smooth((t-.56)/.32));
+ const dx=q.x-ox,dy=q.y-oy,dist=Math.hypot(dx,dy)||1;
+ const stop=Math.max(36,Math.min(58,this.h*.105));
+ const travel=Math.max(0,dist-stop)*reach;
+ p.x=ox+dx/dist*travel;p.y=oy+dy/dist*travel;
+ try{return _firePunchDraw.call(this,now);}
+ finally{p.x=ox;p.y=oy;}
+};
 })();
