@@ -91,13 +91,19 @@ async function browserCase(port,query,mobile=false,combat=false){
      ['electric-thunder',25,143,2],['water-gun',9,143,0],
      ['water-hydro',9,143,2],['fire-ember',6,143,0],
      ['electric-old-shot',25,143,2,{staleShot:true}],
-     ['water-with-dodging',9,143,0,{allowDodge:true}]];
+     ['water-with-dodging',9,143,0,{allowDodge:true}],
+     ['grass-bulbasaur',1,143,-1,{type:'grass'}],
+     ['psychic-mewtwo',150,143,-1,{type:'psychic'}],
+     ['fighting-machamp',68,143,-1,{type:'fighting'}],
+     ['rock-onix',95,143,-1,{type:'rock'}],
+     ['flying-pidgeot',18,143,-1,{type:'flying'}]];
    combatResults=[];
    for(const [name,allyId,foeId,slot,options={}] of cases){
     const expression="(async()=>{const qa=window.PokemonTorreLocalCombatTestV47;"+
      "if(!qa)return {error:'Combat QA missing'};"+
      "const initial=qa.start("+allyId+","+foeId+","+JSON.stringify(options)+");"+
-     "const fired=qa.cast("+slot+","+JSON.stringify(options)+");"+
+     "const selectedSlot="+slot+"===-1?(initial.moves.findIndex(m=>m.power>0&&m.kind!=='status'&&m.type==="+JSON.stringify(options.type||null)+")>=0?initial.moves.findIndex(m=>m.power>0&&m.kind!=='status'&&m.type==="+JSON.stringify(options.type||null)+"):initial.moves.findIndex(m=>m.power>0&&m.kind!=='status')):"+slot+";"+
+     "const fired=qa.cast(selectedSlot,"+JSON.stringify(options)+");"+
      "await new Promise(r=>setTimeout(r,2300));"+
      "return {initial,fired,final:qa.snapshot()};})()";
     const response=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
@@ -147,7 +153,7 @@ server.listen(0,'127.0.0.1',async()=>{
   }
   if(stable.ok&&experimental.ok&&phone.ok&&recovered.ok&&combat.ok&&
      combat.combatResults?.every(c=>c.landed))
-   console.log('PASS: V47.2 real browser damage for electric/water/fire, moving enemy dodge and unrelated lingering projectile');
+   console.log('PASS: V47.2 real browser HP reduction for electric, water, fire, grass, psychic, fighting, rock and flying; moving foe and stale projectiles');
  }catch(e){console.error('BROWSER TEST EXCEPTION:',e);process.exitCode=1}
  finally{server.close()}
 });
