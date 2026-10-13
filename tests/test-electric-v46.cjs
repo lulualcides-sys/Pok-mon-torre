@@ -123,7 +123,12 @@ const ele=env.window.PokemonTorreElectricV46;
 assert.equal(typeof dex,'function');
 assert.equal(typeof ele,'function');
 assert.ok(dex().referenceNames>=300,'Canonical map covers actual full 311 original catalog names');
-assert.ok(dex().curatedCorrections>=45,'Full set of manual corrections preserved');
+assert.ok(dex().curatedCorrections>=75,'Official move type and status category audit must be comprehensive');
+for(const [move,type] of [['Growth','normal'],['Calm Mind','psychic'],['Protect','normal'],['Thunder Wave','electric'],['Roost','flying'],['Bulk Up','fighting']]){
+ const row=dex().lookup(move);
+ assert.equal(row?.type,type,'Audited official move type: '+move);
+ assert.equal(row?.category,'status','Non-damaging official move category: '+move);
+}
 const expected={
  'Drill Peck':'flying','Quick Attack':'normal','Skull Bash':'normal','Amnesia':'psychic',
  'Arranhão':'normal','Rapid Spin':'normal','Explosion':'normal',
