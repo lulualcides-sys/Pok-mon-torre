@@ -76,7 +76,7 @@ const _firePunchDraw=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
  const active=(this.v359Attacks||[]).filter(fx=>{
   const n=String(fx?.move?.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
-  return (n==='punhodefogo'||n==='firepunch')&&now>=fx.at&&now<fx.at+Math.max(350,fx.duration||1000);
+  return (n==='punhodefogo'||n==='firepunch'||n==='garradefogo')&&now>=fx.at&&now<fx.at+Math.max(350,fx.duration||1000);
  });
  if(!active.length||!this.player||!this.enemy||!battle?.active)return _firePunchDraw.call(this,now);
  const fx=active[active.length-1],p=this.player,q=this.enemy,ox=p.x,oy=p.y;
