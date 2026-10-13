@@ -5,7 +5,7 @@ function paint(g,f,now,e,k){
  if(t<0||now<f.at||now>f.at+dur+30)return true;
  g.save();g.imageSmoothingEnabled=false;
  const entry=registry.get(k);if(!entry){g.restore();return false;}
- if(!pixiFX.paint(f,e,k)&&!spriteFallbackVFX.paint(g,f,now,e))entry.draw(g,f,t,now,s,low);
+ if(!pixiFX.paint(f,e,k))entry.draw(g,f,t,now,s,low);
  g.restore();counts[k]=(counts[k]||0)+1;return true;
 }
 // Render de golpes ofensivos: pipeline existente. O retorno true impede duplicação por Canvas/PNG antigos.
@@ -15,10 +15,7 @@ window.PokemonTorreV360Paint=function(g,f,now,e){
  // BEFORE Pixi/semantic/old Canvas to avoid duplicate generic VFX.
  if(originalGbaFX.handles(f))return originalGbaFX.paint(g,f,now,e);
  const k=pick(f?.move?.name||f?.name);if(k)return paint(g,f,now,e,k);
- // Protected Psybeam is not in the 312-move catalog. Reuse its existing hit
- // and render only its new sprite animation; do not double gameplay damage.
- const specialName=uniqueMoveFX.key(f?.move?.name||f?.name);
- if(specialName==='psybeam'&&(pixiFX.paint(f,e,'special_psybeam')||spriteFallbackVFX.paint(g,f,now,e)))return true;
+ // The original GBA painter above owns Psybeam and the other three moves.
  return typeof prevPainter==='function'?prevPainter(g,f,now,e):false;
 };
 // Status (sem projétil na fila v359) precisa ser animado mesmo quando não causa dano.
