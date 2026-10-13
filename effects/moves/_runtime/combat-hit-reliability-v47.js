@@ -1,4 +1,4 @@
-/* Pokemon Torre V47.2 — reliable real collisions with independent per-cast physics.
+/* Pokemon Torre V47.4 — reliable real collisions and buffered valid attacks with independent per-cast physics.
  * The original BattleEngine.hitTarget()/damage() remains the only damage source.
  * Projectiles steer toward the foe instead of missing on every sideways step.
  * Beams track the visible target on discharge; physical dashes actually connect.
@@ -6,9 +6,10 @@
  */
 (function(){
  'use strict';
- const report={version:'47.3',casts:0,projectileCorrections:0,beamsAligned:0,
+ const report={version:'47.4',casts:0,projectileCorrections:0,beamsAligned:0,
   contactFollowThrough:0,missingCollisionRecovered:0,realHits:0,
   ignoredOldShots:0,waitedForInvincibility:0,zeroCostRecognized:0,
+  queuedDuringWindup:0,replayedQueued:0,discardedQueued:0,
   lastHit:null,lastCast:null};
  const savedHit=BattleEngine.prototype.hitTarget;
  BattleEngine.prototype.hitTarget=function(who,type,power){
@@ -53,7 +54,19 @@
   const accepted=!!(active&&selected&&battle?.active&&
    (resourcesChanged||actorAdvanced||animationBegan||particlesSpawned));
   if(accepted&&!resourcesChanged)report.zeroCostRecognized++;
-  if(!accepted)return result;
+  if(!accepted){
+   // V33's cinematic windup blocks otherwise valid player inputs.
+   // Buffer the LAST button pressed instead of silently losing the attack.
+   // A queue is NOT treated as a hit or cast until the core engine
+   // actually accepts it and starts its own physics.
+   if(active&&selected&&this.v33Windup?.until>now&&
+     (cooldowns[slot]||0)<=now&&Number(battle.energy)>=Number(selected.cost||0)&&
+     owner.hp>0){
+    this.v474QueuedMove={slot,b:battle,owner,at:now,until:now+2200};
+    report.queuedDuringWindup++;
+   }
+   return result;
+  }
   report.casts++;report.lastCast=selected.name;
   // The real game catalogue marks some physical moves (e.g. Faísca,
   // Aqua Tail) as "bolt", although the approved animations are body contact.
@@ -129,6 +142,26 @@
    }
   }
   const result=savedUpdate.apply(this,arguments);
+  // Replay legitimate input after V33's heavy-attack preparation completes.
+  // Guards ensure a queued move cannot leak into a different Pokémon/battle.
+  const queued=this.v474QueuedMove;
+  if(queued){
+   const time=performance.now();
+   if(!battle?.active||battle!==queued.b||current()!==queued.owner||
+      time>queued.until||current()?.hp<=0){
+    this.v474QueuedMove=null;report.discardedQueued++;
+   }else if(!battle.paused&&(!this.v33Windup||this.v33Windup.until<=time)&&
+     (cooldowns[queued.slot]||0)<=time){
+    this.v474QueuedMove=null;
+    const oldCd=Number(cooldowns[queued.slot]||0);
+    const oldEnergy=Number(battle.energy);
+    const oldCastCount=report.casts;
+    this.useMove(queued.slot);
+    if(report.casts>oldCastCount||
+       Number(cooldowns[queued.slot]||0)>oldCd||
+       Number(battle.energy)<oldEnergy)report.replayedQueued++;
+   }
+  }
   // Dash impact at its actual animation contact moment, with original damage
   // and resistance logic. No instant fake hit, no double damage, no status hit.
   if(battle?.active&&this.v47ContactToLand?.length){
@@ -192,7 +225,10 @@
     const target=mon(Number(foeId),85);
     target.hp=target.maxHp*20;target.maxHp=target.hp;
     startBattle([target],'TESTE DE ACERTO',true);
-    if(engine){engine.foeDodgeCD=options.allowDodge?0:999;engine.enemy.inv=0;engine.enemy.spawn=0;}
+    if(engine){engine.foeDodgeCD=options.allowDodge?0:999;engine.enemy.inv=0;engine.enemy.spawn=0;
+      // New battles must never inherit a windup/click queue from the preceding test.
+      engine.v33Windup=null;engine.v474QueuedMove=null;
+      engine.v47ContactToLand=[];engine.v47MissingCollisions=[];}
     return this.snapshot();
    },
    cast(slot=0,options={}){
