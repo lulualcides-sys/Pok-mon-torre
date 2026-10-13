@@ -6,9 +6,10 @@
  */
 (function(){
  'use strict';
- const report={version:'47.2',casts:0,projectileCorrections:0,beamsAligned:0,
+ const report={version:'47.3',casts:0,projectileCorrections:0,beamsAligned:0,
   contactFollowThrough:0,missingCollisionRecovered:0,realHits:0,
-  ignoredOldShots:0,waitedForInvincibility:0,lastHit:null,lastCast:null};
+  ignoredOldShots:0,waitedForInvincibility:0,zeroCostRecognized:0,
+  lastHit:null,lastCast:null};
  const savedHit=BattleEngine.prototype.hitTarget;
  BattleEngine.prototype.hitTarget=function(who,type,power){
   const victim=battle?.active?(who==='enemy'?foe():current()):null;
@@ -36,10 +37,22 @@
   // of physics actors present BEFORE the new cast.
   const shotsBefore=new Set((this.projectiles||[]).filter(x=>x.from==='player'));
   const beamBefore=this.telegraph;
+  const oldX=Number(this.player?.x),oldY=Number(this.player?.y);
+  const oldAttackAct=Number(this.attackActs?.player||0);
+  const particleBefore=this.particles?.length||0;
   const result=savedCast.apply(this,arguments);
+  // Several ORIGINAL physical moves (Soco, etc.) have cost=0 and cd=0.
+  // The engine still performs their dash/attack, so resource-based detection
+  // alone misses EVERY real cast for these moves.
+  const actorAdvanced=Number.isFinite(oldX)&&Number.isFinite(oldY)&&
+   Math.hypot((this.player?.x||0)-oldX,(this.player?.y||0)-oldY)>2;
+  const animationBegan=Number(this.attackActs?.player||0)>oldAttackAct+.001;
+  const particlesSpawned=(this.particles?.length||0)>particleBefore;
+  const resourcesChanged=Number(battle?.energy)<priorEnergy||
+   (Number(cooldowns[slot]||0)>now&&Number(cooldowns[slot]||0)!==priorCooldown);
   const accepted=!!(active&&selected&&battle?.active&&
-    (Number(battle.energy)<priorEnergy||
-      (Number(cooldowns[slot]||0)>now&&Number(cooldowns[slot]||0)!==priorCooldown)));
+   (resourcesChanged||actorAdvanced||animationBegan||particlesSpawned));
+  if(accepted&&!resourcesChanged)report.zeroCostRecognized++;
   if(!accepted)return result;
   report.casts++;report.lastCast=selected.name;
   // The real game catalogue marks some physical moves (e.g. Faísca,
