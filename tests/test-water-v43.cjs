@@ -25,9 +25,11 @@ const pump=read('effects/moves/hydro-pump/index.js');
 const thought=read('effects/moves/amnesia/thought.svg');
 assert.match(thought,/<svg[^>]+shape-rendering="crispEdges"/,'Amnesia must use real pixel-art symbol');
 assert.match(tsunami,/waterWall:true/,'Tsunami is a real vertical advancing wave');
-assert.match(tsunami,/crestY/,'Tsunami needs an elevated crest');
+assert.match(tsunami,/tsunamiWaveV441/,'Tsunami must use the large coherent curved wave sprite');
+assert.match(read('effects/moves/tsunami/wave.svg'),/<svg[^>]+shape-rendering="crispEdges"/,'Wave must be pixel art');
 assert.match(pump,/pressureStream:true/,'Hydro Pump has its own continuous jet');
-assert.match(pump,/count=16/,'Hydro Pump uses densely overlapping water source frames');
+assert.match(pump,/hydroJetV441/,'Hydro Pump must use ONE unbroken pixel-water sprite');
+assert.match(read('effects/moves/hydro-pump/jet.svg'),/<svg[^>]+shape-rendering="crispEdges"/,'Jet must be pixel art');
 assert.match(amnesia,/amnesiaMarkV44\.src/,'Amnesia loads its own question-mark sprite');
 assert.doesNotMatch(amnesia,/draw\(g,/,'Amnesia must not paint water at all');
 assert.match(read(files[0]),/version:'44\.0'/);
@@ -115,17 +117,19 @@ engine.useMove(1); // Tsunami
 let startFrame=draws.length;
 engine.draw(now+1140);
 let tsunamiDraws=draws.slice(startFrame);
-assert.ok(tsunamiDraws.length>=14,'Tsunami has three-layer water body, crest and spray');
-assert.ok(tsunamiDraws.some(x=>x.img.includes('water-original')&&x.args[6]>=225&&x.args[7]>=105),
- 'The wave must be wide AND tall; cannot be a thin water stripe');
+assert.ok(tsunamiDraws.some(x=>x.img.includes('tsunami/wave.svg')),
+ 'The advancing Tsunami must render a single real full-height wave');
+assert.ok(tsunamiDraws.some(x=>x.img.includes('tsunami/wave.svg')&&x.args[2]>=270&&x.args[3]>=175),
+ 'Tsunami crest must be wide AND tall, never the old thin water stripe');
 now=35000;
 engine.useMove(3); // Hydro Pump
 startFrame=draws.length;
 engine.draw(now+930);
 let hydroDraws=draws.slice(startFrame);
-assert.ok(hydroDraws.length>=21,'Hydro Pump must be a continuous 16-segment water cannon');
-assert.ok(hydroDraws.some(x=>x.img.includes('water-original')&&x.args[6]>=84),
- 'The jet segments must overlap into a thick uninterrupted stream');
+assert.ok(hydroDraws.some(x=>x.img.includes('hydro-pump/jet.svg')),
+ 'Hydro Pump should render its real single-piece water sprite');
+assert.ok(hydroDraws.some(x=>x.img.includes('hydro-pump/jet.svg')&&x.args[6]>=310&&x.args[7]>=38),
+ 'Hydro Pump must draw one LONG THICK jet rather than little scattered bubbles');
 now=39000;
 engine.useMove(2); // Amnesia
 startFrame=draws.length;
@@ -138,7 +142,7 @@ assert.ok(amnesiaDraws.every(x=>!x.img.includes('water-original')),
 assert.ok(amnesiaDraws.some(x=>x.img.includes('psychic-original')),
  'Amnesia keeps approved authentic psychic accents');
 assert.equal(engine.player.x,190,'Skull Bash movement restored as before');
-console.log('PASS: V44 big Tsunami crest, continuous Hydro Pump, self-target Amnesia symbols');
+console.log('PASS: V44.1 coherent tidal wave, continuous thick Hydro Pump, self-target Amnesia symbols');
 
 console.log('PASS: Skull Bash contact, Tsunami wave, Amnesia self-status and Hydro Pump jet');
 console.log(JSON.stringify({version:diagnostics().version,registered:diagnostics().registered,waterFrames:draws.length,previousFire:diagnostics().originalFire}));
