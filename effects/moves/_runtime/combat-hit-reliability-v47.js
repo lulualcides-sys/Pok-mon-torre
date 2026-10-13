@@ -90,20 +90,25 @@
     report.queuedDuringWindup++;
     return result;
    }
-   // V47.5: The legacy V32-V35 wrappers silently discard some true
-   // zero-cost/zero-cooldown basic punches without even starting an attack.
+   // V47.5: Legacy wrappers sometimes silently discard valid physical
+   // punches without even starting an attack or consuming resources.
    // Respect preparation, pause, fainting, and throttling. Reconstruct the
    // core's physical dash ONLY if no original action occurred.
    const basicDash=active&&selected?.kind==='dash'&&Number(selected.power)>0&&
-    Number(selected.cost||0)===0&&Number(selected.cd||0)===0&&
+    Number(battle.energy)>=Number(selected.cost||0)&&
+    Number(cooldowns[slot]||0)<=now&&
     owner?.hp>0&&victim?.hp>0&&(!this.v33Windup||this.v33Windup.until<=now)&&
     !battle?.v301Fainting;
    if(basicDash){
     const last=this.v475LastBasicDash||0;
     if(now-last>=490){
      this.v475LastBasicDash=now;
+     const cost=Math.max(0,Number(selected.cost)||0),cd=Math.max(0,Number(selected.cd)||0);
+     if(cost)battle.energy-=cost;
+     if(cd)cooldowns[slot]=now+cd;
      report.casts++;report.lastCast=selected.name;
-     report.zeroCostRecognized++;report.recoveredBasicDashes++;
+     if(!cost&&!cd)report.zeroCostRecognized++;
+     report.recoveredBasicDashes++;
      this.attackActs.player=Math.max(Number(this.attackActs.player)||0,(this.time||0)+.43);
      this.v475RecoveredDash={b:battle,owner,at:now,until:now+680};
      this.v47ContactToLand=(this.v47ContactToLand||[]).filter(f=>f.until>now);
