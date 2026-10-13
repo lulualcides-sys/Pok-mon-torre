@@ -1,5 +1,5 @@
 /* Will-O-Wisp — ONLY spectral blue source sprites.
- * V42.1: attached to the ENEMY for the whole animation, follows enemy movement.
+ * V42.3: attached to the ENEMY for the whole animation, follows enemy movement.
  * No incoming fireball, old generic overlay, orange flash or explosion.
  */
 fireSpriteV41.add('willowisp',{
