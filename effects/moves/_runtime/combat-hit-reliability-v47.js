@@ -6,11 +6,11 @@
  */
 (function(){
  'use strict';
- const report={version:'47.5',casts:0,projectileCorrections:0,beamsAligned:0,
+ const report={version:'47.6',casts:0,projectileCorrections:0,beamsAligned:0,
   contactFollowThrough:0,missingCollisionRecovered:0,realHits:0,
   ignoredOldShots:0,waitedForInvincibility:0,zeroCostRecognized:0,
   queuedDuringWindup:0,replayedQueued:0,discardedQueued:0,
-  recoveredBasicDashes:0,updateTicks:0,drawTicks:0,contactChecks:0,lastContactCheck:null,
+  recoveredBasicDashes:0,timerContactHits:0,contactConfirmedByUpdate:0,updateTicks:0,drawTicks:0,contactChecks:0,lastContactCheck:null,
   lastHit:null,lastCast:null};
  const savedHit=BattleEngine.prototype.hitTarget;
  BattleEngine.prototype.hitTarget=function(who,type,power){
@@ -24,6 +24,35 @@
   }
   return result;
  };
+ // Physical hit confirmation is independent of render FPS. A short timer checks
+ // the actual enemy at the collision moment, and ALWAYS uses the original
+ // hitTarget() logic; neither visuals nor CSS calculate or fabricate damage.
+ // Every cast has one settled token shared by the update loop and this timer.
+ function confirmRealContact(engine,event){
+  if(typeof setTimeout!=='function')return;
+  const check=()=>{
+   const now=performance.now();
+   if(event.settled||now>event.until||!battle?.active||
+      event.owner!==current()||event.victim!==foe())return;
+   if(Number(event.victim.hp)<event.hpBefore){
+    event.settled=true;return;
+   }
+   if(battle.paused||now<event.at||Number(engine.enemy?.inv||0)>0){
+    if(now<event.until)setTimeout(check,Math.max(24,Math.min(75,
+       now<event.at?event.at-now:70)));
+    return;
+   }
+   event.settled=true;
+   const before=Number(event.victim.hp);
+   engine.hitTarget('enemy',event.type,event.power);
+   if(Number(event.victim.hp)<before){
+    report.contactFollowThrough++;
+    report.timerContactHits++;
+   }
+   engine.v47ContactToLand=(engine.v47ContactToLand||[]).filter(x=>x!==event);
+  };
+  setTimeout(check,Math.max(0,event.at-performance.now()));
+ }
  const savedCast=BattleEngine.prototype.useMove;
  BattleEngine.prototype.useMove=function(slot){
   const active=battle?.active&&!battle.paused;
@@ -110,10 +139,10 @@
      selected.cat!=='status'&&Number(selected.power)>0&&
     victim===foe()&&Number(victim?.hp)>=priorHP){
    this.v47ContactToLand=(this.v47ContactToLand||[]).filter(f=>f.until>now);
-   this.v47ContactToLand.push({
-    at:now+380,until:now+2750,owner,victim,hpBefore:priorHP,
-    type:selected.type,power:selected.power,name:selected.name
-   });
+   const contact={at:now+380,until:now+2750,owner,victim,hpBefore:priorHP,
+    type:selected.type,power:selected.power,name:selected.name,settled:false};
+   this.v47ContactToLand.push(contact);
+   confirmRealContact(this,contact);
   }else if(Number(selected.power)>0&&!spriteContact&&selected.kind!=='dash'&&
       selected.kind!=='status'&&selected.cat!=='status'&&
       victim===foe()&&Number(victim?.hp)>=priorHP){
@@ -201,16 +230,19 @@
    report.lastContactCheck={source:'update',time,count:this.v47ContactToLand.length};
    const pending=[];
    for(const fx of this.v47ContactToLand){
-    if(fx.until<=time||fx.victim!==foe()||fx.owner!==current())continue;
-    if(Number(fx.victim.hp)<fx.hpBefore)continue;
+    if(fx.settled||fx.until<=time||fx.victim!==foe()||fx.owner!==current())continue;
+    if(Number(fx.victim.hp)<fx.hpBefore){fx.settled=true;continue;}
     if(time<fx.at||this.enemy.inv>0){
      if(this.enemy.inv>0)report.waitedForInvincibility++;
      pending.push(fx);continue;
     }
     const hp=Number(fx.victim.hp);
+    fx.settled=true;
     this.hitTarget('enemy',fx.type,fx.power);
-    if(Number(fx.victim.hp)<hp)report.contactFollowThrough++;
-    else if(time<fx.until)pending.push(fx);
+    if(Number(fx.victim.hp)<hp){
+     report.contactFollowThrough++;
+     report.contactConfirmedByUpdate++;
+    }
    }
    this.v47ContactToLand=pending;
   }
