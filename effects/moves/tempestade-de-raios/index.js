@@ -1,11 +1,11 @@
-/* TEMPESTADE DE RAIOS V46 — multi-strike sky-to-ground lightning storm.
+/* TEMPESTADE DE RAIOS V47 — multi-strike sky-to-ground lightning storm.
  * A dark authored pixel cloud and separately timed jagged bolts appear above
  * the opponent. NOT the same animation as a single giant Trovão.
  */
 electricSpriteV46.add('tempestadederaios',{
  key:'thunderstorm',duration:2450,contact:false,storm:true,followTarget:true,
  paint(g,f,t,ms,s,K){
-  const {stamp,ease,clamp}=K,A=f.from,B=f.to;
+  const {stamp,burst,ease,clamp}=K,A=f.from,B=f.to;
   const TAU=Math.PI*2,top=Math.max(48*s,B[1]-199*s);
   const appear=ease(t/.15),fade=1-ease((t-.88)/.12);
   if(t<.95){
@@ -21,10 +21,10 @@ electricSpriteV46.add('tempestadederaios',{
   }
   const strikes=[
    {at:.14,x:-64,kind:'bolt-b',w:59,d:.20},
-   {at:.30,x:41,kind:'bolt-c',w:69,d:.22},
-   {at:.47,x:-26,kind:'bolt-a',w:78,d:.24},
+   {at:.30,x:41,kind:'bolt-fork',w:69,d:.22},
+   {at:.47,x:-26,kind:'bolt-shatter',w:78,d:.24},
    {at:.64,x:66,kind:'bolt-b',w:61,d:.19},
-   {at:.75,x:0,kind:'bolt-c',w:91,d:.18}
+   {at:.75,x:0,kind:'bolt-fork',w:91,d:.18}
   ];
   for(let i=0;i<strikes.length;i++){
    const z=strikes[i],p=ease((t-z.at)/.075),gone=1-ease((t-z.at-z.d)/.055);
@@ -34,9 +34,9 @@ electricSpriteV46.add('tempestadederaios',{
    const by=B[1]+(i%2?6:-9)*s;
    const height=(by-top+42*s)*p;
    const cy=top-29*s+height*.50;
-   stamp(g,z.kind,bx,cy,z.w*s,Math.max(4*s,height),
-    {alpha:alpha*.97,flipX:i%2===0});
-   stamp(g,'impact',bx,by,(81+i%2*12)*s,(63+i%3*9)*s,{alpha:alpha*.93});
+   stamp(g,(Math.floor(ms/92)+i)%4===0?'bolt-shatter':z.kind,bx,cy,z.w*s,Math.max(4*s,height),
+    {alpha:alpha*.97,flipX:i%2===0,additive:true});
+   burst(g,bx,by,ms+i*83,s,alpha*.93,1.05);
    for(let j=0;j<5;j++){
     const a=j*TAU/5+ms*.005+i;
     stamp(g,'spark',bx+Math.cos(a)*47*s,by+Math.sin(a)*23*s,
