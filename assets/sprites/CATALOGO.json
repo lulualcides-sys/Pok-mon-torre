@@ -1,0 +1,378 @@
+{
+  "library": "Pokemon Torre - Sprite Reference Library",
+  "date": "2026-10-13",
+  "origin": "Images provided directly by user. For private/offline use.",
+  "count": 21,
+  "rules": [
+    "Original raw image bytes preserved and checksummed",
+    "Do not replace approved move effects",
+    "Read existing sprite library before creating a move",
+    "Never use commercial watermarked reference images as deployable assets without licensing",
+    "Give artist/ripper credit when indicated",
+    "Use pixel-art nearest neighbor; do not invent generic spheres or shapes"
+  ],
+  "files": [
+    {
+      "original": "1000981120.png",
+      "file": "dragao/dragon_attack_original_refs.png",
+      "type": "dragao",
+      "description": "dragon_attack_original_refs",
+      "format": "PNG",
+      "dimensions": [
+        612,
+        2048
+      ],
+      "bytes": 383841,
+      "sha256": "6cd26abcd741b79b5185b5cb01b5be704d08ebf7559b7d5f3f0f1c8f645c2a53",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/dragao/dragon_attack_original_refs.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981121.jpg",
+      "file": "fogo/fire_move_effects_spritesheet.jpg",
+      "type": "fogo",
+      "description": "fire_move_effects_spritesheet",
+      "format": "JPEG",
+      "dimensions": [
+        490,
+        626
+      ],
+      "bytes": 50313,
+      "sha256": "99f3acaf320ddf165a89ad36e1275c661336c0ed83ccd57264ac4f8e5c6f5be4",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/fogo/fire_move_effects_spritesheet.jpg",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981122.png",
+      "file": "veneno/poison_attack_effects_ripped.png",
+      "type": "veneno",
+      "description": "poison_attack_effects_ripped",
+      "format": "PNG",
+      "dimensions": [
+        800,
+        1221
+      ],
+      "bytes": 85098,
+      "sha256": "edc356640969383f7fa1cfe19beda3051184c0bbe1fc77bb211de5846923d659",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/veneno/poison_attack_effects_ripped.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981123.jpg",
+      "file": "varios/custom_pokemon_attack_spritesheet.jpg",
+      "type": "varios",
+      "description": "custom_pokemon_attack_spritesheet",
+      "format": "JPEG",
+      "dimensions": [
+        286,
+        1072
+      ],
+      "bytes": 78472,
+      "sha256": "0dfdad4507c2bce2af8c9c404a583e31182ef714ec71f940b995fc01f3f5d5f8",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/varios/custom_pokemon_attack_spritesheet.jpg",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981126.png",
+      "file": "varios/full_pixel_attack_fx_blue_background.png",
+      "type": "varios",
+      "description": "full_pixel_attack_fx_blue_background",
+      "format": "PNG",
+      "dimensions": [
+        2048,
+        973
+      ],
+      "bytes": 1584186,
+      "sha256": "19ed99d6de1b5e57b43c79b04b0c0c156538cc14bacd8f06a469b038217030c9",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/varios/full_pixel_attack_fx_blue_background.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981127.png",
+      "file": "varios/pixel_fx_sheet_blue_background.png",
+      "type": "varios",
+      "description": "pixel_fx_sheet_blue_background",
+      "format": "PNG",
+      "dimensions": [
+        1137,
+        2048
+      ],
+      "bytes": 1027902,
+      "sha256": "c5194e859ecb3b0dd581bac62b7cda8efe8976cf3c97a1e6cb8ebbade20be489",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/varios/pixel_fx_sheet_blue_background.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981129.png",
+      "file": "varios/multi_element_fx_sheet.png",
+      "type": "varios",
+      "description": "multi_element_fx_sheet",
+      "format": "PNG",
+      "dimensions": [
+        816,
+        1248
+      ],
+      "bytes": 55316,
+      "sha256": "867065aa9b7e087e554d9a48ca3bb4455a4e2ac272663d43d3cde1a09e3e5932",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/varios/multi_element_fx_sheet.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981130.gif",
+      "file": "varios/multi_element_orange_blue_green_fx.png",
+      "type": "varios",
+      "description": "multi_element_orange_blue_green_fx",
+      "format": "PNG",
+      "dimensions": [
+        960,
+        624
+      ],
+      "bytes": 66367,
+      "sha256": "877c6172da5f33b1d361213ed0bba73bbe61b6708b403546ab1a934d1f1a50af",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/varios/multi_element_orange_blue_green_fx.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981131.gif",
+      "file": "psiquico/psychic_orange_purple_fx_sheet.png",
+      "type": "psiquico",
+      "description": "psychic_orange_purple_fx_sheet",
+      "format": "PNG",
+      "dimensions": [
+        1080,
+        720
+      ],
+      "bytes": 151010,
+      "sha256": "3f30ffb15f77d986eefdff9ec8917ecd549ea5e6a9fa3e5213f5ac907dbdfcf4",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/psiquico/psychic_orange_purple_fx_sheet.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981132.jpg",
+      "file": "fogo/fire_explosion_stages_reference_watermarked.jpg",
+      "type": "fogo",
+      "description": "fire_explosion_stages_reference_watermarked",
+      "format": "JPEG",
+      "dimensions": [
+        468,
+        280
+      ],
+      "bytes": 21611,
+      "sha256": "5f0b27dcd62ff4e0499dd52934ed68df9f8ce03eb75ccad051004ecca81d5ac3",
+      "original_preserved": true,
+      "watermark": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/fogo/fire_explosion_stages_reference_watermarked.jpg",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981134.jpg",
+      "file": "psiquico/magic_storm_shadows_fx_reference.jpg",
+      "type": "psiquico",
+      "description": "magic_storm_shadows_fx_reference",
+      "format": "JPEG",
+      "dimensions": [
+        621,
+        494
+      ],
+      "bytes": 63470,
+      "sha256": "30976157375a924376d287e0336f4b485d627da0ea843378921dadf8436dd295",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/psiquico/magic_storm_shadows_fx_reference.jpg",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981135.png",
+      "file": "varios/pixel_magic_attack_effects_dark_backdrop.png",
+      "type": "varios",
+      "description": "pixel_magic_attack_effects_dark_backdrop",
+      "format": "PNG",
+      "dimensions": [
+        2047,
+        1643
+      ],
+      "bytes": 641305,
+      "sha256": "c2b2d2033bbe6008325e78e152aa2d2e3eabc4c67cd8ea44b1b6cc7cd501e3e3",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/varios/pixel_magic_attack_effects_dark_backdrop.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981136.jpg",
+      "file": "varios/blue_fire_orange_fire_spritesheet.jpg",
+      "type": "varios",
+      "description": "blue_fire_orange_fire_spritesheet",
+      "format": "JPEG",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "bytes": 213564,
+      "sha256": "471152750d31f1ec996e8494c9dfcfb7e7b101affbd3e52992726ce845d03b1c",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/varios/blue_fire_orange_fire_spritesheet.jpg",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981137.jpg",
+      "file": "agua/blue_splash_11_animation_frames.jpg",
+      "type": "agua",
+      "description": "blue_splash_11_animation_frames",
+      "format": "JPEG",
+      "dimensions": [
+        866,
+        354
+      ],
+      "bytes": 25352,
+      "sha256": "05f6fcc0dde52d396219a163e02f15653cdfc0169b353107a59b6d189d11b6b7",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/agua/blue_splash_11_animation_frames.jpg",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981138.jpg",
+      "file": "agua/blue_droplet_16_animation_frames.jpg",
+      "type": "agua",
+      "description": "blue_droplet_16_animation_frames",
+      "format": "JPEG",
+      "dimensions": [
+        554,
+        554
+      ],
+      "bytes": 15913,
+      "sha256": "171b665d4429041a257d6f23d31c987b69d09b68fd7558734ebc25fe1a1286b0",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/agua/blue_droplet_16_animation_frames.jpg",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981139.jpg",
+      "file": "agua/water_splash_stages_reference.jpg",
+      "type": "agua",
+      "description": "water_splash_stages_reference",
+      "format": "JPEG",
+      "dimensions": [
+        598,
+        513
+      ],
+      "bytes": 38083,
+      "sha256": "5fada1edd817a0f805c756f764fbab73f0e8c231d6cc61e3159e848419e5ebdd",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/agua/water_splash_stages_reference.jpg",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981140.png",
+      "file": "agua/water_pixel_splash_sheet.png",
+      "type": "agua",
+      "description": "water_pixel_splash_sheet",
+      "format": "PNG",
+      "dimensions": [
+        508,
+        504
+      ],
+      "bytes": 28898,
+      "sha256": "efa64705e34f0bac81548300c13df19f4577e814ad3abf0e4948ac0ab9a9030b",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/agua/water_pixel_splash_sheet.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981141.png",
+      "file": "agua/large_water_elemental_and_waves_spritesheet.png",
+      "type": "agua",
+      "description": "large_water_elemental_and_waves_spritesheet",
+      "format": "PNG",
+      "dimensions": [
+        597,
+        2048
+      ],
+      "bytes": 817680,
+      "sha256": "a7a16cc01c78f6cf40fd13f3c7cf9c155b680212aba1d9ffcc717cd8f2160743",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/agua/large_water_elemental_and_waves_spritesheet.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981142.png",
+      "file": "agua/water_elemental_character_animation.png",
+      "type": "agua",
+      "description": "water_elemental_character_animation",
+      "format": "PNG",
+      "dimensions": [
+        500,
+        319
+      ],
+      "bytes": 12044,
+      "sha256": "01523186b3e7cef0009047f619439a3654e0222bbf41025820b46f33b9916be2",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/agua/water_elemental_character_animation.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "1000981143.jpg",
+      "file": "agua/water_animation_reference_watermarked.jpg",
+      "type": "agua",
+      "description": "water_animation_reference_watermarked",
+      "format": "JPEG",
+      "dimensions": [
+        511,
+        601
+      ],
+      "bytes": 45413,
+      "sha256": "80001fa966abf0e28dffd748253b590858590dfc7236de9f03f1e017524085de",
+      "original_preserved": true,
+      "watermark": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/agua/water_animation_reference_watermarked.jpg",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    },
+    {
+      "original": "Game Boy Advance - Pokemon Ruby _ Sapphire - Battle Effects - Move Effects (1).png",
+      "file": "gba/pokemon_ruby_sapphire_effects_neslug.png",
+      "type": "gba",
+      "description": "pokemon_ruby_sapphire_effects_neslug",
+      "format": "PNG",
+      "dimensions": [
+        491,
+        1926
+      ],
+      "bytes": 218215,
+      "sha256": "f4d45f1f9aab45b893f2e2c64f101ecb78d1b60ec1342725db1a9a575991463e",
+      "original_preserved": true,
+      "watermark": false,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/gba/pokemon_ruby_sapphire_effects_neslug.png",
+      "backup_zip": "/Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip"
+    }
+  ],
+  "locations": {
+    "originals": "ChatGPT Library: /Pokemon Torre/Biblioteca de Sprites/",
+    "archive": "ChatGPT Library: /Pokemon Torre/Biblioteca de Sprites/Pacote_21_sprites_originais_2026-10-13.zip",
+    "on_github": "This text index; GitHub binary storage not yet synced, except the existing GBA sprite atlas."
+  }
+}
