@@ -10,6 +10,8 @@ const pick=s=>{const k=norm(s);if(k==='psiquico'||k==='psychic')return'psychic';
 const C=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),M=(a,b,t)=>a+(b-a)*t,SM=t=>{t=C(t);return t*t*(3-2*t);};
 const TWO=Math.PI*2;
 const counts={psychic:0,confusion:0,flame:0,telekinesis:0};
+// Reutiliza sprites reais do atlas DS fornecido pelo usuario; desenhos sao fallback dinamico.
+const stamp=(g,name,x,y,w,h,rotation,opacity)=>typeof sprite3511==='function'&&sprite3511(g,name,x,y,w,h,rotation,opacity);
 function dot(g,x,y,r,color,alpha=1,glow=0){
  g.save();g.globalAlpha=C(alpha);g.fillStyle=color;if(glow){g.shadowColor=color;g.shadowBlur=glow;}g.beginPath();g.arc(x,y,Math.max(.1,r),0,TWO);g.fill();g.restore();
 }
@@ -32,6 +34,7 @@ function drawPsychic(g,f,t,now,s){
  const A=f.from,B=f.to,u=SM(C((t-.06)/.68));const x=M(A[0],B[0],u),y=M(A[1],B[1],u);
  const fade=C(Math.min(t*9,(1-t)*6,1)),hit=C((t-.67)/.26),r=(13+8*Math.sin(t*10))*s;
  glow(g,x,y,r*3.2,'#fffbff','#a93bfa',fade*.88);dot(g,x,y,r,'#c655ff',fade,.0);dot(g,x,y,r*.54,'#ffdeff',fade,4);
+ stamp(g,'purple'+(Math.floor(now/70)%32),x,y,24*s,24*s,t*8,fade*.90);
  for(let i=0;i<4;i++){
   const q=C((t-i*.055)/.70),ox=M(A[0],B[0],SM(q)),oy=M(A[1],B[1],SM(q));
   ring(g,ox,oy,(11+i*3)*s,'#e8a9ff',fade*(.70-i*.11),1.5*s,.46,now*.004+i*.9);
@@ -39,6 +42,7 @@ function drawPsychic(g,f,t,now,s){
  for(let j=0;j<12;j++){
   const th=j*TWO/12+now*.009,rr=(19+j%3*7)*s;
   dot(g,x+Math.cos(th)*rr,y+Math.sin(th)*rr*.7,(1.5+j%3)*s,j%3?'#fa85f5':'#ffffff',fade*.86,2*s);
+  if(j%2===0)stamp(g,'purple'+((j*4+Math.floor(now/65))%32),x+Math.cos(th)*rr,y+Math.sin(th)*rr*.7,11*s,11*s,th,fade*.73);
  }
  if(hit>0){glow(g,B[0],B[1],(28+hit*25)*s,'#ffebff','#8e39ef',(1-hit)*.8);
   for(let j=0;j<3;j++)ring(g,B[0],B[1],(13+hit*(24+j*14))*s,'#efadff',(1-hit)*(.9-j*.20),2*s,.6,now*.002+j);
@@ -58,6 +62,7 @@ function drawConfusion(g,f,t,now,s){
   const a=j*TWO/15+speed*(j%2?1:-1),rad=(13+(j%5)*7)*s;
   const x=B[0]+Math.cos(a)*rad,y=B[1]+Math.sin(a)*rad*.63;
   if(j%4===0)star(g,x,y,4*s,'#ffeaff',fade*.83);else dot(g,x,y,2*s,j%2?'#9e7dff':'#ff9eed',fade,.7*s);
+  if(j%3===1)stamp(g,'purple'+((j*2+Math.floor(now/75))%32),x,y,13*s,13*s,a,fade*.80);
  }
  if(t>.42){const p=C((t-.42)/.51);ring(g,B[0],B[1],(20+30*p)*s,'#f6d9ff',(1-p)*.7,2*s,.63,speed);}
 }
@@ -65,12 +70,13 @@ function drawFlame(g,f,t,now,s,low){
  const A=f.from,B=f.to,fade=C(Math.min(t*10,(1-t)*9,1)),reach=SM(C(t/.35)),dx=B[0]-A[0],dy=B[1]-A[1],len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len;
  for(let layer=0;layer<3;layer++){
   const color=['#d83f1e','#ff851d','#ffe48d'][layer];
-  for(let j=0;j<(low?12:19);j++){
-   const q=j/18*reach,noise=Math.sin(q*19-now*.023+j*1.7),wide=(13+Math.sin(q*6)*8)*(1-q*.40)*s;
+  const steps=low?12:19;for(let j=0;j<steps;j++){
+   const q=j/(steps-1)*reach,noise=Math.sin(q*19-now*.023+j*1.7),wide=(13+Math.sin(q*6)*8)*(1-q*.40)*s;
    const x=A[0]+dx*q+nx*noise*wide*.18,y=A[1]+dy*q+ny*noise*wide*.18;
    const upper=wide*(1-layer*.30),pts=[[x-nx*upper,y-ny*upper],[x+nx*upper,y+ny*upper]];
    line(g,pts,color,(layer===0?13:layer===1?9:4.3)*s,fade,layer===0?4*s:0);
    dot(g,x,y,(layer===0?10:layer===1?7:3.6)*s,color,fade,layer===1?4*s:0);
+   if(layer===1 && j%2===0)stamp(g,'flame'+((j+Math.floor(now/100))%5),x,y,21*s,28*s,Math.atan2(dy,dx)-Math.PI/2,fade*.84);
   }
  }
  for(let i=0;i<(low?16:34);i++){
@@ -93,6 +99,7 @@ function drawTelekinesis(g,f,t,now,s){
  for(let j=0;j<11;j++){
   const a=j*2.399+now*.003,rad=(14+(j%4)*12)*s,lev=Math.sin(now*.008+j)*10*s;
   stone(g,x+Math.cos(a)*rad,y+Math.sin(a)*rad*.61+lev,2.4*s+(j%3)*1.2*s,a*.7,fade*(.85-j*.035));
+  if(j%2===0)stamp(g,'purple'+((j*3+Math.floor(now/90))%32),x+Math.cos(a)*rad,y+Math.sin(a)*rad*.61+lev,13*s,13*s,a,fade*.70);
  }
  for(let j=0;j<9;j++){
   const a=j*TWO/9+now*.004,rad=(22+j%3*14)*s;
