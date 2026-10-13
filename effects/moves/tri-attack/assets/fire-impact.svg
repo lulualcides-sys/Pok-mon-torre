@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+<defs><radialGradient id="impact"><stop offset="0" stop-color="#ffffff" stop-opacity=".96"/><stop offset=".22" stop-color="#fff0a9"/><stop offset=".63" stop-color="#fd6d20" stop-opacity=".85"/><stop offset="1" stop-color="#b92309" stop-opacity="0"/></radialGradient>
+<filter id="blur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+<g opacity=".7" fill="#fb5b13" filter="url(#blur)">
+<path d="M80 10 L97 43 L124 21 L116 59 L151 74 L120 89 L138 132 L104 115 L81 154 L61 118 L25 139 L40 98 L7 76 L41 58 L20 23 L59 44Z"/></g>
+<path d="M80 10 L97 43 L124 21 L116 59 L151 74 L120 89 L138 132 L104 115 L81 154 L61 118 L25 139 L40 98 L7 76 L41 58 L20 23 L59 44Z" fill="url(#impact)"/>
+<path d="M80 39 L96 63 L119 61 L103 82 L113 105 L87 97 L80 125 L69 97 L46 102 L57 82 L46 62 L70 65Z" fill="#fff5c9" opacity=".89"/>
+<g fill="#ffce54"><path d="M 10 27 L 18 32 L 14 41 L 7 34Z"/><path d="M147 20 L155 25 L151 36Z"/><path d="M17 123 L24 133 L13 141Z"/></g></svg>

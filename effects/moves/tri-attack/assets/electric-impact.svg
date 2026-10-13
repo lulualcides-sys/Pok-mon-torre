@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+<defs><radialGradient id="impact"><stop offset="0" stop-color="#ffffff" stop-opacity=".96"/><stop offset=".22" stop-color="#ffffff"/><stop offset=".63" stop-color="#ffe436" stop-opacity=".85"/><stop offset="1" stop-color="#b88702" stop-opacity="0"/></radialGradient>
+<filter id="blur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+<g fill="none" stroke-linejoin="round" stroke-linecap="round">
+<path d="M80 4 L76 47 L93 65 L83 79 L111 94 L93 126 L108 152 M79 78 L53 53 L35 62 L18 26 M80 78 L112 57 L142 42 L127 20 M82 83 L48 94 L23 123 L13 118 M81 83 L113 113 L145 119"
+stroke="#ffa700" stroke-width="14" opacity=".60" filter="url(#blur)"/>
+<path d="M80 4 L76 47 L93 65 L83 79 L111 94 L93 126 L108 152 M79 78 L53 53 L35 62 L18 26 M80 78 L112 57 L142 42 L127 20 M82 83 L48 94 L23 123 L13 118 M81 83 L113 113 L145 119"
+stroke="#ffd32b" stroke-width="8"/>
+<path d="M80 4 L76 47 L93 65 L83 79 L111 94 L93 126 L108 152 M79 78 L53 53 L35 62 L18 26 M80 78 L112 57 L142 42 L127 20 M82 83 L48 94 L23 123 L13 118 M81 83 L113 113 L145 119"
+stroke="#fffef1" stroke-width="3"/></g>
+<path d="M80 55 L95 76 L116 80 L93 92 L80 113 L67 93 L44 80 L67 71Z" fill="url(#impact)"/></svg>

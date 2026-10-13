@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+<defs><radialGradient id="impact"><stop offset="0" stop-color="#ffffff" stop-opacity=".96"/><stop offset=".22" stop-color="#f5ffff"/><stop offset=".63" stop-color="#52d8fe" stop-opacity=".85"/><stop offset="1" stop-color="#2768b9" stop-opacity="0"/></radialGradient>
+<filter id="blur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+<path d="M80 9 L100 52 L142 33 L119 77 L152 90 L111 104 L126 150 L86 126 L55 153 L50 111 L10 100 L44 77 L21 31 L67 54Z"
+fill="#66cdfe" filter="url(#blur)" opacity=".48"/>
+<g fill="#9decff" stroke="#e4ffff" stroke-width="2">
+<path d="M80 7 L95 63 L80 102 L63 65Z"/><path d="M149 31 L106 84 L80 90 L116 45Z"/>
+<path d="M145 126 L95 108 L78 87 L127 99Z"/><path d="M20 137 L55 105 L80 87 L43 103Z"/>
+<path d="M8 44 L55 66 L80 85 L31 78Z"/><path d="M78 153 L71 108 L80 86 L92 113Z"/></g>
+<g fill="#ffffff" opacity=".84"><path d="M80 7 L95 63 L80 102 L80 63Z"/><path d="M149 31 L106 84 L80 90 L111 60Z"/>
+<path d="M145 126 L95 108 L78 87 L105 99Z"/></g>
+<path d="M80 61 L95 76 L102 89 L85 98 L65 90 L67 72Z" fill="url(#impact)"/>
+<g stroke="#fff" stroke-width="2" opacity=".8"><path d="M19 19 L29 19 M24 14 L24 24 M145 146 L155 146 M150 141 L150 151"/></g></svg>
