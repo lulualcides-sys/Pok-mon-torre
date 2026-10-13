@@ -1,6 +1,37 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#09111e"><title>Pokémon Torre — carregando</title><style>body{background:#09111e;color:#d6fff2;font:600 16px system-ui;min-height:100vh;display:grid;place-items:center;margin:0;text-align:center;padding:20px}.progress{font-size:12px;opacity:.7;margin-top:12px}</style></head><body><main><div>🎮 Carregando Pokémon Torre…</div><div class="progress" id="pt-status">Preparando os sprites e animações.</div></main><script>
-(async()=>{const total=25;const paths=Array.from({length:total},(_,i)=>'parts/p'+String(i).padStart(3,'0')+'.txt');let completed=0;const pieces=await Promise.all(paths.map(async path=>{const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v46-1-bootverified',{cache:'no-store'});if(!response.ok)throw Error('Falha '+response.status+' ao carregar '+path);const txt=await response.text();completed++;document.getElementById('pt-status').textContent='Carregando arquivos: '+completed+'/'+total;return txt}));let game=pieces.join('');if(!game.startsWith('<!doctype html>')&&!game.startsWith('<!DOCTYPE html>'))throw Error('Conteúdo do jogo não encontrado');if(!game.includes('PokemonTorreV3579Diagnostics'))throw Error('Versão do jogo incompleta');const fxFiles=["effects/moves/_runtime/begin.js","effects/moves/psychic/index.js","effects/moves/confusion/index.js","effects/moves/flamethrower/index.js","effects/moves/telekinesis/index.js","effects/moves/_runtime/beam-kit.js","effects/moves/hyper-beam/index.js","effects/moves/aurora-beam/index.js","effects/moves/ice-beam/index.js","effects/moves/solar-beam/index.js","effects/moves/catalog/painter.js","effects/moves/catalog/bundle.js","effects/moves/_runtime/semantic-vfx.js","effects/moves/_runtime/cinematic-vfx.js","effects/moves/tri-attack/index.js","effects/moves/_runtime/pixi-layer.js","effects/ui/move-type-filter.js","effects/moves/_runtime/original-gba-vfx.js","effects/moves/_runtime/fire-original-vfx.js","effects/moves/_runtime/legendary-fire-vfx.js","effects/moves/_runtime/end.js"];let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build=sprite-fire-v42-5-water45-v46-1-bootverified',{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.warn('Efeitos modulares indisponíveis; usando V35.80',error);plugin=await fetch('effects/mewtwo-4moves-v3580.js',{cache:'no-store'}).then(r=>r.ok?r.text():null).catch(()=>null);}if(plugin){const anchor='\nrender();\n})();\n</scr'+'ipt>';if(game.includes(anchor)&&plugin.includes('PokemonTorreMewtwo4FX'))game=game.replace(anchor,'\n'+plugin+'\n'+anchor);else console.warn('Pacote V35.80 não pôde ser inserido; carregando o jogo original.');}// Sprite-only fire effects V41 + V42.5: 8 isolated original-GIF animations.
-const fireSpriteFiles=[
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#09111e"><title>Pokémon Torre — carregando</title><style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100dvh;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,#16324f 0%,#0b182b 46%,#060e1a 100%);color:#f4fbff;font:500 14px/1.5 system-ui,-apple-system,sans-serif}
+body:before{content:"";position:fixed;inset:0;background:repeating-linear-gradient(90deg,transparent 0 47px,#86dcff07 48px 49px,transparent 50px 96px),repeating-linear-gradient(0deg,transparent 0 47px,#86dcff05 48px 49px,transparent 50px 96px);pointer-events:none}
+#pt-loader{position:relative;width:min(430px,calc(100vw - 36px));padding:35px 24px 29px;text-align:center;border:1px solid #5ca9cf59;border-radius:23px;background:linear-gradient(154deg,#172d44e8,#071324ed);box-shadow:0 30px 100px #0009,0 0 60px #32aafe11;isolation:isolate}
+#pt-loader:before{content:"";position:absolute;inset:0;border-radius:23px;border-top:1px solid #e1fbff57;pointer-events:none}
+.pt-emblem{display:grid;place-items:center;margin:0 auto 15px;width:85px;height:85px;border:1px solid #ffe68b88;border-radius:24px;background:radial-gradient(circle at 40% 35%,#41506b,#152437 72%);box-shadow:0 0 27px #fac45c33;font-size:45px}
+.pt-kicker{margin:0;color:#83d9f2;font-weight:800;letter-spacing:.26em;font-size:10px}
+#pt-loader h1{font-size:26px;letter-spacing:.06em;margin:8px 0 5px;font-weight:900}
+.pt-desc{margin:0 0 24px;color:#a6b9d0;font-size:12px}
+.pt-bar-track{height:14px;overflow:hidden;padding:2px;border:1px solid #69b5d36c;border-radius:100px;background:#05121d;box-shadow:inset 0 3px 9px #0008}
+#pt-bar-fill{height:100%;width:0%;border-radius:100px;background:linear-gradient(90deg,#218cc9,#4bd5ef 54%,#eafcff);box-shadow:0 0 15px #74eaff9c;transition:width .26s ease}
+.pt-numbers{display:flex;justify-content:space-between;gap:8px;margin:12px 0 0;align-items:center}
+#pt-status{color:#b7d6e5;font-size:12px;text-align:left;min-width:0}
+#pt-percent{font-size:16px;font-weight:900;color:#ccf7ff;font-variant-numeric:tabular-nums}
+.pt-foot{margin:24px 0 0;display:flex;justify-content:center;gap:15px;flex-wrap:wrap}
+.pt-foot a{color:#83cbe8;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+.pt-error{color:#ffc6bd!important}
+.pt-retry{background:#214b68;border:1px solid #54b7e5;padding:9px 14px;border-radius:9px;color:#fff;margin-top:12px;cursor:pointer}
+@media(prefers-reduced-motion:reduce){#pt-bar-fill{transition:none}}
+</style></head><body><main id="pt-loader" role="status" aria-live="polite" aria-label="Carregando Pokémon Torre">
+<div class="pt-emblem" aria-hidden="true">⚡</div>
+<p class="pt-kicker">POKÉMON • TORRE DE BATALHAS</p>
+<h1>POKÉMON TORRE</h1>
+<p class="pt-desc">Preparando uma batalha cinematográfica</p>
+<div class="pt-bar-track" role="progressbar" aria-label="Progresso do carregamento" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pt-progress">
+<div id="pt-bar-fill"></div></div>
+<div class="pt-numbers"><span id="pt-status">Iniciando jogo…</span><span id="pt-percent">0%</span></div>
+<div class="pt-foot"><a href="?safe=1" id="pt-safe-link">Abrir modo seguro</a><a href="https://github.com/lulualcides-sys/Pok-mon-torre/issues" target="_blank" rel="noopener">Relatar problema</a></div>
+</main><script>
+const ptProgress=(value,phase)=>{const pct=Math.max(0,Math.min(100,Math.round(value)));const fill=document.getElementById('pt-bar-fill'),label=document.getElementById('pt-status'),number=document.getElementById('pt-percent'),bar=document.getElementById('pt-progress');if(fill)fill.style.width=pct+'%';if(label&&phase)label.textContent=phase;if(number)number.textContent=pct+'%';if(bar)bar.setAttribute('aria-valuenow',String(pct));};
+(async()=>{ptProgress(2,'Iniciando Pokémon Torre…');const total=25;const paths=Array.from({length:total},(_,i)=>'parts/p'+String(i).padStart(3,'0')+'.txt');let completed=0;const pieces=await Promise.all(paths.map(async path=>{const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-boot-bar',{cache:'no-store'});if(!response.ok)throw Error('Falha '+response.status+' ao carregar '+path);const txt=await response.text();completed++;ptProgress(5+completed/total*46,'Carregando recursos do jogo…');return txt}));ptProgress(52,'Montando o campo de batalha…');let game=pieces.join('');if(!game.startsWith('<!doctype html>')&&!game.startsWith('<!DOCTYPE html>'))throw Error('Conteúdo do jogo não encontrado');if(!game.includes('PokemonTorreV3579Diagnostics'))throw Error('Versão do jogo incompleta');ptProgress(60,'Preparando efeitos e animações…');const fxFiles=["effects/moves/_runtime/begin.js","effects/moves/psychic/index.js","effects/moves/confusion/index.js","effects/moves/flamethrower/index.js","effects/moves/telekinesis/index.js","effects/moves/_runtime/beam-kit.js","effects/moves/hyper-beam/index.js","effects/moves/aurora-beam/index.js","effects/moves/ice-beam/index.js","effects/moves/solar-beam/index.js","effects/moves/catalog/painter.js","effects/moves/catalog/bundle.js","effects/moves/_runtime/semantic-vfx.js","effects/moves/_runtime/cinematic-vfx.js","effects/moves/tri-attack/index.js","effects/moves/_runtime/pixi-layer.js","effects/ui/move-type-filter.js","effects/moves/_runtime/original-gba-vfx.js","effects/moves/_runtime/fire-original-vfx.js","effects/moves/_runtime/legendary-fire-vfx.js","effects/moves/_runtime/end.js"];let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-boot-bar',{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.warn('Efeitos modulares indisponíveis; usando V35.80',error);plugin=await fetch('effects/mewtwo-4moves-v3580.js',{cache:'no-store'}).then(r=>r.ok?r.text():null).catch(()=>null);}if(plugin){const anchor='\nrender();\n})();\n</scr'+'ipt>';if(game.includes(anchor)&&plugin.includes('PokemonTorreMewtwo4FX'))game=game.replace(anchor,'\n'+plugin+'\n'+anchor);else console.warn('Pacote V35.80 não pôde ser inserido; carregando o jogo original.');}// Sprite-only fire effects V41 + V42.5: 8 isolated original-GIF animations.
+ptProgress(68,'Carregando sprites de fogo…');const fireSpriteFiles=[
  "effects/moves/_runtime/fire-sprite-kit.js",
  "effects/moves/chamas-de-moltres/index.js",
  "effects/moves/rajada-flamejante/index.js",
@@ -9,7 +40,7 @@ const fireSpriteFiles=[
  "effects/moves/_runtime/fire-sprite-integrate.js"
 ];
 const fireSpriteSections=await Promise.all(fireSpriteFiles.map(async path=>{
- const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v46-1-bootverified',{cache:'no-store'});
+ const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-boot-bar',{cache:'no-store'});
  if(!response.ok)throw Error('Falha ao carregar sprite '+path+' ('+response.status+')');
  return response.text();
 }));
@@ -20,7 +51,7 @@ const nextFourFireMoves=[
  "effects/moves/brasa/index.js"
 ];
 const extraFireSections=await Promise.all(nextFourFireMoves.map(async path=>{
- const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v46-1-bootverified',{cache:'no-store'});
+ const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-boot-bar',{cache:'no-store'});
  if(!response.ok)throw Error('Novo golpe não carregou: '+path+' ('+response.status+')');
  return response.text();
 }));
@@ -35,7 +66,7 @@ if(!fireSpritePlugin.includes('PokemonTorreFireSpriteV41'))throw Error('Sprite p
 const fireSpriteAnchor='\nrender();\n})();\n</scr'+'ipt>';
 if(!game.includes(fireSpriteAnchor))throw Error('Ponto de inserção dos sprites não encontrado');
 game=game.replace(fireSpriteAnchor,'\n'+fireSpritePlugin+'\n'+fireSpriteAnchor);
-const waterSpriteFiles=[
+ptProgress(76,'Carregando golpes de água…');const waterSpriteFiles=[
  "effects/moves/_runtime/water-sprite-kit.js",
  "effects/moves/skull-bash/index.js",
  "effects/moves/tsunami/index.js",
@@ -48,7 +79,7 @@ const waterSpriteFiles=[
  "effects/moves/_runtime/water-sprite-integrate.js"
 ];
 const waterSpriteSections=await Promise.all(waterSpriteFiles.map(async path=>{
- const response=await fetch(path+'?build=water-sprites-v45-v46-1-bootverified',{cache:'no-store'});
+ const response=await fetch(path+'?build=water-sprites-v45-v47-boot-bar',{cache:'no-store'});
  if(!response.ok)throw Error('Falha ao carregar ataque de água '+path+' ('+response.status+')');
  return response.text();
 }));
@@ -59,7 +90,7 @@ game=game.replace(fireSpriteAnchor,'\n'+waterSpritePlugin+'\n'+fireSpriteAnchor)
 
 // Electric V46: four independent attacks + canonical game-wide move typing.
 // Keep approved fire V42.5 and water V45 modules untouched.
-const electricV46Files=[
+ptProgress(84,'Preparando efeitos elétricos…');const electricV46Files=[
  "effects/moves/_runtime/electric-sprite-kit.js",
  "effects/moves/faisca/index.js",
  "effects/moves/discharge/index.js",
@@ -70,7 +101,7 @@ const electricV46Files=[
 ];
 const enableElectricPreview=new URLSearchParams(location.search).get('safe')!=='1';
 const electricV46Parts=enableElectricPreview?await Promise.all(electricV46Files.map(async path=>{
- const response=await fetch(path+'?build=electric-sprites-v46-1-verified',{cache:'no-store'});
+ const response=await fetch(path+'?build=electric-sprites-v47-electric-cinematic',{cache:'no-store'});
  if(!response.ok)throw Error('Golpe eletrico V46 nao carregou: '+path+' ('+response.status+')');
  return response.text();
 })):[];
@@ -82,7 +113,7 @@ if(enableElectricPreview){
  // Attach the move catalogue installer INSIDE the original V32 scope.
  // V46's global plugin cannot access that private v32Catalogue binding.
  const v32Closing='\n})();\n/* FIM POKEMON TORRE V32 */';
- const hookResponse=await fetch('effects/moves/_runtime/move-type-hook-v46.js?build=v46-1-bootverified',{cache:'no-store'});
+ const hookResponse=await fetch('effects/moves/_runtime/move-type-hook-v46.js?build=v47-boot-bar',{cache:'no-store'});
  if(!hookResponse.ok)throw Error('V46: instalador interno não carregou '+hookResponse.status);
  if(!game.includes(v32Closing))throw Error('V46: fechamento do catálogo V32 não encontrado');
  game=game.replace(v32Closing,'\n'+await hookResponse.text()+v32Closing);
@@ -90,7 +121,7 @@ if(enableElectricPreview){
 if(enableElectricPreview)game=game.replace(fireSpriteAnchor,'\n'+electricV46Plugin+'\n'+fireSpriteAnchor);
 
 
-const libraries='<scr'+'ipt src="https://cdn.jsdelivr.net/npm/pixi.js@7.4.3/dist/pixi.min.js"></scr'+'ipt>'+'<scr'+'ipt src="https://cdn.jsdelivr.net/npm/@pixi/particle-emitter@5.0.10/dist/particle-emitter.min.js"></scr'+'ipt>';game=game.replace('<script>',libraries+'<script>');// If game startup throws after document.write(), load the preserved V45 mode.
+ptProgress(95,'Inicializando a arena…');const libraries='<scr'+'ipt src="https://cdn.jsdelivr.net/npm/pixi.js@7.4.3/dist/pixi.min.js"></scr'+'ipt>'+'<scr'+'ipt src="https://cdn.jsdelivr.net/npm/@pixi/particle-emitter@5.0.10/dist/particle-emitter.min.js"></scr'+'ipt>';game=game.replace('<script>',libraries+'<script>');// If game startup throws after document.write(), load the preserved V45 mode.
 if(enableElectricPreview){
  const startedAt=Date.now();
  window.addEventListener('error',function startupRecovery(event){
@@ -101,11 +132,11 @@ if(enableElectricPreview){
   location.replace(safeUrl.toString());
  },{once:true});
 }
-document.open();document.write(game);document.close()})().catch(e=>{
+ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
  if(new URLSearchParams(location.search).get('safe')!=='1'){
   const safeUrl=new URL(location.href);safeUrl.searchParams.set('safe','1');
   console.error('Falha na V46, restaurando V45:',e);
   location.replace(safeUrl.toString());return;
  }
- document.body.innerHTML='<main><h2>Não foi possível abrir o jogo</h2><p id="reason"></p><button onclick="location.reload()">Tentar novamente</button></main>';document.getElementById('reason').textContent=e.message;console.error(e)})
+ ptProgress(0,'Falha ao carregar. Use o modo seguro ou tente novamente.');const label=document.getElementById('pt-status');if(label){label.classList.add('pt-error');label.title=String(e.message||e)}const retry=document.createElement('button');retry.className='pt-retry';retry.textContent='Tentar novamente';retry.onclick=()=>location.reload();document.getElementById('pt-loader')?.appendChild(retry);console.error(e)})
 </script></body></html>
