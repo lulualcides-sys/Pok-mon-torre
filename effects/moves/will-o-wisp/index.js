@@ -1,36 +1,34 @@
-/* Will-O-Wisp — independent spectral-blue wisps; status, not an explosion. */
+/* Will-O-Wisp — ONLY spectral blue source sprites.
+ * V42.1: attached to the ENEMY for the whole animation, follows enemy movement.
+ * No incoming fireball, old generic overlay, orange flash or explosion.
+ */
 fireSpriteV41.add('willowisp',{
- key:'willOWisp',duration:1980,contact:false,status:true,
+ key:'willOWisp',duration:3300,contact:false,status:true,stickToTarget:true,
  paint(g,f,t,ms,s,K){
-  const {draw,ease,lerp,clamp}=K,A=f.from,B=f.to;
-  const warm=ease(t/.15),travel=ease((t-.10)/.53);
-  const fade=1-ease((t-.91)/.09);
-  const TAU=Math.PI*2;
-  // Five independent blue flames weave towards the target, not a fire beam.
+  const {draw,ease}=K,B=f.to,TAU=Math.PI*2;
+  const on=ease(t/.035),off=1-ease((t-.94)/.06);
+  const alpha=on*off;
+  if(alpha<=.001)return;
+  // Central spectral fire is always above the foe, not beside the caster.
+  const bob=Math.sin(ms*.005)*5*s;
+  draw(g,'flame',0,B[0],B[1]-17*s+bob,39*s,54*s,
+    {blue:true,alpha:alpha*.96,rotation:Math.sin(ms*.003)*.09});
+  draw(g,'firebolt',Math.floor(ms/94),B[0],B[1]-30*s+bob,
+    27*s,33*s,{blue:true,alpha:alpha*.83});
+  // Small blue wisps stay attached to the opponent's upper body until expiry.
   for(let i=0;i<5;i++){
-   const lag=i*.038,q=clamp((travel-lag)/(1-lag));
-   const orbit=i*TAU/5+ms*.0036;
-   const spread=(1-q)*20*s+Math.sin(q*Math.PI)*12*s;
-   const x=lerp(A[0],B[0],q)+Math.cos(orbit)*spread;
-   const y=lerp(A[1],B[1],q)+Math.sin(orbit)*spread*.74-10*s;
-   const flicker=.86+Math.sin(ms*.016+i*2.2)*.12;
-   const size=(26+(i%2)*7)*s*flicker;
-   draw(g,'flame',0,x,y,size,size*1.31,
-     {blue:true,alpha:fade*warm*.85,rotation:Math.sin(ms*.004+i)*.17});
-   draw(g,'firebolt',Math.floor(ms/89)+i*3,x+Math.sin(orbit)*6*s,y-9*s,
-     19*s,22*s,{blue:true,alpha:fade*warm*.71,rotation:orbit*.15});
+   const angle=(i*TAU/5)+ms*.00175;
+   const spread=(22+5*Math.sin(ms*.003+i))*s;
+   const x=B[0]+Math.cos(angle)*spread;
+   const y=B[1]-10*s+Math.sin(angle)*spread*.45+bob*.35;
+   const size=(19+(i%2)*5)*s;
+   draw(g,'flame',0,x,y,size,size*1.32,
+     {blue:true,alpha:alpha*(.69+.19*Math.sin(ms*.011+i)),rotation:Math.sin(ms*.004+i)*.13});
+   draw(g,'firebolt',Math.floor(ms/92)+i*3,x,y-6*s,
+      size*.73,size*.86,{blue:true,alpha:alpha*.69});
   }
-  // Burn-like spectral aura remains around the target; no burst damage visual.
-  if(t>.51){
-   const burn=ease((t-.51)/.13)*(1-ease((t-.91)/.09));
-   for(let i=0;i<6;i++){
-    const a=i*TAU/6+ms*.0035,rad=(24+Math.sin(ms*.007+i)*5)*s;
-    draw(g,'flame',0,B[0]+Math.cos(a)*rad,B[1]+Math.sin(a)*rad*.69,
-      (22+i%2*6)*s,(30+i%2*7)*s,
-      {blue:true,alpha:burn*(.72+.15*Math.sin(ms*.012+i)),rotation:a*.20});
-   }
-   draw(g,'spinRing',Math.floor(ms/90),B[0],B[1]+21*s,65*s,30*s,
-     {blue:true,alpha:burn*.68});
-  }
+  // Residual blue ring keeps the status anchored visually to the enemy.
+  draw(g,'spinRing',Math.floor(ms/120),B[0],B[1]+15*s,62*s,27*s,
+     {blue:true,alpha:alpha*.53});
  }
 });
