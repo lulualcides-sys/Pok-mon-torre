@@ -1,4 +1,4 @@
-/* Pokemon Torre V46: move typing is authoritative by move NAME, not owner type.
+/* Pokemon Torre V46.1: move typing is authoritative by move NAME, not owner type.
  * The old all-species test catalog mixed wrong types and duplicated entries.
  * Preserve power, cooldowns, learned restrictions and ALL accepted VFX.
  */
@@ -27,54 +27,14 @@
   }
   return fixed;
  };
- const beforeCatalogue=v32Catalogue;
- v32Catalogue=function(mon){
-  const original=beforeCatalogue(mon);
-  if(!Array.isArray(original)||!original.length)return original;
-  const tester=Number(mon?.id)===150&&mon?.v3566MewtwoTest===true;
-  const names=new Map(),rows=[];
-  for(const entry of original){
-   if(!entry?.move?.name)continue;
-   const move=canonical(entry.move);
-   const key=v32MoveKey(move),name=normalize(move.name);
-   const item={...entry,move,key};
-   // The sandbox of 415 moves used to include the SAME move with several
-   // different types. Present just one actual move name in that test catalog.
-   if(tester&&names.has(name)){
-    const previous=names.get(name);
-    if(!previous.available&&item.available)Object.assign(previous,item);
-    stats.duplicates++;
-    continue;
-   }
-   names.set(name,item);
-   rows.push(item);
-  }
-  if(tester)rows.sort((a,b)=>a.move.type.localeCompare(b.move.type)||
-   a.move.name.localeCompare(b.move.name,'pt-BR'));
-  // Keep equipment selections compatible with saved old "name|WRONGTYPE|kind"
-  // keys; no reset of the user's team, energy, levels or active battle.
-  if(mon&&Array.isArray(mon.v32Slots)){
-   const remapped=mon.v32Slots.map(old=>{
-    if(rows.some(x=>x.key===old))return old;
-    const oldName=normalize(String(old).split('|')[0]);
-    const candidate=names.get(oldName);
-    return candidate?.key||old;
-   });
-   if(remapped.some((k,i)=>k!==mon.v32Slots[i])){
-    stats.migratedSlots+=remapped.filter((k,i)=>k!==mon.v32Slots[i]).length;
-    mon.v32Slots=remapped;
-    if(typeof persist==='function')persist();
-   }
-  }
-  return rows;
- };
- const beforeSkillSet=skillSet;
- skillSet=function(mon){
-  const selected=beforeSkillSet(mon);
-  return Array.isArray(selected)?selected.map(canonical):selected;
- };
+ // The V32 catalogue is private to its own IIFE: never reference it here.
+ // Hook inserted inside V32 installs the wrappers in their proper scope.
+ const install=window.PokemonTorreInstallMoveTypesV46;
+ if(typeof install!=='function')throw Error(
+  'V46 type patch: lexical catalogue hook missing; safe mode should be used');
+ install(canonical,normalize,stats);
  window.PokemonTorreMoveTypesV46=()=>({
-  version:'46.0',referenceNames:Object.keys(moveDex).length,
+  version:'46.1',referenceNames:Object.keys(moveDex).length,
   curatedCorrections:Object.keys(overrides).length,...stats,
   lookup:name=>{
    const key=normalize(name),change=overrides[key];
@@ -82,6 +42,6 @@
     moveDex[key]?{type:moveDex[key]}:null;
   },
   preview:name=>({type:canonical({name,type:'electric',cat:'special'}).type}),
-  catalogue:mon=>v32Catalogue(mon)
+  catalogue:mon=>window.PokemonTorreV3566QA.catalog(mon)
  });
 })();
