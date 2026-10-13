@@ -55,7 +55,7 @@ class FakeContext{
  drawImage(img){drawn++;if(img.__isCanvas)blueDrawn++;else orangeDrawn++;}
 }
 class FakeCanvas{
- constructor(){this.width=0;this.height=0;this.__isCanvas=true;}
+ constructor(){this.width=0;this.height=0;this.__isCanvas=true;this.id='';this.style={};}
  getContext(){const cv=this;return {
   drawImage(){},
   getImageData(){return {data:new Uint8ClampedArray(cv.width*cv.height*4)};},
