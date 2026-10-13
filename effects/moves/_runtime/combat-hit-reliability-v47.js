@@ -258,6 +258,31 @@
   try{return v473PhysicalDashDraw.call(this,now)}
   finally{p.x=originalX;p.y=originalY}
  };
+ // Collision recovery for cases where the legacy engine advances the
+ // render loop but an older update() wrapper skips the new contact queue.
+ // Both update() and draw() invoke the SAME original hitTarget/damage rules.
+ // After the first successful collision the queue entry is removed, making
+ // it impossible for the two pathways to deal the same hit twice.
+ const v475CollisionFrameDraw=BattleEngine.prototype.draw;
+ BattleEngine.prototype.draw=function(now){
+  const result=v475CollisionFrameDraw.call(this,now);
+  if(!battle?.active||battle.paused||!this.v47ContactToLand?.length)
+   return result;
+  const tick=performance.now(),remaining=[];
+  for(const fx of this.v47ContactToLand){
+   if(fx.until<=tick||fx.owner!==current()||fx.victim!==foe())continue;
+   if(Number(fx.victim.hp)<fx.hpBefore)continue;
+   if(tick<fx.at||(this.enemy?.inv||0)>0){
+    remaining.push(fx);continue;
+   }
+   const hp=Number(fx.victim.hp);
+   this.hitTarget('enemy',fx.type,fx.power);
+   if(Number(fx.victim.hp)<hp)report.contactFollowThrough++;
+   else if(tick<fx.until)remaining.push(fx);
+  }
+  this.v47ContactToLand=remaining;
+  return result;
+ };
  window.PokemonTorreCombatV47=()=>({
   ...report,active:!!battle?.active,
   enemyHp:battle?.active?foe()?.hp:null,
@@ -308,6 +333,11 @@
     moves:battle?.active?skillSet(current()).map(m=>({name:m.name,kind:m.kind,power:m.power,type:m.type})):[],
     projectiles:engine?.projectiles?.length||0,
     running:!!engine?.running,frameTime:engine?.time||0,
+    combatClock:performance.now(),
+    contactQueue:(engine?.v47ContactToLand||[]).map(x=>({
+     at:x.at,until:x.until,hpBefore:x.hpBefore,
+     ownerMatches:x.owner===current(),victimMatches:x.victim===foe()
+    })),
     enemyInv:engine?.enemy?.inv||0,
     windup:engine?.v33Windup?.until||null,
     stats:window.PokemonTorreCombatV47()
