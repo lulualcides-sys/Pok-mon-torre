@@ -167,20 +167,27 @@
  // No production site visitor can start test battles or alter saved creatures.
  if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)){
   window.PokemonTorreLocalCombatTestV47={
-   start(allyId=25,foeId=143){
+   start(allyId=25,foeId=143,options={}){
     if(battle?.active)stopTimers();
     save.team=[mon(Number(allyId),76)];
     const target=mon(Number(foeId),85);
     target.hp=target.maxHp*20;target.maxHp=target.hp;
     startBattle([target],'TESTE DE ACERTO',true);
-    if(engine){engine.foeDodgeCD=999;engine.enemy.inv=0;engine.enemy.spawn=0;}
+    if(engine){engine.foeDodgeCD=options.allowDodge?0:999;engine.enemy.inv=0;engine.enemy.spawn=0;}
     return this.snapshot();
    },
-   cast(slot=0){
+   cast(slot=0,options={}){
     if(!engine||!battle?.active)return {error:'No active battle'};
     // Test harness must not remain in the tutorial/intro pause state.
     battle.paused=false;battle.energy=100;cooldowns[slot]=0;
     const selected=skillSet(current())[slot];
+    if(options.staleShot&&engine.projectiles){
+     // A slow old projectile can legitimately outlive the next move.
+     // Regression: it must not block this cast's own collision.
+     engine.projectiles.push({x:engine.w*.18,y:engine.h*.33,
+      vx:0,vy:0,life:4,from:'player',tail:[],type:'water',
+      power:1,r:1,shape:'orb'});
+    }
     const before=foe().hp;
     engine.useMove(slot);
     return {name:selected?.name,kind:selected?.kind,type:selected?.type,
