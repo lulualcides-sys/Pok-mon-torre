@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="140" viewBox="0 0 150 140"><defs><linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6ff"/><stop offset=".3" stop-color="#ee9eff"/><stop offset=".65" stop-color="#a46cf0"/><stop offset="1" stop-color="#4265b7"/></linearGradient><filter id="gl" x="-45%" y="-45%" width="190%" height="190%"><feGaussianBlur stdDeviation="2"/></filter></defs>
+ <g fill="none" stroke-linecap="round">
+ <path d="M72 9C119 6 153 47 130 94C113 128 63 135 33 103C7 76 22 26 63 24C98 22 120 56 103 82C90 104 54 105 42 81C28 51 58 45 70 55" stroke="#ab75f3" stroke-width="13" filter="url(#gl)" opacity=".55"/>
+ <path d="M72 9C119 6 153 47 130 94C113 128 63 135 33 103C7 76 22 26 63 24C98 22 120 56 103 82C90 104 54 105 42 81C28 51 58 45 70 55" stroke="url(#p)" stroke-width="5.5" stroke-dasharray="45 8 16 3"/>
+ <path d="M34 18L47 43 M123 16L112 43 M131 119L112 105 M9 101L34 91" stroke="#fff0fe" stroke-width="3.8"/>
+ </g><g fill="#d7faff"><path d="M74 44L82 60L98 66L82 73L75 89L67 73L51 66L67 61Z"/>
+ <path d="M115 43L119 50L127 55L119 59L115 67L110 59L103 55L110 51Z"/></g>
+ </svg>

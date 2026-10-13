@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><defs><linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6ff"/><stop offset=".3" stop-color="#ee9eff"/><stop offset=".65" stop-color="#a46cf0"/><stop offset="1" stop-color="#4265b7"/></linearGradient><filter id="gl" x="-45%" y="-45%" width="190%" height="190%"><feGaussianBlur stdDeviation="2"/></filter></defs>
+ <g fill="none" stroke-linecap="round">
+ <path d="M91 8C153 11 173 67 148 119C117 181 38 165 15 107C-9 46 44 6 91 29C132 48 139 88 109 116C74 145 38 110 48 72C57 49 81 43 96 60" stroke="#7650d3" stroke-width="17" filter="url(#gl)" opacity=".63"/>
+ <path d="M91 8C153 11 173 67 148 119C117 181 38 165 15 107C-9 46 44 6 91 29C132 48 139 88 109 116C74 145 38 110 48 72C57 49 81 43 96 60" stroke="url(#p)" stroke-width="6" stroke-dasharray="44 7 21 8"/>
+ </g><g fill="#e2aaff" stroke="#fff5ff" stroke-width="1.5">
+ <path d="M112 8L132 40L103 38Z"/><path d="M165 71L178 101L148 88Z"/><path d="M37 145L5 159L22 127Z"/>
+ <path d="M63 12L45 42L32 22Z"/><path d="M110 128L137 163L106 151Z"/></g>
+ <path d="M87 57L98 78L120 84L98 93L89 114L77 93L57 85L78 78Z" fill="#fff2ff"/>
+ </svg>

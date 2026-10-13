@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="125" viewBox="0 0 140 125"><defs><linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6ff"/><stop offset=".3" stop-color="#ee9eff"/><stop offset=".65" stop-color="#a46cf0"/><stop offset="1" stop-color="#4265b7"/></linearGradient><filter id="gl" x="-45%" y="-45%" width="190%" height="190%"><feGaussianBlur stdDeviation="2"/></filter></defs>
+ <g fill="none" stroke-linecap="round">
+ <path d="M65 15C119 12 141 56 119 94C92 133 29 115 15 78C3 43 37 16 76 25C107 32 118 66 96 88C73 107 36 88 40 60C43 42 66 36 80 44"
+ stroke="#9f6eef" stroke-width="9" opacity=".5" filter="url(#gl)"/>
+ <path d="M65 15C119 12 141 56 119 94C92 133 29 115 15 78C3 43 37 16 76 25C107 32 118 66 96 88C73 107 36 88 40 60C43 42 66 36 80 44"
+ stroke="url(#p)" stroke-width="4.4" stroke-dasharray="20 9 32 3"/>
+ <path d="M18 42 C45 6 101 17 119 49 M31 102 C61 120 103 105 114 77"
+ stroke="#ffe3ff" stroke-width="1.8" opacity=".88"/>
+ </g><path d="M69 34L76 49L90 52L76 57L69 73L62 57L48 52L62 47Z" fill="#fff1ff" opacity=".92"/>
+ <path d="M100 4 L105 13 L114 17 L105 20 L100 30 L97 20 L88 17 L97 13Z" fill="#acfaff"/>
+ </svg>
