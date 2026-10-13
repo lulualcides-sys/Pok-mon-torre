@@ -170,6 +170,12 @@
   }
   return result;
  };
+ // Visible version marker makes cached/older game builds unmistakable on phone.
+ const gameVersion=document.getElementById('ptFireSpriteV41Badge');
+ if(gameVersion){
+  gameVersion.textContent='ACERTO REAL V47.3 · ELÉTRICOS V47 · ÁGUA V45';
+  gameVersion.title='Colisões reais verificadas. Ativos: sprite e acerto V47.3';
+ }
  window.PokemonTorreCombatV47=()=>({
   ...report,active:!!battle?.active,
   enemyHp:battle?.active?foe()?.hp:null,
