@@ -1,4 +1,4 @@
-name: Testar golpes em sprites Fogo V42 e Água V44
+name: Testar golpes em sprites Fogo V42 e Água V45
 on:
   push:
     branches: [main]
@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Testar golpes aprovados, três efeitos de água V44 e status
+      - name: Testar fogo V42, água V44 e quatro golpes novos V45
         run: |
           node tests/test-fire-v41.cjs
           node tests/test-fire-v42.cjs
