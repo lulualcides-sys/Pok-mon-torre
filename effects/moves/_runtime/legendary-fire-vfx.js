@@ -56,4 +56,11 @@ const legendaryFireFX=(()=>{
  }
  return {paint,handles:f=>!!kinds[norm(f?.move?.name||f?.name)],diagnostics:()=>({moves:Object.keys(kinds),frames:{...frames}})};
 })();
+// Register names in the battle scheduler so accepted attacks are queued and painted.
+for(const [key,aliases,duration] of [
+ ['moltresblue',['Chamas de Moltres'],1450],
+ ['flamestream',['Rajada Flamejante'],1100],
+ ['firecircle',['Chama Circular'],1400],
+ ['fireclaw',['Garra de Fogo'],980]
+]){if(!pick(aliases[0]))registerMove('legendary_'+key,aliases,()=>{},duration);}
 window.PokemonTorreLegendaryFireFX=()=>legendaryFireFX.diagnostics();
