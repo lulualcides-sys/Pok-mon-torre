@@ -1,4 +1,4 @@
-name: Testar golpes de fogo V40
+name: Testar golpes de fogo em sprites V41
 on:
   push:
     branches: [main]
@@ -16,5 +16,5 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validar montagem e executar quatro ataques
-        run: node tests/test-fire-v40.cjs
+      - name: Validar sprites originais e executar quatro golpes
+        run: node tests/test-fire-v41.cjs
