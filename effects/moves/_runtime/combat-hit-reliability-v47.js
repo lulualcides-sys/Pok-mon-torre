@@ -378,7 +378,7 @@
     remaining.push(fx);continue;
    }
    const hp=Number(fx.victim.hp);
-   this.hitTarget('enemy',fx.type,fx.power);
+   landPhysicalContact(this,fx);
    if(Number(fx.victim.hp)<hp)report.contactFollowThrough++;
    else if(tick<fx.until)remaining.push(fx);
   }
