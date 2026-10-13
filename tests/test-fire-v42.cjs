@@ -148,7 +148,7 @@ now=1000+6*7000+4800;
 const sunnyFramesStart=moveFrameLog.length;
 const sunnyEvent=engine.v41FireVisuals?.find(f=>f.move.name==='Sunny Day');
 if(sunnyEvent)engine.draw(sunnyEvent.at+sunnyEvent.duration*.62);
-const sunnyCode=read('effects/moves/sunny-day/index.js');
+// Reuse sunnyCode from the static checks above.
 assert.doesNotMatch(sunnyCode,/draw\(g,'(?:firebolt|fireburst|explosion|explosionBurst)'/,
  'Sunny Day must not stamp explosive/launch sprite groups');
 const fireCode=read('effects/moves/fire-blast/index.js');
