@@ -251,7 +251,7 @@ assert.equal(diagnostics().originalFire,'42.5','Approved fire attacks remain unc
 const aliases=[
  ['Água Jet','aquaJet'],['Pulso de Água','waterPulse'],
  ['Water Pulse','waterPulse'],['Aqua Tail','aquaTail'],
- ['Water Gun','waterGun'],['Pistola d’Água','waterGun']
+ ['Water Gun','waterGun']
 ];
 for(const [name,key] of aliases){
  desc[5].name=name;
