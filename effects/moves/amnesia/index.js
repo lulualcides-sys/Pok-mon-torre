@@ -1,33 +1,54 @@
-/* Amnesia — psychic STATUS effect using the already-approved original
- * purple psychic pixel sheet. Stay on the caster, no launch/no enemy damage VFX.
+/* AMNESIA V44 — SELF status in classic Pokemon style, NO water/projectile.
+ * Real pixel-art question mark and subtle approved psychic sprite.
+ * The new symbol lives in this move's own folder, isolated from other FX.
  */
+const amnesiaMarkV44=new Image();
+amnesiaMarkV44.decoding='async';
+amnesiaMarkV44.src='effects/moves/amnesia/thought.svg?v=44.0';
 waterSpriteV43.add('amnesia',{
- key:'amnesia',duration:1620,contact:false,status:true,selfTarget:true,
+ key:'amnesia',duration:1780,contact:false,status:true,selfTarget:true,mentalGlyph:true,
  paint(g,f,t,ms,s,K){
-  const {mind,ease}=K,A=f.from,TAU=Math.PI*2;
-  const appear=ease(t/.16),fade=1-ease((t-.82)/.18),alpha=appear*fade;
-  if(alpha<.02)return;
-  const bx=A[0],by=A[1]-14*s;
-  // Three small thoughts expand/contract around the caster's head.
-  for(let i=0;i<4;i++){
-   const a=i*TAU/4+ms*.00165;
-   const rad=(19+9*Math.sin(Math.min(1,t)*Math.PI)+i*2)*s;
-   const x=bx+Math.cos(a)*rad;
-   const y=by-15*s+Math.sin(a)*rad*.66;
-   mind(g,[0,2,4,6][i],x,y,(27+(i%2)*5)*s,
-        (27+(i%2)*5)*s,{alpha:alpha*(.83-i*.09),rotation:a*.22});
+  const {mind,ease,clamp}=K,A=f.from;
+  const alpha=ease(t/.12)*(1-ease((t-.86)/.14));
+  if(alpha<=.008)return;
+  const x=A[0],y=A[1]-28*s;
+  // One small subtle approved psychic GIF-frame behind the Pokémon's head.
+  // A short aura, not a large explosive ring or orbiting orbs.
+  const pulse=.92+.06*Math.sin(ms*.005);
+  mind(g,1,x,y-7*s,41*s*pulse,36*s*pulse,
+    {alpha:alpha*.32});
+  if(!amnesiaMarkV44.naturalWidth)return;
+  // 3 sequential thought symbols appearing directly above the caster,
+  // then fading like a moment of lost memory.
+  const thoughts=[
+    {dx:0,dy:-36,size:54,appear:.10},
+    {dx:-29,dy:-63,size:34,appear:.27},
+    {dx:29,dy:-66,size:34,appear:.40}
+  ];
+  for(const thought of thoughts){
+   const onset=ease((t-thought.appear)/.13);
+   const gone=1-ease((t-.80)/.19);
+   const a=alpha*onset*gone;
+   if(a<.02)continue;
+   const bob=Math.sin(ms*.004+thought.dx*.10)*3*s;
+   const size=thought.size*s*(.94+.04*Math.sin(ms*.006+thought.dx));
+   const px=x+thought.dx*s,py=y+thought.dy*s+bob;
+   g.save();
+   g.imageSmoothingEnabled=false;
+   g.globalAlpha=a*(thought.size>40?.96:.82);
+   g.drawImage(amnesiaMarkV44,
+    Math.round(px-size/2),Math.round(py-size/2),
+    Math.round(size),Math.round(size));
+   g.restore();
   }
-  // Original hand-drawn halo frames around the user's head (not an explosion).
-  const pulse=.89+.10*Math.sin(ms*.009);
-  mind(g,4,bx,by-21*s,49*s*pulse,46*s*pulse,
-    {alpha:alpha*.79,rotation:ms*.0008});
-  if(t>.48){
-   const rise=ease((t-.48)/.26);
+  // A few real pixel-art psychic motes leave the caster's head at the end.
+  if(t>.57&&t<.92){
+   const rise=ease((t-.57)/.34);
    for(let i=0;i<3;i++){
-    const x=bx+(i-1)*20*s;
-    mind(g,8+(Math.floor(ms/105)+i)%6,x,
-      by-29*s-(22+15*i)*rise*s,21*s,23*s,
-      {alpha:alpha*.52,rotation:i*.22});
+    const off=(i-1)*24*s;
+    mind(g,11+i*2,x+off,y-50*s-rise*(18+9*i)*s,
+      14*s,16*s,
+      {alpha:alpha*(1-rise)*.43});
    }
   }
  }
