@@ -3,7 +3,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const html=read('index.html');
 const realCombatScript=read('effects/moves/_runtime/combat-hit-reliability-v47.js');
-new vm.Script(realCombatScript,{filename:'V47.5RealHitEngine'});
+new vm.Script(realCombatScript,{filename:'V47.6RealHitEngine'});
 assert.match(realCombatScript,/version:'47\.6'/,'Current one-shot contact engine version');
 assert.match(html,/combat-hit-reliability-v47\.js/,'Real hit module must load');
 assert.equal((realCombatScript.match(/const savedDraw=/g)||[]).length,0,
