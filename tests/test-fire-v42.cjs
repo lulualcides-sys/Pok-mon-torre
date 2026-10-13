@@ -66,8 +66,9 @@ new vm.Script(assembled.slice(start+8,end),{filename:'assembled-pokemon-v42.js'}
 const loader=index.slice(index.indexOf('<script>')+8,index.indexOf('</script>'));
 new vm.Script(loader,{filename:'loader-v42.js'});
 console.log('PASS: all 25 game parts + old sprite modules + new V42 moves compile');
-let now=1000,hitPixels=0,bluePixels=0,orangePixels=0;
-const battle={active:true,energy:1000,paused:false},mon={id:150};
+let now=1000,hitPixels=0,bluePixels=0,orangePixels=0,legacyPainted=0;
+const moveFrameLog=[];
+const battle={active:true,energy:1000,paused:false},mon={id:150},enemyMon={id:25};
 const cooldowns=Array(8).fill(0);
 const moves=[...oldMoves,...newMoves].map(name=>({name,type:'fire',cost:10,cd:2000,kind:/^(Sunny Day|Will-O-Wisp)$/.test(name)?'status':'bolt'}));
 const drawEvents=[];
@@ -84,25 +85,38 @@ class FakeImage{
 }
 class FakeContext{
  save(){}restore(){}translate(){}rotate(){}scale(){}
- drawImage(img){hitPixels++;if(img.__isCanvas)bluePixels++;else orangePixels++;}
+ drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh){hitPixels++;if(img.__isCanvas)bluePixels++;else orangePixels++;
+ moveFrameLog.push({blue:!!img.__isCanvas,frame:Math.round(sy/96)*8+Math.round(sx/96),dw,dh});}
 }
 class FakeEngine{
  constructor(){this.h=560;this.w=900;this.player={x:180,y:370};this.enemy={x:680,y:260};this.ctx=new FakeContext();this.particles=[];this.rings=[];this.v26Particles=[];}
  useMove(slot){
   if(now<cooldowns[slot]||battle.energy<moves[slot].cost)return false;
   cooldowns[slot]=now+2000;battle.energy-=moves[slot].cost;
-  if(moves[slot].name==='Will-O-Wisp')this.particles.push({legacy:'old-orange-effect'});
+  if(moves[slot].name==='Will-O-Wisp'){
+   this.particles.push({legacy:'old-orange-effect'});
+   this.v342StatusFx=[{name:'Will-O-Wisp',visual:'old-orange-burn'}];
+   this.v19Impacts=[{unlabelled:true,visual:'old-impact'}];
+  }
+  if(moves[slot].name==='Sunny Day'){
+   this.rings.push({legacy:'old-weather-flash'});
+   this.v344Fx=[{moveName:'Sunny Day',visual:'old-explosion'}];
+  }
   if(moves[slot].kind==='status'){
    this.v3568StatusFX=[{move:{name:moves[slot].name}}];
    this.v3580Visuals=[{move:{name:moves[slot].name}}];
   }
   return true;
  }
- draw(t){drawEvents.push({t,x:this.player.x,y:this.player.y});return true;}
+ draw(t){drawEvents.push({t,x:this.player.x,y:this.player.y});
+ for(const queue of ['v3568StatusFX','v3580Visuals','v342StatusFx','v344Fx','v19Impacts']){
+   for(const fx of (this[queue]||[]))if(fx?.visual||fx?.move?.name==='Will-O-Wisp'||fx?.move?.name==='Sunny Day')legacyPainted++;
+ }
+ return true;}
 }
 const engine=new FakeEngine();
 const sandbox={window:{PokemonTorreV360Paint(){return false}},BattleEngine:FakeEngine,Image:FakeImage,
- performance:{now:()=>now},battle,cooldowns,engine,console,current:()=>mon,skillSet:()=>moves,
+ performance:{now:()=>now},battle,cooldowns,engine,console,current:()=>mon,foe:()=>enemyMon,skillSet:()=>moves,
  document:{createElement:()=>new FakeCanvas(),getElementById:()=>null,body:{appendChild(){}}}};
 vm.runInNewContext(source,sandbox,{filename:'fire-sprite-v42.js'});
 const v42=sandbox.window.PokemonTorreFireSpriteV42;
@@ -128,9 +142,22 @@ const drawCounts={};
   assert.equal(engine.v3580Visuals.length,0,'Duplicate catalog overlay suppressed');
  }
 });
+// Inspect ORIGINAL sprite frame IDs. Sunny Day may not use any firebolt,
+ // fireburst or explosion frame; only gentle ring (15-25) and flame (74).
+now=1000+6*7000+4800;
+const sunnyFramesStart=moveFrameLog.length;
+const sunnyEvent=engine.v41FireVisuals?.find(f=>f.move.name==='Sunny Day');
+if(sunnyEvent)engine.draw(sunnyEvent.at+sunnyEvent.duration*.62);
+const sunnyCode=read('effects/moves/sunny-day/index.js');
+assert.doesNotMatch(sunnyCode,/draw\(g,'(?:firebolt|fireburst|explosion|explosionBurst)'/,
+ 'Sunny Day must not stamp explosive/launch sprite groups');
+const fireCode=read('effects/moves/fire-blast/index.js');
+assert.match(fireCode,/const w=100\*s\*growth,h=110\*s\*growth/,'Fire Blast smaller');
+assert.match(fireCode,/const bw=\(30\+/,'Fire Blast thicker');
+assert.ok(legacyPainted===0,'No legacy status visuals should reach the renderer');
 const metrics=v42();
 assert.equal(metrics.casts,8);
-assert.equal(metrics.version,'42.1');
+assert.equal(metrics.version,'42.2');
 assert.equal(metrics.newMoves.length,4);
 assert.equal(metrics.registered.length,8);
 assert.ok(bluePixels>0 && orangePixels>0,'Blue status wisps and fire attacks must render real atlas pixels');
@@ -147,13 +174,14 @@ assert.equal(engine.particles.length,0,'Old unlabelled red cast particles remove
 engine.v3568StatusFX.push({move:{name:'Will-O-Wisp'}});
 engine.v3580Visuals.push({move:{name:'Will-O-Wisp'}});
 engine.enemy.x+=93;engine.enemy.y-=17;
-const beforeBlue=bluePixels,beforeOrange=orangePixels;
+const beforeBlue=bluePixels,beforeOrange=orangePixels,previousLegacy=legacyPainted;
 engine.draw(now+wisp.duration*.86);
 assert.equal(wisp.to[0],engine.enemy.x,'Blue wisps track enemy horizontal motion');
-assert.equal(wisp.to[1],engine.enemy.y-Math.max(26,engine.h*.12),
+assert.equal(wisp.to[1],engine.enemy.y-Math.max(13,engine.h*.028),
  'Blue wisps hover ABOVE moving opponent');
 assert.ok(bluePixels>beforeBlue,'Blue flames persist near the END of the move');
 assert.equal(orangePixels,beforeOrange,'Will-O-Wisp paints NO orange flame or old effect');
+assert.equal(legacyPainted,previousLegacy,'Will-O-Wisp has no additional legacy drawings');
 assert.equal(engine.v3568StatusFX.length,0,'Requeued legacy status FX hidden during draw');
 assert.equal(engine.v3580Visuals.length,0,'Requeued generic catalog FX hidden during draw');
 engine.draw(now+wisp.duration-1);
