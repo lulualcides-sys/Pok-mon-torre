@@ -11,9 +11,10 @@ const server=http.createServer((req,res)=>{
   const pathname=decodeURIComponent(new URL(req.url,'http://local').pathname);
   const file=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname));
   if(!file.startsWith(root+path.sep))throw Error('Invalid path');
+  const bytes=fs.readFileSync(file);
   res.writeHead(200,{'content-type':mime[path.extname(file)]||'application/octet-stream','cache-control':'no-store'});
-  res.end(fs.readFileSync(file));
- }catch(err){res.writeHead(404);res.end(String(err));}
+  res.end(bytes);
+ }catch(err){if(!res.headersSent)res.writeHead(404);res.end(String(err));}
 });
 const get=url=>new Promise((resolve,reject)=>{
  http.get(url,res=>{let data='';res.on('data',d=>data+=d);
