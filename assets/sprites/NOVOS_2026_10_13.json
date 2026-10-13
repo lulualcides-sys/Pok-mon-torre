@@ -1,0 +1,189 @@
+{
+  "date": "2026-10-13",
+  "countReceived": 20,
+  "countValid": 19,
+  "localLibraryFolder": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13",
+  "notes": "19 files stored individually in ChatGPT Library; one empty GIF was NOT stored. These original binary images are not in GitHub, only this index. Authentic crops for two updated move effects are committed separately under effects/moves/gba-assets/psychic-original-v3.png.",
+  "source_files": [
+    {
+      "name": "1000981206.gif",
+      "kind": "terra",
+      "bytes": 278803,
+      "sha256": "314b6f48c238c9b4bf82f01079d5f6bdf131ee3ec740c89353407fedbb7ed5cd",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/terra/1000981206.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981207.gif",
+      "kind": "fogo",
+      "bytes": 612177,
+      "sha256": "5ade05bd8bbdd36e61e72fb259a02028f933b4d1d49529f31d608c9dff5f6380",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fogo/1000981207.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981208.gif",
+      "kind": "fogo",
+      "bytes": 871710,
+      "sha256": "bd7971939e6176fac77c56c344f9dad91925f8253f86af1da7803f1b3e953e2f",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fogo/1000981208.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981209.gif",
+      "kind": "fogo",
+      "bytes": 892355,
+      "sha256": "955738bd11b40f148d17f055dcdb5e36c32514e336259eeda2e6b6fb8668ff0a",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fogo/1000981209.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981210.gif",
+      "kind": "fogo",
+      "bytes": 228353,
+      "sha256": "81802a555ecaae135f62dc04f18e88f386230cb48e616f9143386ea376b01dad",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fogo/1000981210.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981211.gif",
+      "kind": "agua",
+      "bytes": 207062,
+      "sha256": "ee3f4a336395d762b8ccf5b27cda749201ceb24a8db89bc31ce02e06f8b4ed41",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/agua/1000981211.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981212.gif",
+      "kind": "terra",
+      "bytes": 854139,
+      "sha256": "fc0f8cee81bd95fe2dae2b62b949de8a63080b4e9c5d6af76f89d169ca8eb356",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/terra/1000981212.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981213.gif",
+      "kind": "agua",
+      "bytes": 995245,
+      "sha256": "000333e293994ef192c972032af38260124fc8cfd1f6ff73f34920fcbdfefbfc",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/agua/1000981213.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981215.gif",
+      "kind": "fogo",
+      "bytes": 183056,
+      "sha256": "3b15ad0cfe55042fc1b6f159b514d3614c81f118a6f15deac21d5d328a7bae1b",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fogo/1000981215.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981216.jpg",
+      "kind": "fantasma",
+      "bytes": 51458,
+      "sha256": "ac63c796b143b1aee3421f104cf0b7e9f1bf8866eedf7e0a6a48ea0ca8a760aa",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fantasma/1000981216.jpg",
+      "issue": null
+    },
+    {
+      "name": "1000981217.gif",
+      "kind": "terra",
+      "bytes": 904180,
+      "sha256": "7d9b6ab184ba35f3e6a5539ad3ba5372378488aa5c2f1e1a9eade0c7a902e198",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/terra/1000981217.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981218.gif",
+      "kind": "gelo",
+      "bytes": 541324,
+      "sha256": "4d341aa75603e4e056f3e42a0c0aeb9176a979b4cd0dc61950b48b406fe69209",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/gelo/1000981218.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981219.jpg",
+      "kind": "fumaça",
+      "bytes": 21014,
+      "sha256": "6bc397e258dd2a82b452110e247df8ce1c53e175c83bad44d13e1246ae31a430",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fumaca/1000981219.jpg",
+      "issue": null
+    },
+    {
+      "name": "1000981220.gif",
+      "kind": "fumaça",
+      "bytes": 43904,
+      "sha256": "1563d4ef8d3bc90333811c6804c13617b959f1805628e6adec895ab2a44ef1d3",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fumaca/1000981220.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981221.jpg",
+      "kind": "fumaça",
+      "bytes": 36610,
+      "sha256": "205dfe3fc9319af18244eb80fcdf8f2f1141e2396bf3199c82037857ef71ab40",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/fumaca/1000981221.jpg",
+      "issue": null
+    },
+    {
+      "name": "1000981222.gif",
+      "kind": "fumaça",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "valid_img": false,
+      "library_path": null,
+      "issue": "Upload contained 0 bytes; no usable frames"
+    },
+    {
+      "name": "1000981223.jpg",
+      "kind": "terra",
+      "bytes": 87788,
+      "sha256": "26eaca5f7214b05a613363cea360ff075dda1fc143f6d2ca0b3d3b7fc0ac7348",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/terra/1000981223.jpg",
+      "issue": null
+    },
+    {
+      "name": "1000981224.gif",
+      "kind": "terra",
+      "bytes": 235140,
+      "sha256": "ab1360377fb6fcdc8f031acdad261cb816f0f0c6449ef78ab28b581459a412d7",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/terra/1000981224.gif",
+      "issue": null
+    },
+    {
+      "name": "1000981227.webp",
+      "kind": "varios",
+      "bytes": 26022,
+      "sha256": "1870699b7ec037ca7d0b3cec6b9f2159bc44948a041521496d55ba2c2dc3176a",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/varios/1000981227.webp",
+      "issue": null
+    },
+    {
+      "name": "1000981228.webp",
+      "kind": "eletrico",
+      "bytes": 128846,
+      "sha256": "1573ad6ab9610b4857740fb8f4283289f119ce2eec350c8f3880be2441fdcdfa",
+      "valid_img": true,
+      "library_path": "/Pokemon Torre/Biblioteca de Sprites/Novos_2026-10-13/eletrico/1000981228.webp",
+      "issue": null
+    }
+  ]
+}
