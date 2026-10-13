@@ -91,10 +91,20 @@ const pixiFX=(()=>{
   if(effects.has(f))return effects.get(f);
   if(!atlas)return null;
   const m=f.move||{},typ=m.type||'normal',col=themes[typ]||themes.normal;
+  // Use each move name before the type: every catalog move gets a semantic WebGL scene.
+  const root=new PIXI.Container();app.stage.addChild(root);
+  const sem=semanticVFX.create({app,root,f,name:m.name||f.name||'',type:typ,
+    kind:m.kind||f.kind,cat:m.cat,tex,particles});
+  if(sem){
+   const o={f,root,semantic:sem,trail:sem.trail,burst:sem.burst,started:performance.now(),
+    duration:f.duration||registry.get(kind)?.duration||1000,n:norm(m.name||f.name||'')};
+   effects.set(f,o);return o;
+  }
+  root.destroy({children:true});
   const seq=sequence(m.kind,typ,m.name||f.name);
   if(!seq.length)return null;
   if(effects.size>=16){const first=effects.keys().next().value;dispose(effects.get(first));effects.delete(first);}
-  const root=new PIXI.Container();app.stage.addChild(root);
+
   const A=f.from,B=f.to,angle=Math.atan2(B[1]-A[1],B[0]-A[0]),n=norm(m.name||f.name);
   const k=m.kind||f.kind||'bolt';
   const mode=m.cat==='status'||['status','shield','guard','recover','weather','illusion'].includes(k)?'status':
@@ -115,6 +125,10 @@ const pixiFX=(()=>{
   effects.set(f,item);return item;
  }
  function animate(item,now,dt){
+  if(item.semantic){
+   const t=clamp((now-item.f.at)/(item.f.duration||item.duration));
+   item.semantic.draw(now,t,dt);drawn[item.n]=(drawn[item.n]||0)+1;frames++;return;
+  }
   const {f,A,B,mode}=item,t=clamp((now-f.at)/(f.duration||item.duration));
   const u0=clamp((t-.14)/.55),u=u0*u0*(3-2*u0),impact=clamp((t-.65)/.35),beat=now*.017;
   const dx=B[0]-A[0],dy=B[1]-A[1],nx=-Math.sin(item.angle),ny=Math.cos(item.angle);
