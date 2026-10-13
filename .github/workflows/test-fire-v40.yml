@@ -22,3 +22,5 @@ jobs:
           node tests/test-fire-v42.cjs
           node tests/test-water-v43.cjs
           node tests/test-electric-v46.cjs
+      - name: Abrir jogo no Chromium real (V46 e modo recuperação)
+        run: node tests/test-browser-boot.cjs
