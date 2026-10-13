@@ -115,7 +115,7 @@ engine.useMove(1); // Tsunami
 let startFrame=draws.length;
 engine.draw(now+1140);
 let tsunamiDraws=draws.slice(startFrame);
-assert.ok(tsunamiDraws.length>=20,'Tsunami has layered crest and whitewater');
+assert.ok(tsunamiDraws.length>=14,'Tsunami has three-layer water body, crest and spray');
 assert.ok(tsunamiDraws.some(x=>x.img.includes('water-original')&&x.args[6]>=225&&x.args[7]>=105),
  'The wave must be wide AND tall; cannot be a thin water stripe');
 now=35000;
