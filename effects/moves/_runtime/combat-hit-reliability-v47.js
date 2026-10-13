@@ -1,4 +1,4 @@
-/* Pokemon Torre V47.4 — reliable real collisions and buffered valid attacks with independent per-cast physics.
+/* Pokemon Torre V47.5 — reliable physical collisions, queued commands and zero-cost inputs with independent per-cast physics.
  * The original BattleEngine.hitTarget()/damage() remains the only damage source.
  * Projectiles steer toward the foe instead of missing on every sideways step.
  * Beams track the visible target on discharge; physical dashes actually connect.
@@ -6,10 +6,11 @@
  */
 (function(){
  'use strict';
- const report={version:'47.4',casts:0,projectileCorrections:0,beamsAligned:0,
+ const report={version:'47.5',casts:0,projectileCorrections:0,beamsAligned:0,
   contactFollowThrough:0,missingCollisionRecovered:0,realHits:0,
   ignoredOldShots:0,waitedForInvincibility:0,zeroCostRecognized:0,
   queuedDuringWindup:0,replayedQueued:0,discardedQueued:0,
+  recoveredBasicDashes:0,
   lastHit:null,lastCast:null};
  const savedHit=BattleEngine.prototype.hitTarget;
  BattleEngine.prototype.hitTarget=function(who,type,power){
@@ -87,6 +88,30 @@
      owner.hp>0){
     this.v474QueuedMove={slot,b:battle,owner,at:now,until:now+2200};
     report.queuedDuringWindup++;
+    return result;
+   }
+   // V47.5: The legacy V32-V35 wrappers silently discard some true
+   // zero-cost/zero-cooldown basic punches without even starting an attack.
+   // Respect preparation, pause, fainting, and throttling. Reconstruct the
+   // core's physical dash ONLY if no original action occurred.
+   const basicDash=active&&selected?.kind==='dash'&&Number(selected.power)>0&&
+    Number(selected.cost||0)===0&&Number(selected.cd||0)===0&&
+    owner?.hp>0&&victim?.hp>0&&(!this.v33Windup||this.v33Windup.until<=now)&&
+    !battle?.v301Fainting;
+   if(basicDash){
+    const last=this.v475LastBasicDash||0;
+    if(now-last>=490){
+     this.v475LastBasicDash=now;
+     report.casts++;report.lastCast=selected.name;
+     report.zeroCostRecognized++;report.recoveredBasicDashes++;
+     this.attackActs.player=Math.max(Number(this.attackActs.player)||0,(this.time||0)+.43);
+     this.v475RecoveredDash={b:battle,owner,at:now,until:now+680};
+     this.v47ContactToLand=(this.v47ContactToLand||[]).filter(f=>f.until>now);
+     this.v47ContactToLand.push({
+      at:now+320,until:now+2250,owner,victim,hpBefore:priorHP,
+      type:selected.type,power:selected.power,name:selected.name
+     });
+    }
    }
    return result;
   }
@@ -133,6 +158,23 @@
    }
   }
   return result;
+ };
+ // Only the recovered basic physical dash needs a synchronized visual
+ // follow-through. The original approved sprite attack painters are untouched.
+ const savedDraw=BattleEngine.prototype.draw;
+ BattleEngine.prototype.draw=function(now){
+  const dash=this.v475RecoveredDash,actor=this.player,target=this.enemy;
+  if(!dash||dash.b!==battle||dash.owner!==current()||now>=dash.until||
+     !actor||!target)return savedDraw.apply(this,arguments);
+  const ox=actor.x,oy=actor.y;
+  const t=Math.max(0,Math.min(1,(now-dash.at)/680));
+  const motion=Math.max(0,Math.min(1,(t-.10)/.30))*
+               (1-Math.max(0,Math.min(1,(t-.61)/.28)));
+  const dx=target.x-ox,dy=target.y-oy,dist=Math.hypot(dx,dy)||1;
+  const travel=Math.max(0,dist-(this.h||560)*.087)*motion;
+  actor.x+=dx/dist*travel;actor.y+=dy/dist*travel;
+  try{return savedDraw.apply(this,arguments)}
+  finally{actor.x=ox;actor.y=oy}
  };
  const savedUpdate=BattleEngine.prototype.update;
  BattleEngine.prototype.update=function(dt,now){
