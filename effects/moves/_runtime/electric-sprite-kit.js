@@ -1,4 +1,4 @@
-/* Pokémon Torre V55 — eight animated golden cinematic electric attacks.
+/* Pokémon Torre V57.2 — four independent golden cinematic electric attacks.
  * Golden-white lightning, impact debris, cloud choreography and target tracking.
  * No CSS animation, static PNG overlay or changed combat rules.
  */
@@ -187,7 +187,7 @@ const electricSpriteV46=(()=>{
   return true;
  }
  function diagnostics(){return {
-  version:'55.0',registered:[...registered.keys()],
+  version:'57.2',registered:[...registered.keys()],
   ready:Object.fromEntries(names.map(n=>[n,!!images[n].naturalWidth])),
   stamps:{...counters},arcsReady:spriteSets.discharge.arcs.filter(i=>i.naturalWidth>0).length,frames:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.frames.filter(i=>i.naturalWidth>0).length])),impacts:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.impacts.filter(i=>i.naturalWidth>0).length])),error
  }}

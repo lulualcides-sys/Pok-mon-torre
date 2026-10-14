@@ -72,7 +72,7 @@ const catalogElectricFourV56=(()=>{
   return drew;
  }
  function diagnostics(){
-  return {version:'56.0',registered:moves.slice(),painted:stats.painted,last:stats.last,
+  return {version:'57.2',registered:moves.slice(),painted:stats.painted,last:stats.last,
    frames:{...stats.frames},ready:Object.fromEntries(moves.map(id=>{
     const v=sets.get(id);return [id,{main:v.main.filter(ready).length,impacts:v.impacts.filter(ready).length}];
    }))};
