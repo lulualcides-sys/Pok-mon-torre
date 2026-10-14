@@ -7,7 +7,9 @@ function paint(g,f,now,e,k){
  const entry=registry.get(k);if(!entry){g.restore();return false;}
  // These four move-specific sprite animators take priority over the generic
  // Pixi shader path; all other moves retain the exact previous pipeline.
- if(typeof library16V59!=='undefined'&&library16V59.accepts(k)){
+ if(typeof cinematicFourV60!=='undefined'&&cinematicFourV60.accepts(k)){
+  if(!cinematicFourV60.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
+ }else if(typeof library16V59!=='undefined'&&library16V59.accepts(k)){
   // V59 uses only a verified catalog allowlist. Older approved effects
   // have their own modules and never enter this branch.
   if(!library16V59.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
@@ -26,6 +28,10 @@ window.PokemonTorreV360Paint=function(g,f,now,e){
  // These 4 named moves draw only the source GBA pixel sprites. Intercept
  // BEFORE Pixi/semantic/old Canvas to avoid duplicate generic VFX.
  // Fire-specific sprites take priority over the generic pipeline.
+ // Only the specifically requested non-catalog snowstorm uses a named hook.
+ if(typeof cinematicFourV60!=='undefined'&&cinematicFourV60.supportsName(f?.move?.name||f?.name)){
+  if(cinematicFourV60.paintNamed(g,f,now,e))return true;
+ }
  if(legendaryFireFX.handles(f))return legendaryFireFX.paint(g,f,now,e);
  if(originalFireFX.handles(f))return originalFireFX.paint(g,f,now,e);
  if(originalGbaFX.handles(f))return originalGbaFX.paint(g,f,now,e);
