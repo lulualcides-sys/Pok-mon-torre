@@ -7,7 +7,11 @@ function paint(g,f,now,e,k){
  const entry=registry.get(k);if(!entry){g.restore();return false;}
  // These four move-specific sprite animators take priority over the generic
  // Pixi shader path; all other moves retain the exact previous pipeline.
- if(typeof elementalEightV58!=='undefined'&&elementalEightV58.accepts(k)){
+ if(typeof library16V59!=='undefined'&&library16V59.accepts(k)){
+  // V59 uses only a verified catalog allowlist. Older approved effects
+  // have their own modules and never enter this branch.
+  if(!library16V59.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
+ }else if(typeof elementalEightV58!=='undefined'&&elementalEightV58.accepts(k)){
   // Sprite atlas owns these water/ice catalog visuals only. If the atlas
   // has not finished loading, retain the original painter for continuity.
   if(!elementalEightV58.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
