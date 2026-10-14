@@ -4,7 +4,7 @@
  */
 const cinematicFourV60=(()=>{
  'use strict';
- const VERSION='61.0',DIR='effects/moves/v60-four/';
+ const VERSION='61.2',DIR='effects/moves/v60-four/';
  const specs={
   catalog_nevasca:{id:'nevasca',kind:'ice'},
   catalog_faiscadopikachu:{id:'faisca-do-pikachu',kind:'contact'},
