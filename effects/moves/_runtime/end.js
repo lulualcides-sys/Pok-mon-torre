@@ -100,13 +100,15 @@ const _firePunchDraw=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
  const active=(this.v359Attacks||[]).filter(fx=>{
   const n=String(fx?.move?.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
-  return (n==='punhodefogo'||n==='firepunch')&&now>=fx.at&&now<fx.at+Math.max(350,fx.duration||1000);
+  return (n==='punhodefogo'||n==='firepunch'||n==='faiscadopikachu'||n==='volttackle')&&now>=fx.at&&now<fx.at+Math.max(350,fx.duration||1000);
  });
  if(!active.length||!this.player||!this.enemy||!battle?.active)return _firePunchDraw.call(this,now);
  const fx=active[active.length-1],p=this.player,q=this.enemy,ox=p.x,oy=p.y;
  const t=Math.max(0,Math.min(1,(now-fx.at)/Math.max(350,fx.duration||1000)));
  const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)};
- const reach=smooth((t-.07)/.37)*(1-smooth((t-.56)/.32));
+ const electric=n=>n==='faiscadopikachu'||n==='volttackle';
+ const isElectric=electric(String(fx?.move?.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,''));
+ const reach=isElectric?smooth((t-.05)/.53)*(1-smooth((t-.77)/.20)):smooth((t-.07)/.37)*(1-smooth((t-.56)/.32));
  const dx=q.x-ox,dy=q.y-oy,dist=Math.hypot(dx,dy)||1;
  const stop=Math.max(36,Math.min(58,this.h*.105));
  const travel=Math.max(0,dist-stop)*reach;
