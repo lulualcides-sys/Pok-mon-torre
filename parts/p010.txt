@@ -128,7 +128,8 @@ BattleEngine.prototype.useMove=function(i){
    const cond=def[1];
    const immune=(cond==='paralysis'&&types.includes('ground'))||
     (cond==='poison'&&types.some(t=>t==='poison'||t==='steel'))||
-    (cond==='sleep'&&/powder|spore/i.test(move.name)&&types.includes('grass'));
+    (cond==='sleep'&&/powder|spore/i.test(move.name)&&types.includes('grass'))||
+    (cond==='seed'&&types.includes('grass'));
    if(immune){note(this,'enemy','NÃO AFETA','#f8d6a4');log(move.name+': não afeta '+D[foe().id].name);return false;}
   }
   if(mode==='heal'&&m.hp>=m.maxHp){note(this,'player','PV CHEIO','#baf7dd');return false;}
