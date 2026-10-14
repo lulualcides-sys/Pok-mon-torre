@@ -42,12 +42,12 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
  const errors=[];let ws=null;
  try{
   const portFile=path.join(tmp,'DevToolsActivePort');let cdpPort=0;
-  for(let i=0;i<90;i++){
+  for(let i=0;i<200;i++){
    if(fs.existsSync(portFile)){cdpPort=Number(fs.readFileSync(portFile,'utf8').split('\n')[0]);break;}
    if(child.exitCode!==null)throw Error('Chromium exited '+child.exitCode);
    await sleep(200);
   }
-  if(!cdpPort)throw Error('Chrome DevTools not available after 18 seconds');
+  if(!cdpPort)throw Error('Chrome DevTools not available after 40 seconds');
   let target=null;
   for(let i=0;i<50;i++){
    const targets=await get('http://127.0.0.1:'+cdpPort+'/json/list').catch(()=>[]);
