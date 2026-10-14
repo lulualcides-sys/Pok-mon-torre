@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b101d">
+<title>Pokémon Torre — Prévia real dos 4 golpes elétricos V56</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#f6f7ff;background:#0b101d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0%,#322149 0%,#12172b 34%,#080e18 82%);min-height:100vh}
+header{padding:24px clamp(14px,4vw,36px) 14px;max-width:1200px;margin:auto}
+.eyebrow{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#92ead8;font-weight:700}
+h1{font-size:clamp(26px,5vw,42px);margin:5px 0 8px;line-height:1.12;letter-spacing:-.04em}
+h1 b{color:#ffcf61}header p{font-size:14px;line-height:1.6;color:#b9c7d9;margin:0;max-width:780px}
+main{max-width:1200px;margin:0 auto;padding:4px clamp(12px,3vw,34px) 60px}
+section{border:1px solid #a78a5880;border-radius:18px;background:linear-gradient(150deg,rgba(21,43,65,.96),rgba(12,19,39,.95));margin:16px 0 26px;box-shadow:0 9px 36px #0008;overflow:hidden}
+.heading{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:18px 18px 9px}
+.emblem{border:1px solid #f9d57488;background:#ffcc5530;border-radius:50%;width:46px;height:46px;display:grid;place-items:center;font-size:25px;flex:none}
+h2{font-size:23px;color:#ffe2a1;margin:0 0 2px}.kind{font-size:11px;color:#a7bdce;font-weight:650;text-transform:uppercase;letter-spacing:.10em}
+.desc{font-size:13px;color:#bad0dd;margin:0 18px 14px;line-height:1.45}
+.stage{height:clamp(170px,30vw,230px);position:relative;margin:0 18px 12px;overflow:hidden;border:1px solid #61718d;border-radius:14px;
+background:radial-gradient(ellipse 43% 58% at 50% 80%,#5d3a73aa,transparent 80%),linear-gradient(#16192e 0 48%,#392c4c 49% 53%,#211d3b 55% 100%)}
+.stage::before{content:"";position:absolute;inset:50% -10% 0;background:repeating-linear-gradient(0deg,#e2d1fc20 0 1px,transparent 1px 29px),repeating-linear-gradient(90deg,#e2d1fc20 0 1px,transparent 1px 37px);transform:perspective(180px) rotateX(49deg);pointer-events:none}
+.stage::after{content:"";position:absolute;left:38%;right:28%;bottom:8%;height:24%;border:2px solid #e3c2ff40;border-radius:50%;transform:perspective(250px) rotateX(52deg)}
+.attack{position:absolute;width:74%;height:70%;top:14%;left:11%;object-fit:fill;filter:drop-shadow(0 0 7px #f6bf4c70);pointer-events:none}
+.impact{position:absolute;width:27%;height:76%;top:12%;right:1.8%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 0 6px #fff19290)}
+.role{position:absolute;bottom:10px;border:1px solid #b9a1d577;background:#091725ce;padding:4px 9px;border-radius:999px;color:#d2e5ee;font-size:10px;letter-spacing:.08em;font-weight:700;z-index:1}
+.actor{left:10px}.target{right:10px}
+.progressline{height:2px;background:#fff3;position:absolute;bottom:0;left:0;right:0}
+.progressline span{height:100%;background:#ffcc4a;display:block;width:0;transition:width .08s linear}
+.controls{display:flex;align-items:center;gap:8px;margin:0 18px 13px;flex-wrap:wrap}
+button{cursor:pointer;border-radius:9px;border:1px solid #547a98;background:#132941;color:#dbeaf6;padding:9px 12px;font-weight:700}
+button:focus-visible{outline:2px solid #ffd367;outline-offset:2px}
+.play{background:#ffd16d;color:#201707;border-color:#f6dd9c}
+.phase{margin-left:auto;color:#ffd16d;font-weight:700;font-variant-numeric:tabular-nums;font-size:13px}
+.frames{display:grid;grid-template-columns:repeat(8,minmax(90px,1fr));gap:6px;overflow-x:auto;padding:0 18px 18px;scrollbar-color:#6890a9 transparent}
+.tile{padding:5px 4px;border:1px solid #6385a0;border-radius:10px;background:linear-gradient(150deg,#241d3e,#10182b);min-width:90px;outline:none}
+.tile img{display:block;width:100%;height:54px;object-fit:contain}
+.tile span{display:block;text-align:center;color:#b9cbd9;font-size:11px}
+.tile.active{border:2px solid #ffd56e;padding:4px 3px;box-shadow:0 0 0 1px #ffda753a inset}
+footer{color:#92afc1;font-size:12px;line-height:1.7;max-width:1200px;margin:auto;padding:0 18px 30px;text-align:center}
+a{color:#a7edeb;text-decoration:underline}
+@media(max-width:750px){.frames{grid-template-columns:repeat(8,98px)}.heading{padding:15px 13px 8px}.desc{margin:0 13px 11px}.stage{margin:0 12px 10px}.controls{margin:0 12px 12px}section{border-radius:13px}h2{font-size:21px}}
+@media(prefers-reduced-motion:reduce){.progressline span{transition:none}}
+</style>
+</head>
+<body>
+<header>
+<div class="eyebrow">⚡ Pokémon Torre · Animação real V56</div>
+<h1>PRÉVIA DOS <b>4 GOLPES ELÉTRICOS</b></h1>
+<p><b>8 frames de começo ao fim, por golpe.</b> Estes são os arquivos reais da versão V56, não uma imagem conceitual. Clique em qualquer quadro para ver o detalhe; use Reproduzir para acompanhar o movimento. Os sprites são desenhados sobre uma arena ilustrativa, sem alterar o jogo.</p>
+</header>
+<main id="moves"></main>
+<footer>Faísca de Jolteon · Thunderbolt · Choque do Trovão · Choque · <a href="./?v=56">Voltar ao Pokémon Torre</a></footer>
+<script>
+(function(){
+ 'use strict';
+ const definitions=[
+  {id:'faiscadejolteon',name:'Faísca de Jolteon',category:'Elétrico · Físico',duration:950,desc:'Carrega o corpo, avança em contato e descarrega a energia no adversário.'},
+  {id:'thunderbolt',name:'Thunderbolt',category:'Elétrico · Especial',duration:1170,desc:'Raio poderoso e ramificado que avança em direção ao adversário.'},
+  {id:'choquedotrovao',name:'Choque do Trovão',category:'Elétrico · Especial',duration:950,desc:'Descarga direta, rápida e de intensidade intermediária.'},
+  {id:'choque',name:'Choque',category:'Elétrico · Especial',duration:950,desc:'Choque elétrico curto e concentrado, com impacto leve.'}
+ ];
+ const num=n=>String(n).padStart(2,'0');
+ const asset=(id,kind,i)=>'effects/moves/catalog/'+id+'/'+kind+'/'+(kind==='sprites'?'frame_':'hit_')+num(i)+'.png?v=56.0';
+ const host=document.getElementById('moves');
+ const state=[];
+ for(const def of definitions){
+   const sect=document.createElement('section');
+   sect.innerHTML='<div class="heading"><span class="emblem">⚡</span><div><h2></h2><div class="kind"></div></div></div><p class="desc"></p>'
+    +'<div class="stage"><img class="attack" alt=""><img class="impact" alt=""><span class="role actor">MEWTWO · ORIGEM</span><span class="role target">PIKACHU · ALVO</span><div class="progressline"><span></span></div></div>'
+    +'<div class="controls"><button class="play">⏸ Pausar</button><button class="restart">↻ Reiniciar</button><span class="phase">QUADRO 01 / 08</span></div><div class="frames" aria-label="Oito quadros reais da animação"></div>';
+   sect.querySelector('h2').textContent=def.name;
+   sect.querySelector('.kind').textContent=def.category;
+   sect.querySelector('.desc').textContent=def.desc;
+   const img=sect.querySelector('.attack'),hit=sect.querySelector('.impact'),line=sect.querySelector('.progressline span');
+   const phase=sect.querySelector('.phase'),play=sect.querySelector('.play'),restart=sect.querySelector('.restart'),tiles=sect.querySelector('.frames');
+   const tileList=[];
+   const obj={def,frame:0,playing:true,elapsed:0,img,hit,phase,line,tileList,play};
+   for(let i=0;i<8;i++){
+    const b=document.createElement('button');
+    b.className='tile';b.setAttribute('aria-label','Mostrar quadro '+(i+1));
+    const thumb=document.createElement('img');thumb.src=asset(def.id,'sprites',i+1);thumb.alt='Quadro '+(i+1);
+    const lbl=document.createElement('span');lbl.textContent='FRAME '+num(i+1);
+    b.append(thumb,lbl);tiles.appendChild(b);tileList.push(b);
+    b.onclick=()=>{obj.playing=false;obj.elapsed=i*def.duration/8;draw(obj,i);updateLabel(obj)};
+   }
+   play.onclick=()=>{obj.playing=!obj.playing;updateLabel(obj)};
+   restart.onclick=()=>{obj.elapsed=0;obj.playing=true;draw(obj,0);updateLabel(obj)};
+   state.push(obj);host.appendChild(sect);
+   draw(obj,0);updateLabel(obj);
+ }
+ function updateLabel(obj){obj.play.textContent=obj.playing?'⏸ Pausar':'▶ Reproduzir';}
+ function draw(o,n){
+  if(o.frame===n&&o.img.src){return}
+  o.frame=n;
+  o.img.src=asset(o.def.id,'sprites',n+1);
+  const start=o.def.id==='faiscadejolteon'?4:4;
+  const hi=n>=start?Math.min(4,n-start+1):0;
+  o.hit.style.opacity=hi?'1':'0';
+  if(hi)o.hit.src=asset(o.def.id,'impact',hi);
+  o.phase.textContent='QUADRO '+num(n+1)+' / 08';
+  o.line.style.width=(((n+1)/8)*100)+'%';
+  o.tileList.forEach((b,i)=>{b.classList.toggle('active',i===n);b.setAttribute('aria-pressed',String(i===n))});
+ }
+ let last=0;
+ function tick(ts){
+  const dt=last?Math.min(ts-last,150):0;last=ts;
+  for(const o of state){
+   if(!o.playing)continue;
+   o.elapsed=(o.elapsed+dt)%(o.def.duration+270);
+   draw(o,Math.min(7,Math.floor(o.elapsed/o.def.duration*8)));
+  }
+  requestAnimationFrame(tick);
+ }
+ requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
