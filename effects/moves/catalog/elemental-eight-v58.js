@@ -52,7 +52,7 @@ const elementalEightV58=(()=>{
   catalog_whirlpool:['water-hurricane','waterball'],
   catalog_surf:['water-hurricane','geyser']
  };
- const names={'tempestadeneve':['snowflake','water-hurricane','ice-spike']};
+ const names={'tempestadedeneve':['snowflake','water-hurricane','ice-spike']};
  const norm=x=>String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
   .toLowerCase().replace(/[^a-z0-9]/g,'');
  const clamp=(v,min=0,max=1)=>Math.max(min,Math.min(max,v));
