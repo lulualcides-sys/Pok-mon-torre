@@ -59,6 +59,9 @@ def tapered(draw,pts,width,fill):
         draw.line([point(pts[j]),point(pts[j+1])],fill=fill,width=ww)
 
 def bolt(im,a,b,seed,width=5,power=1,branches=3,rough=.24,shade=True):
+    # V57: broaden the authored lightning paths by 24%, preserving the
+    # approved 8-phase choreography, angular silhouette and hit timing.
+    width *= 1.24
     if power<=.015:return
     pts=fractal(a,b,seed,rough,5)
     broad=mask(im.width//S,im.height//S);core=mask(im.width//S,im.height//S)
