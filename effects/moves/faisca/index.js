@@ -45,5 +45,7 @@ electricSpriteV46.add('faisca',{
     }
    }
   }
+  // V48: eight cinematic phases with unique black-edged electric ink.
+  K.cinematic(g,f,t,ms,s,'faisca');
  }
 });

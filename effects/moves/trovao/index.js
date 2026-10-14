@@ -53,5 +53,7 @@ electricSpriteV46.add('trovao',{
      (19+j%2*5)*s,(24+j%3*6)*s,{alpha:residue*.62,rotation:a});
    }
   }
+  // V48: eight cinematic phases with unique black-edged electric ink.
+  K.cinematic(g,f,t,ms,s,'trovao');
  }
 });

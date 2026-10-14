@@ -44,5 +44,7 @@ electricSpriteV46.add('tempestadederaios',{
      {alpha:alpha*(.78-j*.095),rotation:a});
    }
   }
+  // V48: eight cinematic phases with unique black-edged electric ink.
+  K.cinematic(g,f,t,ms,s,'tempestade');
  }
 });
