@@ -77,7 +77,7 @@ const pixiFX=(()=>{
  function ensure(engine){
   if(!battle?.active||!engine?.canvas){if(app)reset();return false;}
   if(owner&&owner!==engine){reset();}
-  if(app){position(engine);return true;}
+  if(app){position(engine);if(!app.ticker.started)app.ticker.start();return true;}
   if(!hasGPU()){error='PixiJS/WebGL/ParticleEmitter indisponível';return false;}
   try{
    app=new PIXI.Application({width:engine.w,height:engine.h,backgroundAlpha:0,transparent:true,antialias:true,resolution:1,
@@ -182,6 +182,10 @@ const pixiFX=(()=>{
    }
    try{animate(e,now,dt);}catch(ex){error='VFX: '+ex.message;dispose(e);effects.delete(f);}
   }
+  // Mobile: PIXI's transparent WebGL canvas must not keep running alongside
+  // the battle renderer when the last GPU effect has finished. Restart on
+  // demand in ensure(), preserving existing graphics and particle behavior.
+  if(!effects.size){app.ticker.stop();app.view.style.display='none';}
  }
  function paint(f,engine,key){
   if(!ensure(engine))return false;
