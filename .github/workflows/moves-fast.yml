@@ -29,3 +29,7 @@ jobs:
           node-version: '22'
       - name: Conferir catalogo e apenas assets dos golpes modificados
         run: node tools/check-move-assets.cjs --changed
+      - name: Preservar os quatro sprites aprovados e validar performance de ataque
+        run: |
+          node tests/test-four-v60.cjs
+          node tests/test-attack-fps-v61.cjs
