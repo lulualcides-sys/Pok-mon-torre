@@ -68,6 +68,8 @@ css.textContent=[
  '.v331Slots .v331Slot b{display:flex!important;align-items:center;gap:5px!important;font:600 11px/1.3 Inter,"Segoe UI",Arial,sans-serif!important}',
  '.v331Slots .v331Slot .pt61Icon{width:20px;height:20px;flex-basis:20px}',
  '.v331Slots .v331Slot .pt61Icon svg{width:18px;height:18px}',
+ '.skillV8 .skillIcon .pt61Icon{width:33px;height:33px;flex-basis:33px}',
+ '.skillV8 .skillIcon .pt61Icon svg{width:30px;height:30px}',
  '@media(max-width:480px){.v331MoveList .v331Choice b{font-size:13px!important}.v331MoveList .v331Choice{min-height:56px!important;padding:8px!important}}'
 ].join('');
 document.head.appendChild(css);
@@ -76,7 +78,29 @@ const getPower=s=>numeric(s,/(-?\d+(?:[.,]\d+)?)\s*for[cç]a/i);
 const getCost=s=>numeric(s,/(\d+(?:[.,]\d+)?)\s*energia/i);
 const getCd=s=>numeric(s,/(\d+(?:[.,]\d+)?)\s*s\b/i);
 const strip=s=>String(s||'').replace(/^[^\p{L}\p{N}]+/u,'').trim();
+
+function paintCombatSkills(){
+ // The battle hotkey slots MUST preserve their original order; only swap art.
+ for(const button of document.querySelectorAll('.skillV8[data-skill]')){
+  const target=button.querySelector('.skillIcon');
+  if(!target||target.dataset.pt61Styled==='1')continue;
+  const meta=button.querySelector('.skillName small');
+  const typeName=(meta?.textContent||'').split('·')[0].trim();
+  const type=lookup.get(norm(typeName))||'normal';
+  target.dataset.pt61Styled='1';
+  target.replaceChildren(typeIcon(type));
+  // Keep category text but drop system emoji from the battle hotbar.
+  if(meta){
+   const parts=meta.textContent.split('·');
+   if(parts.length>1){
+    const category=strip(parts.slice(1).join('·'));
+    meta.textContent=typeName+' · '+category;
+   }
+  }
+ }
+}
 function mount(){
+ paintCombatSkills();
  const modal=document.querySelector('#modal'),list=modal?.querySelector('.v331MoveList');
  if(!list)return;
  const rows=[...list.querySelectorAll(':scope > .v331Choice')];
@@ -109,7 +133,8 @@ function mount(){
  if(select){
   for(const option of select.options){
    const data=info.get(option.value);
-   option.textContent=data?data.name:'Todos os tipos';
+   const expected=data?data.name:'Todos os tipos';
+   if(option.textContent!==expected)option.textContent=expected;
   }
   const bar=modal.querySelector('.ptTypeBar');
   if(bar){
