@@ -92,23 +92,29 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
   }
   let grassResults=null;
   if(ok&&grass){
-   const q=JSON.stringify(['Stun Spore','Pó do Sono','Leech Seed','Esporos']);
-   const expression="(async()=>{const qa=window.PokemonTorreLocalCombatTestV47;"+
-    "if(!qa)return [{error:'Local QA harness missing'}];"+
-    "const out=[];for(const name of "+q+"){"+
-    "const cast=qa.castGrass(name,143);"+
-    "await new Promise(r=>setTimeout(r,260));"+
-    "const visual=window.PokemonTorrePlantStatusV64?.();"+
-    "const sprite=window.PokemonTorrePlantFourV63?.();"+
-    "out.push({name,equipped:cast.equipped,error:cast.error,"+
-     "castAccepted:cast.cast?.stats?.lastCast===name||visual?.names?.at(-1)?.result===true,"+
-     "conditions:visual?.actualEnemyConditions,frames:sprite?.framesDrawn,"+
-     "castBefore:cast.visuals?.casts,visualQueues:visual?.visualQueues,"+
-     "statusApplied:visual?.statusApplied,cooldown:cast.cast?.cooldowns?.["+q+".indexOf(name)],"+
-     "energyAfter:cast.cast?.energy});"+
-    "}return out;})()";
-   const reply=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
-   grassResults=reply.result?.result?.value||[{error:reply.result?.exceptionDetails?.text||'Grass status evaluation failed'}];
+   grassResults=[];
+   // Start a fresh local test battle for each status synchronously. Returning
+   // a Promise from the devtools context while startBattle() recreates the
+   // game can produce an unhelpful {} instead of test diagnostics.
+   for(const name of ['Stun Spore','Pó do Sono','Leech Seed','Esporos']){
+    const expr="(()=>{const qa=window.PokemonTorreLocalCombatTestV47;return qa?.castGrass("+JSON.stringify(name)+",143)||{error:'Local status harness missing'};})()";
+    const before=await cmd('Runtime.evaluate',{expression:expr,returnByValue:true});
+    const cast=before.result?.result?.value||
+     {error:before.result?.exceptionDetails?.text||'Cast did not produce a value',
+      exception:before.result?.exceptionDetails?.exception?.description};
+    await sleep(320);
+    const after=await cmd('Runtime.evaluate',{
+     expression:"(()=>({visual:window.PokemonTorrePlantStatusV64?.(),sprite:window.PokemonTorrePlantFourV63?.()}))()",
+     returnByValue:true});
+    const state=after.result?.result?.value||{};
+    grassResults.push({name,error:cast.error,exception:cast.exception,
+     equipped:cast.equipped,castAccepted:cast.cast?.stats?.lastCast===name||
+      state.visual?.names?.at(-1)?.result===true,
+     conditions:state.visual?.actualEnemyConditions,frames:state.sprite?.framesDrawn,
+     visualQueues:state.visual?.visualQueues,statusApplied:state.visual?.statusApplied,
+     cooldown:cast.cast?.cooldowns?.[['Stun Spore','Pó do Sono','Leech Seed','Esporos'].indexOf(name)],
+     energyAfter:cast.cast?.energy});
+   }
   }
   let combatResults=null;
   if(combat&&ok){
