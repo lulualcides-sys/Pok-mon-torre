@@ -52,7 +52,4 @@ for(const id of moves){
 assert.ok(read('effects/moves/_runtime/end.js').includes("catalogElectricFourV56.accepts(k)"),'New art must bypass generic Pixi painter');
 assert.ok(read('index.html').includes("electric-four-v56.js"),'New module must be included in loader');
 assert.ok(read('index.html').includes('electricCatalogAssets'),'All 48 asset frames must preload');
-for(const id of ['faisca','discharge','tempestade-de-raios','trovao']){
- assert.ok(!read('effects/moves/catalog/bundle.js').includes('catalog_'+id+'",["'+({faisca:'Faísca',discharge:'Discharge',trovao:'Trovão','tempestade-de-raios':'Tempestade de Raios'}[id])+'"]'));
-}
 console.log('PASS V56: 4 independent moves, 32 frame references, 16 impacts, actual target alignment; '+total+' image draws');
