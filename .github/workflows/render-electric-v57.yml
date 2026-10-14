@@ -1,0 +1,86 @@
+name: Gerar sprites V57 dos oito golpes eletricos
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/build_electric_v55.py'
+      - 'tools/build_electric_catalog_v56.py'
+      - '.github/workflows/render-electric-v57.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: render-electric-v57-main
+  cancel-in-progress: false
+jobs:
+  render-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Pillow
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Conferir geradores e motor do jogo
+        run: |
+          python -m py_compile tools/build_electric_v55.py tools/build_electric_catalog_v56.py
+          node --check effects/moves/catalog/electric-four-v56.js
+          node --check effects/moves/catalog/bundle.js
+      - name: Recriar somente os oito golpes pedidos
+        run: |
+          python tools/build_electric_v55.py --move all
+          python tools/build_electric_catalog_v56.py --move all
+      - name: Validar fases reais, transparencias e impactos
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          groups=(
+            (Path('effects/moves'),('faisca','discharge','tempestade-de-raios','trovao'),(280,320)),
+            (Path('effects/moves/catalog'),('faiscadejolteon','thunderbolt','choquedotrovao','choque'),(384,144)))
+          count=0
+          for root,moves,shape in groups:
+            for move in moves:
+              p=root/move
+              frames=[p/'sprites'/f'frame_{i:02}.png' for i in range(1,9)]
+              impacts=[p/'impact'/f'hit_{i:02}.png' for i in range(1,5)]
+              assert len({a.read_bytes() for a in frames})==8,move
+              for file in frames+impacts:
+                with Image.open(file) as im:
+                  expected=shape if file in frames else (280,320)
+                  assert im.mode=='RGBA' and im.size==expected,(move,file,im.size)
+                  assert im.getextrema()[3][0]==0 and im.getextrema()[3][1]>10,file
+              count+=len(frames)+len(impacts)
+          arcs=Path('effects/moves/discharge/arcs')
+          for i in range(1,9):
+            with Image.open(arcs/f'arc_{i:02}.png') as im:
+              assert im.mode=='RGBA' and im.size==(384,144)
+          print(f'PASS: 8 unique move sequences, {count} attack/impact sprites, 8 discharge arcs')
+          PY
+      - name: Verificar integracao dos quatro catalogados
+        run: node tests/test-electric-v56.cjs
+      - name: Gravar os sprites finais no jogo publicado
+        run: |
+          git config user.name 'Pokémon Torre VFX'
+          git config user.email 'actions@users.noreply.github.com'
+          git add effects/moves/faisca/sprites effects/moves/faisca/impact
+          git add effects/moves/discharge/sprites effects/moves/discharge/impact effects/moves/discharge/arcs
+          git add effects/moves/tempestade-de-raios/sprites effects/moves/tempestade-de-raios/impact
+          git add effects/moves/trovao/sprites effects/moves/trovao/impact
+          for move in faiscadejolteon thunderbolt choquedotrovao choque; do
+            git add "effects/moves/catalog/$move/sprites" "effects/moves/catalog/$move/impact"
+          done
+          if ! git diff --cached --quiet; then
+            git commit -m 'assets(electric): regenerate V57 cinematic lightning for eight moves'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          else
+            echo 'Sprites já correspondem aos novos geradores.'
+          fi
