@@ -56,8 +56,8 @@ function typeIcon(type){
 }
 const css=document.createElement('style');css.id='pt61MoveCss';
 css.textContent=[
- '.pt61Icon{display:inline-flex;justify-content:center;align-items:center;width:26px;height:26px;flex:0 0 26px;filter:drop-shadow(0 0 3px currentColor)}',
- '.pt61Icon svg{width:23px;height:23px;display:block}',
+ '.pt61Icon{display:inline-flex;justify-content:center;align-items:center;width:26px;height:26px;flex:0 0 26px;box-sizing:border-box;line-height:0;vertical-align:middle}',
+ '.pt61Icon svg{width:23px;height:23px;display:block;margin:auto;flex:none;overflow:visible}',
  '.v331MoveList .v331Choice{align-items:center!important;min-height:61px!important;padding:10px 11px!important;gap:8px!important;border-radius:11px!important;background:linear-gradient(160deg,#142838,#102333)!important}',
  '.v331MoveList .v331Choice.equipped{border-color:#d6c079!important}',
  '.v331MoveList .v331Choice>span:first-child{min-width:0;flex:1}',
@@ -67,9 +67,11 @@ css.textContent=[
  '.v331MoveList .v331Choice .pillSmall{flex-shrink:0;min-width:54px!important}',
  '.v331Slots .v331Slot b{display:flex!important;align-items:center;gap:5px!important;font:600 11px/1.3 Inter,"Segoe UI",Arial,sans-serif!important}',
  '.v331Slots .v331Slot .pt61Icon{width:20px;height:20px;flex-basis:20px}',
- '.v331Slots .v331Slot .pt61Icon svg{width:18px;height:18px}',
- '.skillV8 .skillIcon .pt61Icon{width:33px;height:33px;flex-basis:33px}',
- '.skillV8 .skillIcon .pt61Icon svg{width:30px;height:30px}',
+ '.v331Slots .v331Slot .pt61Icon svg{width:18px;height:18px;margin:auto}',
+ '.v331MoveList .v331Choice b>.pt61Icon{display:flex;justify-content:center;align-items:center;line-height:0;align-self:center;margin:0;transform:none}',
+ '.skillV8 .skillIcon{display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box;line-height:1!important;padding:0!important;text-align:center!important}',
+ '.skillV8 .skillIcon .pt61Icon{display:flex!important;justify-content:center!important;align-items:center!important;width:32px;height:32px;flex:0 0 32px;margin:0!important;transform:none!important}',
+ '.skillV8 .skillIcon .pt61Icon svg{width:26px;height:26px;margin:auto!important}',
  '@media(max-width:480px){.v331MoveList .v331Choice b{font-size:13px!important}.v331MoveList .v331Choice{min-height:56px!important;padding:8px!important}}'
 ].join('');
 document.head.appendChild(css);
@@ -156,21 +158,40 @@ function mount(){
  list.setAttribute('data-v346-sorted','1');
  list.dataset.pt61Ascending='1';
 }
-let queued=false,busy=false,runs=0;
+// V61.1: no full-subtree MutationObserver during a real-time battle.
+// The old observer fired for combat labels/HP and ran an entire editor scan
+// every frame on phones, causing severe stutter and battery drain.
+let queued=false,busy=false,runs=0,watchingModal=null,watchingCombat=null;
+const modalObserver=new MutationObserver(schedule);
+const battleObserver=new MutationObserver(schedule);
+const bodyObserver=new MutationObserver(schedule);
+function watchStructuralChanges(){
+ const modal=document.querySelector('#modal');
+ if(watchingModal!==modal){
+  modalObserver.disconnect();watchingModal=modal;
+  if(modal)modalObserver.observe(modal,{childList:true});
+ }
+ const combat=modal?.querySelector('#combatContainer');
+ if(watchingCombat!==combat){
+  battleObserver.disconnect();watchingCombat=combat;
+  if(combat)battleObserver.observe(combat,{childList:true});
+ }
+}
 function schedule(){
  if(queued||busy)return;
  queued=true;
- requestAnimationFrame(()=>{queued=false;if(busy)return;busy=true;
-  try{mount();runs++;}finally{busy=false;}
+ requestAnimationFrame(()=>{
+  queued=false;
+  if(busy)return;
+  busy=true;
+  try{watchStructuralChanges();mount();runs++;}finally{busy=false;}
  });
 }
-const observer=new MutationObserver(schedule);
-observer.observe(document.querySelector('#modal')||document.body,{subtree:true,childList:true});
-const bodyObserver=new MutationObserver(schedule);
-bodyObserver.observe(document.body,{subtree:false,childList:true});
-schedule();
+// Watch only top-level structural changes, not every animation update.
+bodyObserver.observe(document.body,{childList:true});
+watchStructuralChanges();schedule();
 window.PokemonTorreMoveUIV61=()=>({
- version:'61.0',types:TYPES.length,
+ version:'61.1',types:TYPES.length,
  modifiedRows:document.querySelectorAll('.v331MoveList .pt61Icon').length,
  ascending:!!document.querySelector('.v331MoveList[data-pt61-ascending="1"]'),
  runs
