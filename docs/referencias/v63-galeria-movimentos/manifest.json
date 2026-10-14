@@ -3,64 +3,432 @@
   "created": "2026-10-14",
   "privateArchive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14",
   "publicGithubContainsOnlyMetadata": true,
-  "description": "14 folhas de sprites de fogo, explosão, água, eletricidade, espada, cura, efeitos de status, raízes e magia preservadas na Biblioteca privada como referências para uso futuro. Não foram copiadas para o jogo público; suas licenças devem ser conferidas antes de republicação.",
+  "description": "18 referências de sprites arquivadas na biblioteca privada: 14 folhas WEBP e 4 GIFs. Cada referência tem sugestões para golpes reais cadastrados no jogo. Apenas catálogo — o funcionamento, sprites e golpes aprovados NÃO foram alterados.",
   "approvedForInspiration": true,
   "files": [
     {
       "filename": "1000982591.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982591.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982591.webp",
+      "category": "fogo e magma",
+      "description": "Chamas, brasas, partículas rubras e salpicos de lava",
+      "suggestedMoves": [
+        {
+          "id": "catalog_brasa",
+          "name": "Brasa"
+        },
+        {
+          "id": "catalog_brasaviva",
+          "name": "Brasa Viva"
+        },
+        {
+          "id": "catalog_firespin",
+          "name": "Fire Spin"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982592.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982592.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982592.webp",
+      "category": "fogo e magma",
+      "description": "Jatos de fogo, explosões de calor e lava",
+      "suggestedMoves": [
+        {
+          "id": "catalog_explosaomagmatica",
+          "name": "Explosão Magmática"
+        },
+        {
+          "id": "catalog_firespin",
+          "name": "Fire Spin"
+        },
+        {
+          "id": "catalog_chamacircular",
+          "name": "Chama Circular"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982595.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982595.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982595.webp",
+      "category": "fogo e defesa",
+      "description": "Furacão de fogo, flor flamejante, aro de escudo",
+      "suggestedMoves": [
+        {
+          "id": "catalog_firespin",
+          "name": "Fire Spin"
+        },
+        {
+          "id": "catalog_chamacircular",
+          "name": "Chama Circular"
+        },
+        {
+          "id": "catalog_protect",
+          "name": "Protect"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982596.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982596.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982596.webp",
+      "category": "fogo e campo",
+      "description": "Colunas, brasas pequenas, gotas e poças de lava",
+      "suggestedMoves": [
+        {
+          "id": "catalog_brasa",
+          "name": "Brasa"
+        },
+        {
+          "id": "catalog_chamasdemoltres",
+          "name": "Chamas de Moltres"
+        },
+        {
+          "id": "catalog_explosaomagmatica",
+          "name": "Explosão Magmática"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982597.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982597.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982597.webp",
+      "category": "fogo lendário",
+      "description": "Projétil incandescente, fênix e gêiser de magma",
+      "suggestedMoves": [
+        {
+          "id": "catalog_chamasdemoltres",
+          "name": "Chamas de Moltres"
+        },
+        {
+          "id": "catalog_explosaomagmatica",
+          "name": "Explosão Magmática"
+        },
+        {
+          "id": "catalog_firespin",
+          "name": "Fire Spin"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982598.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982598.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982598.webp",
+      "category": "explosões e gás",
+      "description": "Explosão laranja, círculo azul e gás esverdeado",
+      "suggestedMoves": [
+        {
+          "id": "catalog_explosion",
+          "name": "Explosion"
+        },
+        {
+          "id": "catalog_pulsodeagua",
+          "name": "Pulso de Água"
+        },
+        {
+          "id": "catalog_acido",
+          "name": "Ácido"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982599.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982599.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982599.webp",
+      "category": "explosões elementais",
+      "description": "Explosão radial, onda azul e gás circular",
+      "suggestedMoves": [
+        {
+          "id": "catalog_explosion",
+          "name": "Explosion"
+        },
+        {
+          "id": "catalog_pulsodeagua",
+          "name": "Pulso de Água"
+        },
+        {
+          "id": "catalog_acido",
+          "name": "Ácido"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982600.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982600.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982600.webp",
+      "category": "explosão e raio",
+      "description": "Explosão nuclear, efeito multicolor, raios e fumaça",
+      "suggestedMoves": [
+        {
+          "id": "catalog_explosion",
+          "name": "Explosion"
+        },
+        {
+          "id": "catalog_thunderbolt",
+          "name": "Thunderbolt"
+        },
+        {
+          "id": "catalog_firespin",
+          "name": "Fire Spin"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982603.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982603.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982603.webp",
+      "category": "físico e utilidade",
+      "description": "Espadas, soco, ácido, bolhas e totem",
+      "suggestedMoves": [
+        {
+          "id": "catalog_swordsdance",
+          "name": "Swords Dance"
+        },
+        {
+          "id": "catalog_cortex",
+          "name": "Corte X"
+        },
+        {
+          "id": "catalog_acido",
+          "name": "Ácido"
+        },
+        {
+          "id": "catalog_bolhas",
+          "name": "Bolhas"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982604.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982604.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982604.webp",
+      "category": "mágica e área",
+      "description": "Cubo, Fire Blast, chama, veneno e implosão",
+      "suggestedMoves": [
+        {
+          "id": "catalog_protect",
+          "name": "Protect"
+        },
+        {
+          "id": "catalog_willowisp",
+          "name": "Will-O-Wisp"
+        },
+        {
+          "id": "catalog_acido",
+          "name": "Ácido"
+        },
+        {
+          "id": "catalog_hex",
+          "name": "Hex"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982605.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982605.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982605.webp",
+      "category": "múltiplos tipos",
+      "description": "Relâmpagos, raio solar, espinhos, firewall, escudo, buraco negro",
+      "suggestedMoves": [
+        {
+          "id": "catalog_thunderbolt",
+          "name": "Thunderbolt"
+        },
+        {
+          "id": "catalog_explosion",
+          "name": "Explosion"
+        },
+        {
+          "id": "catalog_protect",
+          "name": "Protect"
+        },
+        {
+          "id": "catalog_hex",
+          "name": "Hex"
+        },
+        {
+          "id": "catalog_firespin",
+          "name": "Fire Spin"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982606.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982606.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982606.webp",
+      "category": "barreira, vento e gelo",
+      "description": "Barreira de bambu, livro, orbe elétrico, tornado e congelamento",
+      "suggestedMoves": [
+        {
+          "id": "catalog_protect",
+          "name": "Protect"
+        },
+        {
+          "id": "catalog_campogelado",
+          "name": "Campo Gelado"
+        },
+        {
+          "id": "catalog_cacodegelo",
+          "name": "Caco de Gelo"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982607.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982607.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982607.webp",
+      "category": "projétil e gelo",
+      "description": "Lança, esfera, flechas, cura e estilhaços de gelo",
+      "suggestedMoves": [
+        {
+          "id": "catalog_aurasphere",
+          "name": "Aura Sphere"
+        },
+        {
+          "id": "catalog_agulhas",
+          "name": "Agulhas"
+        },
+        {
+          "id": "catalog_recover",
+          "name": "Recover"
+        },
+        {
+          "id": "catalog_cacodegelo",
+          "name": "Caco de Gelo"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
     },
     {
       "filename": "1000982610.webp",
-      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982610.webp"
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982610.webp",
+      "category": "cura e status",
+      "description": "Recuperação, mana, força, reviver, imunidade e debuff",
+      "suggestedMoves": [
+        {
+          "id": "catalog_recover",
+          "name": "Recover"
+        },
+        {
+          "id": "catalog_synthesis",
+          "name": "Synthesis"
+        },
+        {
+          "id": "catalog_bulkup",
+          "name": "Bulk Up"
+        },
+        {
+          "id": "catalog_calmmind",
+          "name": "Calm Mind"
+        },
+        {
+          "id": "catalog_protect",
+          "name": "Protect"
+        }
+      ],
+      "status": "reference_only",
+      "frames": null
+    },
+    {
+      "filename": "1000982590.gif",
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982590.gif",
+      "category": "fogo animado",
+      "description": "Sequência animada com fogo e chamas sobre fundo cinza com marca do fornecedor",
+      "suggestedMoves": [
+        {
+          "id": "catalog_brasa",
+          "name": "Brasa"
+        },
+        {
+          "id": "catalog_chamaardente",
+          "name": "Chama Ardente"
+        },
+        {
+          "id": "catalog_firespin",
+          "name": "Fire Spin"
+        }
+      ],
+      "status": "reference_only",
+      "frames": 333
+    },
+    {
+      "filename": "1000982452.gif",
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982452.gif",
+      "category": "gelo e magia animados",
+      "description": "Quadros de magia, rajadas geladas e explosões luminosas",
+      "suggestedMoves": [
+        {
+          "id": "catalog_cacodegelo",
+          "name": "Caco de Gelo"
+        },
+        {
+          "id": "catalog_aurasphere",
+          "name": "Aura Sphere"
+        },
+        {
+          "id": "catalog_pulsodeagua",
+          "name": "Pulso de Água"
+        }
+      ],
+      "status": "reference_only",
+      "frames": 15
+    },
+    {
+      "filename": "1000982451.gif",
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982451.gif",
+      "category": "fogo e espinhos animados",
+      "description": "Quadros de fogo que se expande e pontas de pedra",
+      "suggestedMoves": [
+        {
+          "id": "catalog_brasa",
+          "name": "Brasa"
+        },
+        {
+          "id": "catalog_firespin",
+          "name": "Fire Spin"
+        },
+        {
+          "id": "catalog_agulhas",
+          "name": "Agulhas"
+        }
+      ],
+      "status": "reference_only",
+      "frames": 14
+    },
+    {
+      "filename": "1000982450.gif",
+      "archive": "/Pokémon Torre/Galeria/Referencias V63 2026-10-14/1000982450.gif",
+      "category": "escudo e espinhos animados",
+      "description": "Escudo de energia arredondado e pontas surgindo do chão",
+      "suggestedMoves": [
+        {
+          "id": "catalog_protect",
+          "name": "Protect"
+        },
+        {
+          "id": "catalog_barreirapsiquica",
+          "name": "Barreira Psíquica"
+        },
+        {
+          "id": "catalog_agulhas",
+          "name": "Agulhas"
+        }
+      ],
+      "status": "reference_only",
+      "frames": 14
     }
   ],
   "plantMovesIntegrated": [
@@ -69,5 +437,64 @@
     "Leech Seed",
     "Esporos"
   ],
-  "note": "As animações V63 são arte original com 8 quadros cada, seguindo a prévia aprovada, sem remoção de marcas d'água."
+  "note": "As animações V63 são arte original com 8 quadros cada, seguindo a prévia aprovada, sem remoção de marcas d'água.",
+  "version": "V65 reference catalog",
+  "updated": "2026-10-14",
+  "archiveKind": "private_library",
+  "summary": {
+    "total": 18,
+    "spritesheets": 14,
+    "animatedGIFs": 4,
+    "integratedByThisChange": 0
+  },
+  "usagePolicy": {
+    "referenceOnly": true,
+    "replacesApprovedEffects": false,
+    "noAutomaticIntegration": true,
+    "checkRightsBeforePublicDistribution": true,
+    "privateCopiesPreservedWithOriginalWatermarks": true,
+    "suggestedMovesAreRecommendationsNotInstalledVfx": true
+  },
+  "topMatches": [
+    {
+      "move": "Fire Spin",
+      "reference": "1000982595.webp",
+      "rationale": "Furacão circular de fogo combina com aprisionamento por chamas"
+    },
+    {
+      "move": "Chamas de Moltres",
+      "reference": "1000982597.webp",
+      "rationale": "Fênix de fogo adequada ao golpe especial lendário"
+    },
+    {
+      "move": "Explosion",
+      "reference": "1000982600.webp",
+      "rationale": "Onda de choque e explosão de grande escala"
+    },
+    {
+      "move": "Thunderbolt",
+      "reference": "1000982605.webp",
+      "rationale": "Raios ramificados de ataque"
+    },
+    {
+      "move": "Swords Dance",
+      "reference": "1000982603.webp",
+      "rationale": "Espadas ascendentes em sequência"
+    },
+    {
+      "move": "Bubble Beam",
+      "reference": "1000982603.webp",
+      "rationale": "Bolhas que avançam e estouram"
+    },
+    {
+      "move": "Recover",
+      "reference": "1000982610.webp",
+      "rationale": "Círculo mágico verde de regeneração"
+    },
+    {
+      "move": "Caco de Gelo",
+      "reference": "1000982607.webp",
+      "rationale": "Fragmentos frios como projéteis"
+    }
+  ]
 }
