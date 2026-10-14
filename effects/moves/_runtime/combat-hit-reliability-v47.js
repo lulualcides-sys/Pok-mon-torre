@@ -336,7 +336,7 @@
  const gameVersion=document.getElementById('ptFireSpriteV41Badge');
  if(gameVersion){
   const actualElectric=typeof window.PokemonTorreElectricV46==='function'?window.PokemonTorreElectricV46().version:null;
-  gameVersion.textContent='TORRE V61 · '+(actualElectric?'ÍCONES V61 · 4 GOLPES REFEITOS · ELÉTRICOS V'+actualElectric:'MODO SEGURO · ÁGUA V45');
+  gameVersion.textContent='TORRE V64 · '+(actualElectric?'PLANTA V64 · 4 GOLPES CORRIGIDOS · ELÉTRICOS V'+actualElectric:'MODO SEGURO · ÁGUA V45');
   gameVersion.title='Motor de colisão V47.8; renderizador elétrico: '+(actualElectric||'desativado');
  }
  // Only for a RECOVERED old zero-cost physical move. The Pokémon really
