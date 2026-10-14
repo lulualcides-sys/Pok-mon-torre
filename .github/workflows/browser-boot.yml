@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'tests/test-browser-boot.cjs'
+      - 'effects/moves/_runtime/combat-hit-reliability-v47.js'
   pull_request:
     branches: [main]
     paths:
