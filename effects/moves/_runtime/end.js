@@ -73,7 +73,10 @@ BattleEngine.prototype.useMove=function(i){
 };
 const previousDraw=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
- pixiFX.ensure(this);
+ // V61.3 performance: 4 approved Canvas atlas animations do not need WebGL.
+ // Creating a Pixi application here used to open a second GPU canvas on
+ // every battle, even when no move called pixiFX.paint(). The WebGL layer is
+ // now initialized lazily by pixiFX.paint for moves that actually need it.
  const result=previousDraw.call(this,now);
  if(!battle?.active||!this.ctx){this.v3580Visuals=[];return result;}
  this.v3580Visuals=(this.v3580Visuals||[]).filter(f=>f.end>now);
