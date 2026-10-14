@@ -85,6 +85,11 @@ async function browserCase(port,query,mobile=false,combat=false){
    await sleep(250);
   }
   const ok=!!(result?.main&&result?.resources?.length>10&&!result?.text?.includes('Não foi possível abrir o jogo'));
+  let uiFixture=null;
+  if(ok&&query==='?v=46.1'){
+    const probe=await cmd('Runtime.evaluate',{expression:"(async()=>{\n const modal=document.querySelector('#modal');\n if(!modal)return {ok:false,error:'modal missing'};\n const holder=document.createElement('section');holder.id='pt61-test-fixture';\n const moves=[\n  ['Nevasca','Gelo',35,'35','4.6'],\n  ['Tempestade de Neve','Gelo',39,'39','4.6'],\n  ['Faísca do Pikachu','Elétrico',18,'18','1.4'],\n  ['Volt Tackle','Elétrico',26.8,'27','2.8'],\n  ['Barreira','Psíquico',0,'24','5.8']\n ];\n holder.innerHTML='<div class=\"v331MoveList\">'+moves.map((x,i)=>\n  '<button class=\"v331Choice\" data-v331-pick=\"'+i+'\"><span><b>⚡ '+x[0]+'</b>'+\n  '<small>'+x[1]+' · '+(x[2]||'Defesa')+' força · '+x[3]+' energia · '+x[4]+'s</small>'+\n  '</span><span class=\"pillSmall\">EQUIPAR</span></button>').join('')+'</div>';\n modal.append(holder);\n await new Promise(r=>setTimeout(r,550));\n const rows=[...holder.querySelectorAll('.v331Choice')];\n const names=rows.map(el=>el.querySelector('.pt61Label')?.textContent||'');\n const powers=rows.map(el=>{\n  const m=el.querySelector('small')?.textContent.match(/(\\d+(?:[.,]\\d+)?)\\s*força/);\n  return m?Number(m[1].replace(',','.')):0;\n });\n const icons=rows.map(el=>el.querySelector('.pt61Icon')?.dataset.type);\n const originalButtonIds=rows.map(el=>el.getAttribute('data-v331-pick'));\n const ok=JSON.stringify(powers)===JSON.stringify([0,18,26.8,35,39])\n  &&icons.includes('electric')&&icons.includes('ice')&&icons.includes('psychic')\n  &&originalButtonIds.length===5\n  &&holder.querySelectorAll('.pt61Icon svg').length===5;\n holder.remove();\n return {ok,names,powers,icons,originalButtonIds};\n})()",returnByValue:true,awaitPromise:true});
+    uiFixture=probe.result?.result?.value||{ok:false,error:probe.result?.exceptionDetails?.text||'Evaluation failed'};
+  }
   let combatResults=null;
   if(combat&&ok){
    const cases=[['electric-spark',25,143,0],['electric-spark-pikachu',25,143,1],
@@ -115,7 +120,7 @@ async function browserCase(port,query,mobile=false,combat=false){
       answer.final.foeHp<answer.fired.hpBefore});
    }
   }
-  return {query:query||'default',ok,result,combatResults,errors:errors.slice(0,12)};
+  return {query:query||'default',ok,result,combatResults,uiFixture,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -137,6 +142,7 @@ server.listen(0,'127.0.0.1',async()=>{
   if(!experimental.ok||!experimental.result?.electric||!experimental.result?.types||experimental.result?.electricVersion!=='57.2'||!experimental.result?.electricLabel?.includes('ELÉTRICOS V57.2')||!experimental.result?.elemental||!experimental.result?.elementalReady||!experimental.result?.library16||!experimental.result?.library16Ready||experimental.result?.library16Count!==16||!experimental.result?.fourV60||!experimental.result?.fourV60Ready||experimental.result?.fourV60Count!==3||!experimental.result?.moveUi||experimental.result?.moveUiTypes!==18){
    console.error('FAIL: V46 must now boot with electric and canonical types enabled');process.exitCode=1;
   }
+  if(!experimental.uiFixture?.ok){console.error('FAIL V61 icons/ascending power:',experimental.uiFixture);process.exitCode=1;}
   const phone=await browserCase(port,'?v=47-mobile',true);
   console.log('BROWSER ANDROID:',JSON.stringify(phone));
   if(!phone.ok||!phone.result?.electric||!phone.result?.types||!phone.result?.electricReady||!phone.result?.elementalReady||!phone.result?.library16Ready||!phone.result?.fourV60Ready||!phone.result?.moveUi||phone.result?.moveUiTypes!==18){
