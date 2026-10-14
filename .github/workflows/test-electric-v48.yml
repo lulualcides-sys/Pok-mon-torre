@@ -1,7 +1,7 @@
-name: Testar quatro golpes elétricos V48
+name: Testar quatro golpes elétricos V48 / V50
 on:
   push:
-    branches: [main, feat/electric-cinematic-v48-8frames]
+    branches: [main, feat/electric-cinematic-v48-8frames, feat/electric-v50-frame-assets]
   pull_request:
     branches: [main]
 permissions:
@@ -17,5 +17,5 @@ jobs:
           node-version: '22'
       - name: Confirmar a lógica e os movimentos antigos
         run: node tests/test-electric-v46.cjs
-      - name: Validar 32 fases cinematográficas, contorno e renderização
+      - name: Validar 32 PNGs finais, impactos e ausência de traços Canvas
         run: node tests/test-electric-v48.cjs
