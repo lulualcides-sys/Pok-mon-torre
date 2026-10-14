@@ -248,7 +248,7 @@ def arc(i):
 def impact_frame(move,i):
     im=canvas()
     powers=[.35,1,.62,.18];power=powers[i]
-    x,y=(190,166) if move=="faisca" else ((140,162) if move=="discharge" else (141,271))
+    x,y=(140,160)
     impact(im,x,y,power,432+len(move)*11+i,spread=[24,47,33,15][i])
     return im.resize((W,H),Image.Resampling.LANCZOS)
 
