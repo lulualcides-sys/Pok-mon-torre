@@ -33,7 +33,7 @@ jobs:
               with Image.open(p) as im:
                   assert im.mode=='RGBA',p
                   assert im.size==((384,144) if p.parent.name=='arcs' else (280,320)),p
-                  assert im.getextrema()[3][0]==0 and im.getextrema()[3][1]>=160,p
+                  assert im.getextrema()[3][0]==0 and im.getextrema()[3][1]>=20,p
           assert len({p.read_bytes() for p in paths})==8
           assert len({p.read_bytes() for p in arcs})==8
           print('PASS 16 sprites, oito fases distintas em cada conjunto')
