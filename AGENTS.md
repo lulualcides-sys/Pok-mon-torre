@@ -20,8 +20,8 @@ Este documento registra as regras do projeto para qualquer alteração de golpes
 ## Processo padrão para cada novo pedido
 
 1. Trabalhar **exatamente os golpes que o usuário pedir, de qualquer tipo**. Não assumir que todos os próximos pedidos são elétricos apenas por causa da V55/V56.
-2. **Mostrar prévia de dentro do próprio jogo** antes de considerar a alteração finalizada, com animação real/quadros representativos, conforme o padrão que o usuário aprovou. Prévia externa isolada não substitui a prévia integrada ao jogo.
-3. Após aprovação, integrar a mudança ao jogo e ao repositório quando houver permissão de escrita.
+2. **A prévia de aprovação é um painel externo de apresentação dos golpes**, como a referência enviada pelo usuário: logo do Pokémon Torre, nome, tipo/categoria, descrição e 8 quadros numerados da animação, com acabamento cinematográfico. **Não é print nem modal dentro do jogo.**
+3. Após a aprovação da prévia, **implementar os efeitos funcionais no jogo e publicar no repositório** quando houver escrita autorizada. A prévia não substitui o trabalho no jogo; se o usuário solicitar aplicação imediata, seguir essa instrução e não gerar novas fotos.
 4. Manter cada golpe em pasta/módulo isolado e evitar regressões nos outros efeitos aprovados.
 5. Testar carregamento do jogo, exibição do efeito, acerto e dano, alinhamento, desempenho, e compatibilidade com o renderizador. Não afirmar que os testes passaram sem executá-los.
 6. Organizar as pastas sem afetar o funcionamento e preservar salvamentos e conteúdo existente. Preferir atualizações no site já publicado, evitando downloads manuais a cada versão.
