@@ -29,7 +29,7 @@ const chrome=process.env.CHROME_BIN||[
  '/usr/bin/chromium-browser'
 ].find(x=>fs.existsSync(x));
 if(!chrome){console.error('SKIP: Chrome/Chromium missing');process.exit(0)}
-async function browserCase(port,query,mobile=false,combat=false){
+async function browserCase(port,query,mobile=false,combat=false,grass=false){
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'pokemon-boot-'));
  const child=cp.spawn(chrome,[
   '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
@@ -90,6 +90,26 @@ async function browserCase(port,query,mobile=false,combat=false){
     const probe=await cmd('Runtime.evaluate',{expression:"(async()=>{\n const modal=document.querySelector('#modal');\n if(!modal)return {ok:false,error:'modal missing'};\n const holder=document.createElement('section');holder.id='pt61-test-fixture';\n const moves=[\n  ['Nevasca','Gelo',35,'35','4.6'],\n  ['Tempestade de Neve','Gelo',39,'39','4.6'],\n  ['Faísca do Pikachu','Elétrico',18,'18','1.4'],\n  ['Volt Tackle','Elétrico',26.8,'27','2.8'],\n  ['Barreira','Psíquico',0,'24','5.8']\n ];\n holder.innerHTML='<div class=\"v331MoveList\">'+moves.map((x,i)=>\n  '<button class=\"v331Choice\" data-v331-pick=\"'+i+'\"><span><b>⚡ '+x[0]+'</b>'+\n  '<small>'+x[1]+' · '+(x[2]||'Defesa')+' força · '+x[3]+' energia · '+x[4]+'s</small>'+\n  '</span><span class=\"pillSmall\">EQUIPAR</span></button>').join('')+'</div>';\n modal.append(holder);\n await new Promise(r=>setTimeout(r,550));\n const rows=[...holder.querySelectorAll('.v331Choice')];\n const names=rows.map(el=>el.querySelector('.pt61Label')?.textContent||'');\n const powers=rows.map(el=>{\n  const m=el.querySelector('small')?.textContent.match(/(\\d+(?:[.,]\\d+)?)\\s*força/);\n  return m?Number(m[1].replace(',','.')):0;\n });\n const icons=rows.map(el=>el.querySelector('.pt61Icon')?.dataset.type);\n const originalButtonIds=rows.map(el=>el.getAttribute('data-v331-pick'));\n const svgCount=holder.querySelectorAll('.v331Choice .pt61Icon svg').length;\n const vectorMarkup=rows.map(el=>el.querySelector('.pt61Icon')?.innerHTML?.slice(0,100));\n const runsBefore=window.PokemonTorreMoveUIV61?.().runs||0;\n const churn=document.createElement('span');churn.className='pt61-performance-probe';\n holder.append(churn);\n for(let i=0;i<120;i++){const e=document.createElement('i');e.textContent='hp '+i;churn.append(e);}\n await new Promise(r=>setTimeout(r,140));\n const runsAfter=window.PokemonTorreMoveUIV61?.().runs||0;\n const stableObserver=runsAfter-runsBefore<=1;\n const centered=rows.every(el=>{const icon=el.querySelector('.pt61Icon');const st=window.getComputedStyle(icon);return st.display.includes('flex')&&st.alignItems==='center'&&st.justifyContent==='center'});\n const ok=JSON.stringify(powers)===JSON.stringify([0,18,26.8,35,39])\n  &&icons.includes('electric')&&icons.includes('ice')&&icons.includes('psychic')\n  &&originalButtonIds.length===5\n  &&stableObserver&&centered\n  &&holder.querySelectorAll('.v331Choice .pt61Icon svg').length===5;\n const picker=document.querySelector('.pt62TypeButton');\n const dropdownPresent=!!picker;\n picker?.click();\n await new Promise(r=>setTimeout(r,80));\n const popup=document.querySelector('.pt62TypePopup');\n const dropdownOptions=popup?.querySelectorAll('.pt62TypeOption').length||0;\n const optionIcons=popup?.querySelectorAll('.pt62TypeOption .pt61Icon svg').length||0;\n const iceOption=popup?.querySelector('.pt62TypeOption[data-type=\"ice\"]');\n const optionLabel=iceOption?.querySelector('.pt62OptionName')?.textContent;\n iceOption?.click();\n await new Promise(r=>setTimeout(r,80));\n const chosenType=document.querySelector('.ptTypeSelect')?.value;\n const pickerLabel=document.querySelector('.pt62TypeTitle')?.textContent;\n const popupClosed=!document.querySelector('.pt62TypePopup');\n const visibleGelo=[...holder.querySelectorAll('.v331Choice:not(.ptFilteredOut)')]\n  .map(row=>row.querySelector('.pt61Label')?.textContent);\n const filterWorks=visibleGelo.length===2&&visibleGelo.includes('Nevasca')\n   &&visibleGelo.includes('Tempestade de Neve');\n const typeMenuOk=dropdownPresent&&dropdownOptions===19&&optionIcons===19\n   &&optionLabel==='Gelo'&&chosenType==='ice'\n   &&pickerLabel==='Gelo'&&popupClosed&&filterWorks;\n holder.remove();\n return {ok:ok&&typeMenuOk,names,powers,icons,svgCount,\n  vectorMarkup,originalButtonIds,runsBefore,runsAfter,stableObserver,centered,\n  dropdownPresent,dropdownOptions,optionIcons,chosenType,pickerLabel,popupClosed,typeMenuOk,filterWorks,visibleGelo};\n})()",returnByValue:true,awaitPromise:true});
     uiFixture=probe.result?.result?.value||{ok:false,error:probe.result?.exceptionDetails?.text||'Evaluation failed'};
   }
+  let grassResults=null;
+  if(ok&&grass){
+   const q=JSON.stringify(['Stun Spore','Pó do Sono','Leech Seed','Esporos']);
+   const expression="(async()=>{const qa=window.PokemonTorreLocalCombatTestV47;"+
+    "if(!qa)return [{error:'Local QA harness missing'}];"+
+    "const out=[];for(const name of "+q+"){"+
+    "const cast=qa.castGrass(name,143);"+
+    "await new Promise(r=>setTimeout(r,260));"+
+    "const visual=window.PokemonTorrePlantStatusV64?.();"+
+    "const sprite=window.PokemonTorrePlantFourV63?.();"+
+    "out.push({name,equipped:cast.equipped,error:cast.error,"+
+     "castAccepted:cast.cast?.stats?.lastCast===name||visual?.names?.at(-1)?.result===true,"+
+     "conditions:visual?.actualEnemyConditions,frames:sprite?.framesDrawn,"+
+     "castBefore:cast.visuals?.casts,visualQueues:visual?.visualQueues,"+
+     "statusApplied:visual?.statusApplied,cooldown:cast.cast?.cooldowns?.["+q+".indexOf(name)],"+
+     "energyAfter:cast.cast?.energy});"+
+    "}return out;})()";
+   const reply=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
+   grassResults=reply.result?.result?.value||[{error:reply.result?.exceptionDetails?.text||'Grass status evaluation failed'}];
+  }
   let combatResults=null;
   if(combat&&ok){
    const cases=[['electric-spark',25,143,0],['electric-spark-pikachu',25,143,1],
@@ -120,7 +140,7 @@ async function browserCase(port,query,mobile=false,combat=false){
       answer.final.foeHp<answer.fired.hpBefore});
    }
   }
-  return {query:query||'default',ok,result,combatResults,uiFixture,errors:errors.slice(0,12)};
+  return {query:query||'default',ok,result,combatResults,grassResults,uiFixture,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -152,6 +172,23 @@ server.listen(0,'127.0.0.1',async()=>{
   console.log('BROWSER AUTOMATIC RECOVERY:',JSON.stringify(recovered));
   if(!recovered.ok||recovered.result?.electric||!recovered.result?.url?.includes('safe=1')){
    console.error('FAIL: a missing electric asset should recover to V45 safe mode on phone');process.exitCode=1;
+  }
+  const status=await browserCase(port,'?v=64-grass-status-regression',true,false,true);
+  console.log('BROWSER GRASS STATUSES:',JSON.stringify(status.grassResults));
+  const names=['Stun Spore','Pó do Sono','Leech Seed','Esporos'];
+  const idMap={'Stun Spore':'stun-spore','Pó do Sono':'po-do-sono',
+   'Leech Seed':'leech-seed','Esporos':'esporos'};
+  const expected={'Stun Spore':'paralysis','Pó do Sono':'sleep',
+   'Leech Seed':'seed','Esporos':'sleep'};
+  const statusOkay=status.ok&&status.grassResults?.length===4&&
+   status.grassResults.every((r,i)=>!r.error&&r.name===names[i]&&
+    r.equipped?.includes(r.name)&&r.castAccepted===true&&
+    r.conditions?.includes(expected[r.name])&&
+    (r.frames?.[idMap[r.name]]||0)>0&&r.visualQueues>0&&
+    r.energyAfter<100);
+  if(!statusOkay){
+   console.error('FAIL: actual status casts must apply real conditions and draw their V63 sprites',status.grassResults);
+   process.exitCode=1;
   }
   const combat=await browserCase(port,'?v=47.1-hit-regression',false,true);
   console.log('BROWSER REAL COMBAT:',JSON.stringify(combat.combatResults));
