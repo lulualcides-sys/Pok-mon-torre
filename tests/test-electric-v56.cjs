@@ -32,7 +32,7 @@ for(const id of moves){
   const t=(frame+.5)/8;
   const result=kit.paint(g,{from:[60,190],to:target},t,1200,1,false,id);
   assert.ok(result,id+' paints frame '+frame);
-  assert.ok(draw.some(v=>v.src.endsWith('/sprites/frame_'+String(frame+1).padStart(2,'0')+'.png?v=57.0')),
+  assert.ok(draw.some(v=>v.src.endsWith('/sprites/frame_'+String(frame+1).padStart(2,'0')+'.png?v=57.1')),
    'Wrong animation frame '+id+' '+frame);
   assert.ok(draw.every(v=>v.args.every(Number.isFinite)),'Invalid draw coordinates');
   assert.ok(Number.isFinite(g.angle),'Effect must point towards target');
