@@ -63,8 +63,8 @@ def bolt(im,a,b,seed,width=5,power=1,branches=3,rough=.24,shade=True):
     pts=fractal(a,b,seed,rough,5)
     broad=mask(im.width//S,im.height//S);core=mask(im.width//S,im.height//S)
     broadDraw=ImageDraw.Draw(broad);coreDraw=ImageDraw.Draw(core)
-    tapered(broadDraw,pts,width*.78,255)
-    tapered(coreDraw,pts,max(1.0,width*.42),255)
+    tapered(broadDraw,pts,width*.57,255)
+    tapered(coreDraw,pts,max(1.05,width*.34),255)
     r=random.Random(seed+707)
     for k in range(branches):
         idx=max(2,min(len(pts)-4,int((.23+.57*(k+1)/(branches+1))*(len(pts)-1))))
@@ -75,17 +75,17 @@ def bolt(im,a,b,seed,width=5,power=1,branches=3,rough=.24,shade=True):
         length=r.uniform(14,44)*min(1.42,max(.7,width/5))
         tail=(x+length*math.cos(theta),y+length*math.sin(theta))
         fork=fractal((x,y),tail,seed*19+k,rough=.26,generation=3)
-        tapered(broadDraw,fork,max(.7,width*.20),190)
-        tapered(coreDraw,fork,max(.55,width*.11),200)
-    blur(im,broad,(255,107,8),7,power*.22)
-    blur(im,broad,(255,199,44),4.5,power*.38)
-    blur(im,core,(255,252,182),2.5,power*.76)
-    if shade:composite(im,broad.filter(ImageFilter.MaxFilter(3)),DARK,power*.61)
-    composite(im,broad,(255,170,22),power*.90)
-    composite(im,core,(255,242,128),power*.96)
+        tapered(broadDraw,fork,max(.6,width*.16),180)
+        tapered(coreDraw,fork,max(.5,width*.095),200)
+    blur(im,broad,(255,118,13),5.1,power*.11)
+    blur(im,broad,(255,210,49),3.2,power*.28)
+    blur(im,core,(255,252,184),1.9,power*.83)
+    if shade:composite(im,broad.filter(ImageFilter.MaxFilter(3)),DARK,power*.55)
+    composite(im,broad,(255,164,19),power*.31)
+    composite(im,core,(255,240,124),power*.94)
     # Peak white core must be visible on phone-sized displays.
     fine=mask(im.width//S,im.height//S)
-    tapered(ImageDraw.Draw(fine),pts,max(.9,width*.28),255)
+    tapered(ImageDraw.Draw(fine),pts,max(.88,width*.26),255)
     composite(im,fine,WHITE,power*.97)
 
 def sparks(im,x,y,count,radius,seed,power=1):
@@ -182,8 +182,8 @@ def gold_impact(im,x,y,power,seed,spread=44,debris=False):
         p3=point((x+ux*short-dx,y+uy*short-dy))
         draw.polygon([p1,p2,p3],fill=255)
     blur(im,raymask,(255,157,29),4,power*.49)
-    composite(im,raymask.filter(ImageFilter.MaxFilter(3)),(21,12,19),power*.64)
-    composite(im,raymask,(255,191,44),power*.91)
+    composite(im,raymask.filter(ImageFilter.MaxFilter(3)),(21,12,19),power*.48)
+    composite(im,raymask,(255,206,74),power*.77)
     core=mask(im.width//S,im.height//S)
     d=ImageDraw.Draw(core);r=max(3,spread*.12)
     d.ellipse((int((x-r)*S),int((y-r)*S),int((x+r)*S),int((y+r)*S)),fill=255)
@@ -239,21 +239,21 @@ def discharge(i):
     levels=[.18,.39,.64,.84,1,.88,.47,.16]
     rad=[19,34,53,79,114,122,82,30][i]
     if i<=2:targeting(im,cx,218,levels[i],i+23,42+i*12)
-    count=[4,6,8,12,15,13,9,4][i]
+    count=[4,5,7,9,11,11,8,4][i]
     rng=random.Random(454+i*111)
     for j in range(count):
         a=TAU*j/count+rng.uniform(-.14,.14)+i*.095
         radius=rad*rng.uniform(.71,1.15)
         end=(cx+math.cos(a)*radius,cy+math.sin(a)*radius*.88)
-        start=(cx+rng.uniform(-10,10),cy+rng.uniform(-10,10))
+        start=(cx+math.cos(a)*rng.uniform(12,20),cy+math.sin(a)*rng.uniform(12,20))
         bolt(im,start,end,1600+i*71+j,
              width=2.6 if i<=2 else 3.7 if i>=4 else 3.0,
              power=levels[i],branches=1+(i>=3),rough=.18)
     if i==4:
         bolt(im,(139,14),(142,192),2841,6.2,.90,6,.20)
-        gold_impact(im,cx,cy,.92,2780,46)
+        gold_impact(im,cx,cy,.53,2780,35)
     elif i==5:
-        gold_impact(im,cx,cy,.58,2788,32)
+        gold_impact(im,cx,cy,.34,2788,25)
     sparks(im,cx,cy,8+i*3,rad*.9,1520+i,levels[i])
     return im.resize((W,H),Image.Resampling.LANCZOS)
 
@@ -275,8 +275,8 @@ def tempestade(i):
                  width=4.6 if i<5 else 6.8,
                  power=power,branches=3+(i>=4),rough=.16)
             if i>=3:
-                gold_impact(im,xx,267,power*(.48 if i<5 else .87),
-                            400+i*19+j,39 if i==5 else 24,debris=i==5)
+                gold_impact(im,xx,267,power*(.45 if i<5 else .62),
+                            400+i*19+j,32 if i==5 else 24,debris=i==5)
         if i==6:sparks(im,140,267,22,83,478,.45)
     else:sparks(im,140,264,11,40,490,.21)
     return im.resize((W,H),Image.Resampling.LANCZOS)
