@@ -79,11 +79,11 @@ def bolt(im,a,b,seed,width=5,power=1,branches=3,rough=.24,shade=True):
         fork=fractal((x,y),tail,seed*19+k,rough=.26,generation=3)
         tapered(broadDraw,fork,max(1.05,width*.29),200)
         tapered(coreDraw,fork,max(.7,width*.13),190)
-    blur(im,broad,(78,37,255),11,power*.23)
-    blur(im,broad,(17,132,255),5,power*.40)
-    blur(im,core,(148,235,255),2.8,power*.58)
-    if shade:composite(im,broad.filter(ImageFilter.MaxFilter(3)),DARK,power*.55)
-    composite(im,broad,(59,154,255),power*.95)
+    blur(im,broad,(71,56,224),7,power*.14)
+    blur(im,broad,(17,132,255),3.7,power*.26)
+    blur(im,core,(148,235,255),2.1,power*.67)
+    if shade:composite(im,broad.filter(ImageFilter.MaxFilter(3)),DARK,power*.42)
+    composite(im,broad,(64,162,248),power*.81)
     composite(im,core,(204,246,255),power)
     # Peak white core must be visible on phone-sized displays.
     fine=mask(im.width//S,im.height//S)
@@ -110,14 +110,14 @@ def energy(im,x,y,radius,power):
     m=mask(im.width//S,im.height//S)
     ImageDraw.Draw(m).ellipse((round((x-radius)*S),round((y-radius)*S),
                               round((x+radius)*S),round((y+radius)*S)),fill=255)
-    blur(im,m,(66,31,236),radius*.75,power*.25)
-    blur(im,m,(60,175,255),radius*.48,power*.25)
+    blur(im,m,(53,49,157),radius*.64,power*.10)
+    blur(im,m,(47,151,238),radius*.33,power*.15)
     core=mask(im.width//S,im.height//S)
     rad=max(1.6,radius*.28)
     ImageDraw.Draw(core).ellipse((round((x-rad)*S),round((y-rad)*S),
                                  round((x+rad)*S),round((y+rad)*S)),fill=255)
-    blur(im,core,(222,252,255),radius*.28,power*.37)
-    composite(im,core,(236,253,255),power*.74)
+    blur(im,core,(222,252,255),radius*.20,power*.49)
+    composite(im,core,(236,253,255),power*.69)
 
 def impact(im,x,y,power=1,seed=0,spread=40):
     if power<=0:return
@@ -137,14 +137,14 @@ def storm_mist(im,x,y,power,seed):
     r=random.Random(seed)
     m=mask(im.width//S,im.height//S)
     d=ImageDraw.Draw(m)
-    for i in range(17):
-        xx=x+r.uniform(-78,78)
+    for i in range(13):
+        xx=x+r.uniform(-65,65)
         yy=y+r.uniform(-14,11)
         rx=r.uniform(9,30)
-        ry=r.uniform(5,12)
-        d.ellipse((round((xx-rx)*S),round((yy-ry)*S),round((xx+rx)*S),round((yy+ry)*S)),fill=r.randint(55,165))
-    composite(im,m.filter(ImageFilter.GaussianBlur(9*S)),(53,37,105),power*.48)
-    blur(im,m,(50,82,185),4,power*.17)
+        ry=r.uniform(3,9)
+        d.ellipse((round((xx-rx)*S),round((yy-ry)*S),round((xx+rx)*S),round((yy+ry)*S)),fill=r.randint(25,90))
+    composite(im,m.filter(ImageFilter.GaussianBlur(12*S)),(35,33,71),power*.19)
+    blur(im,m,(62,81,159),6,power*.12)
     if power>.35:sparks(im,x,y+14,7,66,seed+99,power*.32)
 
 def faisca(i):
@@ -161,11 +161,11 @@ def faisca(i):
         for j in range(5):
             y=160+(j-2)*11
             bolt(im,(15, y-4*j),(188+i*12,y+(j-2)*5),220+i*19+j,
-                 width=4.5 if j==2 else 2.0,power=power,branches=3)
+                 width=3.4 if j==2 else 1.6,power=power,branches=3)
         energy(im,190,160,18,power*.73)
         sparks(im,191,161,19,43,i+320,power)
     elif i==5:
-        bolt(im,(35,167),(190,167),414,6.1,.86,4)
+        bolt(im,(35,167),(190,167),414,4.8,.86,4)
         impact(im,196,164,power,431,52)
     elif i==6:
         impact(im,192,162,.54,432,37)
@@ -185,7 +185,7 @@ def discharge(i):
         x=140+end*math.cos(a)
         y=163+end*math.sin(a)*.89
         start=(140+r.uniform(-6,6),163+r.uniform(-6,6))
-        bolt(im,start,(x,y),930+i*130+j,width=2.4+(i in (4,5))*1.5,
+        bolt(im,start,(x,y),930+i*130+j,width=2.1+(i in (4,5))*.96,
              power=power*(.7+r.random()*.27),branches=1+(i>=3),rough=.26)
     sparks(im,140,163,12+i*3,radius*.91,i+440,power)
     if i in (4,5):impact(im,140,164,.55,772+i,24)
@@ -204,7 +204,7 @@ def tempestade(i):
         for j in range(count):
             x=140+offsets[i-2]+(j-(count-1)/2)*28
             tipy=194 if i==2 else 268
-            bolt(im,(x+12,74),(x,tipy),311+i*31+j,4.6 if i!=5 else 5.8,
+            bolt(im,(x+12,74),(x,tipy),311+i*31+j,3.5 if i!=5 else 4.7,
                  levels[i]*(.8+.15*j),branches=4,rough=.24)
             if i>=3:impact(im,x,265,.47+(i==5)*.40,405+i*13+j,25+(i==5)*13)
     else:sparks(im,140,270,14,58,702,.32)
@@ -220,12 +220,12 @@ def trovao(i):
     elif i<=6:
         progress=[0,0,0,.64,1,1,1][i]
         endy=80+192*progress
-        bolt(im,(127,86),(143,endy),1400+i*37,width=5.8 if i==3 else 9 if i<=5 else 4.7,
+        bolt(im,(127,86),(143,endy),1400+i*37,width=4.8 if i==3 else 6.3 if i<=5 else 3.7,
              power=power,branches=4 if i==3 else 7,rough=.27)
         if i in (4,5):
             bolt(im,(141,199),(100,257),1780+i,3.8,power,2)
             bolt(im,(143,221),(183,261),1790+i,3.4,power,2)
-            impact(im,142,272,.85 if i==4 else 1,821+i,56 if i==5 else 44)
+            impact(im,142,272,.85 if i==4 else 1,821+i,44 if i==5 else 35)
         elif i==6:impact(im,142,272,.49,911,35)
     else:sparks(im,141,271,14,62,1044,.35)
     return im.resize((W,H),Image.Resampling.LANCZOS)
