@@ -1,0 +1,17 @@
+{
+  "version": "V61.2",
+  "approved_on": "2026-10-14",
+  "status": "APPROVED — do not replace these sprite frames without new explicit user approval",
+  "note": "User approved all four current move artworks, found electric visuals acceptable (no more cosmetic changes now). Subsequent work may optimize the renderer while keeping identical displayed frames and timing.",
+  "frozenFiles": {
+    "effects/moves/v60-four/tempestade-de-neve/atlas.png": "297508d67eaba83968dc299b9deea109f75ffc70",
+    "effects/moves/v60-four/nevasca/atlas.png": "691173c3904237964ed75920232e5a09dacabb3e",
+    "effects/moves/v60-four/faisca-do-pikachu/atlas.png": "e98c41aab780c82a990ea00e82efe4accf710c9f",
+    "effects/moves/v60-four/volt-tackle/atlas.png": "fe8a5943a3f38bbf5a1f37cb0de5cb8b41e5cf54"
+  },
+  "allowed_changes": [
+    "Draw optimization and predecode without modifying any of the 4 atlas PNG files",
+    "Frame selection must remain 8 distinct frames",
+    "Unchanged move damage, type, cooldown, equipped slots and hitboxes"
+  ]
+}
