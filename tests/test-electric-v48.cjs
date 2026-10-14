@@ -29,7 +29,7 @@ vm.runInContext(src,context);
 const kit=vm.runInContext('electricSpriteV46',context);
 assert.equal(kit.diagnostics().registered.length,4);
 assert.equal(typeof kit.cinematic,'function');
-assert.equal(kit.diagnostics().version,'51.0','Must run newest electric V51 engine');
+assert.equal(kit.diagnostics().version,'52.0','Must run newest electric V52 engine');
 const cases=[
  ['Faísca','faisca',980],
  ['Discharge','discharge',1550],
@@ -55,8 +55,14 @@ for(const [name,kind,duration] of cases){
  }
  assert.equal(g.strokes,0,'No Canvas line art allowed');
  assert.ok(g.blits.some(b=>b.src.includes('/impact/hit_')),'Draw real transparent impacts');
+ if(kind==='discharge'){
+  const links=g.blits.filter(b=>b.src.includes('/arcs/arc_'));
+  assert.ok(links.length>=4,'Discharge must connect actor to target with animated lightning assets');
+  assert.ok(links.some(b=>b.args[2]>100),'Bolt visibly travels toward the opponent');
+  assert.equal(kit.diagnostics().arcsReady,8,'Every directional arc frame is preloaded');
+ }
  assert.ok(g.blits.every(b=>b.args.every(Number.isFinite)),'Image drawing bounds are finite');
- assert.ok(g.blits.every(b=>b.args[2]<=220&&b.args[3]<=260),
+ assert.ok(g.blits.every(b=>b.args[2]<=600&&b.args[3]<=340),
   'Effects stay within mobile arena proportions');
 
  report.push({name,phaseSizes,strokes:g.strokes,blits:g.blits.length});
@@ -85,6 +91,18 @@ for(const dir of moveDirs){
  }
 }
 assert.ok(read('index.html').includes('Carregando sprites elétricos finais'),'Asset preflight must run before battle');
+const arcs=[];
+for(let i=1;i<=8;i++){
+ const p='effects/moves/discharge/arcs/arc_'+String(i).padStart(2,'0')+'.png';
+ const data=fs.readFileSync(path.join(root,p));
+ assert.equal(data.readUInt32BE(16),384,'Directional sprite width must be 384px');
+ assert.equal(data.readUInt32BE(20),144,'Directional sprite height must be 144px');
+ arcs.push(data.toString('base64'));
+}
+assert.equal(new Set(arcs).size,8,'All directional discharges must animate');
+assert.ok(read('index.html').includes('/arcs/arc_'),'Target arcs preloaded before combat');
+assert.doesNotMatch(read('effects/moves/_runtime/combat-hit-reliability-v47.js'),/gameVersion\.textContent='ACERTO REAL V47/,'Footer cannot display legacy combat engine version');
 
-console.log('PASS V51: 32 authored PNG animation frames, real impact images, no runtime Canvas strokes');
+
+console.log('PASS V52: all four sprite animations, 8 animated target-reaching Discharge arcs, no old V47 footer');
 console.log(JSON.stringify(report));
