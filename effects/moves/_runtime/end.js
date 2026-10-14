@@ -7,7 +7,11 @@ function paint(g,f,now,e,k){
  const entry=registry.get(k);if(!entry){g.restore();return false;}
  // These four move-specific sprite animators take priority over the generic
  // Pixi shader path; all other moves retain the exact previous pipeline.
- if(typeof cinematicFourV60!=='undefined'&&cinematicFourV60.accepts(k)){
+ // The four approved Grass status animations replace their original catalog
+ // visuals completely. Never draw the previous status particles underneath.
+ if(typeof plantFourV63!=='undefined'&&plantFourV63.accepts(k)){
+  plantFourV63.paint(g,f,t,now,s,low,k);
+ }else  if(typeof cinematicFourV60!=='undefined'&&cinematicFourV60.accepts(k)){
   if(!cinematicFourV60.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
  }else if(typeof library16V59!=='undefined'&&library16V59.accepts(k)){
   // V59 uses only a verified catalog allowlist. Older approved effects
