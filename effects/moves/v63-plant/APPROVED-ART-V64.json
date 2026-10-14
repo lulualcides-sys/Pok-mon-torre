@@ -1,0 +1,25 @@
+{
+  "version": "V64",
+  "approval_date": "2026-10-14",
+  "status": "APPROVED_VISUALS_AS_IS",
+  "note": "O usuário aprovou e pediu salvar Stun Spore, Pó do Sono, Leech Seed e Esporos como estão. Os poderes/mecânicas antigos permanecem por escolha expressa. Não alterar sprites, mapeamento, duração ou características sem uma nova aprovação.",
+  "approvedMoves": [
+    "Stun Spore",
+    "Pó do Sono",
+    "Leech Seed",
+    "Esporos"
+  ],
+  "frozenFiles": {
+    "effects/moves/v63-plant/stun-spore/atlas.png": "1dd539ec49955dec2f6dc3ab0e71302226f2e9de",
+    "effects/moves/v63-plant/po-do-sono/atlas.png": "3a893b6e4c2152ad84a658f48b680f9a8b3a54d5",
+    "effects/moves/v63-plant/leech-seed/atlas.png": "a5cb1864e65481a8ff6d04a428e60f1cfb0b50f6",
+    "effects/moves/v63-plant/esporos/atlas.png": "c820326e2fd748301d0e47b9c34cd59639396c21"
+  },
+  "visualVersions": {
+    "atlas": "V63",
+    "gameStatusIntegration": "V64",
+    "framesPerMove": 8
+  },
+  "preservedBehavior": "Old gameplay powers are not changed as part of this approval.",
+  "changePolicy": "No automatic regeneration/replacement of frozen files without new explicit approval."
+}
