@@ -26,6 +26,7 @@ jobs:
         run: |
           node --check effects/moves/catalog/electric-four-v56.js
           node --check effects/moves/catalog/bundle.js
-          node --check effects/moves/_runtime/end.js
+          # end.js is an intentional fragment that closes the original game IIFE.
+          # Syntax of the assembled file is covered by the Chromium boot test.
       - name: Confirmar 4 golpes, 32 frames e 16 impactos
         run: node tests/test-electric-v56.cjs
