@@ -432,6 +432,43 @@
      visuals:window.PokemonTorrePlantStatusV64?.()||null,
      ready:window.PokemonTorrePlantFourV63?.()||null};
    },
+   // V65: exercise the REAL battle engine for the two distinct drain rules.
+   // Exists only on localhost in the existing QA harness.
+   verifyDrainV65(name='Leech Seed'){
+    if(name==='Leech Seed'){
+     const result=this.castGrass('Leech Seed',143);
+     if(result.error)return result;
+     const p=current(),v=foe();
+     p.maxHp=500;p.hp=100;
+     v.maxHp=800;v.hp=800;
+     engine.enemyAttackCD=999;
+     engine.v342DamageTicker=1.99;
+     engine.update(.025,performance.now());
+     return {name,seedApplied:result.conditions.includes('seed'),
+      enemyMax:800,enemyAfter:v.hp,
+      enemyLost:800-v.hp,playerAfter:p.hp,playerHealed:p.hp-100,
+      seedStats:engine.v65SeedStats,
+      diagnostics:window.PokemonTorreDrainV65?.()||null};
+    }
+    const allowed=['Absorver','Mega Dreno','Draining Kiss','Leech Life'];
+    if(!allowed.includes(name))return {error:'Unknown drain test '+name};
+    if(this._grassBaseSkillSet)skillSet=this._grassBaseSkillSet;
+    this.start(3,143);
+    const actor=current(),v=foe(),priorSkillSet=skillSet;
+    const type=(name==='Draining Kiss'?'fairy':name==='Leech Life'?'bug':'grass');
+    skillSet=m=>m===actor?[{name,type,kind:'bolt',cat:'special',
+       power:45,cost:20,cd:850,icon:''}]:priorSkillSet(m);
+    actor.maxHp=500;actor.hp=100;
+    v.maxHp=800;v.hp=800;
+    engine.enemy.inv=0;engine.enemyAttackCD=999;
+    const cast=this.cast(0);
+    engine.hitTarget('enemy',type,70);
+    const lost=800-v.hp,healed=actor.hp-100;
+    return {name,accepted:cast.energy<100,
+     enemyLost:lost,playerHealed:healed,playerAfter:actor.hp,
+     expectedHeal:Math.max(1,Math.floor(lost*(name==='Draining Kiss'?.75:.5))),
+     diagnostics:window.PokemonTorreDrainV65?.()||null};
+   },
    cast(slot=0,options={}){
     if(!engine||!battle?.active)return {error:'No active battle'};
     // Test harness must not remain in the tutorial/intro pause state.
