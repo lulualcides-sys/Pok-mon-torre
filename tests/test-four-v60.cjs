@@ -57,7 +57,7 @@ const approved=JSON.parse(read('effects/moves/v60-four/APPROVED-ART-V61.2.json')
 assert.equal(Object.keys(approved.frozenFiles).length,4);
 for(const [filename,blobSha] of Object.entries(approved.frozenFiles)){
  const source=fs.readFileSync(path.join(root,filename));
- const digest=crypto.createHash('sha1').update('blob '+source.length+'\\0').update(source).digest('hex');
+ const digest=crypto.createHash('sha1').update('blob '+source.length+'\0').update(source).digest('hex');
  assert.equal(digest,blobSha,'Approved art modified without permission: '+filename);
 }
 const loader=read('index.html'),runtime=read('effects/moves/_runtime/end.js');
