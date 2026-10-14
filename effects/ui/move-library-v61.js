@@ -151,6 +151,14 @@ function mountTypePicker(select,bar){
   button.append(iconSlot,caption,caret);
   bar.append(button);
   bar.classList.add('pt62Enhanced');
+  // The visible label must open our SVG picker too; linking it to the
+  // visually-hidden native select would reopen Android's plain options.
+  const label=bar.querySelector('label');
+  if(label){
+   label.removeAttribute('for');
+   label.style.cursor='pointer';
+   label.addEventListener('click',()=>button.click());
+  }
   // Unchanged native select listener still applies filter, search, and count.
   button.addEventListener('click',()=>openTypePopup(button,select));
   button.addEventListener('keydown',event=>{
