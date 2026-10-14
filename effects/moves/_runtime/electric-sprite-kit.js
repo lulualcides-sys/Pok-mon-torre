@@ -1,5 +1,5 @@
-/* Pokémon Torre V53 — independently timed cinematic electric sprite attacks.
- * Four distinct eight-beat blue/violet plasma animations, plus impact and target tracking.
+/* Pokémon Torre V55 — eight animated golden cinematic electric attacks.
+ * Golden-white lightning, impact debris, cloud choreography and target tracking.
  * No CSS animation, static PNG overlay or changed combat rules.
  */
 const electricSpriteV46=(()=>{
@@ -66,19 +66,19 @@ const electricSpriteV46=(()=>{
   const frames=[],impacts=[];
   for(let index=1;index<=8;index++){
    const img=new Image();img.decoding='async';
-   img.src=dir+'sprites/frame_'+String(index).padStart(2,'0')+'.png?v=53.0';
+   img.src=dir+'sprites/frame_'+String(index).padStart(2,'0')+'.png?v=55.0';
    frames.push(img);
   }
   for(let index=1;index<=4;index++){
    const img=new Image();img.decoding='async';
-   img.src=dir+'impact/hit_'+String(index).padStart(2,'0')+'.png?v=53.0';
+   img.src=dir+'impact/hit_'+String(index).padStart(2,'0')+'.png?v=55.0';
    impacts.push(img);
   }
   const arcs=[];
   if(kind==='discharge'){
    for(let index=1;index<=8;index++){
     const img=new Image();img.decoding='async';
-    img.src=dir+'arcs/arc_'+String(index).padStart(2,'0')+'.png?v=53.0';
+    img.src=dir+'arcs/arc_'+String(index).padStart(2,'0')+'.png?v=55.0';
     arcs.push(img);
    }
   }
@@ -108,18 +108,18 @@ const electricSpriteV46=(()=>{
    const actor=fx.actor||A;
    // Charging and electric dash follow the Pokémon's actual movement.
    // Strike and residue attach to the moving enemy position.
-   if(phase<=4){x=actor[0]-w*.49;y=actor[1]-h*.52;}
-   else{x=B[0]-w*.625;y=B[1]-h*.52;}
+   if(phase<=4){x=actor[0]-w*(125/280);y=actor[1]-h*(165/320);}
+   else{x=B[0]-w*(196/280);y=B[1]-h*(168/320);}
   }else if(kind==='discharge'){
    // A large dynamic burst travels in every direction from the Pokémon.
    // No shield-ring illusion: the radial artwork contains branching bolts.
    w=267*scale;h=305*scale;
-   x=A[0]-w*.50;y=A[1]-h*.52;
+   x=A[0]-w*.50;y=A[1]-h*(165/320);
   }else{
    // Storm effects are bounded to the target, not an arena-sized overlay.
    w=(kind==='trovao'?218:212)*scale;
    h=(kind==='trovao'?249:242)*scale;
-   x=B[0]-w*.50;y=B[1]-h*.865;
+   x=B[0]-w*.50;y=B[1]-h*(269/320);
   }
   // The additional discharge beam is eight separate animated sprites
   // rotated from the caster to the moving target, with no Canvas strokes.
@@ -187,7 +187,7 @@ const electricSpriteV46=(()=>{
   return true;
  }
  function diagnostics(){return {
-  version:'53.0',registered:[...registered.keys()],
+  version:'55.0',registered:[...registered.keys()],
   ready:Object.fromEntries(names.map(n=>[n,!!images[n].naturalWidth])),
   stamps:{...counters},arcsReady:spriteSets.discharge.arcs.filter(i=>i.naturalWidth>0).length,frames:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.frames.filter(i=>i.naturalWidth>0).length])),impacts:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.impacts.filter(i=>i.naturalWidth>0).length])),error
  }}
