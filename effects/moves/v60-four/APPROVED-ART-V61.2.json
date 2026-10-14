@@ -13,5 +13,15 @@
     "Draw optimization and predecode without modifying any of the 4 atlas PNG files",
     "Frame selection must remain 8 distinct frames",
     "Unchanged move damage, type, cooldown, equipped slots and hitboxes"
-  ]
+  ],
+  "performanceUpdate": {
+    "version": "V61.3",
+    "status": "Optimized rendering, art unchanged",
+    "methods": [
+      "Lazy WebGL activation only for GPU moves",
+      "Stop Pixi ticker when no GPU effects remain",
+      "Asynchronous image bitmap slicing for 4 sprite atlases"
+    ],
+    "assetsMustMatchFrozenFiles": true
+  }
 }
