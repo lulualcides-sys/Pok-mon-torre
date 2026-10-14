@@ -120,5 +120,5 @@
  window.PokemonTorreElectricV46=()=>({...K.diagnostics(),...stats,
   active:(engine?.v46ElectricFX||[]).map(x=>x.move.name)});
  const oldBadge=document.getElementById('ptFireSpriteV41Badge');
- if(oldBadge)oldBadge.textContent='ELÉTRICOS V49 FINAL · ÁGUA V45 · FOGO V42.5';
+ if(oldBadge)oldBadge.textContent='ELÉTRICOS V50 PNG · ÁGUA V45 · FOGO V42.5';
 })();

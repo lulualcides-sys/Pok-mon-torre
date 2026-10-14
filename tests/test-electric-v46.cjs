@@ -185,14 +185,20 @@ for(let i=0;i<4;i++){
  for(const frac of [.36,.52,.72])engine.draw(now+duration*frac);
  assert.equal(engine.player.x,beforeX,'Real contact must always restore player coordinates');
 
- const parts=draws.slice(before),ink=strokes.slice(beforeStrokes);
- assert.equal(parts.length,0,moves[i].name+' must not stack the giant SVG sprites again');
- assert.ok(ink.length>=15,moves[i].name+' must render multiple live, small lightning strokes');
- assert.ok(ink.some(v=>v.color==='#090717'),moves[i].name+' must show dark outlines');
- assert.ok(ink.some(v=>v.color==='#ffffff'),moves[i].name+' must have a crisp white core');
- effectsByMove[moves[i].name]={strokes:ink.length,usesStaticImages:parts.length};
- if(i===0)assert.ok(sawPlayerPositions.some(x=>x>beforeX+65),'Spark Pokémon advances physically');
 
+ const parts=draws.slice(before);
+ assert.ok(parts.length>=3,moves[i].name+' must show authored PNG frames');
+ const png=parts.map(p=>p.src);
+ assert.ok(png.some(p=>/\/sprites\/frame_0[1-8]\.png/.test(p)),
+  moves[i].name+' uses real image animation frames');
+ assert.ok(png.some(p=>/\/impact\/hit_0[1-4]\.png/.test(p)),
+  moves[i].name+' uses real impact PNGs');
+ assert.ok(!png.some(p=>p.endsWith('.svg?v=47.0')),
+  'Do not draw any legacy oversized SVGs');
+ effectsByMove[moves[i].name]={count:parts.length,
+  pngAssets:[...new Set(png.map(p=>p.split('/').slice(-3).join('/')))]};
+ if(i===0)assert.ok(sawPlayerPositions.some(x=>x>beforeX+65),
+  'Spark Pokémon still advances physically');
 }
 assert.equal(spent,4,'Accepted combat attacks occur exactly four times');
 assert.equal(ele().accepted,4);
@@ -200,6 +206,6 @@ assert.ok(ele().contactFrames>0);
 assert.ok(ele().legacySuppressed>=4,'Only the replaced generic electric VFX removed');
 assert.equal(engine.particles.length,4,'Other particles and non-electric mechanics stay intact');
 console.log('PASS: global canonical move types, duplicate-free tester and saved-slot migration');
-console.log('PASS: four finalized cinematic electric attacks, no tangled SVGs, old overlays or damaged approved FX');
+console.log('PASS: four genuine PNG electric attacks, no legacy SVG overlays and no altered combat mechanics');
 console.log(JSON.stringify({version:ele().version,types:dex().referenceNames,corrections:dex().curatedCorrections,
  samples:dex().samples.slice(0,9),animations:effectsByMove}));
