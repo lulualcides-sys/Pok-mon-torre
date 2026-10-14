@@ -408,6 +408,26 @@
       engine.v47ContactToLand=[];engine.v47MissingCollisions=[];}
     return this.snapshot();
    },
+   // Browser-only regression for actual Grass status moves, not image preload.
+   // Battle and team are ephemeral inside headless localhost Chromium only.
+   castGrass(name,foeId=143){
+    const requested=['Stun Spore','Pó do Sono','Leech Seed','Esporos'];
+    if(!requested.includes(name))return {error:'Invalid Grass move '+name};
+    this.start(45,foeId);
+    const actor=current();
+    const cat=v32Catalogue(actor);
+    const chosen=requested.map(label=>cat.find(row=>row.move?.name===label));
+    if(chosen.some(row=>!row))return {error:'Missing selectable Grass move',requested,
+     catalog:cat.filter(x=>x.move?.type==='grass').map(x=>x.move?.name).slice(0,40)};
+    actor.v32Slots=chosen.map(x=>x.key);
+    const before=skillSet(actor).map(x=>x.name);
+    const index=requested.indexOf(name);
+    const result=this.cast(index);
+    const conditions=engine?.v25?.stats?.enemy?.conditions?.slice()||[];
+    return {requested:name,equipped:before,cast:result,
+     conditions,visuals:window.PokemonTorrePlantStatusV64?.()||null,
+     ready:window.PokemonTorrePlantFourV63?.()||null};
+   },
    cast(slot=0,options={}){
     if(!engine||!battle?.active)return {error:'No active battle'};
     // Test harness must not remain in the tutorial/intro pause state.
