@@ -215,7 +215,7 @@ const electricSpriteV46=(()=>{
   const d=resolve(fx);if(!d)return false;
   if(!Array.isArray(fx.from)||!Array.isArray(fx.to)||now<fx.at)return true;
   const t=clamp((now-fx.at)/(fx.duration||d.duration)),s=clamp((e?.h||560)/560,.72,1.16);
-  try{d.paint(g,fx,t,now-fx.at,s,{stamp,between,burst,clamp,ease,lerp});}
+  try{d.paint(g,fx,t,now-fx.at,s,{stamp,between,burst,cinematic,clamp,ease,lerp});}
   catch(err){error=d.key+': '+err.message;console.warn('[V46 Electric]',err)}
   return true;
  }
