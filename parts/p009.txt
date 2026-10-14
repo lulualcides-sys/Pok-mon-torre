@@ -26,15 +26,40 @@ BattleEngine.prototype.update=function(dt,now){
  const stats=this.v25.stats.enemy,timers=this.v342CondTimers||{};
  for(const [condition,end] of Object.entries(timers))if(now>=end){stats.conditions=stats.conditions.filter(x=>x!==condition);delete timers[condition];}
  if(stats.conditions.includes('sleep'))this.enemyAttackCD=Math.max(this.enemyAttackCD,Math.min(.26,(timers.sleep-now)/1000));
+ // V65: Leech Seed follows Pokémon's modern 1/8 maximum foe HP per
+ // end-of-turn effect. In this real-time battle, the original 2-second
+ // condition pulse stands for one turn. Drain *actual HP removed*, not
+ // theoretical damage, and heal only the surviving seed user.
+ // Burn is independent: overlapping burn + seed both apply their own damage.
  if(stats.conditions.includes('burn')||stats.conditions.includes('seed')){
   this.v342DamageTicker=(this.v342DamageTicker||0)+dt;
-  if(this.v342DamageTicker>=2.0){this.v342DamageTicker=0;const foeMon=foe();if(foeMon){
-   const burn=stats.conditions.includes('burn'),seed=stats.conditions.includes('seed');
-   const amount=Math.max(1,Math.round(foeMon.maxHp*(burn?.025:.019)));
-   foeMon.hp=Math.max(1,foeMon.hp-amount);
-   if(seed&&current())current().hp=Math.min(current().maxHp,current().hp+amount);
-   this.v25Popup(this.enemy.x,this.enemy.y-this.h*.22,(burn?'QUEIMADURA':'DRENADO')+' -'+amount,burn?'#ffb894':'#a6e8a1');
-  }}
+  if(this.v342DamageTicker>=2.0){
+   this.v342DamageTicker-=2.0;
+   const victim=foe();
+   const user=current();
+   if(victim&&victim.hp>0){
+    const burn=stats.conditions.includes('burn'),seed=stats.conditions.includes('seed');
+    const before=victim.hp;
+    if(burn){
+     const burnDamage=Math.max(1,Math.floor(victim.maxHp*.025));
+     const burned=Math.min(victim.hp,burnDamage);
+     victim.hp=Math.max(0,victim.hp-burned);
+     this.v25Popup(this.enemy.x,this.enemy.y-this.h*.22,'QUEIMADURA -'+burned,'#ffb894');
+    }
+    if(seed&&victim.hp>0){
+     const seedDamage=Math.max(1,Math.floor(victim.maxHp/8));
+     const drained=Math.min(victim.hp,seedDamage);
+     victim.hp=Math.max(0,victim.hp-drained);
+     const healed=user&&user.hp>0?
+      Math.min(user.maxHp-user.hp,drained):0;
+     if(healed>0)user.hp+=healed;
+     this.v25Popup(this.enemy.x,this.enemy.y-this.h*.22,'DRENADO -'+drained,'#a6e8a1');
+     if(healed>0)this.v25Popup(this.player.x,this.player.y-this.h*.24,'PV +'+healed,'#b6ffd0');
+     this.v65SeedStats={damage:drained,healed,base:victim.maxHp,after:victim.hp};
+    }
+    if(before>0&&victim.hp<=0&&battle?.active)nextFoe();
+   }
+  }
  }
  return res;
 };
