@@ -50,23 +50,21 @@ def fractal(start,end,seed,rough=.21,generation=5):
     return p
 
 def tapered(draw,pts,width,fill):
+    # Sharp, angular, tapering lightning. Do not render circular/capsule joints.
     n=len(pts)-1
     for j in range(n):
         t=j/max(1,n)
-        k=(1.03-.56*t)
+        k=(.94-.56*t)
         ww=max(1,round(width*S*k))
         draw.line([point(pts[j]),point(pts[j+1])],fill=fill,width=ww)
-        rad=ww/2
-        xx,yy=point(pts[j+1])
-        draw.ellipse((xx-rad,yy-rad,xx+rad,yy+rad),fill=fill)
 
 def bolt(im,a,b,seed,width=5,power=1,branches=3,rough=.24,shade=True):
     if power<=.015:return
     pts=fractal(a,b,seed,rough,5)
     broad=mask(im.width//S,im.height//S);core=mask(im.width//S,im.height//S)
     broadDraw=ImageDraw.Draw(broad);coreDraw=ImageDraw.Draw(core)
-    tapered(broadDraw,pts,width,255)
-    tapered(coreDraw,pts,max(1.4,width*.43),255)
+    tapered(broadDraw,pts,width*.78,255)
+    tapered(coreDraw,pts,max(1.0,width*.42),255)
     r=random.Random(seed+707)
     for k in range(branches):
         idx=max(2,min(len(pts)-4,int((.23+.57*(k+1)/(branches+1))*(len(pts)-1))))
@@ -77,17 +75,17 @@ def bolt(im,a,b,seed,width=5,power=1,branches=3,rough=.24,shade=True):
         length=r.uniform(14,44)*min(1.42,max(.7,width/5))
         tail=(x+length*math.cos(theta),y+length*math.sin(theta))
         fork=fractal((x,y),tail,seed*19+k,rough=.26,generation=3)
-        tapered(broadDraw,fork,max(1.05,width*.29),200)
-        tapered(coreDraw,fork,max(.7,width*.13),190)
+        tapered(broadDraw,fork,max(.7,width*.20),190)
+        tapered(coreDraw,fork,max(.55,width*.11),200)
     blur(im,broad,(71,56,224),6,power*.11)
-    blur(im,broad,(17,132,255),4,power*.22)
-    blur(im,core,(148,235,255),2.0,power*.73)
+    blur(im,broad,(35,153,255),3,power*.18)
+    blur(im,core,(148,235,255),2.0,power*.61)
     if shade:composite(im,broad.filter(ImageFilter.MaxFilter(3)),DARK,power*.32)
-    composite(im,broad,(55,139,254),power*.25)
+    composite(im,broad,(85,172,255),power*.19)
     composite(im,core,(198,241,255),power*.94)
     # Peak white core must be visible on phone-sized displays.
     fine=mask(im.width//S,im.height//S)
-    tapered(ImageDraw.Draw(fine),pts,max(.8,width*.19),255)
+    tapered(ImageDraw.Draw(fine),pts,max(.9,width*.28),255)
     composite(im,fine,WHITE,power*.97)
 
 def sparks(im,x,y,count,radius,seed,power=1):
@@ -123,12 +121,12 @@ def impact(im,x,y,power=1,seed=0,spread=40):
     if power<=0:return
     energy(im,x,y,max(5,spread*.16),power*.58)
     r=random.Random(seed+1099)
-    for i in range(8):
-        a=TAU*i/8+r.uniform(-.24,.24)
+    for i in range(7):
+        a=TAU*i/7+r.uniform(-.33,.33)
         d=spread*r.uniform(.60,1.25)
         ox=x+r.uniform(-5,5);oy=y+r.uniform(-4,4)
         bolt(im,(ox,oy),(x+math.cos(a)*d,y+math.sin(a)*d*.75),seed*43+i,
-             width=r.uniform(1.5,3.3),power=power*(.68+r.random()*.27),
+             width=r.uniform(1.1,2.2),power=power*(.68+r.random()*.27),
              branches=1,rough=.20)
     sparks(im,x,y,15,spread*1.4,seed+51,power)
     # No cartoon spiky polygon, no elliptical shield.
@@ -162,11 +160,11 @@ def faisca(i):
         for j in range(5):
             y=160+(j-2)*11
             bolt(im,(15, y-4*j),(188+i*12,y+(j-2)*5),220+i*19+j,
-                 width=3.4 if j==2 else 1.6,power=power,branches=3)
+                 width=3.2 if j==2 else 1.5,power=power,branches=3)
         energy(im,190,160,18,power*.73)
         sparks(im,191,161,19,43,i+320,power)
     elif i==5:
-        bolt(im,(35,167),(190,167),414,4.8,.86,4)
+        bolt(im,(35,167),(190,167),414,3.9,.86,4)
         impact(im,196,164,power,431,52)
     elif i==6:
         impact(im,192,162,.54,432,37)
@@ -186,7 +184,7 @@ def discharge(i):
         x=140+end*math.cos(a)
         y=163+end*math.sin(a)*.89
         start=(140+r.uniform(-6,6),163+r.uniform(-6,6))
-        bolt(im,start,(x,y),930+i*130+j,width=2.1+(i in (4,5))*.96,
+        bolt(im,start,(x,y),930+i*130+j,width=2.0+(i in (4,5))*.8,
              power=power*(.7+r.random()*.27),branches=1+(i>=3),rough=.26)
     sparks(im,140,163,12+i*3,radius*.91,i+440,power)
     if i in (4,5):impact(im,140,164,.55,772+i,24)
@@ -205,7 +203,7 @@ def tempestade(i):
         for j in range(count):
             x=140+offsets[i-2]+(j-(count-1)/2)*28
             tipy=194 if i==2 else 268
-            bolt(im,(x+12,74),(x,tipy),311+i*31+j,3.5 if i!=5 else 4.7,
+            bolt(im,(x+12,74),(x,tipy),311+i*31+j,3.1 if i!=5 else 4.1,
                  levels[i]*(.8+.15*j),branches=4,rough=.24)
             if i>=3:impact(im,x,265,.47+(i==5)*.40,405+i*13+j,25+(i==5)*13)
     else:sparks(im,140,270,14,58,702,.32)
@@ -221,7 +219,7 @@ def trovao(i):
     elif i<=6:
         progress=[0,0,0,.64,1,1,1][i]
         endy=80+192*progress
-        bolt(im,(127,86),(143,endy),1400+i*37,width=4.8 if i==3 else 6.3 if i<=5 else 3.7,
+        bolt(im,(127,86),(143,endy),1400+i*37,width=3.7 if i==3 else 5.2 if i<=5 else 3.0,
              power=power,branches=4 if i==3 else 7,rough=.27)
         if i in (4,5):
             bolt(im,(141,199),(100,257),1780+i,3.8,power,2)
