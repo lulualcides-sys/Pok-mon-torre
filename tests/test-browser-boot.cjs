@@ -134,7 +134,7 @@ server.listen(0,'127.0.0.1',async()=>{
   if(!stable.ok||stable.result?.electric||stable.result?.types){
    console.error('FAIL: V45 recovery mode must boot WITHOUT the experimental modules');process.exitCode=1;
   }
-  if(!experimental.ok||!experimental.result?.electric||!experimental.result?.types||experimental.result?.electricVersion!=='53.0'||!experimental.result?.electricLabel?.includes('ELÉTRICOS V53')){
+  if(!experimental.ok||!experimental.result?.electric||!experimental.result?.types||experimental.result?.electricVersion!=='55.0'||!experimental.result?.electricLabel?.includes('ELÉTRICOS V55')){
    console.error('FAIL: V46 must now boot with electric and canonical types enabled');process.exitCode=1;
   }
   const phone=await browserCase(port,'?v=47-mobile',true);
