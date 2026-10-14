@@ -411,21 +411,25 @@
    // Browser-only regression for actual Grass status moves, not image preload.
    // Battle and team are ephemeral inside headless localhost Chromium only.
    castGrass(name,foeId=143){
-    const requested=['Stun Spore','Pó do Sono','Leech Seed','Esporos'];
-    if(!requested.includes(name))return {error:'Invalid Grass move '+name};
+    // The move editor's v32Catalogue is private to its OWN IIFE and cannot
+    // be read by this battle harness. Equip equivalent real move definitions
+    // through the global skillSet hook, but ONLY on localhost QA battles.
+    const labels=['Stun Spore','Pó do Sono','Leech Seed','Esporos'];
+    if(!labels.includes(name))return {error:'Invalid Grass move '+name};
+    if(this._grassBaseSkillSet)skillSet=this._grassBaseSkillSet;
     this.start(150,foeId);
-    const actor=current();
-    const cat=v32Catalogue(actor);
-    const chosen=requested.map(label=>cat.find(row=>row.move?.name===label));
-    if(chosen.some(row=>!row))return {error:'Missing selectable Grass move',requested,
-     catalog:cat.filter(x=>x.move?.type==='grass').map(x=>x.move?.name).slice(0,40)};
-    actor.v32Slots=chosen.map(x=>x.key);
-    const before=skillSet(actor).map(x=>x.name);
-    const index=requested.indexOf(name);
-    const result=this.cast(index);
+    const actor=current(),oldSkillSet=skillSet;
+    this._grassBaseSkillSet=oldSkillSet;
+    const moves=labels.map(label=>({
+     name:label,kind:'status',cat:'status',type:'grass',power:0,
+     cost:24,cd:6800,level:1,icon:''
+    }));
+    skillSet=function(mon){return mon===actor?moves:oldSkillSet(mon);};
+    const equipped=skillSet(actor).map(x=>x.name),slot=labels.indexOf(name);
+    const cast=this.cast(slot);
     const conditions=engine?.v25?.stats?.enemy?.conditions?.slice()||[];
-    return {requested:name,equipped:before,cast:result,
-     conditions,visuals:window.PokemonTorrePlantStatusV64?.()||null,
+    return {requested:name,equipped,cast,conditions,
+     visuals:window.PokemonTorrePlantStatusV64?.()||null,
      ready:window.PokemonTorrePlantFourV63?.()||null};
    },
    cast(slot=0,options={}){
