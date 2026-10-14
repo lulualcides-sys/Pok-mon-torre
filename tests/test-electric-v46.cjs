@@ -64,8 +64,8 @@ assert.doesNotMatch(html,/Carregando arquivos:.*completed\+'\/'\+total/,
 const electricKit=read('effects/moves/_runtime/electric-sprite-kit.js');
 assert.match(electricKit,/function burst\(/,'Electric impacts must use authored plasma sprite frames');
 const thunderSource=read('effects/moves/trovao/index.js');
-assert.match(thunderSource,/bolt-fork/,'Thunder has animation variation');
-assert.match(thunderSource,/Math\.floor\(ms\/70\)/,'Thunder changes frames every 70ms');
+assert.match(thunderSource,/K\.cinematic\(/,'Thunder delegates to finalized V49 animation');
+assert.doesNotMatch(thunderSource,/K\.stamp\(|stamp\(g,/,'Thunder never stacks the old giant SVG bolts');
 const catalog=read('effects/moves/catalog/bundle.js');
 for(const [id,type] of [['drillpeck','flying'],['quickattack','normal'],['skullbash','normal'],
  ['arranhao','normal'],['avalanche','ice'],['rapidspin','normal'],['dreameater','psychic'],
@@ -75,7 +75,7 @@ for(const [id,type] of [['drillpeck','flying'],['quickattack','normal'],['skullb
  const isolated=read('effects/moves/catalog/'+id+'/index.js');
  assert.match(isolated,new RegExp('"type":"'+type+'"'),'Correct type in individual '+id+' file');
 }
-let now=2000,spent=0,draws=[],sawPlayerPositions=[],persisted=0;
+let now=2000,spent=0,draws=[],strokes=[],sawPlayerPositions=[],persisted=0;
 const mon={id:150,level:50},enemy={id:25},battle={active:true,energy:200,paused:false};
 const moves=['Faísca','Discharge','Tempestade de Raios','Trovão'].map((name,i)=>({
  name,type:'electric',cat:i===0?'physical':'special',power:[16,38,66,62][i],
@@ -87,7 +87,8 @@ class FakeImage{
  set src(p){this.path=p;this.naturalWidth=128;this.naturalHeight=260;this.onload?.();}
 }
 class G{
- save(){}restore(){}translate(){}rotate(){}scale(){}
+ save(){}restore(){}translate(){}rotate(){}scale(){}beginPath(){}moveTo(){}lineTo(){}arc(){}fill(){}
+ stroke(){strokes.push({color:this.strokeStyle,width:this.lineWidth});}
  drawImage(img,...args){draws.push({src:img.path,args});}
 }
 class Engine{
@@ -172,7 +173,7 @@ for(const key of ['bolt-a','bolt-b','bolt-c','bolt-fork','bolt-shatter','arc','s
 const effectsByMove={};
 for(let i=0;i<4;i++){
  now=2000+i*18000;
- const before=draws.length,beforeSpent=spent;
+ const before=draws.length,beforeStrokes=strokes.length,beforeSpent=spent;
  assert.equal(engine.useMove(i),true,'Accepted cast of '+moves[i].name);
  assert.equal(spent,beforeSpent+1,'Game mechanics executed exactly once for '+moves[i].name);
  assert.equal(engine.v342Lightning.length,0,'Old electric lightning overlay suppressed');
@@ -183,19 +184,15 @@ for(let i=0;i<4;i++){
  const beforeX=engine.player.x;
  for(const frac of [.36,.52,.72])engine.draw(now+duration*frac);
  assert.equal(engine.player.x,beforeX,'Real contact must always restore player coordinates');
- const parts=draws.slice(before);
- assert.ok(parts.length>=8,moves[i].name+' must draw a rich sequence of electric sprites');
- effectsByMove[moves[i].name]={count:parts.length,assets:[...new Set(parts.map(x=>x.src.split('/').at(-1)))].sort()};
- if(i===0){
-  assert.ok(sawPlayerPositions.some(x=>x>beforeX+65),'Spark Pokémon advances physically');
-  assert.ok(parts.some(x=>x.src.includes('spark.svg')),'Spark uses jagged sparks');
- }
- if(i===1)assert.ok(parts.filter(x=>x.src.includes('arc.svg')).length>18,
-  'Discharge creates many expanding electric arcs');
- if(i===2)assert.ok(parts.some(x=>x.src.includes('storm-cloud.svg'))&&
-  parts.some(x=>x.src.includes('bolt-')),'Thunderstorm has cloud AND falling bolts');
- if(i===3)assert.ok(parts.some(x=>/bolt-(?:a|b|c|fork|shatter)\.svg/.test(x.src))&&
-  parts.some(x=>x.src.includes('impact.svg')),'Thunder giant bolt and hit burst are visible');
+
+ const parts=draws.slice(before),ink=strokes.slice(beforeStrokes);
+ assert.equal(parts.length,0,moves[i].name+' must not stack the giant SVG sprites again');
+ assert.ok(ink.length>=15,moves[i].name+' must render multiple live, small lightning strokes');
+ assert.ok(ink.some(v=>v.color==='#090717'),moves[i].name+' must show dark outlines');
+ assert.ok(ink.some(v=>v.color==='#ffffff'),moves[i].name+' must have a crisp white core');
+ effectsByMove[moves[i].name]={strokes:ink.length,usesStaticImages:parts.length};
+ if(i===0)assert.ok(sawPlayerPositions.some(x=>x>beforeX+65),'Spark Pokémon advances physically');
+
 }
 assert.equal(spent,4,'Accepted combat attacks occur exactly four times');
 assert.equal(ele().accepted,4);
@@ -203,6 +200,6 @@ assert.ok(ele().contactFrames>0);
 assert.ok(ele().legacySuppressed>=4,'Only the replaced generic electric VFX removed');
 assert.equal(engine.particles.length,4,'Other particles and non-electric mechanics stay intact');
 console.log('PASS: global canonical move types, duplicate-free tester and saved-slot migration');
-console.log('PASS: four independent cinematic electric sprite attacks, no old overlays or damaged approved FX');
+console.log('PASS: four finalized cinematic electric attacks, no tangled SVGs, old overlays or damaged approved FX');
 console.log(JSON.stringify({version:ele().version,types:dex().referenceNames,corrections:dex().curatedCorrections,
  samples:dex().samples.slice(0,9),animations:effectsByMove}));
