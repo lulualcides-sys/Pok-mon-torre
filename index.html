@@ -36,7 +36,7 @@ const ptProgress=(value,phase)=>{const pct=Math.max(0,Math.min(100,Math.round(va
 if(new URLSearchParams(location.search).get('safe')!=='1'){
  const ids=['tempestade-de-neve','nevasca','faisca-do-pikachu','volt-tackle'];
  await Promise.all(ids.map(id=>new Promise((resolve,reject)=>{
-  const im=new Image(),url='effects/moves/v60-four/'+id+'/atlas.png?v=60.0';
+  const im=new Image(),url='effects/moves/v60-four/'+id+'/atlas.png?v=61.0';
   im.onload=()=>im.naturalWidth===2048&&im.naturalHeight===256?resolve():reject(Error('Invalid V60 sprite: '+id));
   im.onerror=()=>reject(Error('Missing V60 sprite: '+id));im.src=url;
  })));
