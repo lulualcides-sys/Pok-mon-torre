@@ -90,7 +90,9 @@
   scheduled=true;
   requestAnimationFrame(()=>{scheduled=false;mount();});
  });
- observer.observe(document.querySelector('#modal')||document.body,{subtree:true,childList:true});
+ // Editor root is repainted directly; monitoring all descendants made the
+ // filter run on every combat log update and caused mobile frame drops.
+ observer.observe(document.querySelector('#modal')||document.body,{subtree:false,childList:true});
  // The original modal is repainted by the editor; mount on initial and later
  // frame updates as a fallback for installations where #modal is replaced.
  const bodyObserver=new MutationObserver(()=>{
