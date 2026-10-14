@@ -462,7 +462,12 @@
     v.maxHp=800;v.hp=800;
     engine.enemy.inv=0;engine.enemyAttackCD=999;
     const cast=this.cast(0);
-    engine.hitTarget('enemy',type,70);
+    // In a freshly spawned arena the enemy can still have invulnerability
+    // frames. The regression must measure a LANDED hit, not a legitimate dodge.
+    for(let attempt=0;attempt<4&&v.hp===800;attempt++){
+     engine.enemy.inv=0;engine.enemy.spawn=0;
+     engine.hitTarget('enemy',type,70);
+    }
     const lost=800-v.hp,healed=actor.hp-100;
     return {name,accepted:cast.energy<100,
      enemyLost:lost,playerHealed:healed,playerAfter:actor.hp,
