@@ -1,0 +1,71 @@
+name: Gerar os 16 efeitos cinematograficos V59
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/build_library16_v59.py'
+      - '.github/workflows/render-library16-v59.yml'
+      - 'effects/moves/catalog/library16-v59.js'
+      - 'tests/test-library16-v59.cjs'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v59-library-generation
+  cancel-in-progress: false
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Pillow
+        run: python -m pip install --disable-pip-version-check Pillow
+      - name: Check Python and JavaScript syntax
+        run: |
+          python -m py_compile tools/build_library16_v59.py
+          node --check effects/moves/catalog/library16-v59.js
+          node --check tests/test-library16-v59.cjs
+      - name: Render 16 independent 8-frame originals
+        run: python tools/build_library16_v59.py --effect all
+      - name: Verify RGBA transparency and distinct animation phases
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          names=('fire_attack','firewall','explosion','sun_strike','lightning',
+          'lightning_ball','tornado','water_attack','spikes','shield','black_hole',
+          'hypnosis','magic_arrow','midas_touch','cloud','time')
+          for name in names:
+              file=Path('effects/elements/v59')/name/'atlas.png'
+              with Image.open(file) as img:
+                  assert img.mode=='RGBA' and img.size==(1280,160),(name,img.size)
+                  assert img.getextrema()[3][0]==0 and img.getextrema()[3][1]>=180,name
+                  frames=[img.crop((i*160,0,(i+1)*160,160)).tobytes() for i in range(8)]
+                  assert len(set(frames))==8,name
+                  assert all(any(f[pos] for pos in range(3,len(f),4)) for f in frames),name
+              print('PASS',name,'8 frames')
+          print('PASS: 128 unique animation frames, none blank')
+          PY
+      - name: Test real move catalog and isolated renderer
+        run: node tests/test-library16-v59.cjs
+      - name: Commit sprite atlases only
+        run: |
+          git config user.name 'Pokémon Torre VFX'
+          git config user.email 'actions@users.noreply.github.com'
+          git add effects/elements/v59
+          if ! git diff --cached --quiet; then
+            git commit -m 'assets(v59): add 16 cinematic effects with 128 distinct frames'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          else
+            echo 'All 16 original sprite atlases are already present'
+          fi
