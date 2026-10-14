@@ -50,6 +50,16 @@ for(const id of ['tempestade-de-neve','nevasca','faisca-do-pikachu','volt-tackle
  assert.equal(buf.subarray(0,8).toString('hex'),'89504e470d0a1a0a',id);
  assert.equal(buf.readUInt32BE(16),2048);assert.equal(buf.readUInt32BE(20),256);
 }
+// Four approved sprite atlases are frozen at V61.2. Never overwrite them
+// during a performance-only fix or an unrelated generator workflow.
+const crypto=require('node:crypto');
+const approved=JSON.parse(read('effects/moves/v60-four/APPROVED-ART-V61.2.json'));
+assert.equal(Object.keys(approved.frozenFiles).length,4);
+for(const [filename,blobSha] of Object.entries(approved.frozenFiles)){
+ const source=fs.readFileSync(path.join(root,filename));
+ const digest=crypto.createHash('sha1').update('blob '+source.length+'\\0').update(source).digest('hex');
+ assert.equal(digest,blobSha,'Approved art modified without permission: '+filename);
+}
 const loader=read('index.html'),runtime=read('effects/moves/_runtime/end.js');
 assert.ok(loader.includes('effects/moves/v60-four/render.js'));
 assert.ok(loader.includes("atlas.png?v=61.2"));
