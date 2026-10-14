@@ -1,5 +1,5 @@
-/* Pokemon Torre V47 — cinematic electric pixel-sprite rendering kit.
- * Every actual stroke is a reusable authored SVG sprite, with independent V48 black-ink lightning strokes layered over the authored SVGs.
+/* Pokemon Torre V49 — clean bounded electric battle renderer.
+ * The four finalized moves use animated outlined Canvas paths without oversized static sprites.
  * No CSS animation, static PNG overlay or changed combat rules.
  */
 const electricSpriteV46=(()=>{
@@ -55,146 +55,151 @@ const electricSpriteV46=(()=>{
   }
  }
 
- // V48: independent, eight-beat, frame-synchronous electric ink layer.
- // In addition to authored SVG sprites, this draws genuinely changing
- // branching paths, dark edge contours, secondary forks and impact shards.
- // Purely visual: never touches game hitboxes, HP, cooldowns or actors.
+ // V49 FINAL: clean bounded, frame-animated lightning, not stacked giant SVG bolts.
+ // All four attacks use the same quality and eight distinct choreography beats.
+ // The underlying battle system still owns player movement, HP, cooldown and hit.
  function cinematic(g,fx,t,ms,s,kind){
   if(!g||typeof g.beginPath!=='function'||!Array.isArray(fx.from)||!Array.isArray(fx.to))return;
-  const phase=Math.min(7,Math.floor(clamp(t)*8));
-  const within=clamp(t*8-phase),tick=Math.floor(ms/62);
+  const phase=Math.min(7,Math.floor(clamp(t)*8)),within=clamp(t*8-phase);
   const A=fx.from,B=fx.to,P=fx.actor||A,TAU=Math.PI*2;
-  const fade=phase===7?1-within:1;
-  const rnd=n=>{const v=Math.sin(n*127.1+tick*31.7+phase*19.3)*43758.5453;return v-Math.floor(v)};
-  const ink=(points,alpha=.9,weight=1)=>{
-   if(points.length<2||alpha<=.015)return;
-   g.save();g.globalAlpha=clamp(alpha)*fade;
-   g.lineJoin='miter';g.lineCap='round';
-   const widths=[9,6.2,3.6,1.35].map(v=>Math.max(.75,v*s*weight));
-   const colors=['#080714','#7b390b','#ffca20','#fff9df'];
-   for(let k=0;k<4;k++){
+  const size=clamp(s,.72,1.14),beat=Math.floor(ms/88);
+  const seed=n=>{const v=Math.sin((n+phase*11+beat*5)*97.17)*42739.123;return v-Math.floor(v)};
+  const alphaEnd=phase===7?1-within*.92:1;
+  const palette=['#090717','#663414','#ffb82e','#fff6ac','#ffffff'];
+  function path(points,alpha=1,weight=3){
+   if(points.length<2||alpha<.025)return;
+   const widths=[weight+5,weight+2.2,weight,weight*.53,Math.max(.65,weight*.20)].map(w=>w*size);
+   g.save();g.globalAlpha=clamp(alpha)*alphaEnd;g.lineJoin='round';g.lineCap='round';g.shadowBlur=0;
+   for(let layer=0;layer<palette.length;layer++){
     g.beginPath();g.moveTo(points[0][0],points[0][1]);
-    for(let j=1;j<points.length;j++)g.lineTo(points[j][0],points[j][1]);
-    g.strokeStyle=colors[k];g.lineWidth=widths[k];
-    g.shadowBlur=k===2?5*s:0;g.shadowColor='#ffde36';g.stroke();
+    for(let i=1;i<points.length;i++)g.lineTo(points[i][0],points[i][1]);
+    g.strokeStyle=palette[layer];g.lineWidth=widths[layer];g.stroke();
    }
    g.restore();
-  };
-  const bolt=(x1,y1,x2,y2,seed,alpha=.9,weight=1,amp=12)=>{
-   const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1;
-   const nx=-dy/L,ny=dx/L,N=7,points=[[x1,y1]];
-   for(let j=1;j<N;j++){
-    const u=j/N,dis=(rnd(seed*13+j)*2-1)*amp*s*Math.sin(u*Math.PI);
-    points.push([x1+dx*u+nx*dis,y1+dy*u+ny*dis]);
+  }
+  function bolt(x1,y1,x2,y2,n,alpha=1,weight=3,zigzag=7,withBranch=false){
+   const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+   if(L<3||alpha<.025)return;
+   const nx=-dy/L,ny=dx/L,count=6,pts=[[x1,y1]];
+   const maxDis=Math.min(zigzag*size,L*.13);
+   for(let i=1;i<count;i++){
+    const p=i/count,d=(seed(n*13+i)*2-1)*maxDis*Math.sin(p*Math.PI);
+    pts.push([x1+dx*p+nx*d,y1+dy*p+ny*d]);
    }
-   points.push([x2,y2]);ink(points,alpha,weight);
-   for(let j=2;j<N-1;j+=3){
-    const point=points[j],angle=(rnd(seed*19+j)-.5)*1.6+Math.atan2(dy,dx);
-    const size=(18+20*rnd(seed*17+j))*s;
-    ink([point,[point[0]+Math.cos(angle+1.25)*size,point[1]+Math.sin(angle+1.25)*size]],alpha*.68,weight*.43);
+   pts.push([x2,y2]);path(pts,alpha,weight);
+   if(withBranch&&L>24){
+    const p=pts[3],angle=Math.atan2(dy,dx)+(seed(n*7)-.5)*1.6;
+    const length=Math.min(23*size,L*.23);
+    path([p,[p[0]+Math.cos(angle+.90)*length,p[1]+Math.sin(angle+.90)*length]],alpha*.62,Math.max(.8,weight*.48));
    }
-  };
-  const ring=(x,y,r,alpha=.8,seed=1)=>{
-   if(alpha<=.02||r<1)return;
+  }
+  function ring(x,y,r,alpha=.6,n=0){
    const points=[];
-   for(let j=0;j<=24;j++){
-    const a=j*TAU/24,rad=r*(.96+.09*rnd(seed*31+j));
-    points.push([x+Math.cos(a)*rad,y+Math.sin(a)*rad*.43]);
+   for(let i=0;i<=16;i++){
+    const a=i*TAU/16,rr=r*(.94+.09*seed(n+i));
+    points.push([x+Math.cos(a)*rr*size,y+Math.sin(a)*rr*.42*size]);
    }
-   ink(points,alpha,.60);
-  };
-  const burstInk=(x,y,energy,seed=1)=>{
-   if(energy<=.02)return;
-   for(let j=0;j<10;j++){
-    const a=j*TAU/10+(rnd(seed+j)-.5)*.24;
-    const r0=(8+4*rnd(seed+j*3))*s;
-    const r=(25+43*energy+17*rnd(seed*2+j))*s;
-    bolt(x+Math.cos(a)*r0,y+Math.sin(a)*r0*.72,
-     x+Math.cos(a)*r,y+Math.sin(a)*r*.75,seed+j,
-     clamp(energy)*(j%3===0?1:.79),j%3===0?.93:.59,7);
+   path(points,alpha,1.5);
+  }
+  function sparks(x,y,num,rad,alpha=1,n=0){
+   for(let i=0;i<num;i++){
+    const a=TAU*i/num+seed(i+n)*.34;
+    const r=(rad*(.63+seed(n+i*3)*.35))*size;
+    bolt(x+Math.cos(a)*r*.36,y+Math.sin(a)*r*.36,
+     x+Math.cos(a)*r,y+Math.sin(a)*r,
+     n+i,alpha*(.73+seed(n+i)*.23),1.6,3);
    }
-   ring(x,y,(27+52*energy)*s,energy*.6,seed+40);
-  };
-  const charged=(x,y,amount,seed)=>{
-   ring(x,y,(24+18*amount)*s,.25+amount*.45,seed);
+  }
+  function energy(x,y,amp,tag){
+   ring(x,y,15+amp*13,.27+amp*.42,tag);
+   sparks(x,y,3+Math.round(amp*2),21+amp*14,.41+amp*.34,tag+12);
+  }
+  function hit(x,y,power,tag){
+   if(power<.03)return;
+   sparks(x,y,6,19+power*21,clamp(power)*.90,tag);
+   ring(x,y,18+power*24,clamp(power)*.72,tag+19);
+  }
+  function cloud(x,y,power){
+   if(typeof g.arc!=='function'||typeof g.fill!=='function'||power<=0)return;
+   g.save();g.globalAlpha=.40*power*alphaEnd;g.fillStyle='#21172f';
    for(let j=0;j<5;j++){
-    const a=j*TAU/5+ms*.004;
-    bolt(x+Math.cos(a)*12*s,y+Math.sin(a)*14*s,
-     x+Math.cos(a)*(21+20*amount)*s,
-     y+Math.sin(a)*(21+20*amount)*s,seed+j,.46+amount*.4,.44,7);
+    const xx=x+(j-2)*20*size,yy=y+Math.sin(j*1.6)*5*size;
+    g.beginPath();g.arc(xx,yy,(16+(j%2)*5)*size,0,TAU);g.fill();
    }
-  };
+   g.restore();
+   bolt(x-33*size,y+12*size,x+31*size,y+9*size,618,.33*power,1.2,5);
+  }
+  // Every attack is fully finalized in the battle renderer; no in-game preview.
   if(kind==='faisca'){
-   if(phase<=2)charged(P[0],P[1],.32+phase*.25,11);
+   if(phase<=2)energy(P[0],P[1],.30+phase*.24,20);
    if(phase>=2&&phase<=5){
-    const length=phase===2?.4:phase===5?.7:1;
-    const dx=B[0]-A[0],dy=B[1]-A[1];
-    const x=P[0],y=P[1],len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len;
-    for(let j=0;j<4;j++){
-     const lateral=(j-1.5)*11*s;
-     bolt(x-dx/len*(43+j*17)*s*length+nx*lateral,
-      y-dy/len*(43+j*17)*s*length+ny*lateral,
-      x+nx*lateral*.3,y+ny*lateral*.3,41+j,.55+j*.1,.68,13);
+    const ux=(B[0]-A[0])/(Math.hypot(B[0]-A[0],B[1]-A[1])||1);
+    const uy=(B[1]-A[1])/(Math.hypot(B[0]-A[0],B[1]-A[1])||1);
+    const x=P[0],y=P[1];
+    for(let i=0;i<3;i++){
+     const off=(i-1)*12*size,trail=(32+i*18)*size;
+     bolt(x-ux*trail-uy*off,y-uy*trail+ux*off,x-uy*off*.45,y+ux*off*.45,
+      31+i,.67,.95+i*.22,6,i===1);
     }
    }
-   if(phase===5||phase===6)burstInk(B[0],B[1],phase===5?1.2:.68,60);
-   if(phase===7)charged(B[0],B[1],.12,61);
+   if(phase===4)bolt(P[0],P[1],B[0],B[1],40,.67,2.3,10);
+   if(phase===5)hit(B[0],B[1],1,49);
+   if(phase===6)hit(B[0],B[1],.62,53);
+   if(phase===7)sparks(B[0],B[1],3,19,.28,54);
   }else if(kind==='discharge'){
-   const r=(20+Math.max(0,phase-1)*34+within*24)*s;
-   ring(A[0],A[1],r,.48+Math.min(phase,5)*.07,101);
-   if(phase<3)charged(A[0],A[1],phase/3,103);
+   if(phase<3)energy(A[0],A[1],.26+phase*.26,61);
+   const r=(18+Math.min(phase,6)*10+within*8);
+   ring(A[0],A[1],Math.min(r,84),phase===7?.20:.68,66);
    if(phase>=2&&phase<=6){
-    for(let j=0;j<12;j++){
-     const a=j*TAU/12+ms*.0007,end=Math.min(phase,5)<3?.6:1;
-     const rad=r*end*(.85+.19*rnd(104+j));
-     bolt(A[0]+Math.cos(a)*17*s,A[1]+Math.sin(a)*17*s,
-      A[0]+Math.cos(a)*rad,A[1]+Math.sin(a)*rad*.73,
-      120+j,.64+(phase===4?.23:0),.7,15);
+    const count=phase===4||phase===5?7:5;
+    for(let i=0;i<count;i++){
+     const a=TAU*i/count+.035*Math.sin(ms*.007+i);
+     const endR=Math.min(r*(.83+.17*seed(i+67)),84)*size;
+     const inner=15*size;
+     bolt(A[0]+Math.cos(a)*inner,A[1]+Math.sin(a)*inner,
+      A[0]+Math.cos(a)*endR,A[1]+Math.sin(a)*endR*.74,
+      71+i,.71,phase===4?2.9:1.9,8,phase===4&&i%3===0);
     }
     if(phase>=4&&phase<=6){
-     burstInk(B[0],B[1],phase===5?1:.51,141);
-     bolt(A[0],A[1],B[0],B[1],156,.64,.45,19);
+     const dist=Math.hypot(B[0]-A[0],B[1]-A[1]);
+     if(dist<=105*size)hit(B[0],B[1],phase===5?.75:.43,90);
     }
    }
+   if(phase===7)sparks(A[0],A[1],3,21,.24,96);
   }else if(kind==='tempestade'){
-   const top=Math.max(44*s,B[1]-203*s);
-   if(phase<=1)ring(B[0],B[1],(26+18*phase)*s,.48,201);
+   const top=B[1]-134*size;
+   const intensity=phase===7?.22:phase<2?.48:.82;
+   cloud(B[0],top,intensity);
+   if(phase<=1)ring(B[0],B[1],23+phase*6,.32+phase*.16,111);
    if(phase>=2&&phase<=6){
-    const count=phase===5?4:phase===4?3:phase===6?1:2;
-    for(let j=0;j<count;j++){
-     const horizontal=(j-(count-1)/2)*38*s+(rnd(210+j)-.5)*21*s;
-     const targetX=j===0||count===1?B[0]:B[0]+horizontal;
-     const until=phase===6?.74:1;
-     bolt(B[0]+horizontal*.7,top,B[0]+(targetX-B[0])*until,
-      top+(B[1]-top)*until,220+j+phase,.66+(.12*count),phase===5?1.15:.76,22);
-     if(phase!==6)burstInk(targetX,B[1],phase===5?.85:.46,230+j);
+    const offsets=[-21,18,-12,20,0];
+    const dx=offsets[phase-2]*size;
+    const hitX=B[0]+dx,fromX=B[0]+dx*.65;
+    const p=phase===2?.65:1;
+    bolt(fromX,top+9*size,hitX,top+(B[1]-top)*p,
+     120+phase,.93,phase===5?4.7:3.1,10,true);
+    if(phase>=3&&phase<=5)hit(hitX,B[1],phase===5?.90:.70,140+phase);
+    if(phase===5){
+     bolt(B[0]+30*size,top+10*size,B[0]+36*size,B[1]-9*size,162,.71,2.5,9);
     }
    }
-   if(phase===7)ring(B[0],B[1],32*s,.24,245);
+   if(phase===7)sparks(B[0],B[1],3,20,.26,178);
   }else if(kind==='trovao'){
-   const top=Math.max(35*s,B[1]-249*s);
-   if(phase<=2){
-    ring(B[0],B[1],(26+12*phase)*s,.55,301);
-    charged(B[0],top+23*s,.26+phase*.23,302);
-   }
+   const top=B[1]-170*size;
+   if(phase<=3){cloud(B[0],top,.42+phase*.17);ring(B[0],B[1],20+phase*7,.46,202);}
+   if(phase===2)bolt(B[0]+8*size,top+10*size,B[0],top+50*size,203,.59,1.9,6);
    if(phase>=3&&phase<=6){
-    const length=phase===3?.58:1;
-    const alpha=phase===6?.45:1;
-    const thick=phase===4||phase===5?2:1.25;
-    bolt(B[0]+(rnd(320)-.5)*14*s,top,
-     B[0],top+(B[1]-top)*length,321,alpha,thick,29);
+    const progress=phase===3?.67:1;
+    bolt(B[0]-5*size,top+12*size,B[0],top+12*size+(B[1]-top-12*size)*progress,
+     216,phase===6?.49:1,phase===4||phase===5?6.7:4.0,12,true);
     if(phase>=4&&phase<=5){
-     for(let j=0;j<4;j++){
-      const a=(j+1)*TAU/5;
-      bolt(B[0]+Math.cos(a)*36*s,top+58*s,
-       B[0]+Math.cos(a)*66*s,B[1]-65*s+(j%2)*26*s,
-       330+j,.76,.83,22);
-     }
-     burstInk(B[0],B[1],phase===5?1.43:1.06,348);
-     ring(B[0],B[1],(45+(phase-4)*39)*s,.95,349);
-    }else if(phase===6)burstInk(B[0],B[1],.5,359);
+     bolt(B[0],B[1]-58*size,B[0]-31*size,B[1]-21*size,218,.85,2.4,7);
+     bolt(B[0],B[1]-43*size,B[0]+30*size,B[1]-13*size,219,.82,2.4,7);
+     hit(B[0],B[1],phase===5?1:.83,225);
+    }
+    if(phase===6)hit(B[0],B[1],.43,228);
    }
-   if(phase===7)ring(B[0],B[1],61*s,.30,361);
+   if(phase===7){ring(B[0],B[1],39,.23,230);sparks(B[0],B[1],3,17,.24,232);}
   }
   counters['cinema-'+kind]=(counters['cinema-'+kind]||0)+1;
   counters['phase-'+kind+'-'+(phase+1)]=(counters['phase-'+kind+'-'+(phase+1)]||0)+1;
@@ -220,7 +225,7 @@ const electricSpriteV46=(()=>{
   return true;
  }
  function diagnostics(){return {
-  version:'47.0',registered:[...registered.keys()],
+  version:'49.0',registered:[...registered.keys()],
   ready:Object.fromEntries(names.map(n=>[n,!!images[n].naturalWidth])),
   stamps:{...counters},error
  }}
