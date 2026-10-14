@@ -3,6 +3,9 @@ on:
   push:
     branches: [feat/electric-v53-video-cinematic]
   workflow_dispatch:
+concurrency:
+  group: v53-assets-unique-branch
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
