@@ -1,0 +1,49 @@
+name: Gerar arte Discharge V52
+on:
+  push:
+    branches: [fix/electric-v52-discharge-radial-real]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/electric-v52-discharge-radial-real
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preparar gerador de sprites
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Renderizar as oito etapas radiais e as oito descargas direcionais
+        run: python tools/build_discharge_v52.py
+      - name: Validar 16 sprites com transparencia e movimento real
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          paths=[Path('effects/moves/discharge/sprites')/f'frame_{i:02}.png' for i in range(1,9)]
+          arcs=[Path('effects/moves/discharge/arcs')/f'arc_{i:02}.png' for i in range(1,9)]
+          for p in paths+arcs:
+              assert p.is_file(),p
+              with Image.open(p) as im:
+                  assert im.mode=='RGBA',p
+                  assert im.size==((384,144) if p.parent.name=='arcs' else (280,320)),p
+                  assert im.getextrema()[3][0]==0 and im.getextrema()[3][1]>=160,p
+          assert len({p.read_bytes() for p in paths})==8
+          assert len({p.read_bytes() for p in arcs})==8
+          print('PASS 16 sprites, oito fases distintas em cada conjunto')
+          PY
+      - name: Versionar arte para o jogo online
+        run: |
+          git config user.name "Pokemon Torre Build"
+          git config user.email "actions@users.noreply.github.com"
+          git add effects/moves/discharge/sprites/frame_*.png effects/moves/discharge/arcs/arc_*.png
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(discharge): V52 16 animated radial and target arcs"
+            git push origin HEAD:fix/electric-v52-discharge-radial-real
+          fi
