@@ -1,0 +1,32 @@
+name: Testar quatro elétricos equipados V56
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'effects/moves/catalog/**'
+      - 'effects/moves/_runtime/end.js'
+      - 'index.html'
+      - 'tests/test-electric-v56.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: v56-check-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  v56-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Checar sintaxe dos modulos
+        run: |
+          node --check effects/moves/catalog/electric-four-v56.js
+          node --check effects/moves/catalog/bundle.js
+          # end.js is an intentional fragment that closes the original game IIFE.
+          # Syntax of the assembled file is covered by the Chromium boot test.
+      - name: Confirmar 4 golpes, 32 frames e 16 impactos
+        run: node tests/test-electric-v56.cjs

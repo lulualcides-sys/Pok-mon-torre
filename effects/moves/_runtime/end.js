@@ -5,7 +5,11 @@ function paint(g,f,now,e,k){
  if(t<0||now<f.at||now>f.at+dur+30)return true;
  g.save();g.imageSmoothingEnabled=false;
  const entry=registry.get(k);if(!entry){g.restore();return false;}
- if(!pixiFX.paint(f,e,k))entry.draw(g,f,t,now,s,low);
+ // These four move-specific sprite animators take priority over the generic
+ // Pixi shader path; all other moves retain the exact previous pipeline.
+ if(typeof catalogElectricFourV56!=='undefined'&&catalogElectricFourV56.accepts(k))
+  entry.draw(g,f,t,now,s,low);
+ else if(!pixiFX.paint(f,e,k))entry.draw(g,f,t,now,s,low);
  g.restore();counts[k]=(counts[k]||0)+1;return true;
 }
 // Render de golpes ofensivos: pipeline existente. O retorno true impede duplicação por Canvas/PNG antigos.

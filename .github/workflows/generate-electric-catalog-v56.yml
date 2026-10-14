@@ -1,0 +1,58 @@
+name: Gerar quatro novos elétricos V56
+on:
+  push:
+    branches: [feat/electric-v56-mewtwo-four-slots]
+    paths:
+      - 'tools/build_electric_catalog_v56.py'
+      - '.github/workflows/generate-electric-catalog-v56.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: render-v56-catalog
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/electric-v56-mewtwo-four-slots
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar renderizador offline
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Renderizar exclusivamente estes quatro golpes
+        run: python tools/build_electric_catalog_v56.py --move all
+      - name: Validar oito frames e quatro impactos por golpe
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          moves=['faiscadejolteon','thunderbolt','choquedotrovao','choque']
+          for move in moves:
+            root=Path('effects/moves/catalog')/move
+            frames=[root/'sprites'/f'frame_{i:02}.png' for i in range(1,9)]
+            hits=[root/'impact'/f'hit_{i:02}.png' for i in range(1,5)]
+            assert len({p.read_bytes() for p in frames})==8,move
+            for p in frames+hits:
+              with Image.open(p) as im:
+                assert im.mode=='RGBA'
+                assert im.size==((384,144) if p in frames else (280,320)),p
+                assert im.getextrema()[3][0]==0 and im.getextrema()[3][1]>=10,p
+          print('PASS V56: 32 animated attack keyframes and 16 independent impacts')
+          PY
+      - name: Versionar apenas estes quatro golpes
+        run: |
+          git config user.name "Pokemon Torre VFX"
+          git config user.email "actions@users.noreply.github.com"
+          for m in faiscadejolteon thunderbolt choquedotrovao choque; do
+            git add "effects/moves/catalog/$m/sprites/" "effects/moves/catalog/$m/impact/"
+          done
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(electric): V56 four independent catalog move animations"
+            git push origin HEAD:feat/electric-v56-mewtwo-four-slots
+          fi

@@ -164,10 +164,10 @@ registerMove("catalog_chicoteduplo",["Chicote Duplo"],(g,f,t,now,s,low)=>drawCat
 registerMove("catalog_chicotesemarea",["Chicotes em Área"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"chicotesemarea","type":"grass","kind":"area","cat":"special","seed":142}),1100);
 
 // Choque — V35.84; edição independente deste golpe.
-registerMove("catalog_choque",["Choque"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"choque","type":"electric","kind":"bolt","cat":"special","seed":43}),950);
+registerMove("catalog_choque",["Choque"],(g,f,t,now,s,low)=>catalogElectricFourV56.paint(g,f,t,now,s,low,"choque"),950);
 
 // Choque do Trovão — V35.84; edição independente deste golpe.
-registerMove("catalog_choquedotrovao",["Choque do Trovão"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"choquedotrovao","type":"electric","kind":"bolt","cat":"special","seed":44}),950);
+registerMove("catalog_choquedotrovao",["Choque do Trovão"],(g,f,t,now,s,low)=>catalogElectricFourV56.paint(g,f,t,now,s,low,"choquedotrovao"),950);
 
 // Choque Magnético — V35.84; edição independente deste golpe.
 registerMove("catalog_choquemagnetico",["Choque Magnético"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"choquemagnetico","type":"electric","kind":"homing","cat":"special","seed":45}),950);
@@ -296,7 +296,7 @@ registerMove("catalog_fairywind",["Fairy Wind"],(g,f,t,now,s,low)=>drawCatalogMo
 registerMove("catalog_faisca",["Faísca"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"faisca","type":"electric","kind":"bolt","cat":"physical","seed":51}),950);
 
 // Faísca de Jolteon — V35.84; edição independente deste golpe.
-registerMove("catalog_faiscadejolteon",["Faísca de Jolteon"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"faiscadejolteon","type":"electric","kind":"bolt","cat":"physical","seed":52}),950);
+registerMove("catalog_faiscadejolteon",["Faísca de Jolteon"],(g,f,t,now,s,low)=>catalogElectricFourV56.paint(g,f,t,now,s,low,"faiscadejolteon"),950);
 
 // Faísca do Pikachu — V35.84; edição independente deste golpe.
 registerMove("catalog_faiscadopikachu",["Faísca do Pikachu"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"faiscadopikachu","type":"electric","kind":"bolt","cat":"physical","seed":53}),950);
@@ -869,7 +869,7 @@ registerMove("catalog_thrash",["Thrash"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,
 registerMove("catalog_thunder",["Thunder"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"thunder","type":"electric","kind":"homing","cat":"special","seed":58}),950);
 
 // Thunderbolt — V35.84; edição independente deste golpe.
-registerMove("catalog_thunderbolt",["Thunderbolt"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"thunderbolt","type":"electric","kind":"beam","cat":"special","seed":60}),1170);
+registerMove("catalog_thunderbolt",["Thunderbolt"],(g,f,t,now,s,low)=>catalogElectricFourV56.paint(g,f,t,now,s,low,"thunderbolt"),1170);
 
 // Thunder Wave — V35.84; edição independente deste golpe.
 registerMove("catalog_thunderwave",["Thunder Wave"],(g,f,t,now,s,low)=>drawCatalogMove(g,f,t,now,s,low,{"id":"thunderwave","type":"electric","kind":"status","cat":"status","seed":59}),1000);
