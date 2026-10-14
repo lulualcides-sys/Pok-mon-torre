@@ -1,3 +1,20 @@
+// V64 — these TWO Portuguese status names were in the selectable catalogue
+// but absent from the original engine's condition definitions. In V35.1,
+// defFor() reads __V351_STATUS_DEFS[move.name] when no normal alias exists.
+// Attach semantic definitions, not animation-only replacements: sleep applies
+// to the target with the exact existing cooldown, energy and immunity rules.
+window.__V351_STATUS_DEFS=window.__V351_STATUS_DEFS||{};
+for(const [name,kind] of [['Pó do Sono','sleep'],['Esporos','sleep']]){
+ if(!window.__V351_STATUS_DEFS[name])
+  window.__V351_STATUS_DEFS[name]=[name,'grass','status',0,kind,4800];
+}
+const grassFourKeys=new Set(['catalog_stunspore','catalog_podosono','catalog_leechseed','catalog_esporos']);
+const grassFourStatusReport={casts:0,rejected:0,statusApplied:0,visualQueues:0,legacyParticlesRemoved:0,names:[]};
+window.PokemonTorrePlantStatusV64=()=>({
+ version:'64.0',...grassFourStatusReport,
+ activeVisuals:(engine?.v3580Visuals||[]).filter(f=>grassFourKeys.has(pick(f?.move?.name))).length,
+ actualEnemyConditions:engine?.v25?.stats?.enemy?.conditions?.slice()||[]
+});
 function paint(g,f,now,e,k){
  if(!f||!Array.isArray(f.from)||!Array.isArray(f.to)||!g)return false;
  const dur=Math.max(250,f.duration||950),t=C((now-f.at)/dur),s=C((e?.h||420)/430,.62,1.18);
@@ -53,8 +70,15 @@ window.PokemonTorreV360Paint=function(g,f,now,e){
 const previousUse=BattleEngine.prototype.useMove;
 BattleEngine.prototype.useMove=function(i){
  const mon=battle?.active?current():null,mv=mon&&Number.isInteger(i)?skillSet(mon)?.[i]:null,k=pick(mv?.name);
+ const approvedGrass=grassFourKeys.has(k);
+ const beforeParticles=approvedGrass?(this.particles?.length||0):0;
  const before=this.v359Attacks?.length||0,energy=battle?.energy,oldCd=Number.isInteger(i)?cooldowns[i]:0,when=performance.now();
  const result=previousUse.apply(this,arguments);
+ if(approvedGrass){
+  grassFourStatusReport.casts++;
+  grassFourStatusReport.names.push({name:mv?.name,result:result!==false,at:when});
+  grassFourStatusReport.names=grassFourStatusReport.names.slice(-12);
+ }
  if(!k||!battle?.active)return result;
  // Avoid double-painting the older automatic STATUS effects for registered catalog moves.
  if(k.startsWith('catalog_')&&Array.isArray(this.v3568StatusFX)){
@@ -68,11 +92,27 @@ BattleEngine.prototype.useMove=function(i){
   return result;
  }
  const accepted=result!==false && (((cooldowns[i]||0)>when&&(cooldowns[i]||0)!==oldCd)||(battle.energy<energy));
+ if(approvedGrass){
+  if(!accepted){grassFourStatusReport.rejected++;return result;}
+  // The original status engine spawned its own generic halo and particles.
+  // Remove ONLY visual debris from this synchronous cast, not status logic.
+  if(this.v351StatusCast?.at>=when-8)this.v351StatusCast=null;
+  if(Array.isArray(this.v342StatusFx))
+   this.v342StatusFx=this.v342StatusFx.filter(fx=>pick(fx?.name)!==k);
+  if(Array.isArray(this.v3568StatusFX))
+   this.v3568StatusFX=this.v3568StatusFX.filter(fx=>pick(fx?.move?.name||fx?.name)!==k);
+  if(Array.isArray(this.particles)&&this.particles.length>beforeParticles){
+   grassFourStatusReport.legacyParticlesRemoved+=this.particles.length-beforeParticles;
+   this.particles.splice(beforeParticles);
+  }
+  if(this.v25?.stats?.enemy?.conditions?.length)grassFourStatusReport.statusApplied++;
+ }
  if(!accepted)return result;
  const duration=registry.get(k).duration;
  this.v3580Visuals||=[];
  this.v3580Visuals.push({move:mv,at:when,end:when+duration,duration,from:[this.player.x,this.player.y-this.h*.13],to:[this.enemy.x,this.enemy.y-this.h*.12]});
  this.v3580Visuals=this.v3580Visuals.slice(-8);
+ if(approvedGrass)grassFourStatusReport.visualQueues++;
  return result;
 };
 const previousDraw=BattleEngine.prototype.draw;
