@@ -1,0 +1,70 @@
+name: Render cinematic four moves V60
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/build_four_moves_v60.py'
+      - 'effects/moves/v60-four/render.js'
+      - 'tests/test-four-v60.cjs'
+      - '.github/workflows/render-four-v60.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: render-four-v60
+  cancel-in-progress: false
+jobs:
+  render-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Pillow
+        run: python -m pip install --disable-pip-version-check Pillow
+      - name: Check syntax
+        run: |
+          python -m py_compile tools/build_four_moves_v60.py
+          node --check effects/moves/v60-four/render.js
+          node --check tests/test-four-v60.cjs
+      - name: Generate only the four requested moves
+        run: python tools/build_four_moves_v60.py --move all
+      - name: Validate transparent art, 8 unique phases each
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          names=('tempestade-de-neve','nevasca','faisca-do-pikachu','volt-tackle')
+          for name in names:
+              fp=Path('effects/moves/v60-four')/name/'atlas.png'
+              with Image.open(fp) as atlas:
+                  assert atlas.mode=='RGBA' and atlas.size==(2048,256),(name,atlas.mode,atlas.size)
+                  assert atlas.getextrema()[3][0]==0 and atlas.getextrema()[3][1]>180,name
+                  frames=[atlas.crop((n*256,0,(n+1)*256,256)).tobytes() for n in range(8)]
+                  assert len(set(frames))==8,name
+                  assert all(any(f[3::4]) for f in frames),name
+                  print('PASS',name,'8 animated frames')
+          PY
+      - name: Test battle VFX routing and protected modules
+        run: node tests/test-four-v60.cjs
+      - name: Save generated sprite atlases to existing game
+        run: |
+          git config user.name 'Pokémon Torre VFX'
+          git config user.email 'actions@users.noreply.github.com'
+          for move in tempestade-de-neve nevasca faisca-do-pikachu volt-tackle; do
+            git add "effects/moves/v60-four/$move/atlas.png"
+          done
+          if ! git diff --cached --quiet; then
+            git commit -m 'assets(v60): generate 32 cinematic frames for requested four moves'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          else
+            echo 'All four sprite atlases are already present'
+          fi
