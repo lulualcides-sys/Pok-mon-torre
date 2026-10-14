@@ -1,4 +1,4 @@
-/* Pokemon Torre V47 — cinematic electric battle integration.
+/* Pokémon Torre V49 — clean finalized electric battle integration.
  * Original game still owns HP, type multipliers, hit checks, cooldowns, AI.
  * Only the old visual overlays for THESE FOUR moves are replaced.
  * Four approved water V45 / fire V42.5 and all other moves are unchanged.
@@ -120,5 +120,5 @@
  window.PokemonTorreElectricV46=()=>({...K.diagnostics(),...stats,
   active:(engine?.v46ElectricFX||[]).map(x=>x.move.name)});
  const oldBadge=document.getElementById('ptFireSpriteV41Badge');
- if(oldBadge)oldBadge.textContent='SPRITES ELÉTRICOS V47 · ÁGUA V45 · FOGO V42.5';
+ if(oldBadge)oldBadge.textContent='ELÉTRICOS V49 FINAL · ÁGUA V45 · FOGO V42.5';
 })();
