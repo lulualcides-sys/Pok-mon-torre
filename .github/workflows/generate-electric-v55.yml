@@ -1,0 +1,65 @@
+name: Gerar elétricos dourados V55
+on:
+  push:
+    branches: [feat/electric-v55-golden-cinematic]
+    paths:
+      - 'tools/build_electric_v55.py'
+      - '.github/workflows/generate-electric-v55.yml'
+permissions:
+  contents: write
+concurrency:
+  group: electric-v55-build
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/electric-v55-golden-cinematic
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar gerador offline
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Gerar quatro golpes completos
+        run: python tools/build_electric_v55.py --move all
+      - name: Conferir 56 arquivos e oito fases distintas
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          root=Path('effects/moves')
+          for name in ('faisca','discharge','tempestade-de-raios','trovao'):
+              base=root/name
+              frames=[base/'sprites'/f'frame_{n:02}.png' for n in range(1,9)]
+              hits=[base/'impact'/f'hit_{n:02}.png' for n in range(1,5)]
+              assert len({p.read_bytes() for p in frames})==8, name
+              for p in frames+hits:
+                  with Image.open(p) as im:
+                      assert im.mode=='RGBA' and im.size==(280,320),p
+                      assert im.getextrema()[3][0]==0 and im.getextrema()[3][1]>=10,p
+              with Image.open(frames[4]) as im:
+                  color=im.convert('RGBA')
+                  gold=sum(1 for r,g,b,a in color.getdata() if a>=60 and r>g*1.07 and r>b*1.50)
+                  assert gold>40,(name,'needs strong golden highlights',gold)
+          arcs=[root/'discharge'/'arcs'/f'arc_{n:02}.png' for n in range(1,9)]
+          assert len({p.read_bytes() for p in arcs})==8
+          for p in arcs:
+              with Image.open(p) as im:assert im.size==(384,144) and im.mode=='RGBA',p
+          print('PASS: 32 animated phases, 16 impacts, 8 targeting arcs, golden-white palette')
+          PY
+      - name: Gravar somente sprites na branch de teste
+        run: |
+          git config user.name "Pokemon Torre VFX"
+          git config user.email "actions@users.noreply.github.com"
+          git add effects/moves/faisca/sprites effects/moves/faisca/impact
+          git add effects/moves/discharge/sprites effects/moves/discharge/impact effects/moves/discharge/arcs
+          git add effects/moves/tempestade-de-raios/sprites effects/moves/tempestade-de-raios/impact
+          git add effects/moves/trovao/sprites effects/moves/trovao/impact
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(electric): V55 golden cinematic 56 frames"
+            git push origin HEAD:feat/electric-v55-golden-cinematic
+          fi
