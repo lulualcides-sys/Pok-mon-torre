@@ -7,7 +7,11 @@ function paint(g,f,now,e,k){
  const entry=registry.get(k);if(!entry){g.restore();return false;}
  // These four move-specific sprite animators take priority over the generic
  // Pixi shader path; all other moves retain the exact previous pipeline.
- if(typeof catalogElectricFourV56!=='undefined'&&catalogElectricFourV56.accepts(k))
+ if(typeof elementalEightV58!=='undefined'&&elementalEightV58.accepts(k)){
+  // Sprite atlas owns these water/ice catalog visuals only. If the atlas
+  // has not finished loading, retain the original painter for continuity.
+  if(!elementalEightV58.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
+ }else if(typeof catalogElectricFourV56!=='undefined'&&catalogElectricFourV56.accepts(k))
   entry.draw(g,f,t,now,s,low);
  else if(!pixiFX.paint(f,e,k))entry.draw(g,f,t,now,s,low);
  g.restore();counts[k]=(counts[k]||0)+1;return true;
@@ -21,7 +25,13 @@ window.PokemonTorreV360Paint=function(g,f,now,e){
  if(legendaryFireFX.handles(f))return legendaryFireFX.paint(g,f,now,e);
  if(originalFireFX.handles(f))return originalFireFX.paint(g,f,now,e);
  if(originalGbaFX.handles(f))return originalGbaFX.paint(g,f,now,e);
- const k=pick(f?.move?.name||f?.name);if(k)return paint(g,f,now,e,k);
+ const rawName=f?.move?.name||f?.name;
+ const k=pick(rawName);if(k)return paint(g,f,now,e,k);
+ // Tempestade de Neve exists in the original engine even when not present
+ // in the modular catalog; this path changes only the visual rendering.
+ if(typeof elementalEightV58!=='undefined'&&elementalEightV58.supportsName(rawName)){
+  if(elementalEightV58.paintNamed(g,f,now,e))return true;
+ }
  // The original GBA painter above owns Psybeam and the other three moves.
  return typeof prevPainter==='function'?prevPainter(g,f,now,e):false;
 };
