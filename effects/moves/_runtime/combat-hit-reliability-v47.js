@@ -413,7 +413,7 @@
    castGrass(name,foeId=143){
     const requested=['Stun Spore','Pó do Sono','Leech Seed','Esporos'];
     if(!requested.includes(name))return {error:'Invalid Grass move '+name};
-    this.start(45,foeId);
+    this.start(150,foeId);
     const actor=current();
     const cat=v32Catalogue(actor);
     const chosen=requested.map(label=>cat.find(row=>row.move?.name===label));
