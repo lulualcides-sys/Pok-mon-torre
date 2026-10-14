@@ -51,5 +51,7 @@ electricSpriteV46.add('discharge',{
      16*s,22*s,{alpha:hit*.75,rotation:a});
    }
   }
+  // V48: eight cinematic phases with unique black-edged electric ink.
+  K.cinematic(g,f,t,ms,s,'discharge');
  }
 });
