@@ -1,4 +1,4 @@
-/* Pokémon Torre V51 — improved layered PNG electric move renderer.
+/* Pokémon Torre V52 — radial Discharge and target-reaching animated electric sprite effects.
  * Four individual 8-frame PNG animations, bright plasma core, shaded forks.
  * No CSS animation, static PNG overlay or changed combat rules.
  */
@@ -66,7 +66,7 @@ const electricSpriteV46=(()=>{
   const frames=[],impacts=[];
   for(let index=1;index<=8;index++){
    const img=new Image();img.decoding='async';
-   img.src=dir+'sprites/frame_'+String(index).padStart(2,'0')+'.png?v=51.0';
+   img.src=dir+'sprites/frame_'+String(index).padStart(2,'0')+'.png?v=52.0';
    frames.push(img);
   }
   for(let index=1;index<=4;index++){
@@ -74,7 +74,15 @@ const electricSpriteV46=(()=>{
    img.src=dir+'impact/hit_'+String(index).padStart(2,'0')+'.png?v=51.0';
    impacts.push(img);
   }
-  spriteSets[kind]={frames,impacts};
+  const arcs=[];
+  if(kind==='discharge'){
+   for(let index=1;index<=8;index++){
+    const img=new Image();img.decoding='async';
+    img.src=dir+'arcs/arc_'+String(index).padStart(2,'0')+'.png?v=52.0';
+    arcs.push(img);
+   }
+  }
+  spriteSets[kind]={frames,impacts,arcs};
  }
  function showImage(g,img,x,y,w,h,alpha=1){
   if(!img||!img.naturalWidth||!img.naturalHeight||!g)return false;
@@ -103,13 +111,36 @@ const electricSpriteV46=(()=>{
    if(phase<=4){x=actor[0]-w*.49;y=actor[1]-h*.52;}
    else{x=B[0]-w*.625;y=B[1]-h*.52;}
   }else if(kind==='discharge'){
-   w=174*scale;h=199*scale;
+   // A large dynamic burst travels in every direction from the Pokémon.
+   // No shield-ring illusion: the radial artwork contains branching bolts.
+   w=267*scale;h=305*scale;
    x=A[0]-w*.50;y=A[1]-h*.52;
   }else{
    // Storm effects are bounded to the target, not an arena-sized overlay.
    w=(kind==='trovao'?218:212)*scale;
    h=(kind==='trovao'?249:242)*scale;
    x=B[0]-w*.50;y=B[1]-h*.865;
+  }
+  // The additional discharge beam is eight separate animated sprites
+  // rotated from the caster to the moving target, with no Canvas strokes.
+  // It grows across the battlefield and visually reaches the target.
+  if(kind==='discharge'&&phase>=2&&phase<=6){
+   const dx=B[0]-A[0],dy=B[1]-A[1],dist=Math.hypot(dx,dy);
+   const arc=pack.arcs[phase],start=17*scale;
+   if(dist>36*scale&&arc?.naturalWidth){
+    const travel=[0,0,.34,.68,.97,1,.88,0][phase];
+    const endDistance=Math.max(0,dist-8*scale);
+    const length=Math.max(4,(endDistance-start)*travel);
+    const height=(phase>=4&&phase<=5?102:82)*scale;
+    g.save();
+    g.translate(A[0]+dx/dist*start,A[1]+dy/dist*start);
+    g.rotate(Math.atan2(dy,dx));
+    g.globalAlpha=(phase===6?.53:phase===2?.65:.96)*fade;
+    g.imageSmoothingEnabled=true;
+    g.drawImage(arc,0,-height*.5,length,height);
+    g.restore();
+    counters['discharge-target-arcs']=(counters['discharge-target-arcs']||0)+1;
+   }
   }
   showImage(g,source,x,y,w,h,fade);
   // Secondary genuine PNG impact frames, timed to animation's real impact.
@@ -151,9 +182,9 @@ const electricSpriteV46=(()=>{
   return true;
  }
  function diagnostics(){return {
-  version:'51.0',registered:[...registered.keys()],
+  version:'52.0',registered:[...registered.keys()],
   ready:Object.fromEntries(names.map(n=>[n,!!images[n].naturalWidth])),
-  stamps:{...counters},frames:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.frames.filter(i=>i.naturalWidth>0).length])),impacts:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.impacts.filter(i=>i.naturalWidth>0).length])),error
+  stamps:{...counters},arcsReady:spriteSets.discharge.arcs.filter(i=>i.naturalWidth>0).length,frames:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.frames.filter(i=>i.naturalWidth>0).length])),impacts:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.impacts.filter(i=>i.naturalWidth>0).length])),error
  }}
  return {add,resolve,paint,stamp,between,burst,cinematic,clamp,ease,lerp,images,diagnostics};
 })();
