@@ -1,7 +1,7 @@
-name: Testar quatro golpes elétricos V48 / V50
+name: Testar quatro golpes elétricos V48 / V51
 on:
   push:
-    branches: [main, feat/electric-cinematic-v48-8frames, feat/electric-v50-frame-assets]
+    branches: [main, feat/electric-cinematic-v48-8frames, feat/electric-v50-frame-assets, fix/electric-v51-art-assets-loader]
   pull_request:
     branches: [main]
 permissions:
