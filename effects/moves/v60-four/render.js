@@ -12,12 +12,27 @@ const cinematicFourV60=(()=>{
  };
  const specialNames={'tempestadedeneve':'tempestade-de-neve'};
  const ids=['tempestade-de-neve','nevasca','faisca-do-pikachu','volt-tackle'];
- const pictures=Object.create(null),draws=Object.create(null),errors=[];
+ const pictures=Object.create(null),frames=Object.create(null);
+ const draws=Object.create(null),errors=[];
  const norm=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
   .toLowerCase().replace(/[^a-z0-9]/g,'');
+ // Preserve the original 32 approved sprite frames, their 8-frame timing
+ // and every on-screen size. Pre-decode/slice with createImageBitmap before
+ // the first attack, instead of waiting for synchronous image decoding and
+ // texture crop at the moment a player taps an attack.
  for(const id of ids){
   const image=new Image();image.decoding='async';
   image.onerror=()=>errors.push('Could not load '+id);
+  image.onload=()=>{
+   if(image.naturalWidth!==2048||image.naturalHeight!==256)return;
+   if(typeof createImageBitmap!=='function')return;
+   // Browser decodes on worker threads; fallback is the untouched 2048x256
+   // drawImage path if any image bitmap cannot be prepared.
+   Promise.all(Array.from({length:8},(_,i)=>
+    createImageBitmap(image,i*256,0,256,256)
+   )).then(pieces=>{frames[id]=pieces;})
+     .catch(()=>{ /* Original atlas remains available; no gameplay error. */ });
+  };
   image.src=DIR+id+'/atlas.png?v='+VERSION;
   pictures[id]=image;
  }
@@ -50,7 +65,9 @@ const cinematicFourV60=(()=>{
   }
   if(frame===7)alpha=1-clip((time*8-7)*.80);
   g.save();g.imageSmoothingEnabled=true;g.globalAlpha=alpha;
-  g.drawImage(im,frame*256,0,256,256,x-w*.5*zoom,y-h*.5*zoom,w*zoom,h*zoom);
+  const bitmap=frames[id]?.[frame];
+  if(bitmap)g.drawImage(bitmap,x-w*.5*zoom,y-h*.5*zoom,w*zoom,h*zoom);
+  else g.drawImage(im,frame*256,0,256,256,x-w*.5*zoom,y-h*.5*zoom,w*zoom,h*zoom);
   g.restore();
   draws[id]=(draws[id]||0)+1;
   return true;
@@ -68,6 +85,7 @@ const cinematicFourV60=(()=>{
  function diagnostic(){
   return {version:VERSION,
    ready:Object.fromEntries(ids.map(id=>[id,pictures[id].naturalWidth===2048])),
+   prerendered:Object.fromEntries(ids.map(id=>[id,frames[id]?.length||0])),
    frames:{...draws},errors:errors.slice(),catalogMoves:Object.keys(specs),
    namedMoves:Object.keys(specialNames),protectedOtherMoves:true};
  }
