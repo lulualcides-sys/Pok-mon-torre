@@ -1,0 +1,92 @@
+{
+  "collection": "Pokemon Torre V59 - referencias de efeitos",
+  "created_utc": "2026-10-14",
+  "origin": "arquivos enviados pelo usuario no chat",
+  "archive": "ChatGPT Library",
+  "library_folder": "/Pokémon Torre/Referências V59 - sprites enviados",
+  "gameplay_modified": false,
+  "assets_embedded_in_public_repo": false,
+  "reason": "Arquivos integrais preservados na Biblioteca privada. O repositorio contem indexacao, hash e guia de uso; nao publicar packs de terceiros/watermarks em site publico sem direitos de redistribuicao.",
+  "files": [
+    {
+      "name": "1000982444.webp",
+      "description": "MAGIC: fire, cloud, time",
+      "sha256": "fbb535207910e9bf7d2aadfff2c4578109923a2a8b2d1d263f2628792cf51626",
+      "bytes": 69462,
+      "width": 1440,
+      "height": 960,
+      "frames": 1,
+      "library_path": "/Pokémon Torre/Referências V59 - sprites enviados/1000982444.webp"
+    },
+    {
+      "name": "1000982445.webp",
+      "description": "ICONES: fire, poison, time, ice, status, defense, rock, electric",
+      "sha256": "e53bc02b8bee9056d245b8f528f8941e1b25588178f518d61768075353d86366",
+      "bytes": 55336,
+      "width": 1440,
+      "height": 960,
+      "frames": 1,
+      "library_path": "/Pokémon Torre/Referências V59 - sprites enviados/1000982445.webp"
+    },
+    {
+      "name": "1000982446.webp",
+      "description": "SPELLS: spikes, firewall, shield, black hole, fire",
+      "sha256": "fa8487b8f9c24212520fc948ada39496fcbbeb8cb007c0ad1684a2c3fad69210",
+      "bytes": 112012,
+      "width": 1440,
+      "height": 960,
+      "frames": 1,
+      "library_path": "/Pokémon Torre/Referências V59 - sprites enviados/1000982446.webp"
+    },
+    {
+      "name": "1000982447.webp",
+      "description": "SPELLS: lightning, lightning bolt, midas touch, sun strike, explosion",
+      "sha256": "c9d1d5a84b433792e1d8272a6e1aa3ddf7c911bc3b626c3886700480d7c56c84",
+      "bytes": 113904,
+      "width": 1440,
+      "height": 960,
+      "frames": 1,
+      "library_path": "/Pokémon Torre/Referências V59 - sprites enviados/1000982447.webp"
+    },
+    {
+      "name": "1000982448.webp",
+      "description": "SPELLS: magic arrow, fire attack, hypnosis, lightning bolt, skull effect",
+      "sha256": "78748989ea13c4b4fb6ffc2e4c4832e5bb683fa391e94d9c8e8b90b3f93eac35",
+      "bytes": 135054,
+      "width": 1440,
+      "height": 960,
+      "frames": 1,
+      "library_path": "/Pokémon Torre/Referências V59 - sprites enviados/1000982448.webp"
+    },
+    {
+      "name": "1000982449.webp",
+      "description": "SPELLS: light of defence, spikes, lightning ball, tornado, water attack",
+      "sha256": "5c038293e90f98d4e22f141740b3e47312cd2feecc7e47f7facba5b5dee7b9ba",
+      "bytes": 119782,
+      "width": 1440,
+      "height": 960,
+      "frames": 1,
+      "library_path": "/Pokémon Torre/Referências V59 - sprites enviados/1000982449.webp"
+    },
+    {
+      "name": "1000982450.gif",
+      "description": "Animated original reference: teal energy shield/orb with Craftpix watermark",
+      "sha256": "e43d3d186dddece8e7e46abb88d9795149e379b9424d9c434bb4beb63a301fde",
+      "bytes": 39318,
+      "width": 600,
+      "height": 370,
+      "frames": 14,
+      "library_path": "/Pokémon Torre/Referências V59 - sprites enviados/1000982450.gif"
+    },
+    {
+      "name": "1000982451.gif",
+      "description": "Animated original reference: Craftpix spell clip/watermark",
+      "sha256": "ab69eb40167130de9ed9f3689c5f21bda1b9012193dab1de8c62cebff5125949",
+      "bytes": 21486,
+      "width": 600,
+      "height": 370,
+      "frames": 14,
+      "library_path": "/Pokémon Torre/Referências V59 - sprites enviados/1000982451.gif"
+    }
+  ]
+}
