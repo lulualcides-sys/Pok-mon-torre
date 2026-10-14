@@ -13,12 +13,12 @@ const catalogElectricFourV56=(()=>{
   const main=[],impacts=[];
   for(let i=1;i<=8;i++){
    const img=new Image();img.decoding='async';
-   img.src='effects/moves/catalog/'+id+'/sprites/frame_'+pad(i)+'.png?v=57.0';
+   img.src='effects/moves/catalog/'+id+'/sprites/frame_'+pad(i)+'.png?v=57.1';
    main.push(img);
   }
   for(let i=1;i<=4;i++){
    const img=new Image();img.decoding='async';
-   img.src='effects/moves/catalog/'+id+'/impact/hit_'+pad(i)+'.png?v=57.0';
+   img.src='effects/moves/catalog/'+id+'/impact/hit_'+pad(i)+'.png?v=57.1';
    impacts.push(img);
   }
   sets.set(id,{main,impacts});
