@@ -4,14 +4,16 @@
  */
 (function(){
  'use strict';
+ // Plain text remains accessible in the fallback native selector.
+ // The custom V62 menu renders original SVG glyphs beside every name.
  const types=[
- ['all','Todos os tipos'],['normal','⚪ Normal'],['fire','🔥 Fogo'],
- ['water','💧 Água'],['electric','⚡ Elétrico'],['grass','🌿 Planta'],
- ['ice','❄️ Gelo'],['fighting','🥊 Lutador'],['poison','☣️ Veneno'],
- ['ground','🌎 Terra'],['flying','🪽 Voador'],['psychic','🧠 Psíquico'],
- ['bug','🐛 Inseto'],['rock','🪨 Pedra'],['ghost','👻 Fantasma'],
- ['dragon','🐲 Dragão'],['dark','🌑 Sombrio'],['steel','⚙️ Aço'],
- ['fairy','✨ Fada']
+ ['all','Todos os tipos'],['normal','Normal'],['fire','Fogo'],
+ ['water','Água'],['electric','Elétrico'],['grass','Planta'],
+ ['ice','Gelo'],['fighting','Lutador'],['poison','Veneno'],
+ ['ground','Terra'],['flying','Voador'],['psychic','Psíquico'],
+ ['bug','Inseto'],['rock','Pedra'],['ghost','Fantasma'],
+ ['dragon','Dragão'],['dark','Sombrio'],['steel','Aço'],
+ ['fairy','Fada']
  ];
  const aliases={
  normal:['normal'],fire:['fogo','fire'],water:['agua','water'],electric:['eletrico','electric'],
