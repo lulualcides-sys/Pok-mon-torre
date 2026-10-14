@@ -79,12 +79,12 @@ def bolt(im,a,b,seed,width=5,power=1,branches=3,rough=.24,shade=True):
         fork=fractal((x,y),tail,seed*19+k,rough=.26,generation=3)
         tapered(broadDraw,fork,max(1.05,width*.29),200)
         tapered(coreDraw,fork,max(.7,width*.13),190)
-    blur(im,broad,(71,56,224),7,power*.14)
-    blur(im,broad,(17,132,255),3.7,power*.26)
-    blur(im,core,(148,235,255),2.1,power*.67)
-    if shade:composite(im,broad.filter(ImageFilter.MaxFilter(3)),DARK,power*.42)
-    composite(im,broad,(64,162,248),power*.81)
-    composite(im,core,(204,246,255),power)
+    blur(im,broad,(71,56,224),6,power*.11)
+    blur(im,broad,(17,132,255),4,power*.22)
+    blur(im,core,(148,235,255),2.0,power*.73)
+    if shade:composite(im,broad.filter(ImageFilter.MaxFilter(3)),DARK,power*.32)
+    composite(im,broad,(55,139,254),power*.25)
+    composite(im,core,(198,241,255),power*.94)
     # Peak white core must be visible on phone-sized displays.
     fine=mask(im.width//S,im.height//S)
     tapered(ImageDraw.Draw(fine),pts,max(.8,width*.19),255)
@@ -110,21 +110,21 @@ def energy(im,x,y,radius,power):
     m=mask(im.width//S,im.height//S)
     ImageDraw.Draw(m).ellipse((round((x-radius)*S),round((y-radius)*S),
                               round((x+radius)*S),round((y+radius)*S)),fill=255)
-    blur(im,m,(53,49,157),radius*.64,power*.10)
-    blur(im,m,(47,151,238),radius*.33,power*.15)
+    blur(im,m,(53,49,157),radius*.57,power*.07)
+    blur(im,m,(47,151,238),radius*.27,power*.12)
     core=mask(im.width//S,im.height//S)
     rad=max(1.6,radius*.28)
     ImageDraw.Draw(core).ellipse((round((x-rad)*S),round((y-rad)*S),
                                  round((x+rad)*S),round((y+rad)*S)),fill=255)
-    blur(im,core,(222,252,255),radius*.20,power*.49)
-    composite(im,core,(236,253,255),power*.69)
+    blur(im,core,(222,252,255),radius*.19,power*.40)
+    composite(im,core,(236,253,255),power*.51)
 
 def impact(im,x,y,power=1,seed=0,spread=40):
     if power<=0:return
-    energy(im,x,y,max(8,spread*.42),power)
+    energy(im,x,y,max(5,spread*.16),power*.58)
     r=random.Random(seed+1099)
-    for i in range(11):
-        a=TAU*i/11+r.uniform(-.24,.24)
+    for i in range(8):
+        a=TAU*i/8+r.uniform(-.24,.24)
         d=spread*r.uniform(.60,1.25)
         ox=x+r.uniform(-5,5);oy=y+r.uniform(-4,4)
         bolt(im,(ox,oy),(x+math.cos(a)*d,y+math.sin(a)*d*.75),seed*43+i,
@@ -134,18 +134,19 @@ def impact(im,x,y,power=1,seed=0,spread=40):
     # No cartoon spiky polygon, no elliptical shield.
 
 def storm_mist(im,x,y,power,seed):
+    """Tiny high-altitude electrical ionization, never a solid cartoon cloud."""
     r=random.Random(seed)
     m=mask(im.width//S,im.height//S)
     d=ImageDraw.Draw(m)
-    for i in range(13):
-        xx=x+r.uniform(-65,65)
-        yy=y+r.uniform(-14,11)
-        rx=r.uniform(9,30)
-        ry=r.uniform(3,9)
-        d.ellipse((round((xx-rx)*S),round((yy-ry)*S),round((xx+rx)*S),round((yy+ry)*S)),fill=r.randint(25,90))
-    composite(im,m.filter(ImageFilter.GaussianBlur(12*S)),(35,33,71),power*.19)
-    blur(im,m,(62,81,159),6,power*.12)
-    if power>.35:sparks(im,x,y+14,7,66,seed+99,power*.32)
+    for i in range(6):
+        xx=x+r.uniform(-45,45)
+        yy=y+r.uniform(-7,6)
+        length=r.uniform(8,21)
+        d.line([point((xx-length,yy)),point((xx+length,yy+r.uniform(-2,2)))],
+               fill=r.randint(60,140),width=max(1,round(S*.9)))
+    blur(im,m,(52,62,188),7,power*.26)
+    sparks(im,x,y+4,6,45,seed+99,power*.45)
+
 
 def faisca(i):
     im=canvas();power=[.28,.54,.83,.99,.97,1,.48,.21][i]
