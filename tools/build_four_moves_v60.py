@@ -112,10 +112,10 @@ def fine_wind(d,rng,cy,energy,phase,quantity=10):
   ln=145+70*energy+rng.uniform(-25,24)
   lift=rng.uniform(-12,10)
   pts=[(x,y),(x+ln*.24,y-6+lift),(x+ln*.60,y+lift*.6),(x+ln,y+lift*.2)]
-  width=.7+2.1*energy*(1 if j%3==0 else .50)
-  line(d,pts,NAVY,width+1.5)
+  width=.4+1.05*energy*(1 if j%3==0 else .50)
+  line(d,pts,NAVY,width+.65)
   line(d,pts,(186,228,245,175) if j%2 else ICY,width)
-  if j%3==0:line(d,pts[1:],(71,170,221,165),.8)
+  if j%3==0:line(d,pts[1:],(71,170,221,130),.5)
 def shard_rain(d,rng,x,y,size,angle,light=True):
  # Thin translucent ice needles with etched edges, not cartoon diamonds.
  ux,uy=math.cos(angle),math.sin(angle)
@@ -178,23 +178,23 @@ def draw(kind,i):
   for j in range(6):
    yy=45+j*29+rng.uniform(-5,5)
    arc(d,cx,yy,55+55*energy,17+9*energy,i*.24+j*.2,i*.24+j*.2+math.pi*1.12,
-    (115,206,248,162) if j%2 else (232,251,255,220),1.4+energy*.6)
+    (115,206,248,138) if j%2 else (232,251,255,192),.75+energy*.35)
   for j in range(13+int(22*energy)):
    x=rng.uniform(10,245)
    y=rng.uniform(15,225)
    shard_rain(d,rng,x,y,rng.uniform(5,18)*energy,rng.uniform(-.95,-.35),j%4==0)
-  micro_particles(d,rng,95+int(80*energy),energy,True)
+  micro_particles(d,rng,70+int(60*energy),energy,True)
   if i>=3:
    for j in range(7):
     shard_rain(d,rng,rng.uniform(67,194),rng.uniform(115,201),
       rng.uniform(10,24)*energy,rng.uniform(-.9,.9))
   if i in (4,5,6):
-   arc(d,cx,178,40+33*energy,12+12*energy,0,math.pi*2,(202,245,255,155),2)
+   arc(d,cx,178,40+33*energy,12+12*energy,0,math.pi*2,(202,245,255,130),1.0)
    for j in range(9):
     a=TAU*j/9
     line(d,[(cx+math.cos(a)*20,cy+math.sin(a)*18),
         (cx+math.cos(a)*(60+23*energy),cy+math.sin(a)*(42+20*energy))],
-       (204,248,255,145),1.3)
+       (204,248,255,126),.7)
  elif kind=='nevasca':
   # Hail cuts: diagonal white streaks and sharp, partially transparent splinters.
   fine_wind(d,rng,cy-20,energy,i,9)
@@ -203,9 +203,9 @@ def draw(kind,i):
    yy=rng.uniform(4,213)
    length=rng.uniform(8,23)*(0.5+energy)
    line(d,[(xx-length*.6,yy-length*.7),(xx+length*.6,yy+length*.7)],
-     (24,61,106,195),3.0)
+     (24,61,106,135),1.65)
    line(d,[(xx-length*.6,yy-length*.7),(xx+length*.6,yy+length*.7)],
-     (214,250,255,235),1.2)
+     (214,250,255,203),.7)
   for j in range(13+int(14*energy)):
    shard_rain(d,rng,rng.uniform(28,238),rng.uniform(12,219),
       rng.uniform(7,29)*energy,rng.uniform(.25,1.8),j%3!=0)
@@ -214,77 +214,90 @@ def draw(kind,i):
     xx=39+j*16
     height=(17+rng.uniform(0,25))*energy
     shard_rain(d,rng,xx,196-height*.55,height,rng.uniform(-1.7,-1.4))
-   arc(d,cx,197,39+40*energy,9+6*energy,0,TAU,(235,253,255,234),2)
+   arc(d,cx,197,39+40*energy,9+6*energy,0,TAU,(235,253,255,194),1.0)
    for j in range(14):
     xx=cx+rng.uniform(-73,73);yy=192+rng.uniform(-20,9)
     line(d,[(xx,yy),(xx+rng.uniform(-17,12),yy-rng.uniform(8,35)*energy)],
-     (168,227,247,215),1.6)
-  micro_particles(d,rng,65+int(45*energy),energy,True)
+     (168,227,247,190),.9)
+  micro_particles(d,rng,51+int(30*energy),energy,True)
  elif kind=='faisca-do-pikachu':
-  # Short crackling discharge with dramatic lightning channel; no yellow blob.
-  root=(83,134)
-  target=(156+18*energy,120+rng.uniform(-12,12))
-  plasma_branch(d,rng,root,target,4.8+4.5*energy,4)
-  for j in range(5):
-   a=TAU*j/5+i*.22
-   radius=(30+42*energy)*rng.uniform(.83,1.14)
-   dest=(cx+math.cos(a)*radius,cy+math.sin(a)*radius)
-   plasma_branch(d,rng,(cx+rng.uniform(-17,17),cy+rng.uniform(-13,13)),
-    dest,2.7+2.5*energy,1)
-  for j in range(11):
-   y=67+j*12+rng.uniform(-7,7)
-   line(d,[(9,y),(rng.uniform(38,112),y+rng.uniform(-9,9))],
-    (255,206,77,175),max(.9,rng.uniform(1.0,2.1)*energy))
+  # Pikachu's short electric attack: one readable zig-zag, branching at
+  # the target. White-hot core with fine black edging, no radial blob.
+  travel=(.04,.17,.35,.57,.79,1,.96,.74)[i]
+  charge=(.18,.32,.55,.73,1,.95,.64,.20)[i]
+  head=(72+119*travel,124-11*math.sin(math.pi*travel))
+  tip=(min(242,head[0]+22+12*charge),head[1]+rng.uniform(-7,7))
+  if i<7:
+   plasma_branch(d,rng,(63,130),head,2.5+3.2*charge,2)
+   plasma_branch(d,rng,(head[0]-5,head[1]),tip,2.7+2.2*charge,3)
+   if i in (3,4,5):
+    plasma_branch(d,rng,(86,141),(head[0]-6,head[1]+9),1.5+1.6*charge,1)
+  for j in range(5+int(8*charge)):
+   xx=rng.uniform(max(22,head[0]-30),min(245,head[0]+30))
+   yy=head[1]+rng.uniform(-32,32)
+   r=rng.uniform(1.5,5.5)*charge
+   line(d,[(xx-r,yy-r*.6),(xx+r,yy+r*.6)],(50,35,20,155),2)
+   line(d,[(xx-r,yy-r*.6),(xx+r,yy+r*.6)],(254,243,165,235),.7)
   if i>=4:
-   px,py=175,128
-   for j in range(9):
-    a=TAU*j/9+rng.uniform(-.15,.15)
-    length=(18+53*energy)*rng.uniform(.65,1.1)
-    line(d,[(px+math.cos(a)*9,py+math.sin(a)*9),
-      (px+math.cos(a)*length,py+math.sin(a)*length)],
-     (56,34,17,225),4.4)
-    line(d,[(px+math.cos(a)*9,py+math.sin(a)*9),
-      (px+math.cos(a)*length,py+math.sin(a)*length)],
-     (255,232,89,253),2)
-  micro_particles(d,rng,40+int(48*energy),energy,False)
+   # A compact off-center 6-spoke impact, not a cartoon lightning ball.
+   x,y=min(234,head[0]+8),head[1]
+   for j in range(6):
+    angle=TAU*(j+.13)/6
+    reach=(9+25*charge)*rng.uniform(.78,1.2)
+    line(d,[(x+math.cos(angle)*5,y+math.sin(angle)*5),
+     (x+math.cos(angle)*reach,y+math.sin(angle)*reach)],
+     (35,25,20,170),3.1)
+    line(d,[(x+math.cos(angle)*5,y+math.sin(angle)*5),
+     (x+math.cos(angle)*reach,y+math.sin(angle)*reach)],
+     (255,249,185,239),1.25)
  elif kind=='volt-tackle':
-  # Electric body silhouette is a transparent halo wrapping the Pokémon;
-  # trails point backward, with converging forks at the head-on collision.
-  for j in range(21):
-   y=rng.uniform(37,220)
-   x=rng.uniform(0,69)
-   dx=rng.uniform(63,173)*energy
-   line(d,[(x,y),(x+dx*.6,y+rng.uniform(-9,9)),(x+dx,y+rng.uniform(-6,6))],
-    (31,25,23,188),4.2)
-   line(d,[(x,y),(x+dx*.6,y+rng.uniform(-9,9)),(x+dx,y+rng.uniform(-6,6))],
-    (255,193,36,213),rng.uniform(1.1,2.8))
-  for j in range(4):
-   start=-2.5+j*.95+i*.09
-   arc(d,118,127,56+8*energy,56+8*energy,start,start+1.1,
-     (255,192,31,230),3.5+1.8*energy)
-  for j in range(10):
-   a=TAU*j/10+i*.29
-   sx=cx+math.cos(a)*38*energy
-   sy=cy+math.sin(a)*29*energy
-   ex=cx+math.cos(a)*(68+22*energy)
-   ey=cy+math.sin(a)*(58+19*energy)
-   plasma_branch(d,rng,(sx,sy),(ex,ey),3.5+4*energy,1)
-  # Spear-shaped leading discharge (open outline, never a flat cartoon fill)
-  plasma_branch(d,rng,(111,100),(211,125),9*energy+3,4)
-  plasma_branch(d,rng,(117,159),(214,124),6*energy+2,3)
+  # A BODY-TRACKING electrical charge, deliberately transparent in the
+  # middle so the Pokémon remains visible beneath the thin crackling aura.
+  # Backward speed lines and an offset forward collision show real travel.
+  run=(.06,.18,.38,.61,.82,1,.96,.70)[i]
+  force=(.18,.38,.61,.84,1,.96,.61,.22)[i]
+  for j in range(11):
+   yy=55+j*14+rng.uniform(-3,3)
+   xx=rng.uniform(0,26)
+   endx=65+rng.uniform(25,68)*run
+   line(d,[(xx,yy),(endx,yy+rng.uniform(-8,8))],(42,30,24,133),2.8)
+   line(d,[(xx,yy),(endx,yy+rng.uniform(-8,8))],(255,220,107,191),.9)
+  # Three incomplete shells are not a ring/solid yellow polygon.
+  for j in range(3):
+   angle=(-2.5+j*1.37)+.10*i
+   arc(d,118,129,44+8*force,57+7*force,angle,angle+1.01,
+      (254,188,34,225),1.6+1.7*force)
+   arc(d,118,129,41+8*force,53+7*force,angle,angle+.74,
+      (255,249,183,216),.65+.55*force)
+  for j in range(7):
+   ang=(TAU*j/7)+i*.17
+   begin=(118+math.cos(ang)*29,129+math.sin(ang)*37)
+   endp=(118+math.cos(ang)*(51+15*force),
+         129+math.sin(ang)*(68+6*force))
+   plasma_branch(d,rng,begin,endp,2+2.9*force,1)
+  # Forward focused electric spear: connected to charge, not free-floating.
+  front=(145,126)
+  impact=(175+50*run,127+rng.uniform(-11,11))
+  plasma_branch(d,rng,front,impact,4+5.3*force,4)
+  plasma_branch(d,rng,(140,153),(impact[0]-4,impact[1]+4),2.6+3.9*force,2)
   if i>=3:
-   px,py=196,127
-   for j in range(15):
-    a=TAU*j/15+rng.uniform(-.15,.15)
-    r=15+(28+52*energy)*rng.uniform(.65,1.06)
-    start=(px+math.cos(a)*12,py+math.sin(a)*12)
-    end=(px+math.cos(a)*r,py+math.sin(a)*r)
-    line(d,[start,end],(22,18,17,195),5.5)
-    line(d,[start,end],(255,241,123,245),2.8)
-  micro_particles(d,rng,62+int(49*energy),energy,False)
+   x,y=min(240,impact[0]+3),impact[1]
+   for j in range(9):
+    ang=TAU*j/9+rng.uniform(-.13,.13)
+    reach=(11+33*force)*rng.uniform(.67,1.17)
+    start=(x+math.cos(ang)*8,y+math.sin(ang)*8)
+    endp=(x+math.cos(ang)*reach,y+math.sin(ang)*reach)
+    line(d,[start,endp],(34,25,21,165),3.7)
+    line(d,[start,endp],(255,234,110,224),1.5)
+  for j in range(17+int(14*force)):
+   x=rng.uniform(31,236)
+   y=rng.uniform(50,213)
+   r=rng.uniform(.6,2.8)*force
+   if j%4:orb(d,x,y,r,r,(255,219,88,219))
+   else:spark(d,x,y,2*r,(255,252,205,243))
  else:raise KeyError(kind)
- bloom=im.filter(ImageFilter.GaussianBlur(4*AA))
- bloom.putalpha(bloom.getchannel('A').point(lambda a:int(a*.12)))
+ bloom=im.filter(ImageFilter.GaussianBlur((2.0 if kind in ('nevasca','tempestade-de-neve') else 2.4)*AA))
+ bloom.putalpha(bloom.getchannel('A').point(lambda a:int(a*(.06 if kind in ('nevasca','tempestade-de-neve') else .09))))
  bloom.alpha_composite(im)
  return bloom.resize((SIZE,SIZE),Image.Resampling.LANCZOS)
 def main(selected):
