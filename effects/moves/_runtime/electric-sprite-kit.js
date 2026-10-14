@@ -1,5 +1,5 @@
-/* Pokémon Torre V52 — radial Discharge and target-reaching animated electric sprite effects.
- * Four individual 8-frame PNG animations, bright plasma core, shaded forks.
+/* Pokémon Torre V53 — independently timed cinematic electric sprite attacks.
+ * Four distinct eight-beat blue/violet plasma animations, plus impact and target tracking.
  * No CSS animation, static PNG overlay or changed combat rules.
  */
 const electricSpriteV46=(()=>{
@@ -66,19 +66,19 @@ const electricSpriteV46=(()=>{
   const frames=[],impacts=[];
   for(let index=1;index<=8;index++){
    const img=new Image();img.decoding='async';
-   img.src=dir+'sprites/frame_'+String(index).padStart(2,'0')+'.png?v=52.0';
+   img.src=dir+'sprites/frame_'+String(index).padStart(2,'0')+'.png?v=53.0';
    frames.push(img);
   }
   for(let index=1;index<=4;index++){
    const img=new Image();img.decoding='async';
-   img.src=dir+'impact/hit_'+String(index).padStart(2,'0')+'.png?v=51.0';
+   img.src=dir+'impact/hit_'+String(index).padStart(2,'0')+'.png?v=53.0';
    impacts.push(img);
   }
   const arcs=[];
   if(kind==='discharge'){
    for(let index=1;index<=8;index++){
     const img=new Image();img.decoding='async';
-    img.src=dir+'arcs/arc_'+String(index).padStart(2,'0')+'.png?v=52.0';
+    img.src=dir+'arcs/arc_'+String(index).padStart(2,'0')+'.png?v=53.0';
     arcs.push(img);
    }
   }
@@ -142,7 +142,12 @@ const electricSpriteV46=(()=>{
     counters['discharge-target-arcs']=(counters['discharge-target-arcs']||0)+1;
    }
   }
-  showImage(g,source,x,y,w,h,fade);
+  const frameBlend=clamp((t*8-phase-.69)/.31)*.48;
+  showImage(g,source,x,y,w,h,fade*(1-frameBlend));
+  if(frameBlend>.001&&phase<7){
+   showImage(g,pack.frames[phase+1],x,y,w,h,fade*frameBlend);
+   counters['smoothTransitions']=(counters['smoothTransitions']||0)+1;
+  }
   // Secondary genuine PNG impact frames, timed to animation's real impact.
   // No fake damage is applied here; the original collision engine owns HP.
   let hitProgress=-1;
@@ -182,7 +187,7 @@ const electricSpriteV46=(()=>{
   return true;
  }
  function diagnostics(){return {
-  version:'52.0',registered:[...registered.keys()],
+  version:'53.0',registered:[...registered.keys()],
   ready:Object.fromEntries(names.map(n=>[n,!!images[n].naturalWidth])),
   stamps:{...counters},arcsReady:spriteSets.discharge.arcs.filter(i=>i.naturalWidth>0).length,frames:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.frames.filter(i=>i.naturalWidth>0).length])),impacts:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.impacts.filter(i=>i.naturalWidth>0).length])),error
  }}

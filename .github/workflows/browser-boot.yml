@@ -1,7 +1,7 @@
 name: Verificar abertura real do Pokémon Torre
 on:
   push:
-    branches: [main, fix/electric-v51-art-assets-loader, fix/electric-v52-discharge-radial-real]
+    branches: [main, fix/electric-v51-art-assets-loader, fix/electric-v52-discharge-radial-real, feat/electric-v53-video-cinematic]
   workflow_dispatch:
 permissions:
   contents: read
