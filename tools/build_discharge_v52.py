@@ -32,8 +32,8 @@ def cinematic_lightning(im, points, width=4, seed=1, branches=2, alpha=1):
     core=v.mask()
     fine=v.mask()
     v.line(main,points,width)
-    v.line(core,points,max(1.05,width*.60))
-    v.line(fine,points,max(.6,width*.27))
+    v.line(core,points,max(1.3,width*.82))
+    v.line(fine,points,max(1.1,width*.46))
     if branches:
         rng=random.Random(seed)
         for j in range(branches):
@@ -47,12 +47,12 @@ def cinematic_lightning(im, points, width=4, seed=1, branches=2, alpha=1):
             v.line(main,fork,max(.8,width*.28))
             v.line(core,fork,max(.5,width*.12))
     # Soft luminous envelope; thin dark outer line is only a hint of definition.
-    v.glow(im,main,(245,127,13),13,alpha*.46)
-    v.glow(im,main,(255,208,26),6,alpha*.76)
-    v.glow(im,core,(255,247,174),3,alpha*.71)
-    v.use(im,main.filter(ImageFilter.MaxFilter(5)),(8,7,21),alpha*.78)
-    v.use(im,main,(255,190,23),alpha*.98)
-    v.use(im,core,(255,246,156),alpha)
+    v.glow(im,main,(255,175,22),8,alpha*.24)
+    v.glow(im,main,(255,220,70),4,alpha*.41)
+    v.glow(im,core,(255,250,211),3,alpha*.84)
+    v.use(im,main.filter(ImageFilter.MaxFilter(3)),(8,7,22),alpha*.62)
+    v.use(im,main,(255,214,63),alpha*.99)
+    v.use(im,core,(255,249,206),alpha)
     v.use(im,fine,(255,255,255),alpha)
 
 def create_radial(frame):
@@ -60,23 +60,23 @@ def create_radial(frame):
     im=Image.new('RGBA',(v.W*S,v.H*S),(0,0,0,0))
     rng=random.Random(915+frame*140)
     # Actual charge -> expansion -> violent radial release -> fading sparks.
-    radii=[15,30,59,94,129,141,90,44]
-    counts=[3,5,7,10,13,13,9,4]
+    radii=[16,29,57,93,124,138,96,42]
+    counts=[3,5,7,10,15,14,9,4]
     levels=[.30,.56,.71,.91,1,.95,.48,.22]
     n=counts[i]
     radius=radii[i]
     aura(im,CX,CY,12+(i%5)*4,levels[i])
     for j in range(n):
-        a=math.tau*j/n+(rng.random()-.5)*.27 +i*.039
+        a=math.tau*j/n+(rng.random()-.5)*.56 +i*.055
         # The tips are not points on a circle: vary lengths and opening directions.
-        reach=radius*(.76+rng.random()*.26)
+        reach=radius*(.57+rng.random()*.45)
         x=CX+math.cos(a)*reach
         y=CY+math.sin(a)*reach*.93
         start_dist=9+(i%3)*3
-        x0=CX+math.cos(a)*start_dist
-        y0=CY+math.sin(a)*start_dist
-        center=v.bolt_path((x0,y0),(x,y),frame*101+17*j,split=10,bend=14 if i>2 else 6)
-        width=(2.3 if i<3 else 3.6 if i<6 else 2.0)*(1.25 if j%4==0 else 1)
+        x0=CX+math.cos(a)*start_dist+rng.uniform(-5,5)
+        y0=CY+math.sin(a)*start_dist+rng.uniform(-5,5)
+        center=v.bolt_path((x0,y0),(x,y),frame*101+17*j,split=16,bend=13 if i>2 else 5)
+        width=(2.7 if i<3 else 4.3 if i<6 else 2.4)*(1.25 if j%4==0 else 1)
         cinematic_lightning(im,center,width=width,seed=180+frame*30+j,branches=2 if i>=3 else 1,alpha=levels[i])
         if i>=3 and i<=6 and j%3==0:
             fork=x0+(x-x0)*.63, y0+(y-y0)*.63
@@ -108,7 +108,7 @@ def create_arc(frame):
         ]
         for j,(start,end,width) in enumerate(segments):
             pts=v.bolt_path(start,end,340+frame*41+j*17,split=12,bend=9+j*5)
-            cinematic_lightning(im,pts,width=width,seed=940+frame*14+j,branches=6 if j==0 else 3,alpha=charge*(1 if j==0 else .61))
+            cinematic_lightning(im,pts,width=width,seed=940+frame*14+j,branches=7 if j==0 else 3,alpha=charge*(1 if j==0 else .61))
         for k in range(5):
             tx=36+k*68+rng.randrange(15)
             ty=center+(rng.random()-.5)*38
