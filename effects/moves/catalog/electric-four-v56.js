@@ -1,4 +1,4 @@
-/* Pokémon Torre V56 — four independent electric catalog effects.
+/* Pokémon Torre V57 art revision — four independent electric catalog effects.
  * Draws only authored, genuinely different animation frames; no CSS/Canvas
  * strokes, copied PNG illustration, generic Pixi shape, or in-game previews.
  * Shared draw / damage / cooldown logic in end.js and the battle engine remains.
@@ -13,12 +13,12 @@ const catalogElectricFourV56=(()=>{
   const main=[],impacts=[];
   for(let i=1;i<=8;i++){
    const img=new Image();img.decoding='async';
-   img.src='effects/moves/catalog/'+id+'/sprites/frame_'+pad(i)+'.png?v=56.0';
+   img.src='effects/moves/catalog/'+id+'/sprites/frame_'+pad(i)+'.png?v=57.0';
    main.push(img);
   }
   for(let i=1;i<=4;i++){
    const img=new Image();img.decoding='async';
-   img.src='effects/moves/catalog/'+id+'/impact/hit_'+pad(i)+'.png?v=56.0';
+   img.src='effects/moves/catalog/'+id+'/impact/hit_'+pad(i)+'.png?v=57.0';
    impacts.push(img);
   }
   sets.set(id,{main,impacts});
@@ -41,8 +41,8 @@ const catalogElectricFourV56=(()=>{
   const dx=B[0]-A[0],dy=B[1]-A[1];
   const dist=Math.max(1,Math.hypot(dx,dy));
   const angle=Math.atan2(dy,dx);
-  const height=(id==='faiscadejolteon'?97:
-     id==='thunderbolt'?90:id==='choquedotrovao'?72:55)*Math.max(.7,Math.min(s,1.18));
+  const height=(id==='faiscadejolteon'?111:
+     id==='thunderbolt'?108:id==='choquedotrovao'?84:66)*Math.max(.7,Math.min(s,1.18));
   const reach=Math.max(20,dist-12);
   const fromX=A[0]+dx/dist*10,fromY=A[1]+dy/dist*10;
   // The animated, transparent sprites are rotated to track real targets.
@@ -58,8 +58,8 @@ const catalogElectricFourV56=(()=>{
   if(t>=hitStart&&t<hitEnd){
    const q=(t-hitStart)/(hitEnd-hitStart);
    const hitPhase=Math.min(3,Math.floor(q*4));
-   const size=(id==='thunderbolt'?107:
-     id==='faiscadejolteon'?95:id==='choquedotrovao'?70:49)*Math.max(.7,Math.min(s,1.18));
+   const size=(id==='thunderbolt'?127:
+     id==='faiscadejolteon'?111:id==='choquedotrovao'?84:61)*Math.max(.7,Math.min(s,1.18));
    const h=size*320/280;
    drew=img(g,packet.impacts[hitPhase],B[0]-size*.5,B[1]-h*.5,
            size,h,hitPhase===3?.53:1)||drew;
