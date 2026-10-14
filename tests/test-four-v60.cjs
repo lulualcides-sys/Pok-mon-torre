@@ -52,7 +52,7 @@ for(const id of ['tempestade-de-neve','nevasca','faisca-do-pikachu','volt-tackle
 }
 const loader=read('index.html'),runtime=read('effects/moves/_runtime/end.js');
 assert.ok(loader.includes('effects/moves/v60-four/render.js'));
-assert.ok(loader.includes("atlas.png?v=60.0"));
+assert.ok(loader.includes("atlas.png?v=61.0"));
 assert.ok(runtime.includes('cinematicFourV60.accepts(k)'));
 assert.ok(runtime.indexOf('cinematicFourV60.accepts(k)')<runtime.indexOf('elementalEightV58.accepts(k)'));
 assert.ok(runtime.includes('cinematicFourV60.supportsName('));
