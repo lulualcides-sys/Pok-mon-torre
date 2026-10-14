@@ -66,19 +66,19 @@ const electricSpriteV46=(()=>{
   const frames=[],impacts=[];
   for(let index=1;index<=8;index++){
    const img=new Image();img.decoding='async';
-   img.src=dir+'sprites/frame_'+String(index).padStart(2,'0')+'.png?v=55.0';
+   img.src=dir+'sprites/frame_'+String(index).padStart(2,'0')+'.png?v=57.0';
    frames.push(img);
   }
   for(let index=1;index<=4;index++){
    const img=new Image();img.decoding='async';
-   img.src=dir+'impact/hit_'+String(index).padStart(2,'0')+'.png?v=55.0';
+   img.src=dir+'impact/hit_'+String(index).padStart(2,'0')+'.png?v=57.0';
    impacts.push(img);
   }
   const arcs=[];
   if(kind==='discharge'){
    for(let index=1;index<=8;index++){
     const img=new Image();img.decoding='async';
-    img.src=dir+'arcs/arc_'+String(index).padStart(2,'0')+'.png?v=55.0';
+    img.src=dir+'arcs/arc_'+String(index).padStart(2,'0')+'.png?v=57.0';
     arcs.push(img);
    }
   }
