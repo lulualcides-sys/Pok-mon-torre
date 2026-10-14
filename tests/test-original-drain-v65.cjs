@@ -59,6 +59,7 @@ assert.equal(rules.healFromDamage(100,.5,90),50);
 assert.equal(rules.healFromDamage(100,.75,40),40);
 assert.equal(rules.healFromDamage(0,.5,50),0);
 const e=new BattleEngine();
+sandbox.engine=e; // Point public diagnostics at the actual mock combat engine.
 assert.equal(e.useMove(0),true);
 e.hitTarget('enemy','grass',100);
 assert.equal(victim.hp,350);
