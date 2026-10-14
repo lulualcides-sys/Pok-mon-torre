@@ -30,7 +30,7 @@ jobs:
       - name: Renderizar somente o golpe escolhido
         env:
           MOVE: ${{ inputs.move }}
-        run: python tools/build_electric_v53.py --move "$MOVE"
+        run: python tools/build_electric_v55.py --move "$MOVE"
       - name: Validar integridade apenas do golpe
         env:
           MOVE: ${{ inputs.move }}
