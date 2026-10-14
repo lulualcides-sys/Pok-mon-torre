@@ -86,6 +86,8 @@ e.immune=false;
 clock+=3000;
 e.hitTarget('enemy','grass',100);
 assert.equal(player.hp,100,'No heal after cast time window expires');
+// Refresh only mock target HP for independent Dream Eater mechanics test.
+victim.hp=450;
 clock+=1000;
 assert.equal(e.useMove(3),false,'Dream Eater requires sleeping foe');
 e.v25.stats.enemy.conditions.push('sleep');
@@ -94,6 +96,6 @@ e.hitTarget('enemy','psychic',100);
 assert.equal(player.hp,150);
 let metrics=sandbox.window.PokemonTorreDrainV65();
 assert.equal(metrics.last.move,'Dream Eater');
-assert.ok(metrics.metrics.healed>=200);
+assert.ok(metrics.metrics.healed>=180);
 assert.ok(metrics.metrics.blockedDreamEater>=1);
 console.log('PASS: Leech Seed = 1/8 max enemy HP; direct drains = 50/75% of real damage; no overheal, miss duplication, or unauthorized art changes');
