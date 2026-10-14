@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - 'tools/build_elemental_v58.py'
+      - 'effects/moves/catalog/elemental-eight-v58.js'
+      - 'tests/test-elemental-v58.cjs'
       - '.github/workflows/render-elemental-v58.yml'
   workflow_dispatch:
 permissions:
