@@ -72,6 +72,21 @@ css.textContent=[
  '.skillV8 .skillIcon{display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box;line-height:1!important;padding:0!important;text-align:center!important}',
  '.skillV8 .skillIcon .pt61Icon{display:flex!important;justify-content:center!important;align-items:center!important;width:32px;height:32px;flex:0 0 32px;margin:0!important;transform:none!important}',
  '.skillV8 .skillIcon .pt61Icon svg{width:26px;height:26px;margin:auto!important}',
+ '.ptTypeBar.pt62Enhanced .ptTypeSelect{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;clip-path:inset(50%)!important;overflow:hidden!important}',
+ '.ptTypeBar.pt62Enhanced{width:100%;min-width:0;align-items:center;display:flex;gap:8px!important}',
+ '.ptTypeBar.pt62Enhanced .pt62TypeButton{background:#123142;border:1px solid #6b9ba4;border-radius:12px;min-width:0;min-height:45px;padding:8px 12px;flex:1;display:flex;align-items:center;gap:10px;text-align:left;color:#f0fbff;font:650 13px Inter,"Segoe UI",sans-serif;cursor:pointer;touch-action:manipulation}',
+ '.pt62TypeButton .pt62TypeTitle{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+ '.pt62TypeButton .pt62Chevron{width:11px;height:11px;border-bottom:2px solid #a7dbe7;border-right:2px solid #a7dbe7;transform:rotate(45deg);margin:-4px 3px 0 0;flex-shrink:0;transition:transform .1s}',
+ '.pt62TypeButton[aria-expanded="true"] .pt62Chevron{transform:rotate(225deg);margin:4px 3px 0 0}',
+ '.pt62TypePopup{box-sizing:border-box;position:fixed;z-index:2147483000;padding:7px;background:#152838;border:1px solid #668b9c;border-radius:15px;box-shadow:0 15px 40px #000b;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}',
+ '.pt62TypeOption{box-sizing:border-box;display:flex;align-items:center;gap:11px;width:100%;min-height:46px;padding:8px 12px;background:transparent;border:1px solid transparent;border-radius:9px;font:550 14px/1.3 Inter,"Segoe UI",Arial,sans-serif;text-align:left;color:#f0fbff;cursor:pointer;touch-action:manipulation}',
+ '.pt62TypeOption .pt62OptionName{min-width:0;flex:1}',
+ '.pt62TypeOption[aria-selected="true"]{background:#25495a;border-color:#74b1bf}',
+ '.pt62TypeOption:focus-visible,.pt62TypeButton:focus-visible{outline:2px solid #a6dbf3;outline-offset:2px}',
+ '.pt62TypeOption .pt62Selected{color:#a4e9d5;font-size:18px;font-weight:800;min-width:17px}',
+ '.pt62TypePopup .pt61Icon,.pt62TypeButton .pt61Icon{filter:none;display:inline-flex;align-items:center;justify-content:center;flex:0 0 26px;margin:0}',
+ '.pt62TypePopup .pt61Icon svg,.pt62TypeButton .pt61Icon svg{width:22px;height:22px}',
+ '.pt62TypePopup .pt62TypeOption:hover{background:#254455}',
  '@media(max-width:480px){.v331MoveList .v331Choice b{font-size:13px!important}.v331MoveList .v331Choice{min-height:56px!important;padding:8px!important}}'
 ].join('');
 document.head.appendChild(css);
@@ -101,6 +116,133 @@ function paintCombatSkills(){
   }
  }
 }
+// V62: Android/Chrome's native <select> cannot display SVG inside an open
+// option list. Keep that select as accessible state + existing filter listener,
+// and add a game-drawn, scrollable popup with the original 18 type symbols.
+// Popup is attached to body so the move editor's scrolling area cannot clip it.
+let activeTypePopup=null;
+function closeTypePopup(refocus=false){
+ const open=activeTypePopup;if(!open)return;
+ activeTypePopup=null;
+ open.button.setAttribute('aria-expanded','false');
+ open.panel.remove();
+ document.removeEventListener('pointerdown',open.outside,true);
+ document.removeEventListener('keydown',open.keyHandler,true);
+ window.removeEventListener('resize',open.reposition);
+ document.removeEventListener('scroll',open.reposition,true);
+ if(refocus&&open.button.isConnected)open.button.focus();
+}
+function mountTypePicker(select,bar){
+ if(!bar)return;
+ const old=bar.querySelector('.pt61IconHolder');
+ if(old)old.remove();
+ let button=bar.querySelector('.pt62TypeButton');
+ if(!button){
+  button=document.createElement('button');
+  button.type='button';
+  button.className='pt62TypeButton';
+  button.setAttribute('aria-label','Filtrar golpes por tipo de Pokémon');
+  button.setAttribute('aria-haspopup','listbox');
+  button.setAttribute('aria-expanded','false');
+  const iconSlot=document.createElement('span');iconSlot.className='pt62IconSlot';
+  const caption=document.createElement('span');caption.className='pt62TypeTitle';
+  const caret=document.createElement('span');caret.className='pt62Chevron';
+  caret.setAttribute('aria-hidden','true');
+  button.append(iconSlot,caption,caret);
+  bar.append(button);
+  bar.classList.add('pt62Enhanced');
+  // Unchanged native select listener still applies filter, search, and count.
+  button.addEventListener('click',()=>openTypePopup(button,select));
+  button.addEventListener('keydown',event=>{
+   if(event.key==='ArrowDown'||event.key===' '){
+    event.preventDefault();
+    if(!activeTypePopup||activeTypePopup.button!==button)openTypePopup(button,select,true);
+   }
+  });
+  select.addEventListener('change',()=>syncTypeButton(select,button));
+ }
+ syncTypeButton(select,button);
+}
+function syncTypeButton(select,button){
+ const id=info.has(select.value)?select.value:'all';
+ const title=info.get(id)?.name||'Todos os tipos';
+ const iconSlot=button.querySelector('.pt62IconSlot');
+ if(iconSlot?.firstElementChild?.dataset.type!==(id==='all'?'normal':id))
+  iconSlot?.replaceChildren(typeIcon(id==='all'?'normal':id));
+ const caption=button.querySelector('.pt62TypeTitle');
+ if(caption&&caption.textContent!==title)caption.textContent=title;
+}
+function openTypePopup(button,select,focusSelected=false){
+ if(activeTypePopup?.button===button){closeTypePopup();return;}
+ closeTypePopup();
+ const panel=document.createElement('div');panel.className='pt62TypePopup';
+ panel.setAttribute('role','listbox');
+ panel.setAttribute('aria-label','Escolher tipo de golpe');
+ const choices=[['all','Todos os tipos'],...TYPES.map(([id,name])=>[id,name])];
+ for(const [id,label] of choices){
+  const item=document.createElement('button');
+  item.type='button';item.className='pt62TypeOption';
+  item.dataset.type=id;item.setAttribute('role','option');
+  item.setAttribute('aria-selected',String(id===select.value));
+  const name=document.createElement('span');name.className='pt62OptionName';name.textContent=label;
+  const selected=document.createElement('span');selected.className='pt62Selected';
+  selected.setAttribute('aria-hidden','true');selected.textContent=id===select.value?'✓':'';
+  item.append(typeIcon(id==='all'?'normal':id),name,selected);
+  item.addEventListener('click',()=>{
+   if(!select.isConnected)return closeTypePopup();
+   select.value=id;
+   select.dispatchEvent(new Event('change',{bubbles:true}));
+   syncTypeButton(select,button);
+   closeTypePopup(true);
+  });
+  panel.append(item);
+ }
+ document.body.append(panel);
+ button.setAttribute('aria-expanded','true');
+ function reposition(){
+  if(!button.isConnected||!select.isConnected){closeTypePopup();return;}
+  const rect=button.getBoundingClientRect(),vw=window.innerWidth,vh=window.innerHeight;
+  const width=Math.min(Math.max(240,rect.width),vw-20);
+  const left=Math.min(Math.max(10,rect.left),vw-width-10);
+  const below=vh-rect.bottom-12,above=rect.top-12;
+  const down=below>=Math.min(290,above)||below>=above;
+  const space=Math.max(120,down?below:above);
+  const height=Math.min(440,Math.floor(vh*.67),space);
+  panel.style.width=width+'px';
+  panel.style.maxHeight=height+'px';
+  panel.style.left=left+'px';
+  panel.style.top=(down?rect.bottom+5:Math.max(8,rect.top-height-5))+'px';
+ }
+ const outside=event=>{
+  if(!panel.contains(event.target)&&!button.contains(event.target))closeTypePopup();
+ };
+ const keyHandler=event=>{
+  if(event.key==='Escape'){event.preventDefault();closeTypePopup(true);return;}
+  if(event.key==='ArrowDown'||event.key==='ArrowUp'){
+   if(!panel.contains(document.activeElement)&&document.activeElement!==button)return;
+   event.preventDefault();
+   const options=[...panel.querySelectorAll('.pt62TypeOption')];
+   const current=options.indexOf(document.activeElement);
+   const fallback=Math.max(0,options.findIndex(el=>el.dataset.type===select.value));
+   const index=current<0?fallback:Math.max(0,Math.min(options.length-1,
+     current+(event.key==='ArrowDown'?1:-1)));
+   options[index]?.focus();
+  }else if(event.key==='Home'||event.key==='End'){
+   if(!panel.contains(document.activeElement))return;
+   event.preventDefault();
+   const options=[...panel.querySelectorAll('.pt62TypeOption')];
+   options[event.key==='Home'?0:options.length-1]?.focus();
+  }
+ };
+ activeTypePopup={panel,button,select,outside,keyHandler,reposition};
+ reposition();
+ document.addEventListener('pointerdown',outside,true);
+ document.addEventListener('keydown',keyHandler,true);
+ window.addEventListener('resize',reposition);
+ document.addEventListener('scroll',reposition,true);
+ if(focusSelected)panel.querySelector('[aria-selected="true"]')?.focus();
+}
+
 function mount(){
  paintCombatSkills();
  const modal=document.querySelector('#modal'),list=modal?.querySelector('.v331MoveList');
@@ -132,21 +274,7 @@ function mount(){
   b.append(typeIcon(type),document.createTextNode(label));
  }
  const select=modal.querySelector('.ptTypeSelect');
- if(select){
-  for(const option of select.options){
-   const data=info.get(option.value);
-   const expected=data?data.name:'Todos os tipos';
-   if(option.textContent!==expected)option.textContent=expected;
-  }
-  const bar=modal.querySelector('.ptTypeBar');
-  if(bar){
-   let iconHolder=bar.querySelector('.pt61IconHolder');
-   if(!iconHolder){iconHolder=document.createElement('span');iconHolder.className='pt61IconHolder';
-     if(select.parentNode===bar)bar.insertBefore(iconHolder,select);}
-   const desired=select.value==='all'?'normal':select.value;
-   if(iconHolder.firstElementChild?.dataset.type!==desired)iconHolder.replaceChildren(typeIcon(desired));
-  }
- }
+ if(select)mountTypePicker(select,modal.querySelector('.ptTypeBar'));
  // The older editor sorts strongest-first; resort ascending without changing
  // data-v331-pick ids, saved equipment slots, or onclick handlers.
  const sorted=records.slice().sort((a,b)=>a.power-b.power||a.cost-b.cost||a.cd-b.cd||a.label.localeCompare(b.label,'pt-BR')||a.index-b.index);
@@ -166,6 +294,7 @@ const modalObserver=new MutationObserver(schedule);
 const battleObserver=new MutationObserver(schedule);
 const bodyObserver=new MutationObserver(schedule);
 function watchStructuralChanges(){
+ if(activeTypePopup&&!activeTypePopup.button.isConnected)closeTypePopup();
  const modal=document.querySelector('#modal');
  if(watchingModal!==modal){
   modalObserver.disconnect();watchingModal=modal;
@@ -191,7 +320,9 @@ function schedule(){
 bodyObserver.observe(document.body,{childList:true});
 watchStructuralChanges();schedule();
 window.PokemonTorreMoveUIV61=()=>({
- version:'61.1',types:TYPES.length,
+ version:'62.0',types:TYPES.length,
+ dropdown:!!document.querySelector('.pt62TypeButton'),
+ optionsInOpenMenu:activeTypePopup?.panel.querySelectorAll('.pt62TypeOption').length||0,
  modifiedRows:document.querySelectorAll('.v331MoveList .pt61Icon').length,
  ascending:!!document.querySelector('.v331MoveList[data-pt61-ascending="1"]'),
  runs
