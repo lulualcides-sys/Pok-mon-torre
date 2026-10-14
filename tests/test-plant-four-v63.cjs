@@ -22,6 +22,15 @@ for(const [file,sha] of Object.entries(oldApproved.frozenFiles)){
  const got=crypto.createHash('sha1').update('blob '+buf.length+'\0').update(buf).digest('hex');
  assert.equal(got,sha,'Changed approved electric/ice atlas: '+file);
 }
+// User-approved V64 sprites are immutable until expressly reapproved.
+const plantApproval=JSON.parse(read('effects/moves/v63-plant/APPROVED-ART-V64.json'));
+assert.equal(plantApproval.status,'APPROVED_VISUALS_AS_IS');
+assert.equal(Object.keys(plantApproval.frozenFiles).length,4);
+for(const [file,sha] of Object.entries(plantApproval.frozenFiles)){
+ const buf=fs.readFileSync(path.join(root,file));
+ const got=crypto.createHash('sha1').update('blob '+buf.length+'\0').update(buf).digest('hex');
+ assert.equal(got,sha,'User-approved Grass effect altered: '+file);
+}
 const allImages=[];
 class ImageMock{
  constructor(){this.naturalWidth=1536;this.naturalHeight=192;allImages.push(this);}
