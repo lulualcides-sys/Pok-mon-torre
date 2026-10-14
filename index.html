@@ -101,7 +101,7 @@ ptProgress(84,'Preparando efeitos elétricos…');const electricV46Files=[
 ];
 const enableElectricPreview=new URLSearchParams(location.search).get('safe')!=='1';
 const electricV46Parts=enableElectricPreview?await Promise.all(electricV46Files.map(async path=>{
- const response=await fetch(path+'?build=electric-v51-art-framebuild',{cache:'no-store'});
+ const response=await fetch(path+'?build=electric-v52-discharge-target-arcs',{cache:'no-store'});
  if(!response.ok)throw Error('Golpe eletrico V46 nao carregou: '+path+' ('+response.status+')');
  return response.text();
 })):[];
@@ -111,8 +111,9 @@ if(enableElectricPreview){
  const dirs=['faisca','discharge','tempestade-de-raios','trovao'];
  const paths=[];
  for(const dir of dirs){
-  for(let i=1;i<=8;i++)paths.push('effects/moves/'+dir+'/sprites/frame_'+String(i).padStart(2,'0')+'.png?v=51.0');
-  for(let i=1;i<=4;i++)paths.push('effects/moves/'+dir+'/impact/hit_'+String(i).padStart(2,'0')+'.png?v=51.0');
+  for(let i=1;i<=8;i++)paths.push('effects/moves/'+dir+'/sprites/frame_'+String(i).padStart(2,'0')+'.png?v=52.0');
+  for(let i=1;i<=4;i++)paths.push('effects/moves/'+dir+'/impact/hit_'+String(i).padStart(2,'0')+'.png?v=52.0');
+  if(dir==='discharge')for(let i=1;i<=8;i++)paths.push('effects/moves/discharge/arcs/arc_'+String(i).padStart(2,'0')+'.png?v=52.0');
  }
  let loaded=0;
  await Promise.all(paths.map(path=>new Promise((resolve,reject)=>{
