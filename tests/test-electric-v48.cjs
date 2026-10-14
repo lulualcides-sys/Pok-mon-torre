@@ -29,7 +29,7 @@ vm.runInContext(src,context);
 const kit=vm.runInContext('electricSpriteV46',context);
 assert.equal(kit.diagnostics().registered.length,4);
 assert.equal(typeof kit.cinematic,'function');
-assert.equal(kit.diagnostics().version,'53.0','Must run newest electric V52 engine');
+assert.equal(kit.diagnostics().version,'55.0','Must run newest electric V52 engine');
 const cases=[
  ['Faísca','faisca',980],
  ['Discharge','discharge',1550],
@@ -104,5 +104,5 @@ assert.ok(read('index.html').includes('/arcs/arc_'),'Target arcs preloaded befor
 assert.doesNotMatch(read('effects/moves/_runtime/combat-hit-reliability-v47.js'),/gameVersion\.textContent='ACERTO REAL V47/,'Footer cannot display legacy combat engine version');
 
 
-console.log('PASS V53: all four sprite animations, 8 animated target-reaching Discharge arcs, no old V47 footer');
+console.log('PASS V55: all four sprite animations, 8 animated target-reaching Discharge arcs, no old V47 footer');
 console.log(JSON.stringify(report));
