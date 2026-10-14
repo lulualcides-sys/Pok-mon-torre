@@ -1,10 +1,21 @@
 name: Verificar abertura real do Pokémon Torre
+# Heavy real-browser tests run on demand, or before merging a changed loader.
+# Move-only sprite changes use the fast validator instead.
 on:
-  push:
-    branches: [main, fix/electric-v51-art-assets-loader, fix/electric-v52-discharge-radial-real, feat/electric-v53-video-cinematic]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'parts/**'
+      - 'effects/moves/_runtime/**'
+      - 'effects/moves/catalog/bundle.js'
+      - 'effects/moves/catalog/painter.js'
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: browser-smoke-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   browser-boot:
     runs-on: ubuntu-latest

@@ -251,15 +251,25 @@ def impact_frame(move,i):
     impact(im,x,y,power,432+len(move)*11+i,spread=[24,47,33,15][i])
     return im.resize((W,H),Image.Resampling.LANCZOS)
 
-def build():
+def build(selected_moves=MOVES):
+    """Generate only requested move assets; untouched moves keep original files."""
+    selected_moves=tuple(selected_moves)
+    if not selected_moves or any(move not in MOVES for move in selected_moves):
+        raise ValueError("Unknown or empty move selection")
     factories=dict(faisca=faisca,discharge=discharge,
                    **{"tempestade-de-raios":tempestade},trovao=trovao)
-    for move in MOVES:
+    for move in selected_moves:
         sprites=ROOT/move/"sprites";impacts=ROOT/move/"impact"
         sprites.mkdir(parents=True,exist_ok=True);impacts.mkdir(parents=True,exist_ok=True)
         for i in range(8):factories[move](i).save(sprites/f"frame_{i+1:02}.png")
         for i in range(4):impact_frame(move,i).save(impacts/f"hit_{i+1:02}.png")
-    arcs=ROOT/"discharge"/"arcs";arcs.mkdir(exist_ok=True)
-    for i in range(8):arc(i).save(arcs/f"arc_{i+1:02}.png")
-    print("PASS V53: 32 individual cinematic frames, 16 impacts, 8 directional arcs")
-if __name__=="__main__":build()
+    if "discharge" in selected_moves:
+        arcs=ROOT/"discharge"/"arcs";arcs.mkdir(exist_ok=True)
+        for i in range(8):arc(i).save(arcs/f"arc_{i+1:02}.png")
+    print("PASS V54 selected move frames: "+", ".join(selected_moves))
+if __name__=="__main__":
+    import argparse
+    parser=argparse.ArgumentParser(description="Render only one requested electric move")
+    parser.add_argument("--move",choices=("all",)+MOVES,default="all")
+    args=parser.parse_args()
+    build(MOVES if args.move=="all" else (args.move,))

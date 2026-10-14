@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "faisca",
+  "name": "Faísca",
+  "type": "electric",
+  "category": "physical",
+  "path": "effects/moves/faisca/index.js",
+  "animation": {
+    "frames": 8,
+    "framePattern": "effects/moves/faisca/sprites/frame_{NN}.png",
+    "impacts": 4,
+    "impactPattern": "effects/moves/faisca/impact/hit_{NN}.png",
+    "extra": []
+  },
+  "durationMs": 980,
+  "physicalContact": true,
+  "renderer": "effects/moves/_runtime/electric-sprite-kit.js",
+  "integrator": "effects/moves/_runtime/electric-sprite-integrate.js",
+  "note": "Metadata only. No game logic, damage or cooldown modifications."
+}

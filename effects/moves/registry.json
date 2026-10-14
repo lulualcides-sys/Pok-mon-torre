@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Single source for locating move assets. Does not alter game loading or battle logic.",
+  "catalog": "effects/moves/catalog/manifest.json",
+  "runtime": "effects/moves/_runtime",
+  "grouped": {
+    "electric": [
+      "effects/moves/faisca/move.json",
+      "effects/moves/discharge/move.json",
+      "effects/moves/tempestade-de-raios/move.json",
+      "effects/moves/trovao/move.json"
+    ],
+    "fire": "effects/moves/ (existing folders, not moved)",
+    "water": "effects/moves/ (existing folders, not moved)",
+    "other": "effects/moves/catalog/manifest.json"
+  },
+  "approvedMovePathsPreserved": true
+}

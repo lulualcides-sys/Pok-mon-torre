@@ -1,11 +1,13 @@
 name: Testar quatro golpes elétricos V48 / V53
+# Full electric regression is reserved for manual checks.
+# Normal sprite/metadata edits are covered by moves-fast.yml.
 on:
-  push:
-    branches: [main, feat/electric-cinematic-v48-8frames, feat/electric-v50-frame-assets, fix/electric-v51-art-assets-loader, fix/electric-v52-discharge-radial-real, feat/electric-v53-video-cinematic]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: electric-full-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   electric-v48:
     runs-on: ubuntu-latest

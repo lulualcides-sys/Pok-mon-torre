@@ -1,0 +1,31 @@
+name: Validar somente golpes modificados
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/moves/**'
+      - 'tools/check-move-assets.cjs'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'effects/moves/**'
+      - 'tools/check-move-assets.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: fast-moves-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  fast-moves:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Conferir catalogo e apenas assets dos golpes modificados
+        run: node tools/check-move-assets.cjs --changed

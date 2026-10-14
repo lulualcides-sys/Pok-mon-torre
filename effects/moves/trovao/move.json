@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "trovao",
+  "name": "Trovão",
+  "type": "electric",
+  "category": "special",
+  "path": "effects/moves/trovao/index.js",
+  "animation": {
+    "frames": 8,
+    "framePattern": "effects/moves/trovao/sprites/frame_{NN}.png",
+    "impacts": 4,
+    "impactPattern": "effects/moves/trovao/impact/hit_{NN}.png",
+    "extra": []
+  },
+  "durationMs": 2100,
+  "physicalContact": false,
+  "renderer": "effects/moves/_runtime/electric-sprite-kit.js",
+  "integrator": "effects/moves/_runtime/electric-sprite-integrate.js",
+  "note": "Metadata only. No game logic, damage or cooldown modifications."
+}
