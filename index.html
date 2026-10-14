@@ -101,10 +101,30 @@ ptProgress(84,'Preparando efeitos elétricos…');const electricV46Files=[
 ];
 const enableElectricPreview=new URLSearchParams(location.search).get('safe')!=='1';
 const electricV46Parts=enableElectricPreview?await Promise.all(electricV46Files.map(async path=>{
- const response=await fetch(path+'?build=electric-sprites-v47-8-melee-range-alignment',{cache:'no-store'});
+ const response=await fetch(path+'?build=electric-v51-art-framebuild',{cache:'no-store'});
  if(!response.ok)throw Error('Golpe eletrico V46 nao carregou: '+path+' ('+response.status+')');
  return response.text();
 })):[];
+// Wait for every authored animation frame (and impact) before the battle starts.
+ // Older V50 vectors never render as a silent fallback.
+if(enableElectricPreview){
+ const dirs=['faisca','discharge','tempestade-de-raios','trovao'];
+ const paths=[];
+ for(const dir of dirs){
+  for(let i=1;i<=8;i++)paths.push('effects/moves/'+dir+'/sprites/frame_'+String(i).padStart(2,'0')+'.png?v=51.0');
+  for(let i=1;i<=4;i++)paths.push('effects/moves/'+dir+'/impact/hit_'+String(i).padStart(2,'0')+'.png?v=51.0');
+ }
+ let loaded=0;
+ await Promise.all(paths.map(path=>new Promise((resolve,reject)=>{
+  const image=new Image();
+  image.onload=()=>{
+   if(image.naturalWidth<64||image.naturalHeight<64){reject(Error('Sprite inválido '+path));return;}
+   loaded++;ptProgress(85+loaded/paths.length*9,'Carregando sprites elétricos finais…');resolve();
+  };
+  image.onerror=()=>reject(Error('Sprite ausente '+path));
+  image.src=path;
+ })));
+}
 const electricV46Plugin=electricV46Parts.join('\n');
 if(enableElectricPreview&&(!electricV46Plugin.includes('PokemonTorreElectricV46')||
    !electricV46Plugin.includes('PokemonTorreMoveTypesV46')))

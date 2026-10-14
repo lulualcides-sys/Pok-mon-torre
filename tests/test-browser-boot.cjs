@@ -75,12 +75,12 @@ async function browserCase(port,query,mobile=false,combat=false){
    try{ws.send(JSON.stringify({id,method,params}))}catch(e){pending.delete(id);rej(e)}
   });
   await cmd('Runtime.enable');await cmd('Log.enable');
-  const expression="(() => ({title:document.title,ready:document.readyState,main:!!document.getElementById('main'),resources:(document.getElementById('resources')?.textContent||'').slice(0,140),text:(document.body?.innerText||'').slice(0,200),electric:typeof window.PokemonTorreElectricV46==='function',water:typeof window.PokemonTorreWaterV43==='function',types:typeof window.PokemonTorreMoveTypesV46==='function',url:location.search}))()";
+  const expression="(() => ({title:document.title,ready:document.readyState,main:!!document.getElementById('main'),resources:(document.getElementById('resources')?.textContent||'').slice(0,140),text:(document.body?.innerText||'').slice(0,200),electric:typeof window.PokemonTorreElectricV46==='function',electricVersion:window.PokemonTorreElectricV46?.().version,electricReady:window.PokemonTorreElectricV46?Object.values(window.PokemonTorreElectricV46().frames).every(n=>n===8)&&Object.values(window.PokemonTorreElectricV46().impacts).every(n=>n===4):false,electricLabel:document.getElementById('ptFireSpriteV41Badge')?.textContent,water:typeof window.PokemonTorreWaterV43==='function',types:typeof window.PokemonTorreMoveTypesV46==='function',url:location.search}))()";
   let result=null;
   for(let i=0;i<100;i++){
    const report=await cmd('Runtime.evaluate',{expression,returnByValue:true});
    result=report.result?.result?.value||result;
-   if(result?.main&&result?.resources?.length>10)break;
+   if(result?.main&&result?.resources?.length>10&&(!result?.electric||result?.electricReady))break;
    if(result?.text?.includes('Não foi possível abrir o jogo'))break;
    await sleep(250);
   }
@@ -134,12 +134,12 @@ server.listen(0,'127.0.0.1',async()=>{
   if(!stable.ok||stable.result?.electric||stable.result?.types){
    console.error('FAIL: V45 recovery mode must boot WITHOUT the experimental modules');process.exitCode=1;
   }
-  if(!experimental.ok||!experimental.result?.electric||!experimental.result?.types){
+  if(!experimental.ok||!experimental.result?.electric||!experimental.result?.types||experimental.result?.electricVersion!=='51.0'||!experimental.result?.electricLabel?.includes('ELÉTRICOS V51')){
    console.error('FAIL: V46 must now boot with electric and canonical types enabled');process.exitCode=1;
   }
   const phone=await browserCase(port,'?v=47-mobile',true);
   console.log('BROWSER ANDROID:',JSON.stringify(phone));
-  if(!phone.ok||!phone.result?.electric||!phone.result?.types){
+  if(!phone.ok||!phone.result?.electric||!phone.result?.types||!phone.result?.electricReady){
    console.error('FAIL: Android mobile-like Chromium must boot V47');process.exitCode=1;
   }
   const recovered=await browserCase(port,'?v=47&electricFail=1',true);

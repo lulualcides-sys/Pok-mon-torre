@@ -1,5 +1,5 @@
-/* Pokémon Torre V50 — final transparent PNG electric move renderer.
- * Four individual 8-frame PNG animations replace the legacy line drawings.
+/* Pokémon Torre V51 — improved layered PNG electric move renderer.
+ * Four individual 8-frame PNG animations, bright plasma core, shaded forks.
  * No CSS animation, static PNG overlay or changed combat rules.
  */
 const electricSpriteV46=(()=>{
@@ -66,12 +66,12 @@ const electricSpriteV46=(()=>{
   const frames=[],impacts=[];
   for(let index=1;index<=8;index++){
    const img=new Image();img.decoding='async';
-   img.src=dir+'sprites/frame_'+String(index).padStart(2,'0')+'.png?v=50.0';
+   img.src=dir+'sprites/frame_'+String(index).padStart(2,'0')+'.png?v=51.0';
    frames.push(img);
   }
   for(let index=1;index<=4;index++){
    const img=new Image();img.decoding='async';
-   img.src=dir+'impact/hit_'+String(index).padStart(2,'0')+'.png?v=50.0';
+   img.src=dir+'impact/hit_'+String(index).padStart(2,'0')+'.png?v=51.0';
    impacts.push(img);
   }
   spriteSets[kind]={frames,impacts};
@@ -96,7 +96,7 @@ const electricSpriteV46=(()=>{
   const source=pack.frames[phase];
   let w,h,x,y;
   if(kind==='faisca'){
-   w=174*scale;h=199*scale;
+   w=210*scale;h=240*scale;
    const actor=fx.actor||A;
    // Charging and electric dash follow the Pokémon's actual movement.
    // Strike and residue attach to the moving enemy position.
@@ -107,8 +107,8 @@ const electricSpriteV46=(()=>{
    x=A[0]-w*.50;y=A[1]-h*.52;
   }else{
    // Storm effects are bounded to the target, not an arena-sized overlay.
-   w=(kind==='trovao'?178:176)*scale;
-   h=(kind==='trovao'?203:201)*scale;
+   w=(kind==='trovao'?218:212)*scale;
+   h=(kind==='trovao'?249:242)*scale;
    x=B[0]-w*.50;y=B[1]-h*.865;
   }
   showImage(g,source,x,y,w,h,fade);
@@ -121,7 +121,7 @@ const electricSpriteV46=(()=>{
   if(kind==='trovao'&&t>=.49&&t<.83)hitProgress=(t-.49)/.34;
   if(hitProgress>=0){
    const frame=Math.min(3,Math.floor(hitProgress*4));
-   const impact=pack.impacts[frame],iw=(kind==='trovao'?99:72)*scale;
+   const impact=pack.impacts[frame],iw=(kind==='trovao'?108:83)*scale;
    const ih=iw*320/280;
    // The impact sheet is centered on the enemy with moderate size.
    showImage(g,impact,B[0]-iw*.5,B[1]-ih*.5,iw,ih,
@@ -151,9 +151,9 @@ const electricSpriteV46=(()=>{
   return true;
  }
  function diagnostics(){return {
-  version:'50.0',registered:[...registered.keys()],
+  version:'51.0',registered:[...registered.keys()],
   ready:Object.fromEntries(names.map(n=>[n,!!images[n].naturalWidth])),
-  stamps:{...counters},error
+  stamps:{...counters},frames:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.frames.filter(i=>i.naturalWidth>0).length])),impacts:Object.fromEntries(Object.entries(spriteSets).map(([name,p])=>[name,p.impacts.filter(i=>i.naturalWidth>0).length])),error
  }}
  return {add,resolve,paint,stamp,between,burst,cinematic,clamp,ease,lerp,images,diagnostics};
 })();

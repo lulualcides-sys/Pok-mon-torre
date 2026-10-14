@@ -1,0 +1,52 @@
+name: Renderizar sprites elétricos V51
+on:
+  push:
+    branches: [fix/electric-v51-art-assets-loader]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/electric-v51-art-assets-loader
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preparar biblioteca de imagens
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Gerar sprites finais offline
+        run: python tools/build_electric_v51.py
+      - name: Garantir 32 quadros e 16 impactos com transparência
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          names=['faisca','discharge','tempestade-de-raios','trovao']
+          for name in names:
+              base=Path('effects/moves')/name
+              frames=sorted((base/'sprites').glob('frame_??.png'))
+              impacts=sorted((base/'impact').glob('hit_??.png'))
+              assert len(frames)==8 and len(impacts)==4,(name,len(frames),len(impacts))
+              for p in frames+impacts:
+                  with Image.open(p) as im:
+                      assert im.size==(280,320),p
+                      assert im.mode=='RGBA',p
+                      assert im.getextrema()[3][0]==0,p
+                      assert im.getextrema()[3][1]>100,p
+              assert len({p.read_bytes() for p in frames})==8,name
+          print('PASS: 48 PNGs transparentes; todos os 8 quadros diferem por golpe')
+          PY
+      - name: Salvar assets e script fonte no GitHub
+        run: |
+          git config user.name "Pokemon Torre Build"
+          git config user.email "actions@users.noreply.github.com"
+          git add tools/build_electric_v51_source.py effects/moves/*/sprites/frame_*.png effects/moves/*/impact/hit_*.png
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(electric): sprites v51 com nucleo luminoso e borda escura"
+            git push origin HEAD:fix/electric-v51-art-assets-loader
+          fi
