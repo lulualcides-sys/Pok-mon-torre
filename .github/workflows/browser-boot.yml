@@ -2,6 +2,10 @@ name: Verificar abertura real do Pokémon Torre
 # Heavy real-browser tests run on demand, or before merging a changed loader.
 # Move-only sprite changes use the fast validator instead.
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'tests/test-browser-boot.cjs'
   pull_request:
     branches: [main]
     paths:
