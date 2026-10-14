@@ -335,8 +335,9 @@
  // Visible version marker makes cached/older game builds unmistakable on phone.
  const gameVersion=document.getElementById('ptFireSpriteV41Badge');
  if(gameVersion){
-  gameVersion.textContent='ACERTO REAL V47.5 · ELÉTRICOS V47 · ÁGUA V45';
-  gameVersion.title='Motor de colisão V47.5 ativo. Sprites originais mantidos';
+  const actualElectric=typeof window.PokemonTorreElectricV46==='function'?window.PokemonTorreElectricV46().version:null;
+  gameVersion.textContent='ACERTO REAL V47.8 · '+(actualElectric?'ELÉTRICOS V'+actualElectric.split('.')[0]+' PNG':'ELÉTRICOS MODO SEGURO')+' · ÁGUA V45';
+  gameVersion.title='Motor de colisão V47.8; renderizador elétrico: '+(actualElectric||'desativado');
  }
  // Only for a RECOVERED old zero-cost physical move. The Pokémon really
  // approaches the enemy on screen during its contact animation; physics still
