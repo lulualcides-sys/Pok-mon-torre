@@ -12,7 +12,7 @@ const pixiFX=(()=>{
  let activeV84=null,castSerialV84=0,clearedV84=0;
  // Opt-in Haze status; independent root in the existing WebGL scene.
  let hazeActiveV85=null;
- let activeV86=null,v86Swaps=0;
+ let activeV86=null,v86Swaps=0,lastV86RenderAt=0,contextLostV94=false;
  const clamp=v=>Math.min(1,Math.max(0,v)),mix=(a,b,u)=>a+(b-a)*u;
  // Particle library is optional. A blocked emitter must not disable our sprite effects.
  const hasGPU=()=>!!(window.PIXI?.Application&&window.PIXI?.utils?.isWebGLSupported?.());
@@ -89,7 +89,7 @@ const pixiFX=(()=>{
  }
  function reset(){
   if(activeV86&&typeof referenceFourV86!=='undefined')referenceFourV86.destroy(activeV86);
-  activeV86=null;
+  activeV86=null;lastV86RenderAt=0;
   if(hazeActiveV85&&typeof hazeV85!=='undefined')hazeV85.destroy(hazeActiveV85);
   hazeActiveV85=null;
   activeV84=null;
@@ -110,13 +110,22 @@ const pixiFX=(()=>{
  function ensure(engine){
   if(!battleViewReady(engine)){onBattleUiChange();return false;}
   if(owner&&owner!==engine){reset();}
-  if(app){position(engine);if(!app.ticker.started)app.ticker.start();return true;}
+  if(app){
+   if(app.renderer?.gl?.isContextLost?.()||contextLostV94){reset();}
+   else {position(engine);if(!app.ticker.started)app.ticker.start();return true;}
+  }
   if(!hasGPU()){error='PixiJS/WebGL/ParticleEmitter indisponível';return false;}
   try{
    app=new PIXI.Application({width:engine.w,height:engine.h,backgroundAlpha:0,transparent:true,antialias:true,resolution:1,
     powerPreference:'high-performance',forceCanvas:false});
    app.view.style.cssText='position:fixed;pointer-events:none;touch-action:none;z-index:9000;max-width:none';
-   document.body.appendChild(app.view);owner=engine;
+   document.body.appendChild(app.view);owner=engine;contextLostV94=false;
+   // Chrome on Android can lose WebGL after prolonged use. No stale
+   // readiness flag may disable the Canvas safety effects afterward.
+   app.view.addEventListener?.('webglcontextlost',event=>{
+    event.preventDefault?.();contextLostV94=true;
+    lastV86RenderAt=0;error='WebGL context lost — using native Canvas';
+   },false);
    if(typeof spriteAtlas3511!=='undefined'&&spriteAtlas3511.naturalWidth)atlas=PIXI.BaseTexture.from(spriteAtlas3511);
    app.ticker.add(tick);position(engine);TriAttackVFX?.preload?.();return true;
   }catch(e){error='PixiJS: '+e.message;reset();return false;}
@@ -381,6 +390,7 @@ const pixiFX=(()=>{
   const key=referenceFourV86.resolve(move?.name);
   if(!key)return false;
   if(activeV86){referenceFourV86.destroy(activeV86);activeV86=null;v86Swaps++;}
+  lastV86RenderAt=0;
   if(!ensure(engine))return false;
   activeV86=referenceFourV86.cast(app,engine,
    [engine.player.x,engine.player.y-engine.h*.13],
@@ -396,17 +406,28 @@ const pixiFX=(()=>{
    referenceFourV86.destroy(fx);activeV86=null;return false;
   }
   const t=Number.isFinite(now)?now:performance.now();
-  const alive=referenceFourV86.animate(fx,t);
-  if(!alive&&t-fx.started>=fx.duration){
-   referenceFourV86.destroy(fx);activeV86=null;
-   if(!effects.size&&!hazeActiveV85)app.view.style.display='none';
+  try{
+   if(contextLostV94||app?.renderer?.gl?.isContextLost?.())
+    throw Error('WebGL context lost');
+   const alive=referenceFourV86.animate(fx,t);
+   if(!alive&&t-fx.started>=fx.duration){
+    referenceFourV86.destroy(fx);activeV86=null;
+    lastV86RenderAt=0;
+    if(!effects.size&&!hazeActiveV85)app.view.style.display='none';
+    return false;
+   }
+   if(fx.ready){
+    position(engine);app.view.style.display='block';
+    app.renderer.render(app.stage);
+    lastV86RenderAt=performance.now(); // only a SUCCESSFUL GPU draw counts
+   }
+   return true;
+  }catch(e){
+   error='V94 Pixi recovered: '+String(e?.message||e);
+   lastV86RenderAt=0;contextLostV94=true;
+   reset(); // no app-frame exception: native Canvas fallback resumes
    return false;
   }
-  if(fx.ready){
-   position(engine);app.view.style.display='block';
-   app.renderer.render(app.stage);
-  }
-  return true;
  }
  return {ensure,paint,clearAll:reset,onBattleUiChange,isBattleViewReady:battleViewReady,
   beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,
@@ -414,6 +435,13 @@ const pixiFX=(()=>{
   sprites:!!atlas,active:effects.size,registered:registry.size,
   emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:typeof grassFourV84?.source==='function'?grassFourV84.source(activeV84.key):'gpu-generated'}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
   hazeActive:!!hazeActiveV85,hazeReady:!!hazeActiveV85?.ready,
-  v86Active:!!activeV86,v86Name:activeV86?.spec?.name||null,v86Ready:!!activeV86?.ready,v86Swaps,
+  v86Active:!!activeV86,v86Name:activeV86?.spec?.name||null,
+  v86Ready:!!activeV86?.ready,
+  v86RenderAgeMs:lastV86RenderAt>0?Math.max(0,performance.now()-lastV86RenderAt):null,
+  v86ContextLost:contextLostV94||!!app?.renderer?.gl?.isContextLost?.(),
+  v86Recent:!!app&&lastV86RenderAt>0&&
+   performance.now()-lastV86RenderAt<350&&!contextLostV94&&
+   !app?.renderer?.gl?.isContextLost?.(),
+  v86Swaps,
   clearedV84,rendered:{...drawn},error})};
 })();

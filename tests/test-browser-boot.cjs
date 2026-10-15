@@ -294,13 +294,18 @@ server.listen(0,'127.0.0.1',async()=>{
    ok:v86.ok,version:v86.result?.v86Version,
    casts:v86.v86CombatResults,sequence:v86.v86SequenceResults,errors:v86.errors}));
   const names86=['Raízes Violentas','Geada Persistente','Sopro Congelante','Chicote Duplo'];
-  const castOK=v86.ok&&['86.0','88.0','93.0'].includes(v86.result?.v86Version)&&
+  const castOK=v86.ok&&['86.0','88.0','93.0','94.0'].includes(v86.result?.v86Version)&&
    v86.v86CombatResults?.length===4&&
    v86.v86CombatResults.every((rec,i)=>{
     const entry=rec.after?.vfx?.perMove?.[names86[i]];
+    // On long Android sessions WebGL may lose its context. A successful
+    // Canvas rescue is correct; refusing it is exactly the "bolinha" bug.
+    const hasGpuArt=(entry?.draws||0)>0&&(entry?.framesMask||0)!==0;
+    const hasNativeRescue=rec.after?.native?.last?.name===names86[i]&&
+     (rec.after?.native?.draws||0)>0&&
+     rec.after?.native?.last?.renderer==='native-canvas-mobile';
     return rec.before?.selected===names86[i]&&entry?.casts===1&&
-     (entry?.draws||0)>0&&(entry?.framesMask||0)!==0&&
-     rec.after?.pixi?.gpu===true&&!rec.after?.error;
+     (hasGpuArt||hasNativeRescue)&&!rec.after?.error;
    });
   const sequenceOK=v86.v86SequenceResults?.length===4&&
    v86.v86SequenceResults.every((rec,i)=>
@@ -308,7 +313,7 @@ server.listen(0,'127.0.0.1',async()=>{
     rec.pixi?.v86Active===true&&
     rec.pixi?.v86Name===rec.selected);
   if(!castOK||!sequenceOK){
-   console.error('FAIL V86: actual Four moves must draw separate Pixi atlases and isolate sequential casts');
+   console.error('FAIL V94: four moves need Pixi OR valid Canvas art after WebGL context loss, no mixed casts');
    process.exitCode=1;
   }
   // The screenshot uses these four EQUIPPED moves in the NORMAL lab.
@@ -325,7 +330,7 @@ server.listen(0,'127.0.0.1',async()=>{
     v92.v86CombatResults.every((rec,i)=>{
       const f=rec.after?.native;
       return rec.before?.selected===v92Names[i]&&
-        ['92.0','93.0'].includes(f?.version)&&f.frames?.[v92Names[i]]===(i<2?16:12)&&
+        ['92.0','93.0','94.0'].includes(f?.version)&&f.frames?.[v92Names[i]]===(i<2?16:12)&&
         (f.draws||0)>i&&rec.after?.pixi?.gpu===false;
     });
   if(!equipped92OK){
@@ -378,8 +383,11 @@ server.listen(0,'127.0.0.1',async()=>{
       rec.layer.active===1&&
       !['chicotedevinha','folhanavalha','chicotesemarea','vinewhip']
        .some(k=>rec.layer.rendered?.[k]>0)&&
-      (i===0||rec.layer.clearedV84>
-       v84.v84IsolationResults[i-1].layer.clearedV84);
+      // Existing sprites may finish naturally before the next cast;
+      // clearedV84 then stays unchanged. The active cast serial MUST advance,
+      // and there must be exactly one preview sprite in the layer.
+      (i===0||own.id>
+       v84.v84IsolationResults[i-1].layer.activePreview?.id);
    });
   if(!isolated){
     console.error('FAIL: V90 previous Area roots leaked into next Chicote or Vine cast');

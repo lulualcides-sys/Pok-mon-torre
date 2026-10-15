@@ -459,13 +459,15 @@ if(new URLSearchParams(location.search).get('fx_debug')==='1'){
     const info=window.PokemonTorreGrassV89();
     const d=info.pixi,m=info.authored,last=m?.last||null;
     const eq=window.PokemonTorreEquippedV92?.();
-    el.textContent='FX V92 | '+(battle?.active?'BATALHA':'MENU')+
+    el.textContent='FX V94 | '+(battle?.active?'BATALHA':'MENU')+
      ' | Pixi '+(d.ready?'ATIVO':d.gpu?'DISPONIVEL':'SEM WEBGL')+
      ' | FX '+(d.activePreview?.key||'nenhum')+
      ' | '+(last?.move||'-')+' '+(last?.frame||0)+'/'+(last?.total||0)+
      ' | quadros GPU '+(m?.generated||0)+
      ' | EQUIPADOS '+(eq?.last?.name||'-')+' '+(eq?.last?.frame||0)+'/'+(eq?.last?.total||0)+
      ' via '+(eq?.last?.renderer||'aguardando')+
+     ' | GPU idade '+(d.v86RenderAgeMs==null?'-':Math.round(d.v86RenderAgeMs))+'ms'+
+     ' | GPU perdido '+!!d.v86ContextLost+
      ' | erro '+(window.PokemonTorreGrassErrorV89||d.error||m?.failures?.at(-1)||'nenhum');
    }catch(err){el.textContent='GRASS V90 DEBUG: '+String(err?.message||err);}
   };
@@ -555,8 +557,11 @@ BattleEngine.prototype.useMove=function(slot){
  const type=/geada|sopro/.test(key)?'ice':'grass';
  // Retain projectile/hit queue (only hide old-circle DRAWING).
  for(const shot of this.projectiles||[])
-  if(!shots.has(shot)&&shot?.from==='player'&&shot.type===type)
-   shot.__v92Covered=true;
+  if(!shots.has(shot)&&shot?.from==='player'){
+   // Tag the accepted CAST, not a fragile grass/ice type: move aliases,
+   // changing attributes and later battle phases may use a different type.
+   shot.__v92Covered=true;shot.__v94NamedEffect=key;
+  }
  if(this.particles?.length>particleLength)this.particles.length=particleLength;
  if(this.rings?.length>ringLength)this.rings.length=ringLength;
  return result;
@@ -567,8 +572,9 @@ if(typeof previousEquippedV92Projectile==='function')
   if(Number.isFinite(this.enemy?.hp)&&this.enemy.hp<=0)return;
   const active=equippedFourV92.active(this,performance.now());
   const type=active&&(/geada|sopro/.test(active.key)?'ice':'grass');
-  if(shot?.__v92Covered||(active&&shot?.from==='player'&&shot?.type===type))
-   return; // stop rendering the old little ball; native collision still runs
+  if(shot?.__v92Covered||shot?.__v94NamedEffect||
+     (active&&shot?.from==='player'&&shot?.type===type))
+   return; // no generic orb, even if Pixi resets or the cast expires
   return previousEquippedV92Projectile.apply(this,arguments);
 };
 const previousEquippedV92Painter=window.PokemonTorreV360Paint;

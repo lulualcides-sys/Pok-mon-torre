@@ -5,19 +5,19 @@
  */
 var referenceFourV86=(()=>{
  'use strict';
- const VERSION='93.0',W=480,H=240;
+ const VERSION='94.0',W=480,H=240;
  const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
    .toLowerCase().replace(/[^a-z0-9]/g,'');
  const specs=Object.freeze({
-  raizesviolentas:{name:'Raízes Violentas',asset:'raizes-violentas',weight:'heavy',time:1860,scope:'target',size:.81,thick:.76,impact:.62},
-  geadapersistente:{name:'Geada Persistente',asset:'geada-persistente',weight:'heavy',time:1940,scope:'target',size:.74,thick:.59,impact:.58},
-  soprocongelante:{name:'Sopro Congelante',asset:'sopro-congelante',weight:'medium',time:1300,scope:'line',size:.90,thick:.41,impact:.58},
-  chicoteduplo:{name:'Chicote Duplo',asset:'chicote-duplo',weight:'medium',time:1600,scope:'line',size:.87,thick:.43,impact:.55}
+  raizesviolentas:{name:'Raízes Violentas',asset:'raizes-violentas',weight:'heavy',time:1860,scope:'target',size:.92,thick:.82,impact:.62},
+  geadapersistente:{name:'Geada Persistente',asset:'geada-persistente',weight:'heavy',time:1940,scope:'target',size:.88,thick:.66,impact:.58},
+  soprocongelante:{name:'Sopro Congelante',asset:'sopro-congelante',weight:'medium',time:1300,scope:'line',size:.94,thick:.49,impact:.58},
+  chicoteduplo:{name:'Chicote Duplo',asset:'chicote-duplo',weight:'medium',time:1600,scope:'line',size:.93,thick:.51,impact:.55}
  });
  const resolve=s=>Object.prototype.hasOwnProperty.call(specs,normalize(s))?normalize(s):'';
  const source=key=>{
   const id=specs[key].asset;
-  return 'effects/moves/'+id+'/v86-preview/sprites/'+id+'.webp?v=93.0';
+  return 'effects/moves/'+id+'/v86-preview/sprites/'+id+'.webp?v=94.0';
  };
  const assets=new Map(),errors=[];
  const counters={version:VERSION,casts:0,draws:0,overlapsPrevented:0,perMove:{},frames:0};
@@ -96,9 +96,10 @@ var referenceFourV86=(()=>{
   // Source atlas contains transparent margins. Bound the VISIBLE target-side
   // figure by the opponent's combat radius rather than a whole-screen percent.
   const foeR=Math.max(14,Math.min(50,Number(fx.engine?.enemy?.r)||fieldW*.055));
-  const width=isArea?Math.min(fieldW*.26,foeR*3.05):
+  const width=isArea?Math.min(fieldW*.36,foeR*3.95):
     Math.min(fieldW*.96,dist*1.15+40);
-  const finalW=Math.max(isArea?82:120,width*spec.size);
+  // Strong enough to read next to the Pokemon, still bounded on mobile.
+  const finalW=Math.max(isArea?112:132,width*spec.size);
   const finalH=finalW*(H/W)*spec.thick;
   // Distinct cinematic motion on TOP of each authored sprite stage;
   // no cross-use of the Grass atlas or generic move graphics.

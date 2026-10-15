@@ -1,20 +1,20 @@
-/* V93: proportionate EQUIPPED four moves, native 2D fallback without WebGL.
+/* V94: balanced-size EQUIPPED four moves, native 2D fallback without WebGL.
  * Different artwork per move. Real battle physics / HP remain untouched.
  * PIXI V86 WebP remains the preferred renderer when ready.
  */
 const equippedFourV92=(()=>{
  'use strict';
  const moves=Object.freeze({
-  raizesviolentas:{name:'Raízes Violentas',ms:1860,frames:16,kind:'roots'},
-  geadapersistente:{name:'Geada Persistente',ms:1940,frames:16,kind:'frost'},
-  soprocongelante:{name:'Sopro Congelante',ms:1300,frames:12,kind:'breath'},
-  chicoteduplo:{name:'Chicote Duplo',ms:1600,frames:12,kind:'double'}
+  raizesviolentas:{name:'Raízes Violentas',ms:1860,frames:16,kind:'roots',scale:1.36},
+  geadapersistente:{name:'Geada Persistente',ms:1940,frames:16,kind:'frost',scale:1.32},
+  soprocongelante:{name:'Sopro Congelante',ms:1300,frames:12,kind:'breath',scale:1.25},
+  chicoteduplo:{name:'Chicote Duplo',ms:1600,frames:12,kind:'double',scale:1.27}
  });
  const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
   .toLowerCase().replace(/[^a-z0-9]/g,'');
  const keyOf=name=>Object.prototype.hasOwnProperty.call(moves,normalize(name))?normalize(name):'';
  const map=new WeakMap();
- const stats={casts:0,draws:0,suppressed:0,last:null};
+ const stats={casts:0,draws:0,suppressed:0,expired:0,last:null};
  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
  const ease=x=>{x=clamp(x);return x*x*(3-2*x)};
  const lerp=(a,b,q)=>a+(b-a)*q;
@@ -33,7 +33,7 @@ const equippedFourV92=(()=>{
   if(!s||s.battle!==battle||closed(engine)){
    if(engine)map.delete(engine);return null;
   }
-  if(now-s.started>s.spec.ms+40){map.delete(engine);return null;}
+  if(now-s.started>s.spec.ms+40){map.delete(engine);stats.expired++;return null;}
   return s;
  }
  function clear(engine){if(engine)map.delete(engine)}
@@ -173,12 +173,14 @@ const equippedFourV92=(()=>{
  function draw(engine,now){
   const state=active(engine,now);
   if(!state||!engine.ctx)return false;
-  // When the V86 authored GPU sheet is ready for the same move, don't
-  // double draw identical effects. The fallback runs during loading/failed GPU.
+  // A stale "ready" atlas is NOT proof of visible frames. If WebGL loses
+  // its context or the Pixi ticker stalls, resume native drawing immediately.
   const d=typeof pixiFX!=='undefined'?pixiFX.diagnostics():null;
-  if(d?.v86Active&&d.v86Ready&&d.v86Name===state.spec.name)return false;
+  const gpuActuallyDrawing=!!(d?.v86Active&&d.v86Ready&&
+   d.v86Name===state.spec.name&&d.v86Recent&&!d.v86ContextLost);
+  if(gpuActuallyDrawing)return false;
   const p=clamp((now-state.started)/state.spec.ms);
-  const ctx=engine.ctx,r=targetRadius(engine);
+  const ctx=engine.ctx,r=targetRadius(engine)*state.spec.scale;
   ctx.save();try{
    if(state.spec.kind==='roots')roots(ctx,state.from,state.to,p,r);
    else if(state.spec.kind==='frost')frost(ctx,state.from,state.to,p,r);
@@ -187,7 +189,8 @@ const equippedFourV92=(()=>{
   }finally{ctx.restore();}
   stats.draws++;stats.last={name:state.spec.name,frame:
    Math.min(state.spec.frames,1+Math.floor(p*state.spec.frames)),
-   total:state.spec.frames,renderer:'native-canvas-mobile'};
+   total:state.spec.frames,renderer:'native-canvas-mobile',
+   scale:state.spec.scale,gpuRecovered:!!d?.v86Active&&!gpuActuallyDrawing};
   return true;
  }
  function hideLegacy(engine,name,now){
@@ -196,9 +199,9 @@ const equippedFourV92=(()=>{
   stats.suppressed++;return true;
  }
  function diagnostics(engine){const live=engine&&active(engine);
-  return {version:'93.0',...stats,active:live?.key||null,
+  return {version:'94.0',...stats,active:live?.key||null,
    frames:Object.fromEntries(Object.values(moves).map(m=>[m.name,m.frames]))};}
- return Object.freeze({keyOf,begin,active,clear,draw,hideLegacy,diagnostics,version:'92.0'});
+ return Object.freeze({keyOf,begin,active,clear,draw,hideLegacy,diagnostics,version:'94.0'});
 })();
 window.PokemonTorreEquippedV92=()=>equippedFourV92.diagnostics(
  typeof engine!=='undefined'?engine:null);
