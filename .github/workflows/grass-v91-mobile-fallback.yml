@@ -1,0 +1,27 @@
+name: Quatro golpes planta sem WebGL V91
+on:
+  pull_request:
+    paths:
+      - 'effects/moves/v91-four/**'
+      - 'effects/moves/_runtime/end.js'
+      - 'tests/grass-v91-no-webgl.test.cjs'
+      - 'index.html'
+  push:
+    branches: [main]
+    paths:
+      - 'effects/moves/v91-four/**'
+      - 'effects/moves/_runtime/end.js'
+      - 'tests/grass-v91-no-webgl.test.cjs'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-fallback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/grass-v91-no-webgl.test.cjs
