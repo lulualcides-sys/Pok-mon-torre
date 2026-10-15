@@ -36,7 +36,9 @@ const index=fs.readFileSync('index.html','utf8');
 const end=fs.readFileSync('effects/moves/_runtime/end.js','utf8');
 assert.ok(index.includes('effects/moves/v91-four/canvas-fallback.js'));
 assert.ok(index.includes('effects/moves/v91-four/safe-mode.js'));
-assert.ok(index.includes("?build=v91-safe-grass"));
+assert.ok(index.includes("?build=v91-safe-grass")||
+ index.includes("?build=v92-mobile-equipped-four"),
+ 'Safe mode must load V91 (plus current V92) plant renderers');
 const moduleList=index.slice(index.indexOf('const fxFiles=['),
  index.indexOf('];// V81:'));
 assert.ok(moduleList.indexOf('effects/moves/v91-four/canvas-fallback.js')<
