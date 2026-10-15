@@ -35,8 +35,11 @@ battle.active=false;assert.equal(mod.active(engine),null);
 const index=fs.readFileSync('index.html','utf8');
 const end=fs.readFileSync('effects/moves/_runtime/end.js','utf8');
 assert.ok(index.includes('effects/moves/v91-four/canvas-fallback.js'));
-assert.ok(index.indexOf('effects/moves/v91-four/canvas-fallback.js')<
- index.indexOf('effects/moves/_runtime/end.js'));
+const moduleList=index.slice(index.indexOf('const fxFiles=['),
+ index.indexOf('];// V81:'));
+assert.ok(moduleList.indexOf('effects/moves/v91-four/canvas-fallback.js')<
+ moduleList.indexOf('effects/moves/_runtime/end.js'),
+ 'V91 must load BEFORE battle integration hooks');
 assert.ok(end.includes('previousGrassProjectilePainterV91'));
 assert.ok(end.includes('previousCatalogPainterV91'));
 assert.ok(end.includes('grassFallbackV91.draw(this,now)'));
