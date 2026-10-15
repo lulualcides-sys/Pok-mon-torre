@@ -35,3 +35,6 @@ jobs:
           node tests/test-attack-fps-v61.cjs
       - name: Validar os 37 golpes V66 sem interceptar os eletricos preservados
         run: node tests/test-heritage37-v66.cjs
+
+      - name: Validar galeria V67 de quatro golpes sem alterar os eletricos protegidos
+        run: node tests/test-v67-four.cjs
