@@ -113,9 +113,10 @@ var grassFourV83=(()=>{
   // Folha Navalha: interpolate its authored stages with a second Pixi sprite,
   // then add continuous 60-fps leaf drift. No frame duplication/Canvas draw.
   // NEVER reveal the damaging frame 6 (idx=5) before its true contact time.
+  let blendWeight=0;
   if(item.blend){
    const safeTransition=idx<COUNT-1&&idx!==def.impactIndex-1;
-   const blendWeight=safeTransition?Math.max(0,Math.min(1,(within-.28)/.72)):0;
+   blendWeight=safeTransition?Math.max(0,Math.min(1,(within-.28)/.72)):0;
    item.blend.texture=item.frames[Math.min(COUNT-1,idx+1)];
    item.blend.visible=blendWeight>0;
    item.blend.alpha=blendWeight;
@@ -136,12 +137,12 @@ var grassFourV83=(()=>{
   item.sprite.width=width;item.sprite.height=height;
   item.sprite.rotation=rotation;
   item.sprite.position.set(x+drift,y+drift*.35);
-  item.sprite.alpha*=endingOpacity;
+  item.sprite.alpha=(1-blendWeight)*endingOpacity;
   if(item.blend){
    item.blend.width=width;item.blend.height=height;
    item.blend.rotation=rotation;
    item.blend.position.set(x+drift+Math.sin(within*Math.PI)*2,y+drift*.35);
-   item.blend.alpha*=endingOpacity;
+   item.blend.alpha=blendWeight*endingOpacity;
   }
   // The emitter is detail only: actual attack silhouette comes entirely from
   // eight individually rendered RGBA frames, not a dynamically drawn line.
