@@ -11,7 +11,9 @@ assert.ok(index.includes('fxFiles[i]="effects/moves/v81-approved/render.js"'),'A
 assert.ok(index.includes('fxFiles[i]="effects/moves/v80-preview/render.js"'),'Preview comparison route lost');
 assert.ok(index.includes('if(new URLSearchParams(location.search).get(\'safe\')!==\'1\'){'),'Safe mode lost');
 assert.ok(index.includes("impact-sync-v80.js?build=v81-approved-impact"),'Production hit sync not installed');
-assert.ok(index.includes("effects/moves/v78-preview/sprites/"),'Approved ranged atlas not preloaded');
+assert.ok(index.includes("fxFiles[i]=\"effects/moves/v81-approved/render.js\"")&&
+ index.includes('V89 resilience: old V72/V78 WebP atlases'),
+ 'V81 must stay the approved renderer while absent legacy WebPs are optional');
 assert.ok(!source.includes('function badge(){'),'Preview overlay must not appear in production');
 assert.ok(source.includes('catalog_dragonclaw')&&source.includes('catalog_cortex'),'Contact approvals removed');
 assert.ok(source.includes('catalog_dragonpulse')&&source.includes('catalog_aurasphere'),'Ranged approvals removed');
