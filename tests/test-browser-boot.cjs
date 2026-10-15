@@ -278,6 +278,9 @@ server.listen(0,'127.0.0.1',async()=>{
     return rec.selected===label&&own?.key===expectedKeys[i]&&
       own.source?.includes('/'+asset+'/v83-preview/sprites/'+asset+'.webp')&&
       rec.layer.previewEffectCount===1&&
+      rec.layer.active===1&&
+      !['chicotedevinha','folhanavalha','chicotesemarea','vinewhip']
+       .some(k=>rec.layer.rendered?.[k]>0)&&
       (i===0||rec.layer.clearedV84>
        v84.v84IsolationResults[i-1].layer.clearedV84);
    });
