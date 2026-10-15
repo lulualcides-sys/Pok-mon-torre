@@ -1,0 +1,27 @@
+name: Cinematic arena V96
+on:
+  pull_request:
+    paths:
+      - 'effects/arena/**'
+      - 'tests/cinematic-arena-v96.test.cjs'
+      - 'index.html'
+      - '.github/workflows/cinematic-arena-v96.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'effects/arena/**'
+      - 'tests/cinematic-arena-v96.test.cjs'
+      - 'index.html'
+      - '.github/workflows/cinematic-arena-v96.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-arena:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/cinematic-arena-v96.test.cjs
