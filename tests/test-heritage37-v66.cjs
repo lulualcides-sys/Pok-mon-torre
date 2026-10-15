@@ -22,13 +22,15 @@ const approved=['catalog_nevasca','catalog_volttackle','catalog_stunspore',
 for(const key of approved)assert.equal(fx.accepts(key),false,'Approved move intercepted: '+key);
 const methods=['save','restore','beginPath','moveTo','lineTo','stroke','closePath','fill',
 'ellipse','arc','translate','rotate'];
-const ctx={};for(const key of methods)ctx[key]=()=>undefined;
+let calls=0;const ctx={};for(const key of methods)ctx[key]=()=>{calls++;};
 let painted=0;
 for(const key of keys){
  assert.equal(fx.accepts(key),true,'No allowlist entry: '+key);
  for(let frame=0;frame<8;frame++){
   const state={from:[45,100],to:[175,100],duration:960,at:0,move:{name:fx.labels[key]}};
+  const before=calls;
   const result=fx.paint(ctx,state,(frame+.5)/8,frame*100,.95,false,key);
+  assert.ok(calls>before,'Move did not paint any visual: '+key+' frame '+frame);
   assert.equal(result,true,'Could not draw '+key+' frame '+frame);
   painted++;
  }
