@@ -304,7 +304,14 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
     moved:moved.result?.result?.value||{}
    };
   }
-  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,errors:errors.slice(0,12)};
+  let moveDedupV100=null;
+  if(ok&&query.includes('move_catalog_test=1')){
+   const check=await cmd('Runtime.evaluate',{
+    expression:"(()=>({installed:!!window.PokemonTorreMoveDedupV100?.installed,mewtwo:window.PokemonTorreMoveDedupV100?.report(150,100)||null,bulbasaur:window.PokemonTorreMoveDedupV100?.report(1,100)||null,metrics:window.PokemonTorreMoveDedupV100?.diagnostics()||null}))()",
+    returnByValue:true});
+   moveDedupV100=check.result?.result?.value||null;
+  }
+  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,moveDedupV100,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -324,6 +331,16 @@ server.listen(0,'127.0.0.1',async()=>{
      experimental.result?.hitSyncVersion!=='80.0'){
     console.error('FAIL: normal game must load approved V81 FX and native hit synchronizer without preview flag');
     process.exitCode=1;
+  }
+  const dedup=await browserCase(port,'?move_catalog_test=1&build=v100-one-per-move');
+  console.log('BROWSER V100 ONE MOVE PER NAME:',JSON.stringify(dedup.moveDedupV100));
+  const dedup100=dedup.moveDedupV100;
+  if(!dedup.ok||!dedup100?.installed||
+     !(dedup100.mewtwo?.before>dedup100.mewtwo?.after)||
+     dedup100.mewtwo?.afterStillDuplicated||
+     dedup100.bulbasaur?.afterStillDuplicated){
+     console.error('FAIL V100: duplicates still present or catalog lost after loading normal game');
+     process.exitCode=1;
   }
   // Verify the ACTUAL original Mewtwo frames are polished during a REAL Lab
   // battle on Chrome (not just a test canvas / static illustrative preview).
