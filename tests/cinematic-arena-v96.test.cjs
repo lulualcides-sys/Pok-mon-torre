@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('nod
 const src=fs.readFileSync('effects/arena/cinematic-arena-v96.js','utf8');
 const idx=fs.readFileSync('index.html','utf8');
 assert.ok(idx.includes("get('arena_preview')==='cinematic'"));
-assert.ok(idx.includes('effects/arena/cinematic-arena-v96.js'));
+assert.ok(idx.includes('effects/arena/stadium-arena-v97.js'), 'Video-style stadium must replace V96 forest preview');
 function makeScene(preview){
  let made=0,polygons=0,trees=0,brushes=0,gradients=0;
  const context={
