@@ -127,6 +127,23 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
        response.result?.exceptionDetails?.text||'No result'});
    }
   }
+  let iceV99Results=null;
+  if(ok&&query.includes('battle_preview=ice99')){
+   iceV99Results=[];
+   for(let slot=0;slot<4;slot++){
+    const cast=await cmd('Runtime.evaluate',{
+     expression:"(()=>window.PokemonTorreLocalCombatTestV47?.castPreviewIceV99("+slot+")||{error:'QA ice missing'})()",
+     returnByValue:true
+    });
+    const fired=cast.result?.result?.value||{error:'no cast value'};
+    await sleep(670);
+    const check=await cmd('Runtime.evaluate',{
+     expression:"(()=>({fx:window.PokemonTorreIceV99?.diagnostics()||null,preview:window.PokemonTorreIcePreviewV99?.enabled||false,gameAlive:!!document.getElementById('battleCanvas')?.isConnected}))()",
+     returnByValue:true
+    });
+    iceV99Results.push({slot,fired,after:check.result?.result?.value||{}});
+   }
+  }
   let v86CombatResults=null,v86SequenceResults=null;
   if(ok&&(query.includes('battle_preview=v86')||query.includes('build=v92-equipped-mobile'))){
    v86CombatResults=[];
@@ -287,7 +304,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
     moved:moved.result?.result?.value||{}
    };
   }
-  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,uiFixture,pokemonPolishResult,arenaV97,errors:errors.slice(0,12)};
+  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -318,6 +335,23 @@ server.listen(0,'127.0.0.1',async()=>{
     console.error('FAIL V95: Mewtwo must render actual polished pixel art in normal Lab battle');
     process.exitCode=1;
   }
+  // Four visible equipped ICE attacks, genuine casts in live Chromium battle.
+  const ice99=await browserCase(port,'?battle_preview=ice99&build=v99-ice-four');
+  const iceNames=['Aurora Beam','Ice Beam','Impacto Glacial','Raio de Gelo'];
+  const iceFrames=[16,16,12,12];
+  const iceKeys=['aurorabeam','icebeam','impactoglacial','raiodegelo'];
+  const iceData=ice99.iceV99Results||[];
+  console.log('BROWSER V99 FOUR ICE:',JSON.stringify(
+   iceData.map((v,i)=>({name:v.fired?.selected,preview:v.after?.preview,
+    registered:v.after?.fx?.registered?.length,casts:v.after?.fx?.casts,
+    frames:v.after?.fx?.drawsPerMove?.[iceNames[i].toLowerCase().replace(/[^a-z]/g,'')]}))
+  ));
+  const iceOK=ice99.ok&&iceData.length===4&&iceData.every((rec,i)=>
+   rec.fired?.selected===iceNames[i]&&rec.after?.preview&&rec.after?.gameAlive&&
+   rec.after?.fx?.registered?.length===4&&
+   rec.after.fx.registered[i].frames===iceFrames[i]&&
+   rec.after.fx.drawsPerMove[iceKeys[i]]>0);
+  if(!iceOK){console.error('FAIL V99: four ice moves must animate in REAL battle');process.exitCode=1;}
   // The arena must be visible in a REAL combat, not just a standalone
   // illustration. No changes to default backgrounds or Mewtwo's V95 polish.
   const newArena=await browserCase(port,'?arena_preview=cinematic&arena_test=1&build=v97-stadium-from-video',true);
