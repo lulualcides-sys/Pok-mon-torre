@@ -1,9 +1,10 @@
-name: Cinematic arena V96
+name: Cinematic arena V96 and video stadium V97
 on:
   pull_request:
     paths:
       - 'effects/arena/**'
       - 'tests/cinematic-arena-v96.test.cjs'
+      - 'tests/stadium-arena-v97.test.cjs'
       - 'index.html'
       - '.github/workflows/cinematic-arena-v96.yml'
   push:
@@ -11,6 +12,7 @@ on:
     paths:
       - 'effects/arena/**'
       - 'tests/cinematic-arena-v96.test.cjs'
+      - 'tests/stadium-arena-v97.test.cjs'
       - 'index.html'
       - '.github/workflows/cinematic-arena-v96.yml'
   workflow_dispatch:
@@ -25,3 +27,4 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/cinematic-arena-v96.test.cjs
+      - run: node tests/stadium-arena-v97.test.cjs
