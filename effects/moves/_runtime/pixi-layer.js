@@ -56,6 +56,7 @@ const pixiFX=(()=>{
   }catch(e){error='Particle Emitter: '+e.message;return null;}
  }
  function dispose(fx){
+  if(fx?.v84&&typeof grassFourV84!=='undefined')grassFourV84.dispose(fx);
   if(fx?.v83&&typeof grassFourV83!=='undefined')grassFourV83.dispose(fx);
   if(fx?.v82&&typeof equippedGrassV82!=='undefined')equippedGrassV82.dispose(fx);
   if(fx?.v72&&typeof battleFourV72!=='undefined')battleFourV72.dispose(fx);
@@ -93,6 +94,11 @@ const pixiFX=(()=>{
  }
  function install(f,kind){
   if(effects.has(f))return effects.get(f);
+  // V84: new isolated approval-only sprites, never substitute older effects.
+  if(typeof grassFourV84!=='undefined'&&grassFourV84.accepts(kind)){
+   const fresh=grassFourV84.install(app,f,kind);
+   if(fresh){effects.set(f,fresh);return fresh;}
+  }
   // V83: isolated FOUR grass previews, sharing the existing battle Pixi overlay.
   if(typeof grassFourV83!=='undefined'&&grassFourV83.accepts(kind)){
    const preview=grassFourV83.install(app,f,kind);
@@ -151,6 +157,7 @@ const pixiFX=(()=>{
   effects.set(f,item);return item;
  }
  function animate(item,now,dt){
+  if(item.v84){grassFourV84.animate(item,now,dt);frames++;return;}
   if(item.v83){grassFourV83.animate(item,now,dt);frames++;return;}
   if(item.v82){equippedGrassV82.animate(item,now);frames++;return;}
   if(item.v72){battleFourV72.animate(item,now);frames++;return;}
@@ -200,7 +207,7 @@ const pixiFX=(()=>{
   for(const [f,e] of effects){
    // V75: only the four cinematic sprite sequences outlive their original
    // game attack animation. Hit/damage, cooldown and battle queues stay intact.
-   const lifetime=(e.v83||e.v82||e.v72)?e.visualDuration:(f.duration||e.duration);
+   const lifetime=(e.v84||e.v83||e.v82||e.v72)?e.visualDuration:(f.duration||e.duration);
    if((f.battle&&f.battle!==battle)||now-f.at>lifetime+240){
     dispose(e);effects.delete(f);continue;
    }
