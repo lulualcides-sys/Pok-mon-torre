@@ -415,6 +415,31 @@ if(new URLSearchParams(location.search).get('arena_preview')==='cinematic'){
   console.warn('Wide-stadium movement unavailable. Normal stage retained.',error);
  }
 }
+// V99 isolated ice move lab PREVIEW — never replace approved/current moves
+// unless explicitly requested by ?battle_preview=ice99.
+if(new URLSearchParams(location.search).get('battle_preview')==='ice99'){
+ try{
+  const iceFiles=[
+   'effects/moves/v99-ice-preview/runtime.js',
+   'effects/moves/aurora-beam/v99-preview/render.js',
+   'effects/moves/ice-beam/v99-preview/render.js',
+   'effects/moves/catalog/impactoglacial/v99-preview/render.js',
+   'effects/moves/raio-de-gelo/v99-preview/render.js'
+  ];
+  const iceParts=await Promise.all(iceFiles.map(async path=>{
+   const res=await fetch(path+'?build=v99-four-ice-preview',{cache:'no-store'});
+   if(!res.ok)throw Error('Prévia V99 indisponível: '+path+' '+res.status);
+   return res.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('Ponto de integração V99 ausente');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+iceParts.join(String.fromCharCode(10))+
+   String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){
+  // An incomplete PREVIEW must not break official approved effects/game.
+  console.error('Prévia de gelo V99 não carregada',error);
+ }
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
