@@ -51,8 +51,9 @@ for(let slot=0;slot<4;slot++){
  assert.equal(event.times[0],.66,'Do not change hit event');
  const runtime=win.PokemonTorreIceV99;
  const collected=new Set();
+ const runtimeDuration=runtime.current(game,event.at).duration;
  for(let i=0;i<frameCounts[slot];i++){
-  now=event.at+((i+.4)/frameCounts[slot])*1250;game.draw(now);
+  now=event.at+((i+.4)/frameCounts[slot])*runtimeDuration;game.draw(now);
   const d=runtime.diagnostics();
   assert.equal(d.last.name,names[slot]);collected.add(d.last.frame);
  }
