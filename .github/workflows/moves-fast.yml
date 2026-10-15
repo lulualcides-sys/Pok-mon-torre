@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - 'effects/moves/**'
+      - 'tools/build-v72-battle.py'
+      - 'tests/test-v72-battle.cjs'
       - 'effects/atelier-v70/**'
       - 'effects/atelier-v71/**'
       - 'tools/build-atelier-v70.py'
@@ -14,6 +16,8 @@ on:
     branches: [main]
     paths:
       - 'effects/moves/**'
+      - 'tools/build-v72-battle.py'
+      - 'tests/test-v72-battle.cjs'
       - 'effects/atelier-v70/**'
       - 'effects/atelier-v71/**'
       - 'tools/build-atelier-v70.py'
@@ -57,3 +61,12 @@ jobs:
 
       - name: Validar as quatro artes cinematograficas aprovadas V71
         run: node tests/test-atelier-v70.cjs
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Renderizar os 4 spritesheets para batalha e validar V72
+        run: |
+          python -m pip install --quiet Pillow
+          python tools/build-v72-battle.py
+          node tests/test-v72-battle.cjs
