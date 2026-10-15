@@ -1,0 +1,29 @@
+{
+  "standard": "Pokemon Torre — acabamento visual global dos Pokémon",
+  "status": "padrão definido; aplicado inicialmente apenas ao Mewtwo",
+  "requested": "Deixar todos os Pokémon mais bonitos de uma vez no futuro, sem redesenhar sprites, sem membros animados, sem Mega Evolução e sem modificar golpes.",
+  "pilot": {
+    "pokemon": "Mewtwo",
+    "id": 150,
+    "implementation": "effects/pokemon/visual-polish-v95.js",
+    "enabled_on_regular_and_safe_mode": true,
+    "disable_for_A_B_test": "?pokemon_polish=off",
+    "approval": "pendente de avaliação visual do usuário"
+  },
+  "rules": {
+    "reuse_existing_sprite_frames": true,
+    "native_pixel_aa": "nearest-neighbor",
+    "one_pixel_dark_outline": true,
+    "subtle_shading": true,
+    "subtle_contrast_and_saturation": true,
+    "no_per_species_redraw": true,
+    "no_artificial_member_animation": true,
+    "no_mega_evolution": true,
+    "no_attack_effect_changes": true,
+    "preserve_existing_sprite_scale_direction_and_actions": true,
+    "process_cache_per_source": true,
+    "fallback_original_on_cors_error": true
+  },
+  "rollout": "Manter apenas Mewtwo até usuário aprovar. Depois ampliar scope em lote, com testes de proporção e exceções por espécie.",
+  "frozen_prior_move_approvals": "effects/moves/STATUS_APROVADOS.json"
+}
