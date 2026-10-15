@@ -1,0 +1,51 @@
+name: Gerar spritesheets V88 dos quatro golpes
+
+on:
+  push:
+    branches:
+      - main
+      - fix/v88-restore-four-move-renderers
+    paths:
+      - ".github/workflows/build-v88-sprites.yml"
+      - "tools/build-v86-four-reference.py"
+      - "effects/moves/v86-preview/render.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprites-v88-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-sprite-sheets:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Pillow
+        run: python -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+      - name: Render authored frames
+        run: python tools/build-v86-four-reference.py
+      - name: Commit generated 12 and 16 frame WebP atlases
+        shell: bash
+        run: |
+          git add \
+            effects/moves/raizes-violentas/v86-preview/sprites/raizes-violentas.webp \
+            effects/moves/geada-persistente/v86-preview/sprites/geada-persistente.webp \
+            effects/moves/sopro-congelante/v86-preview/sprites/sopro-congelante.webp \
+            effects/moves/chicote-duplo/v86-preview/sprites/chicote-duplo.webp
+          if git diff --cached --quiet; then
+            echo 'Spritesheets unchanged.'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'assets: render V88 12 and 16 frame battle atlases'
+            git push
+          fi
