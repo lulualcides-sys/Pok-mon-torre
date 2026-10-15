@@ -28,7 +28,10 @@ const equal=[
  ['Recuperar','Recover'],
  ['Pulso d’Água','Water Pulse'],
  ['Pistola d’Água','Jato de Água'],
- ['Transformar','Transformação']
+ ['Transformar','Transformação'],
+ ['Tri Ataque','Tri Attack'],
+ ['Bico Broca','Drill Peck'],
+ ['Confusão','Confusion']
 ];
 for(const [a,b] of equal)assert.equal(m.groupOf(a),m.groupOf(b),a+' / '+b);
 const different=[
