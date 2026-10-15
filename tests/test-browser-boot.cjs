@@ -307,7 +307,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
   let moveDedupV100=null;
   if(ok&&query.includes('move_catalog_test=1')){
    const check=await cmd('Runtime.evaluate',{
-    expression:"(()=>({installed:!!window.PokemonTorreMoveDedupV100?.installed,scope:window.PokemonTorreMoveDedupScopeV100||null,mewtwo:window.PokemonTorreMoveDedupV100?.report(150,100)||null,bulbasaur:window.PokemonTorreMoveDedupV100?.report(1,100)||null,metrics:window.PokemonTorreMoveDedupV100?.diagnostics()||null}))()",
+    expression:"(()=>({installed:!!window.PokemonTorreMoveDedupV100?.installed,scope:window.PokemonTorreMoveDedupScopeV100||null,mewtwo:window.PokemonTorreMoveDedupV100?.report(150,100)||null,bulbasaur:window.PokemonTorreMoveDedupV100?.report(1,100)||null,fullMewtwo:window.PokemonTorreMoveDedupV100?.report(150,55,true)||null,metrics:window.PokemonTorreMoveDedupV100?.diagnostics()||null}))()",
     returnByValue:true});
    moveDedupV100=check.result?.result?.value||null;
   }
@@ -338,7 +338,10 @@ server.listen(0,'127.0.0.1',async()=>{
   if(!dedup.ok||!dedup100?.installed||
      !(dedup100.mewtwo?.before>dedup100.mewtwo?.after)||
      dedup100.mewtwo?.afterStillDuplicated||
-     dedup100.bulbasaur?.afterStillDuplicated){
+     dedup100.bulbasaur?.afterStillDuplicated||
+     !(dedup100.fullMewtwo?.before>=300)||
+     !(dedup100.fullMewtwo?.before>dedup100.fullMewtwo?.after)||
+     dedup100.fullMewtwo?.afterStillDuplicated){
      console.error('FAIL V100: duplicates still present or catalog lost after loading normal game');
      process.exitCode=1;
   }
