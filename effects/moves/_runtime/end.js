@@ -58,6 +58,17 @@ function paint(g,f,now,e,k){
 // Render de golpes ofensivos: pipeline existente. O retorno true impede duplicação por Canvas/PNG antigos.
 const prevPainter=window.PokemonTorreV360Paint;
 window.PokemonTorreV360Paint=function(g,f,now,e){
+ // V84 opt-in: mandatory GPU preview, never let old Canvas paint over it.
+ if(typeof grassFourV84!=='undefined'){
+  const key84=grassFourV84.resolve(f?.move?.name||f?.name);
+  if(key84){
+   // Detect a missing GPU instead of silently displaying a legacy attack.
+   if(!pixiFX.paint(f,e,key84)){
+    window.PokemonTorreGrassPreviewErrorV84='PixiJS/WebGL indisponível';
+   }
+   return true;
+  }
+ }
  // V83 opt-in: four uniquely authored grass sprite animations in the REAL battle.
  // Original V81 and all other approved effects remain intact without the flag.
  if(typeof grassFourV83!=='undefined'){
@@ -224,4 +235,13 @@ BattleEngine.prototype.drawMon=function(actor,id,isEnemy,now){
   return result;
  }finally{actor.x=ox;actor.y=oy;}
 };
+// V84 only: render the previously queued Pixi animation ON THE GAME FRAME.
+// Historic V81 and V83 code paths do not enter this wrapper.
+const previousGrassPreviewDrawV84=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){
+ const result=previousGrassPreviewDrawV84.apply(this,arguments);
+ if(typeof grassFourV84!=='undefined')pixiFX.frameV84(now,this);
+ return result;
+};
+
 })();
