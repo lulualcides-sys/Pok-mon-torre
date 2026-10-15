@@ -113,7 +113,20 @@
   if(mon&&Array.isArray(mon.v32Slots)&&mon.v32Slots.length===4){
    const previous=mon.v32Slots.slice();
    for(let i=0;i<4;i++){
-    const target=keyAlias.get(mon.v32Slots[i]);
+    const oldKey=mon.v32Slots[i];
+    let target=keyAlias.get(oldKey);
+    if(!target&&!kept.has(oldKey)){
+     // A saved translation might no longer be generated for THIS species,
+     // while its canonical equivalent remains available in the catalogue.
+     const [oldName,oldType,oldKind]=String(oldKey||'').split('|');
+     const group=canonicalOf(oldName);
+     const candidate=[...kept.values()].find(x=>
+      canonicalOf(x.move.name)===group&&x.move.type===oldType&&
+      (!oldKind||x.move.kind===oldKind))
+      ||[...kept.values()].find(x=>
+      canonicalOf(x.move.name)===group&&x.move.type===oldType);
+     target=candidate?.key;
+    }
     if(target)mon.v32Slots[i]=target;
    }
    if(previous.some((key,i)=>key!==mon.v32Slots[i])){
