@@ -4,6 +4,10 @@ const pixiFX=(()=>{
  const themes={normal:[0xf9d997,0xffffff,0xa1886b],fire:[0xff602b,0xfff2b0,0xdf3725],water:[0x36aef9,0xffffff,0x386de1],grass:[0x8be566,0xffffff,0x3b9c67],ice:[0x80e7ff,0xffffff,0x528de4],electric:[0xffe75d,0xffffff,0xe59e2b],psychic:[0xd68cff,0xffffff,0x8354da],ghost:[0x8f7ddc,0xdecaff,0x30346e],dark:[0x8c75a8,0xd6c8f2,0x302247],fighting:[0xe9a17c,0xffe9c2,0xb64e39],rock:[0xbda27d,0xffecd0,0x796044],ground:[0xcfa970,0xffead6,0x81613e],steel:[0x9ac5df,0xffffff,0x607e99],bug:[0x9cce64,0xf7ffd5,0x557f38],flying:[0xa7dfff,0xffffff,0x5b83bd],dragon:[0x9884e9,0xffe2fa,0x4f49ba],poison:[0xb875d9,0xffd7ff,0x813f91],fairy:[0xf79ed8,0xffffff,0xc16b9d]};
  const effects=new Map(),drawn=Object.create(null);
  let app=null,owner=null,atlas=null,cache=new Map(),frames=0,emitterCount=0,error='',lastRect='';
+ // V84.1: at most ONE preview cast can own the four-attack Pixi layer.
+ // Old v359/v3580 visual objects may coexist while the engine cleans up;
+ // they must never create an effect on top of a newer cast.
+ let activeV84=null,castSerialV84=0,clearedV84=0;
  const clamp=v=>Math.min(1,Math.max(0,v)),mix=(a,b,u)=>a+(b-a)*u;
  // Particle library is optional. A blocked emitter must not disable our sprite effects.
  const hasGPU=()=>!!(window.PIXI?.Application&&window.PIXI?.utils?.isWebGLSupported?.());
@@ -64,6 +68,7 @@ const pixiFX=(()=>{
   fx?.root?.destroy({children:true});
  }
  function reset(){
+  activeV84=null;
   for(const fx of effects.values())dispose(fx);effects.clear();
   if(app){try{app.destroy(true,{children:true,texture:false,baseTexture:false});}catch(e){}}
   app=null;atlas=null;owner=null;cache=new Map();lastRect='';
@@ -93,6 +98,10 @@ const pixiFX=(()=>{
   }catch(e){error='PixiJS: '+e.message;reset();return false;}
  }
  function install(f,kind){
+  // Reject stale queued previews BEFORE even checking GPU textures.
+  if(typeof grassFourV84!=='undefined'&&grassFourV84.accepts(kind)&&
+   (!activeV84||activeV84.f!==f||activeV84.key!==kind||
+    activeV84.battle!==battle))return null;
   if(effects.has(f))return effects.get(f);
   // V84: new isolated approval-only sprites, never substitute older effects.
   if(typeof grassFourV84!=='undefined'&&grassFourV84.accepts(kind)){
@@ -219,46 +228,62 @@ const pixiFX=(()=>{
   if(!effects.size){app.ticker.stop();app.view.style.display='none';}
  }
  function paint(f,engine,key){
+  if(typeof grassFourV84!=='undefined'&&grassFourV84.accepts(key)&&
+   (!activeV84||activeV84.f!==f||activeV84.key!==key||
+    activeV84.battle!==battle))return false;
   if(!ensure(engine))return false;
   if(!atlas&&typeof spriteAtlas3511!=='undefined'&&spriteAtlas3511.naturalWidth)atlas=PIXI.BaseTexture.from(spriteAtlas3511);
   return !!install(f,key);
  }
- // V84: guarantee Pixi/WebGL frames are produced on the real BattleEngine
- // draw cadence. A stopped/throttled Pixi ticker must not freeze the effect.
- // This route only runs if an opted-in V84 attack is currently active.
- function frameV84(now,engine){
-  if(typeof grassFourV84==='undefined'||!battle?.active)return false;
-  // Root fix: some Grass moves land in v3580Visuals, others in v359Attacks.
-  // The legacy painter did not route BOTH queues through the same Pixi
-  // renderer. Discover each authorized move directly in the real engine.
-  if(engine?.canvas){
-   const candidates=[...(engine.v359Attacks||[]),...(engine.v3580Visuals||[])];
-   for(const f of candidates){
-    if(!f||effects.has(f)||(f.battle&&f.battle!==battle))continue;
-    const key=grassFourV84.resolve(f?.move?.name||f?.name);
-    if(!key||!Array.isArray(f.from)||!Array.isArray(f.to))continue;
-    if(ensure(engine))install(f,key);
-   }
-  }
-  if(!app)return false;
-  let active=false;
-  const currentTime=Number.isFinite(now)?now:performance.now();
+ // Start a preview only from the NEW native cast, not by rescanning all
+ // old v359Attacks and v3580Visuals every frame.
+ function clearV84(){
+  let removed=0;
   for(const [f,item] of effects){
    if(!item?.v84)continue;
-   if((f.battle&&f.battle!==battle)||currentTime-f.at>item.visualDuration+160){
-    dispose(item);effects.delete(f);continue;
-   }
-   try{grassFourV84.animate(item,currentTime,.016);active=true;frames++;}
-   catch(e){error='V84 live frame: '+e.message;dispose(item);effects.delete(f);}
+   dispose(item);effects.delete(f);removed++;
   }
-  if(active){
-   app.view.style.display='block';
-   // Force compositing even when Pixi's independent ticker is suspended.
-   app.renderer.render(app.stage);
-  }
-  return active;
+  if(removed)clearedV84+=removed;
+  activeV84=null;
  }
- return {ensure,paint,frameV84,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
+ function beginV84(engine,f,key){
+  if(typeof grassFourV84==='undefined'||!grassFourV84.accepts(key)||
+    !f||!Array.isArray(f.from)||!Array.isArray(f.to))return false;
+  // Clear previous owned effect IMMEDIATELY on a new successful cast:
+  // single Vine and Chicote may not share the old Area roots/particles.
+  clearV84();
+  const id=++castSerialV84;
+  activeV84={id,f,key,battle};
+  if(!ensure(engine)||!install(f,key)){
+   clearV84();return false;
+  }
+  return true;
+ }
+ function frameV84(now,engine){
+  if(typeof grassFourV84==='undefined'||!battle?.active)return false;
+  const a=activeV84;
+  if(!a||a.battle!==battle){
+   if(a)clearV84();
+   return false;
+  }
+  if(engine&&owner&&owner!==engine){clearV84();return false;}
+  const item=effects.get(a.f);
+  if(!item?.v84||item.key!==a.key){clearV84();return false;}
+  const when=Number.isFinite(now)?now:performance.now();
+  if(when-a.f.at>item.visualDuration+160){
+   clearV84();return false;
+  }
+  try{
+   grassFourV84.animate(item,when,.016);frames++;
+   app.view.style.display='block';
+   app.renderer.render(app.stage);
+   return true;
+  }catch(e){
+   error='V84 live frame: '+e.message;
+   clearV84();return false;
+  }
+ }
+ return {ensure,paint,beginV84,clearV84,frameV84,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
   sprites:!!atlas,active:effects.size,registered:registry.size,
-  emitterInstances:emitterCount,frames,rendered:{...drawn},error})};
+  emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id}:null,clearedV84,rendered:{...drawn},error})};
 })();
