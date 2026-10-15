@@ -98,10 +98,16 @@ const pixiFX=(()=>{
   }catch(e){error='PixiJS: '+e.message;reset();return false;}
  }
  function install(f,kind){
-  // Reject stale queued previews BEFORE even checking GPU textures.
-  if(typeof grassFourV84!=='undefined'&&grassFourV84.accepts(kind)&&
-   (!activeV84||activeV84.f!==f||activeV84.key!==kind||
-    activeV84.battle!==battle))return null;
+  // The game has multiple painters. Resolve by the ACTUAL move name, not
+  // the caller's catalog/semantic key: never fall back to generic sprites.
+  if(typeof grassFourV84!=='undefined'){
+   const named=grassFourV84.resolve(f?.move?.name||f?.name);
+   if(named){
+    if(!activeV84||activeV84.f!==f||activeV84.key!==named||
+      activeV84.battle!==battle)return null;
+    kind=named;
+   }
+  }
   if(effects.has(f))return effects.get(f);
   // V84: new isolated approval-only sprites, never substitute older effects.
   if(typeof grassFourV84!=='undefined'&&grassFourV84.accepts(kind)){
@@ -228,9 +234,14 @@ const pixiFX=(()=>{
   if(!effects.size){app.ticker.stop();app.view.style.display='none';}
  }
  function paint(f,engine,key){
-  if(typeof grassFourV84!=='undefined'&&grassFourV84.accepts(key)&&
-   (!activeV84||activeV84.f!==f||activeV84.key!==key||
-    activeV84.battle!==battle))return false;
+  if(typeof grassFourV84!=='undefined'){
+   const named=grassFourV84.resolve(f?.move?.name||f?.name);
+   if(named){
+    if(!activeV84||activeV84.f!==f||activeV84.key!==named||
+      activeV84.battle!==battle)return false;
+    key=named;
+   }
+  }
   if(!ensure(engine))return false;
   if(!atlas&&typeof spriteAtlas3511!=='undefined'&&spriteAtlas3511.naturalWidth)atlas=PIXI.BaseTexture.from(spriteAtlas3511);
   return !!install(f,key);
@@ -240,7 +251,11 @@ const pixiFX=(()=>{
  function clearV84(){
   let removed=0;
   for(const [f,item] of effects){
-   if(!item?.v84)continue;
+   // Dispose previously spawned generic/semantic FX for these SAME FOUR
+   // moves too; otherwise old vines overlap the new separate WebP atlas.
+   const belongs=typeof grassFourV84!=='undefined'&&
+    grassFourV84.resolve(f?.move?.name||f?.name);
+   if(!item?.v84&&!belongs)continue;
    dispose(item);effects.delete(f);removed++;
   }
   if(removed)clearedV84+=removed;
@@ -252,9 +267,12 @@ const pixiFX=(()=>{
   // Clear previous owned effect IMMEDIATELY on a new successful cast:
   // single Vine and Chicote may not share the old Area roots/particles.
   clearV84();
+  // ensure() may reset an old GPU owner. Create it BEFORE assigning cast
+  // ownership so reset() cannot erase the new cast.
+  if(!ensure(engine))return false;
   const id=++castSerialV84;
   activeV84={id,f,key,battle};
-  if(!ensure(engine)||!install(f,key)){
+  if(!install(f,key)){
    clearV84();return false;
   }
   return true;
