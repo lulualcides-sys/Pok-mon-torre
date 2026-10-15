@@ -62,10 +62,10 @@ window.PokemonTorreV360Paint=function(g,f,now,e){
  if(typeof grassFourV84!=='undefined'){
   const key84=grassFourV84.resolve(f?.move?.name||f?.name);
   if(key84){
-   // Detect a missing GPU instead of silently displaying a legacy attack.
-   if(!pixiFX.paint(f,e,key84)){
-    window.PokemonTorreGrassPreviewErrorV84='PixiJS/WebGL indisponível';
-   }
+   // beginV84() already installed the ONE currently selected preview.
+   // Older native events may still be drawn by the engine, but must not
+   // trigger an error or create a duplicate generic effect.
+   pixiFX.paint(f,e,key84);
    return true;
   }
  }
