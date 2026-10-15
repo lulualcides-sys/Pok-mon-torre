@@ -5,7 +5,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const base=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(base,p),'utf8');
-const module=read('effects/moves/v86-preview/render.js');
+const renderer=read('effects/moves/v86-preview/render.js');
 const index=read('index.html'),pixi=read('effects/moves/_runtime/pixi-layer.js'),end=read('effects/moves/_runtime/end.js');
 const moveNames=['Raízes Violentas','Geada Persistente','Sopro Congelante','Chicote Duplo'];
 const slugs=['raizes-violentas','geada-persistente','sopro-congelante','chicote-duplo'];
@@ -14,7 +14,7 @@ assert.ok(index.includes('effects/moves/v86-preview/render.js'));
 assert.ok(pixi.includes('referenceFourV86.cast'));
 assert.ok(end.includes('previousReferenceUseV86'));
 assert.ok(end.includes('pixiFX.beginV86'));
-assert.ok(!module.includes('getContext(')&&!module.includes('<video>'));
+assert.ok(!renderer.includes('getContext(')&&!renderer.includes('<video>'));
 for(const slug of slugs){
  const file=path.join(base,'effects/moves',slug,'v86-preview/sprites',slug+'.webp');
  const data=fs.readFileSync(file);
@@ -38,7 +38,7 @@ class Sprite{constructor(tex){this.texture=tex;this.anchor={set(){}};
 const PIXI={Texture,Rectangle,Sprite,Container,Graphics,
  Assets:{load:async()=>({baseTexture:{valid:true,width:3840,height:240}})}};
 const w={PIXI},ctx=vm.createContext({window:w,PIXI,console});
-vm.runInContext(module,ctx);
+vm.runInContext(renderer,ctx);
 const v86=vm.runInContext('referenceFourV86',ctx);
 (async()=>{
  const app={stage:new Container(),screen:{width:660,height:400}};
