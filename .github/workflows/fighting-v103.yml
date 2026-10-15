@@ -1,0 +1,36 @@
+name: V103 approved Fighting contact animations
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/moves/v103-fighting/**'
+      - 'effects/moves/catalog/chute/v103/**'
+      - 'effects/moves/catalog/golpedekarate/v103/**'
+      - 'effects/moves/catalog/crosschop/v103/**'
+      - 'effects/moves/catalog/brickbreak/v103/**'
+      - 'tests/fighting-v103.test.cjs'
+      - 'index.html'
+  pull_request:
+    paths:
+      - 'effects/moves/v103-fighting/**'
+      - 'effects/moves/catalog/chute/v103/**'
+      - 'effects/moves/catalog/golpedekarate/v103/**'
+      - 'effects/moves/catalog/crosschop/v103/**'
+      - 'effects/moves/catalog/brickbreak/v103/**'
+      - 'tests/fighting-v103.test.cjs'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/fighting-v103.test.cjs
+      - run: node tests/ice-v101-official.test.cjs
+      - run: node tests/stadium-arena-v97.test.cjs
+      - run: node tests/wide-stadium-v98.test.cjs
