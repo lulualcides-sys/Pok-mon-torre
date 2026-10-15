@@ -1,3 +1,12 @@
+## V82 — corrigir quais são os quatro golpes do print de Mewtwo
+
+- **O usuário pediu os quatro golpes salvos nos espaços superiores**: 1. Chicote de Vinha; 2. Folha Navalha; 3. Chicotes em Área; 4. Vine Whip. **NÃO** são os quatro do filtro Planta abaixo (Esporos, Pó do Sono, Stun Spore, Leech Seed).
+- Criar prévia destes quatro **dentro da batalha pelo link do GitHub**, sem Ateliê nem foto de mockup, e sem substituir suas versões atuais antes da aprovação. Rota de prévia: `?battle_preview=v82`.
+- Os efeitos em teste ficam em `effects/moves/v82-preview` e geram **32 quadros reais** a partir das artes de vinha já existentes, com identidades próprias (uma vinha, várias lâminas, três chicotes, duplo chicote).
+- Os outros quatro de status Planta V63 permanecem aprovados e intocados; preservar também o Chicote de Vinha atual até a aprovação explícita dos novos efeitos.
+- Acerto e dano devem coincidir com o quadro de impacto visual; nunca diminuir o HP antes do contato.
+- Qualquer próximo lote exige confirmar que são os quatro **equipados** quando o usuário mostrar um menu com quatro espaços.
+
 ## Revisão V81 — quatro golpes aprovados e dano sincronizado
 
 - Usuário **aprovou** o resultado V80 de Dragon Pulse e Aura Sphere, incluindo **impacto sincronizado ao dano**. Dragon Claw e X-Scissor já estavam aprovados desde V77. **Os quatro devem ficar na batalha normal, sem ?battle_preview e sem Ateliê.**
