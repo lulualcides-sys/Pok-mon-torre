@@ -5,14 +5,14 @@
  */
 var referenceFourV86=(()=>{
  'use strict';
- const VERSION='86.0',W=480,H=240,N=8;
+ const VERSION='86.1',W=480,H=240;
  const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
    .toLowerCase().replace(/[^a-z0-9]/g,'');
  const specs=Object.freeze({
-  raizesviolentas:{name:'Raízes Violentas',asset:'raizes-violentas',time:1860,scope:'target',size:.88,thick:1.00,impact:.62},
-  geadapersistente:{name:'Geada Persistente',asset:'geada-persistente',time:1940,scope:'target',size:.79,thick:.77,impact:.58},
-  soprocongelante:{name:'Sopro Congelante',asset:'sopro-congelante',time:1300,scope:'line',size:.91,thick:.78,impact:.58},
-  chicoteduplo:{name:'Chicote Duplo',asset:'chicote-duplo',time:1600,scope:'line',size:.89,thick:.88,impact:.55}
+  raizesviolentas:{name:'Raízes Violentas',asset:'raizes-violentas',weight:'heavy',time:1860,scope:'target',size:.88,thick:1.00,impact:.62},
+  geadapersistente:{name:'Geada Persistente',asset:'geada-persistente',weight:'heavy',time:1940,scope:'target',size:.79,thick:.77,impact:.58},
+  soprocongelante:{name:'Sopro Congelante',asset:'sopro-congelante',weight:'medium',time:1300,scope:'line',size:.91,thick:.78,impact:.58},
+  chicoteduplo:{name:'Chicote Duplo',asset:'chicote-duplo',weight:'medium',time:1600,scope:'line',size:.89,thick:.88,impact:.55}
  });
  const resolve=s=>Object.prototype.hasOwnProperty.call(specs,normalize(s))?normalize(s):'';
  const source=key=>{
@@ -27,9 +27,11 @@ var referenceFourV86=(()=>{
   if(assets.has(key))return assets.get(key);
   const promise=PIXI.Assets.load(source(key)).then(tex=>{
    const b=tex?.baseTexture;
-   if(!b?.valid||b.width!==3840||b.height!==240)
+   const count=b?.width/W;
+   if(!b?.valid||b.height!==H||!Number.isInteger(count)||
+     ![8,12,16].includes(count))
     throw Error('V86 inválido: '+key);
-   return Array.from({length:N},(_,i)=>
+   return Array.from({length:count},(_,i)=>
     new PIXI.Texture(b,new PIXI.Rectangle(i*W,0,W,H)));
   }).catch(e=>{assets.delete(key);errors.push(String(e?.message||e));return null});
   assets.set(key,promise);return promise;
@@ -54,6 +56,15 @@ var referenceFourV86=(()=>{
   load(key).then(frames=>{
    if(!item.alive||!frames)return;
    item.frames=frames;item.ready=true;
+   // Existing published atlases remain at eight frames until regenerated;
+   // the new policy records 12/16 as targets without assuming missing art.
+   if(typeof framePolicyV87!=='undefined'){
+    item.framePlan=framePolicyV87.plan({weight:item.spec.weight,
+     nativeFrames:frames.length,mobile:!!window.matchMedia?.('(pointer:coarse)')?.matches});
+    const record=counters.perMove[item.spec.name];
+    if(record){record.targetFrames=item.framePlan.frames;
+     record.nativeFrames=frames.length;record.weight=item.framePlan.weight;}
+   }
   });
   return item;
  }
@@ -68,13 +79,15 @@ var referenceFourV86=(()=>{
     Number.isFinite(fx.hitAt)?(fx.hitAt-fx.started)/fx.duration:spec.impact));
   const progress=t<=contact?(t/contact)*spec.impact:
     spec.impact+(t-contact)/(1-contact)*(1-spec.impact);
-  const p=clamp(progress)*N,step=Math.min(7,Math.floor(p));
+  const total=fx.frames.length;
+  const p=clamp(progress)*total,step=Math.min(total-1,Math.floor(p));
   const fraction=clamp(p-step);
   art.texture=fx.frames[step];art.visible=true;
   // No future impact frame blended into pre-impact image.
-  const cross=step>=7||step===4||step===5?0:clamp((fraction-.37)/.63)*.24;
-  fade.texture=fx.frames[Math.min(7,step+1)];fade.visible=cross>.005;
-  art.alpha=(1-cross)*(step===7?clamp((1-t)*12):1);
+  const cross=step>=total-1||step===Math.round(total*.5)||
+   step===Math.round(total*.625)?0:clamp((fraction-.37)/.63)*.24;
+  fade.texture=fx.frames[Math.min(total-1,step+1)];fade.visible=cross>.005;
+  art.alpha=(1-cross)*(step===total-1?clamp((1-t)*12):1);
   fade.alpha=cross*art.alpha;
   const ax=from[0],ay=from[1],bx=to[0],by=to[1];
   const dx=bx-ax,dy=by-ay,dist=Math.hypot(dx,dy)||1;
