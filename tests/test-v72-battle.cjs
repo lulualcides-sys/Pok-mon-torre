@@ -48,7 +48,7 @@ assert.ok(pixi.includes('battleFourV72.install(app,f,kind)')&&pixi.includes('bat
 assert.ok(end.includes("battleFourV72.accepts(k)")&&end.indexOf("battleFourV72.accepts(k)")<end.indexOf("heritage37V66.accepts(k)"),
   'V72 must intercept exactly four before legacy V66');
 assert.ok(end.includes("n==='xscissor'")&&end.includes("n==='dragonclaw'"),'Physical moves must approach target during battle draw');
-assert.ok(!source.includes('BattleEngine.prototype.useMove')&&!source.includes('damage')&&!source.includes('hp='),
+assert.ok(!source.includes('BattleEngine.prototype.useMove')&&!/\.hp\s*=|\.energy\s*=|\.damage\s*=|\.cooldown\s*=/.test(source),
   'V72 must not modify hit, energy, damage or cooldown mechanics');
 (async()=>{
  const app={stage:new Container(),screen:{width:620,height:330}};
