@@ -23,7 +23,7 @@ var grassFourV84=(()=>{
  const leafPath='effects/moves/v83-preview/sprites/leaf.webp?v=84.0';
  const loaded=new Map(),errors=[];
  let leafRequest=null;
- const counters={casts:0,draws:0,stages:0,leafMotion:0,particles:0,last:null};
+ const counters={casts:0,draws:0,stages:0,leafMotion:0,particles:0,last:null,perMove:{}};
  function atlas(key){
   if(loaded.has(key))return loaded.get(key);
   const p=PIXI.Assets.load(source(key)).then(texture=>{
@@ -87,6 +87,10 @@ var grassFourV84=(()=>{
    }
   });
   counters.casts++;
+  const record=counters.perMove[spec.name]||(counters.perMove[spec.name]={
+    casts:0,draws:0,framesMask:0,lastFrame:0,width:0,height:0
+  });
+  record.casts++;
   return item;
  }
  const clamp=(v,min=0,max=1)=>Math.min(max,Math.max(min,v));
@@ -147,6 +151,12 @@ var grassFourV84=(()=>{
   }
   if(item.seen!==index){item.seen=index;counters.stages++;}
   counters.draws++;
+  const tracked=counters.perMove[spec.name];
+  if(tracked){
+   tracked.draws++;tracked.framesMask|=1<<index;
+   tracked.lastFrame=index+1;
+   tracked.width=Math.round(width);tracked.height=Math.round(height);
+  }
   counters.last={move:spec.name,frame:index+1,draws:counters.draws,
    width:Math.round(width),height:Math.round(height),
    speed:spec.speed,impact:index===spec.impact};
