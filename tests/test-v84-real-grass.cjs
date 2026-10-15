@@ -18,12 +18,12 @@ assert.ok(end.includes('grassFourV84.resolve(f?.move?.name||f?.name)'));
 assert.ok(!render.includes('getContext(')&&!render.includes('<video>'),'No fake canvas/video stroke');
 const moves=[
  ['Chicote de Vinha','chicote-de-vinha',5,4/8,.94],
- ['Folha Navalha','folha-navalha',3.35,5/8,.96],
+ ['Folha Navalha','folha-navalha',2.25,5/8,.96],
  ['Chicotes em Área','chicotes-em-area',1.85,5/8,.82],
  ['Vine Whip','vine-whip',4.95,4/8,.94]
 ];
 for(const [name,slug] of moves){
- const file=path.join(root,'effects/moves',slug,'v83-preview/sprites',slug+'.webp');
+ const file=path.join(root,'effects/moves',slug,slug==='folha-navalha'?'v83-preview/sprites':'v84-preview/sprites',slug+'.webp');
  const bytes=fs.readFileSync(file);
  assert.equal(bytes.subarray(0,4).toString('ascii'),'RIFF');
  assert.equal(bytes.subarray(8,12).toString('ascii'),'WEBP');
@@ -42,7 +42,7 @@ const window={PIXI};
 const ctx=vm.createContext({window,PIXI,console});
 vm.runInContext(render,ctx);
 const v84=vm.runInContext('grassFourV84',ctx);
-assert.equal(v84.diagnostic().version,'84.1');
+assert.equal(v84.diagnostic().version,'84.2');
 for(const n of ['Thunder','Discharge','Dragon Pulse','Aura Sphere','Leech Seed'])
  assert.equal(v84.resolve(n),'','Protected move intercepted: '+n);
 (async()=>{
@@ -77,7 +77,7 @@ for(const n of ['Thunder','Discharge','Dragon Pulse','Aura Sphere','Leech Seed']
   }
   if(name==='Chicotes em Área')
    assert.ok(item.sprite.height<item.sprite.width*.34,'Area must be compact');
-  assert.ok(v84.source(key).includes(slug+'/v83-preview/sprites/'));
+  assert.ok(v84.source(key).includes(slug+'/'+(slug==='folha-navalha'?'v83-preview':'v84-preview')+'/sprites/'));
   v84.dispose(item);
  }
  class BattleEngine{
