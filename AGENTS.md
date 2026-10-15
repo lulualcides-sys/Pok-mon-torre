@@ -1,3 +1,21 @@
+# SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
+
+**INSTRUÇÕES ATUAIS E PRIORITÁRIAS.** Em caso de divergência com revisões históricas abaixo, aplicar este Script Mestre. Repositório: https://github.com/lulualcides-sys/Pok-mon-torre. Jogo: https://lulualcides-sys.github.io/Pok-mon-torre/.
+
+1. **Alterar o jogo real:** trabalhar diretamente no GitHub quando o acesso estiver disponível; implementar, testar e publicar via Pages. Não substituir programação por imagens, Ateliê, código solto ou arquivo para baixar. **Nunca declarar concluído sem confirmar commit, testes e publicação.** Informar o link jogável.
+2. **Golpes cinematográficos:** utilizar LibreSprite, PixiJS e PixiJS Particle Emitter quando disponíveis e compatíveis; ser fiel aos Pokémon originais. Contorno preto, contraste, luz, partículas, antecipação, trajetória, impacto e dissipação. Golpes simples 8 quadros, médios 12, complexos 16; animações fluidas e visíveis, sem rapidez excessiva, efeito genérico reutilizado ou PNG estático como substituição. Dano sincronizado no quadro real de contato. Golpes proporcionais e sem invadir HUD/menus nem persistir depois da luta.
+3. **Isolamento e proteção:** cada golpe em pasta com código independente. Consultar `effects/moves/STATUS_APROVADOS.json` antes de editar. **Não alterar arte de golpes aprovados sem autorização explícita; preservar snapshots e salvamentos.**
+4. **Prévia:** lotes de quatro golpes. Para substituir golpe já aprovado, disponibilizar animação funcional na batalha online, com preparação, trajetória, impacto e dissipação; aguardar a aprovação para integrar à versão oficial. **Não criar Ateliê dentro do jogo, nem enviar imagens quando o usuário pedir programação.**
+5. **Pokémon:** acabamento Mewtwo V95 aprovado como referência (contorno preto, nitidez, cor, luz, sombra, contraste). Replicar apenas a pedido, em lotes, sem redesenho geral, rigging individual dos membros ou Mega Evolução.
+6. **Arena:** V98 aprovada, estádio tecnológico azul com piso quadriculado, metal, detalhes horizontais, espaço ampliado e câmera acompanhando a luta. Não restaurar floresta V96. Preservar o trabalho aprovado.
+7. **V99 + V100:** verificar estado real do GitHub; unificar quatro slots históricos de gelo e deduplicação PT/EN, **preferir Raio de Gelo a Ice Beam**. Preservar os efeitos aprovados dos outros golpes, nomes internos antigos, equipamentos, salvamentos, dano e aliases. Mostrar só uma opção por ataque equivalente; ataques diferentes continuam distintos.
+8. **Testes antes de publicar:** abrir no Chromium/navegador; executar quatro ataques históricos em batalha e os três tipos canônicos sem duplicações; confirmar impacto e HP, regressões dos aprovados, Android/celular, modo seguro e publicação efetiva de GitHub Pages.
+9. **Autonomia:** implementar e revisar com ferramentas conectadas; explicar brevemente o que mudou e fornecer link do jogo. Se algo ainda não foi validado, informar o estado real em vez de declarar sucesso.
+
+---
+
+## Histórico (regras antigas subordinadas ao Script Mestre acima)
+
 ## V82 — corrigir quais são os quatro golpes do print de Mewtwo
 
 - **O usuário pediu os quatro golpes salvos nos espaços superiores**: 1. Chicote de Vinha; 2. Folha Navalha; 3. Chicotes em Área; 4. Vine Whip. **NÃO** são os quatro do filtro Planta abaixo (Esporos, Pó do Sono, Stun Spore, Leech Seed).
