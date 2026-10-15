@@ -5,7 +5,11 @@
  */
 (()=>{
  'use strict';
- if(typeof v32Catalogue!=='function'||typeof v32MoveKey!=='function')return;
+ window.PokemonTorreMoveDedupScopeV100=Object.freeze({
+  catalogue:typeof v32Catalogue,moveKey:typeof v32MoveKey,
+  defaultSlots:typeof v32DefaultSlots,skillSet:typeof skillSet
+ });
+ if(typeof v32Catalogue!=='function'||typeof v32DefaultSlots!=='function')return;
  const normalize=s=>String(s||'').normalize('NFD')
   .replace(/[\u0300-\u036f]/g,'').toLowerCase()
   .replace(/[\u2018\u2019\u0027]/g,'').replace(/[^a-z0-9]/g,'');
