@@ -43,7 +43,7 @@ for(const p of ['dragon-pulse','aura-sphere','x-scissor','dragon-claw']){
 }
 assert.ok(index.includes('"effects/moves/v72-battle/render.js","effects/moves/_runtime/pixi-layer.js"'),'V72 must load before PixiFX');
 assert.ok(index.includes("effects/moves/v72-battle/sprites/"),'The game must preload battle atlases');
-assert.ok(pixi.includes('battleFourV72.install(app,f,kind)')&&pixi.includes('battleFourV72.animate(item,now)'),
+assert.ok(pixi.includes('battleFourV72.install(app,f,kind)')&&pixi.includes('battleFourV72.animate(item,now)')&&pixi.includes('e.v72?e.visualDuration'),
   'V72 renderer must use the game existing PIXI overlay');
 assert.ok(end.includes("battleFourV72.accepts(k)")&&end.indexOf("battleFourV72.accepts(k)")<end.indexOf("heritage37V66.accepts(k)"),
   'V72 must intercept exactly four before legacy V66');
@@ -59,9 +59,15 @@ assert.ok(!source.includes('BattleEngine.prototype.useMove')&&!/\.hp\s*=|\.energ
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(scene.ready,true,'Images did not decode '+key);
   assert.equal(scene.frames.length,8,'Not eight frames: '+key);
+  assert.equal(scene.visualDuration,1800,'V75 should hold animation 1.8 times longer without editing original cast duration');
+  assert.equal(attack.duration,1000,'V75 must leave game attack duration untouched');
   fx.animate(scene,650);
   assert.equal(scene.sprite.visible,true,'Move hidden in battle '+key);
-  assert.equal(scene.sprite.texture.frame.x,480*4,'Wrong attack animation timing '+key);
+  assert.equal(scene.sprite.texture.frame.x,480*2,'V75 early frame should advance more slowly '+key);
+  fx.animate(scene,1100);
+  assert.equal(scene.sprite.texture.frame.x,480*4,'V75 mid-animation frame is wrong '+key);
+  fx.animate(scene,1840);
+  assert.equal(scene.sprite.texture.frame.x,480*7,'V75 final frame must remain visible after original duration '+key);
   assert.ok(scene.sprite.width>100&&scene.sprite.height>50,'Tiny/no sprite '+key);
   // V73: the same approved artwork must be smaller, for both contact/ranged effects.
   if(fx.specs[key].mode==='contact'){
@@ -79,5 +85,5 @@ assert.ok(!source.includes('BattleEngine.prototype.useMove')&&!/\.hp\s*=|\.energ
   assert.equal(scene.disposed,true,'Scene was not cleaned up: '+key);
  }
  assert.equal(calls,Object.keys(required).length,'Unexpected atlas requests');
- console.log('PASS V74: extra compact four battle effects, correct impact alignment and preserved original art');
+ console.log('PASS V75: visual animation 1.8x longer, full eight frames, original mechanics unchanged; compact art preserved');
 })().catch(e=>{console.error(e);process.exitCode=1});
