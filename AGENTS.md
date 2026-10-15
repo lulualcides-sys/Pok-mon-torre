@@ -28,6 +28,13 @@ Este documento registra as regras do projeto para qualquer alteração de golpes
 
 Estas são **diretrizes permanentes de desenvolvimento**, não uma declaração de que todos os golpes já foram refeitos ou testados.
 
+## Revisão V79 — tempo de leitura dos efeitos e marcadores incompletos
+
+- Usuário aprovou o tamanho compacto e a arte de Dragon Claw e X-Scissor da V77; **não alterar a duração, os quadros nem as artes desses dois**.
+- Dragon Pulse e Aura Sphere em prévia passam a ter duração visual **3,4 vezes a duração básica**, mantendo quadros e tamanho da V78. Dano, tempo de cast, recarga e energia permanecem inalterados. A versão de teste é ativada apenas por `?battle_preview=v79`.
+- O sinal positivo **+ vetorial SVG, sem emoji**, deve aparecer ao lado do **nome** (também durante combate) de todo golpe com efeito visual especial já alterado. Verificar explicitamente `Chamas de Moltres` e seus vizinhos `Rajada Flamejante`, `Chama Circular`, `Garra de Fogo`, bem como os aliases/familias de fogo, status e elétricos editados.
+- O marcador indica que **a arte foi modificada**, não equivale a aprovação formal. Atualizar a lista do `effects/ui/move-library-v61.js` quando outro golpe ganhar renderizador específico e jamais apagar marcas aprovadas.
+
 ## Padrão V78 — marcador positivo nos golpes modificados
 
 - Ao lado dos nomes dos golpes com **efeitos visuais já modificados**, exibir um pequeno **+ vetorial SVG**, com mesmo estilo do ícone de tipo, **não um emoji**. Ele identifica a alteração visual, não significa automaticamente aprovação. Não marcar os golpes genéricos ainda não trabalhados. Aplicar às listas de movimentos, slots equipados e comandos de batalha, sem alterar identificação dos golpes, seletores, salvamentos ou status.
