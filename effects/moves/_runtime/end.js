@@ -30,6 +30,13 @@ function paint(g,f,now,e,k){
   plantFourV63.paint(g,f,t,now,s,low,k);
  }else  if(typeof cinematicFourV60!=='undefined'&&cinematicFourV60.accepts(k)){
   if(!cinematicFourV60.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
+ }else if(typeof battleFourV72!=='undefined'&&battleFourV72.accepts(k)){
+  // The four approved cinematic sprites are drawn on the existing Pixi/WebGL overlay.
+  // Legacy V66 procedural painter is only a compatibility fallback without WebGL.
+  if(!pixiFX.paint(f,e,k)){
+   if(typeof heritage37V66!=='undefined'&&heritage37V66.accepts(k))heritage37V66.paint(g,f,t,now,s,low,k);
+   else entry.draw(g,f,t,now,s,low);
+  }
  }else if(typeof library16V59!=='undefined'&&library16V59.accepts(k)){
   // V59 uses only a verified catalog allowlist. Older approved effects
   // have their own modules and never enter this branch.
@@ -152,7 +159,7 @@ const _firePunchDraw=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
  const active=(this.v359Attacks||[]).filter(fx=>{
   const n=String(fx?.move?.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
-  return (n==='punhodefogo'||n==='firepunch'||n==='faiscadopikachu'||n==='volttackle')&&now>=fx.at&&now<fx.at+Math.max(350,fx.duration||1000);
+  return (n==='punhodefogo'||n==='firepunch'||n==='faiscadopikachu'||n==='volttackle'||n==='xscissor'||n==='cortex'||n==='dragonclaw')&&now>=fx.at&&now<fx.at+Math.max(350,fx.duration||1000);
  });
  if(!active.length||!this.player||!this.enemy||!battle?.active)return _firePunchDraw.call(this,now);
  const fx=active[active.length-1],p=this.player,q=this.enemy,ox=p.x,oy=p.y;
