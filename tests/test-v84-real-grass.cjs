@@ -42,7 +42,7 @@ const window={PIXI};
 const ctx=vm.createContext({window,PIXI,console});
 vm.runInContext(render,ctx);
 const v84=vm.runInContext('grassFourV84',ctx);
-assert.equal(v84.diagnostic().version,'84.0');
+assert.equal(v84.diagnostic().version,'84.1');
 for(const n of ['Thunder','Discharge','Dragon Pulse','Aura Sphere','Leech Seed'])
  assert.equal(v84.resolve(n),'','Protected move intercepted: '+n);
 (async()=>{
