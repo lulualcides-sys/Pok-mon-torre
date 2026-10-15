@@ -1,0 +1,35 @@
+name: V99 four ice animated previews
+on:
+  pull_request:
+    paths:
+      - 'effects/moves/v99-ice-preview/**'
+      - 'effects/moves/aurora-beam/v99-preview/**'
+      - 'effects/moves/ice-beam/v99-preview/**'
+      - 'effects/moves/catalog/impactoglacial/v99-preview/**'
+      - 'effects/moves/raio-de-gelo/v99-preview/**'
+      - 'tests/ice-four-v99-preview.test.cjs'
+      - 'index.html'
+      - '.github/workflows/ice-four-v99.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'effects/moves/v99-ice-preview/**'
+      - 'effects/moves/aurora-beam/v99-preview/**'
+      - 'effects/moves/ice-beam/v99-preview/**'
+      - 'effects/moves/catalog/impactoglacial/v99-preview/**'
+      - 'effects/moves/raio-de-gelo/v99-preview/**'
+      - 'tests/ice-four-v99-preview.test.cjs'
+      - 'index.html'
+      - '.github/workflows/ice-four-v99.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-ice-quartet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/ice-four-v99-preview.test.cjs
