@@ -196,8 +196,8 @@ server.listen(0,'127.0.0.1',async()=>{
     ok:v83.ok,preview:v83.result?.grassV83Version,
     nativeHitSync:v83.result?.grassV83HitSyncVersion,errors:v83.errors
   }));
-  if(!v83.ok||v83.result?.grassV83Version!=='83.0'||
-     v83.result?.grassV83HitSyncVersion!=='83.0'){
+  if(!v83.ok||v83.result?.grassV83Version!=='83.1'||
+     v83.result?.grassV83HitSyncVersion!=='83.1'){
     console.error('FAIL: V83 four unique grass previews did not load in real game');
     process.exitCode=1;
   }
