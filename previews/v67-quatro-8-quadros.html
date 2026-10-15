@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pokémon Torre — V67 — 4 golpes / 8 quadros</title><style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#172a41,#080e1a 60%);color:#e7f6ff;font:14px/1.45 system-ui,sans-serif}
+main{margin:auto;width:min(1180px,100%);padding:clamp(12px,3vw,32px)}
+header{padding:20px 0 10px;border-bottom:1px solid #375472}small{color:#87decb;text-transform:uppercase;letter-spacing:.22em;font-weight:800}h1{font-size:clamp(22px,5vw,34px);margin:8px 0 0;letter-spacing:.045em}
+header p{color:#afc7d8;max-width:850px}
+.tabs{display:flex;gap:9px;overflow-x:auto;padding:18px 0 22px}.tab{border:1px solid #426688;background:#112036;color:#c5e0f5;border-radius:10px;padding:11px 15px;white-space:nowrap;font:700 13px system-ui;cursor:pointer}
+.tab[aria-selected=true]{color:#08121c;background:#9ff4eb;border-color:#d7fff2}
+h2{margin:0 0 6px;font-size:20px}#desc{color:#bed8e9;margin:0 0 17px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.panel{background:linear-gradient(145deg,#15263e,#080f1b);border:1px solid #2d506f;border-radius:13px;min-width:0;overflow:hidden}
+.panel canvas{width:100%;aspect-ratio:4/3;display:block;image-rendering:auto}
+.panel footer{font-size:12px;padding:10px 12px;border-top:1px solid #2d4862;color:#a6c4d7;font-weight:700;display:flex;justify-content:space-between}
+.note{font-size:13px;padding:12px 15px;border-left:3px solid #86ccff;margin:22px 0;background:#112238;color:#bbd4e9}
+@media(min-width:880px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style></head>
+<body><main>
+<header><small>✦ POKÉMON TORRE · ATELIÊ DOS GOLPES</small><h1>V67 — revisão de 4 golpes</h1><p>Oito quadros de cada animação, produzidos pelo mesmo Canvas usado na camada de VFX; esta é a prévia para aprovação, sem alterar os efeitos já aprovados.</p></header>
+<div class="tabs" role="tablist" aria-label="Selecionar golpe"></div>
+<h2 id="heading">Carregando...</h2><p id="desc"></p><section class="grid" id="frames" aria-label="8 quadros da animação"></section>
+<p class="note">Os quadros são capturas de momentos diferentes do mesmo efeito programado; esta galeria não substitui os testes de acerto, direção e dano no jogo. Thunder, Discharge e Thunder Wave não fazem parte desta revisão.</p>
+</main>
+<script src="../effects/moves/v67-four/core.js"></script>
+<script src="../effects/moves/v67-four/x-scissor/index.js"></script>
+<script src="../effects/moves/v67-four/aura-sphere/index.js"></script>
+<script src="../effects/moves/v67-four/dragon-pulse/index.js"></script>
+<script src="../effects/moves/v67-four/dragon-claw/index.js"></script>
+<script>
+(()=>{
+ const fx=window.PokemonTorreFidelityFourV67;
+ const moves=[
+ ['catalog_cortex','X-Scissor / Corte X','Dois cortes curvos sucessivos em forma de X, gume verde com brilho branco e fragmentação no impacto.'],
+ ['catalog_aurasphere','Aura Sphere','Aura azul compacta que se concentra, segue o inimigo e libera ondas de energia ao acertar.'],
+ ['catalog_dragonpulse','Dragon Pulse','Pulso dracônico violeta com cabeça, chifres e mandíbula definidos e rastro serpentino.'],
+ ['catalog_dragonclaw','Dragon Claw','Três rastros de garras dracônicas em sequência com impacto nítido.']
+ ];
+ const tab=document.querySelector('.tabs'),frameRoot=document.querySelector('#frames');
+ function show(id) {
+  const move=moves.find(m=>m[0]===id);
+  document.querySelector('#heading').textContent=move[1];
+  document.querySelector('#desc').textContent=move[2];
+  for(let btn of tab.children)btn.setAttribute('aria-selected',String(btn.dataset.key===id));
+  frameRoot.replaceChildren();
+  for(let i=0;i<8;i++){
+   const box=document.createElement('article');box.className='panel';
+   const canvas=document.createElement('canvas');canvas.width=360;canvas.height=270;
+   const g=canvas.getContext('2d'),t=(i+.55)/8;
+   g.imageSmoothingEnabled=true;
+   // Both actors are represented by unobtrusive reference disks in this preview.
+   // They are NOT part of the move artwork and are not drawn by the VFX module.
+   function actor(x,y,c) {
+    g.fillStyle=c;g.globalAlpha=.14;g.beginPath();g.ellipse(x,y,24,28,0,0,Math.PI*2);g.fill();g.globalAlpha=1;
+   }
+   actor(54,135,'#79cbfa');actor(226,135,'#f7a66d');
+   fx.paint(g,{from:[54,135],to:[226,135],at:0,duration:1000},t,t*1000,1.05,false,id);
+   const foot=document.createElement('footer');
+   const num=document.createElement('span');num.textContent=String(i+1).padStart(2,'0')+'/08';
+   const label=document.createElement('span');label.textContent=['Preparação','Carregando','Início','Avanço','Colisão','Impacto','Energia','Dissipação'][i];
+   foot.append(num,label);box.append(canvas,foot);frameRoot.append(box);
+  }
+ }
+ for(let m of moves){const b=document.createElement('button');b.className='tab';b.type='button';b.role='tab';b.dataset.key=m[0];b.textContent=m[1];b.addEventListener('click',()=>show(m[0]));tab.append(b)}
+ show(moves[0][0]);
+})();
+</script></body></html>
