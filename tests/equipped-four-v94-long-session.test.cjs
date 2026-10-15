@@ -32,7 +32,7 @@ class BattleEngine {
   const mv=moves[slot];cooldowns[slot]=now+1200;battle.energy-=10;
   // Change type every other cast: visual coverage must follow the accepted
   // move, not depend on hard-coded type='grass'/'ice'.
-  this.projectiles.push({from:'player',type:now%2?'normal':mv.type,life:1.5});
+  this.projectiles.push({from:'player',type:Math.floor(now/7000)%2?'normal':mv.type,life:1.5});
   this.particles.push({color:'legacy'});
  }
  drawProjectile(){ballDraws++;return 'round-generic-projectile';}
