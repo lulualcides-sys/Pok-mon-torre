@@ -34,6 +34,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
  const child=cp.spawn(chrome,[
   '--headless=new','--no-sandbox',
   ...((query.includes('battle_preview=v84')||query.includes('build=v90-live-game'))?['--enable-unsafe-swiftshader','--use-gl=angle','--use-angle=swiftshader']:['--disable-gpu']),
+  ...(query.includes('build=v92-equipped-mobile')?['--disable-webgl','--disable-webgl2','--disable-software-rasterizer']:[]),
   '--disable-dev-shm-usage',
   '--no-first-run','--no-default-browser-check','--disable-extensions',
   '--disable-background-networking','--remote-allow-origins=*',
