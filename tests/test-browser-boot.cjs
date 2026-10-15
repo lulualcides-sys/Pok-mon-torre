@@ -146,12 +146,21 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
      "const fired=qa.cast(selectedSlot,"+JSON.stringify(options)+");"+
      "await new Promise(r=>setTimeout(r,2300));"+
      "return {initial,fired,final:qa.snapshot()};})()";
-    const response=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
-    const answer=response.result?.result?.value||{error:response.result?.exceptionDetails?.text||'No combat result'};
-    combatResults.push({name,...answer,landed:
-      Number.isFinite(answer?.fired?.hpBefore)&&
-      Number.isFinite(answer?.final?.foeHp)&&
-      answer.final.foeHp<answer.fired.hpBefore});
+    // Real attacks can legitimately MISS due to native battle accuracy.
+    // Retry at most three independent casts rather than treating one RNG miss
+    // as a broken game. Persistent no-damage errors still fail this smoke test.
+    let answer=null,landed=false,attempts=0;
+    for(attempts=1;attempts<=3;attempts++){
+      const response=await cmd('Runtime.evaluate',
+        {expression,returnByValue:true,awaitPromise:true});
+      answer=response.result?.result?.value||
+        {error:response.result?.exceptionDetails?.text||'No combat result'};
+      landed=Number.isFinite(answer?.fired?.hpBefore)&&
+        Number.isFinite(answer?.final?.foeHp)&&
+        answer.final.foeHp<answer.fired.hpBefore;
+      if(landed)break;
+    }
+    combatResults.push({name,...answer,landed,attempts});
    }
   }
   return {query:query||'default',ok,result,combatResults,grassResults,drainResults,uiFixture,errors:errors.slice(0,12)};
@@ -196,8 +205,8 @@ server.listen(0,'127.0.0.1',async()=>{
     ok:v83.ok,preview:v83.result?.grassV83Version,
     nativeHitSync:v83.result?.grassV83HitSyncVersion,errors:v83.errors
   }));
-  if(!v83.ok||v83.result?.grassV83Version!=='83.0'||
-     v83.result?.grassV83HitSyncVersion!=='83.0'){
+  if(!v83.ok||v83.result?.grassV83Version!=='83.1'||
+     v83.result?.grassV83HitSyncVersion!=='83.1'){
     console.error('FAIL: V83 four unique grass previews did not load in real game');
     process.exitCode=1;
   }

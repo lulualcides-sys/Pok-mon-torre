@@ -7,7 +7,7 @@
  const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
    .toLowerCase().replace(/[^a-z0-9]/g,'');
  const names=new Set(['chicotedevinha','folhanavalha','chicotesemarea','vinewhip']);
- const log={version:'83.0',scheduled:0,suppressed:0,last:null};
+ const log={version:'83.1',scheduled:0,suppressed:0,last:null};
  const previous=BattleEngine.prototype.useMove;
  BattleEngine.prototype.useMove=function(slot){
   const priorAttacks=new Set(this.v359Attacks||[]);
@@ -22,9 +22,11 @@
   if(!attack)return accepted;
   const config=window.PokemonTorreGrassFourPreviewV83?.timings;
   const ratio=config?.contacts?.[attack.move.name];
-  if(!Number.isFinite(ratio)||!(ratio>0&&ratio<1)||config.speed!==3.2)
-    return accepted;
-  const visualMs=Math.max(400,attack.duration)*config.speed;
+  const speed=config?.speeds?.[attack.move.name];
+  if(!Number.isFinite(ratio)||!(ratio>0&&ratio<1)||
+     !Number.isFinite(speed)||speed<1.5||speed>5)return accepted;
+  // The renderer and native HP share the same per-move time scale.
+  const visualMs=Math.max(400,attack.duration)*speed;
   const moment=attack.at+visualMs*ratio;
   // The battle engine reads times as a multiple of attack.duration.
   // No extra damage event is created. Allow delay beyond original cast.
@@ -46,7 +48,7 @@
      (wasContact-(this.v47ContactToLand?.length||0));
   log.scheduled++;
   log.last={name:attack.move.name,impactAt:moment,visualUntil:attack.v83VisualUntil,
-    singleHit:attack.times.length===1,realCastDuration:attack.duration};
+    singleHit:attack.times.length===1,realCastDuration:attack.duration,speed};
   return accepted;
  };
  window.PokemonTorreGrassImpactV83=()=>({...log,last:log.last&&{...log.last}});
