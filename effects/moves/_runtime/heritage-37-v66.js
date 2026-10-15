@@ -141,6 +141,8 @@ var heritage37V66 = (() => {
     case 'claw': case 'cross':case 'fury':case 'windslash':case 'tail':{
      const n=mode==='claw'?3:mode==='cross'?2:mode==='fury'?Math.max(1,Math.ceil(t0*5)):mode==='tail'?1:4;
      const col=mode==='claw'?'#a65fff':mode==='windslash'?'#b7eaff':mode==='tail'?'#cadfe9':mode==='cross'?'#8cf13b':'#baf554';
+     // Early frame: blade glint announces the attack before the strike begins.
+     if(t0<.20)for(let z=0;z<3;z++)sparkle(g,end[0]+(z-1)*11*k,end[1]-13*k-z*3*k,(3+z)*k,col,clip(t0*7));
      for(let j=0;j<n;j++){
       const shift=mode==='cross'?0:(j-(n-1)/2)*9*k;
       const r=mode==='windslash'?49*k:mode==='tail'?53*k:42*k;
