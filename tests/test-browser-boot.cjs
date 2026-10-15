@@ -298,9 +298,14 @@ server.listen(0,'127.0.0.1',async()=>{
    v86.v86CombatResults?.length===4&&
    v86.v86CombatResults.every((rec,i)=>{
     const entry=rec.after?.vfx?.perMove?.[names86[i]];
+    // On long Android sessions WebGL may lose its context. A successful
+    // Canvas rescue is correct; refusing it is exactly the "bolinha" bug.
+    const hasGpuArt=(entry?.draws||0)>0&&(entry?.framesMask||0)!==0;
+    const hasNativeRescue=rec.after?.native?.last?.name===names86[i]&&
+     (rec.after?.native?.draws||0)>0&&
+     rec.after?.native?.last?.renderer==='native-canvas-mobile';
     return rec.before?.selected===names86[i]&&entry?.casts===1&&
-     (entry?.draws||0)>0&&(entry?.framesMask||0)!==0&&
-     rec.after?.pixi?.gpu===true&&!rec.after?.error;
+     (hasGpuArt||hasNativeRescue)&&!rec.after?.error;
    });
   const sequenceOK=v86.v86SequenceResults?.length===4&&
    v86.v86SequenceResults.every((rec,i)=>
@@ -308,7 +313,7 @@ server.listen(0,'127.0.0.1',async()=>{
     rec.pixi?.v86Active===true&&
     rec.pixi?.v86Name===rec.selected);
   if(!castOK||!sequenceOK){
-   console.error('FAIL V86: actual Four moves must draw separate Pixi atlases and isolate sequential casts');
+   console.error('FAIL V94: four moves need Pixi OR valid Canvas art after WebGL context loss, no mixed casts');
    process.exitCode=1;
   }
   // The screenshot uses these four EQUIPPED moves in the NORMAL lab.
