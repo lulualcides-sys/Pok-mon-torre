@@ -27,3 +27,9 @@ Este documento registra as regras do projeto para qualquer alteração de golpes
 6. Organizar as pastas sem afetar o funcionamento e preservar salvamentos e conteúdo existente. Preferir atualizações no site já publicado, evitando downloads manuais a cada versão.
 
 Estas são **diretrizes permanentes de desenvolvimento**, não uma declaração de que todos os golpes já foram refeitos ou testados.
+
+## Revisão obrigatória V71 — Ateliê e arte cinematográfica aprovada
+
+- Fluxo atual: prévia de **quatro golpes por lote dentro do jogo**, aberta pelo botão ✦ ATELIÊ; exibir animação PixiJS e oito quadros, preservando o layout de entrada aprovado. O painel externo antigo não é a experiência principal. Não alterar o combate até aprovação visual.
+- **Não voltar a gerar sprites geométricos ou simplórios proceduralmente**. Para Dragon Pulse, Aura Sphere, X-Scissor e Dragon Claw, usar os spritesheets em `effects/atelier-v71/atlases/`, derivados diretamente das quatro artes cinematográficas aprovadas pelo usuário. O gerador V70 foi aposentado da publicação.
+- Manter Thunder, Discharge e Thunder Wave intactos, além de todos os outros golpes aprovados. Novos efeitos devem partir de referências específicas e arte quadro a quadro aprovada; PixiJS cuida da animação, partículas apenas complementares.
