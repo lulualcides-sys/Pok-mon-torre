@@ -31,9 +31,9 @@ var grassFourV83=(()=>{
  const accepts=key=>Object.hasOwn(definitions,key);
  const resolve=name=>accepts(normalize(name))?normalize(name):'';
  const url=key=>{const slug=definitions[key].slug;
-  return 'effects/moves/'+slug+'/v83-preview/sprites/'+slug+'.webp?v=83.0';
+  return 'effects/moves/'+slug+'/v83-preview/sprites/'+slug+'.webp?v=83.1';
  };
- const leafURL='effects/moves/v83-preview/sprites/leaf.webp?v=83.0';
+ const leafURL='effects/moves/v83-preview/sprites/leaf.webp?v=83.1';
  const errors=[],stat={casts:0,frames:0,particleFrames:0,blendedFrames:0,lastStage:null};
  const sharedAtlasFrames=new Map();
  let leafTexturePromise=null;
