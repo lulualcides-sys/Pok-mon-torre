@@ -359,7 +359,7 @@ if(!enableElectricPreview){
    return resp.text();
   }));
   if(!game.includes(fireSpriteAnchor))throw Error('V91 recovery hook missing');
-  game=game.replace(fireSpriteAnchor,'\\n'+parts.join('\\n')+'\\n'+fireSpriteAnchor);
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+parts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V91 safety animation unavailable',error);}
 }
 // The retired Atelier stays in GitHub history; it is not inside the game.
