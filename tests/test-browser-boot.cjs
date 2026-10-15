@@ -304,7 +304,15 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
     moved:moved.result?.result?.value||{}
    };
   }
-  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,errors:errors.slice(0,12)};
+  let bilingualV100=null;
+  if(ok){
+   const probe=await cmd('Runtime.evaluate',{
+    expression:"(()=>{const fx=window.PokemonTorreMoveCatalogV100;const m={id:150,level:100};const pool=window.PokemonTorreV3566QA?.catalog?.(m)||[];const names=pool.map(e=>e.move?.name);const pairs=['Ice Beam','Raio de Gelo','Confusion','Confusão'];return {loaded:!!fx?.installed,version:fx?.version,options:pool.length,ice:names.filter(x=>pairs.slice(0,2).includes(x)),confusion:names.filter(x=>pairs.slice(2).includes(x)),diagnostics:fx?.diagnostics()||null}})()",
+    returnByValue:true
+   });
+   bilingualV100=probe.result?.result?.value||null;
+  }
+  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,bilingualV100,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -318,6 +326,13 @@ server.listen(0,'127.0.0.1',async()=>{
   const port=server.address().port;
   const stable=await browserCase(port,'?safe=1');
   console.log('BROWSER STABLE:',JSON.stringify(stable));
+  if(!stable.ok||!stable.bilingualV100?.loaded||
+     stable.bilingualV100.version!=='100.0'||
+     stable.bilingualV100.ice.length>1||
+     stable.bilingualV100.confusion.length>1){
+    console.error('FAIL V100: PT/EN bilingual duplicates must be consolidated in actual game catalogue');
+    process.exitCode=1;
+  }
   const experimental=await browserCase(port,'?v=46.1');
   console.log('BROWSER EXPERIMENT:',JSON.stringify(experimental));
   if(!experimental.ok||experimental.result?.approvedVersion!=='81.0'||
