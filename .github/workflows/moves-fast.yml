@@ -12,6 +12,8 @@ on:
       - 'tests/test-v79-preview.cjs'
       - 'tests/test-v80-impact.cjs'
       - 'tests/test-v81-approved.cjs'
+      - 'tools/build-v82-equipped-grass.py'
+      - 'tests/test-v82-equipped-grass.cjs'
       - 'effects/moves/_runtime/impact-sync-v80.js'
       - 'effects/ui/**'
       - 'tools/build-v72-battle.py'
@@ -78,10 +80,12 @@ jobs:
           python-version: '3.11'
       - name: Renderizar os 4 spritesheets para batalha e validar V72
         run: |
-          python -m pip install --quiet Pillow
+          python -m pip install --quiet Pillow cairosvg
           python tools/build-v72-battle.py
           python tools/build-v77-preview.py
           python tools/build-v78-preview.py
+          python tools/build-v82-equipped-grass.py
+          node tests/test-v82-equipped-grass.cjs
           node tests/test-v78-preview.cjs
           node tests/test-v79-preview.cjs
           node tests/test-v80-impact.cjs

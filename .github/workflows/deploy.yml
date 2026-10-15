@@ -25,10 +25,11 @@ jobs:
           python-version: '3.11'
       - name: Gerar sprites V72 para as batalhas com Pillow
         run: |
-          python -m pip install --quiet Pillow
+          python -m pip install --quiet Pillow cairosvg
           python tools/build-v72-battle.py
           python tools/build-v77-preview.py
           python tools/build-v78-preview.py
+          python tools/build-v82-equipped-grass.py
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .

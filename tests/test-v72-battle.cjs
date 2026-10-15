@@ -43,7 +43,7 @@ for(const p of ['dragon-pulse','aura-sphere','x-scissor','dragon-claw']){
 }
 assert.ok(index.includes('"effects/moves/v72-battle/render.js","effects/moves/_runtime/pixi-layer.js"'),'V72 must load before PixiFX');
 assert.ok(index.includes("effects/moves/v72-battle/sprites/"),'The game must preload battle atlases');
-assert.ok(pixi.includes('battleFourV72.install(app,f,kind)')&&pixi.includes('battleFourV72.animate(item,now)')&&pixi.includes('e.v72?e.visualDuration'),
+assert.ok(pixi.includes('battleFourV72.install(app,f,kind)')&&pixi.includes('battleFourV72.animate(item,now)')&&pixi.includes('(e.v82||e.v72)?e.visualDuration'),
   'V72 renderer must use the game existing PIXI overlay');
 assert.ok(end.includes("battleFourV72.accepts(k)")&&end.indexOf("battleFourV72.accepts(k)")<end.indexOf("heritage37V66.accepts(k)"),
   'V72 must intercept exactly four before legacy V66');
