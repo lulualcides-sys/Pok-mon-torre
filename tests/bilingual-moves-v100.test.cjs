@@ -31,7 +31,7 @@ const api=context.window.testApi,fx=context.window.PokemonTorreMoveCatalogV100;
 assert.equal(fx.installed,true);
 const all=api.catalog(SAVE),chosen=api.skills(SAVE);
 assert.equal(all.length,9,'14 moves -> 9 semantic and type-distinct menu choices');
-assert.deepEqual(chosen.map(x=>x?.name),['Vine Whip','Raio de Gelo','Confusion','Slam'],
+assert.deepEqual(Array.from(chosen,x=>x?.name),['Vine Whip','Raio de Gelo','Confusion','Slam'],
  'Saved English/Pt keys and existing visual move implementations preserved');
 assert.equal(SAVE.v32Slots[0],'Vine Whip|grass|bolt');
 assert.ok(all.some(x=>x.move.name==='Vine Whip'));
