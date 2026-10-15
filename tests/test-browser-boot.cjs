@@ -304,7 +304,15 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
     moved:moved.result?.result?.value||{}
    };
   }
-  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,errors:errors.slice(0,12)};
+  let moveDedupV100=null;
+  if(ok&&query.includes('dedup_test=1')){
+   const report=await cmd('Runtime.evaluate',{
+    expression:"(async()=>{const modal=document.querySelector('#modal');if(!modal)return {error:'missing modal'};const section=document.createElement('section');section.id='dedup-v100-fixture';section.innerHTML='<div class=\"v331Slots\"><button class=\"v331Slot\"><b>1. ❄️ Ice Beam</b></button><button class=\"v331Slot active\"><b>2. 🔥 Lança-Chamas</b></button></div><div class=\"v331Tabs\"><button data-v331-filter=\"available\">Liberados (9)</button><button data-v331-filter=\"all\">Todos (9)</button></div><div class=\"v331MoveList\">'+['Ice Beam','Raio de Gelo','Haze','Aurora Beam','Raio da Aurora','Chicote de Vinha','Vine Whip','Chicote Duplo','Impacto Glacial'].map((name,i)=>'<button class=\"v331Choice '+(i===0?'equipped':'')+'\" data-v331-pick=\"'+i+'\"><span><b>❄ '+name+'</b><small>Gelo · 40 força · 28 energia · 3.3s</small></span><span>EQUIPAR</span></button>').join('')+'</div>';modal.append(section);await new Promise(r=>setTimeout(r,850));const rows=[...section.querySelectorAll('.v331Choice')];const names=rows.map(x=>x.querySelector('.pt61Label')?.textContent||x.querySelector('b')?.textContent);const ids=rows.map(x=>x.dataset.v331Pick);const result={installed:!!window.PokemonTorreMoveDedupV100?.installed,count:rows.length,names,ids,slot:section.querySelector('.v331Slot b')?.textContent,diagnostics:window.PokemonTorreMoveDedupV100?.diagnostics()||null};section.remove();return result;})()",
+    returnByValue:true,awaitPromise:true
+   });
+   moveDedupV100=report.result?.result?.value||null;
+  }
+  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,moveDedupV100,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -318,6 +326,18 @@ server.listen(0,'127.0.0.1',async()=>{
   const port=server.address().port;
   const stable=await browserCase(port,'?safe=1');
   console.log('BROWSER STABLE:',JSON.stringify(stable));
+  const dedup100=await browserCase(port,'?dedup_test=1&build=v100-bilingual-cleanup');
+  console.log('BROWSER V100 BILINGUAL DEDUP:',JSON.stringify(dedup100.moveDedupV100));
+  const d100=dedup100.moveDedupV100;
+  const expected100=['Ice Beam','Haze','Aurora Beam','Chicote de Vinha',
+    'Chicote Duplo','Impacto Glacial'];
+  if(!dedup100.ok||!d100?.installed||d100.count!==6||
+   !expected100.every(x=>d100.names.includes(x))||
+   d100.names.includes('Raio de Gelo')||d100.names.includes('Vine Whip')||
+   d100.ids.join(',')!=='0,2,3,5,7,8'||!d100.slot?.includes('Ice Beam')){
+    console.error('FAIL V100: editor must show one representative per move; old keys and saved slots intact');
+    process.exitCode=1;
+  }
   const experimental=await browserCase(port,'?v=46.1');
   console.log('BROWSER EXPERIMENT:',JSON.stringify(experimental));
   if(!experimental.ok||experimental.result?.approvedVersion!=='81.0'||
