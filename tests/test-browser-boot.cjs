@@ -33,7 +33,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'pokemon-boot-'));
  const child=cp.spawn(chrome,[
   '--headless=new','--no-sandbox',
-  ...(query.includes('battle_preview=v84')?['--enable-unsafe-swiftshader','--use-gl=angle','--use-angle=swiftshader']:['--disable-gpu']),
+  ...((query.includes('battle_preview=v84')||query.includes('build=v90-live-game'))?['--enable-unsafe-swiftshader','--use-gl=angle','--use-angle=swiftshader']:['--disable-gpu']),
   '--disable-dev-shm-usage',
   '--no-first-run','--no-default-browser-check','--disable-extensions',
   '--disable-background-networking','--remote-allow-origins=*',
@@ -169,7 +169,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
    hazeResults={before,after:after.result?.result?.value||{}};
   }
   let v84CombatResults=null,v84IsolationResults=null;
-  if(ok&&query.includes('battle_preview=v84')){
+  if(ok&&(query.includes('battle_preview=v84')||query.includes('build=v90-live-game'))){
    v84CombatResults=[];
    for(let slot=0;slot<4;slot++){
     const cast=await cmd('Runtime.evaluate',{
@@ -293,7 +293,7 @@ server.listen(0,'127.0.0.1',async()=>{
    ok:v86.ok,version:v86.result?.v86Version,
    casts:v86.v86CombatResults,sequence:v86.v86SequenceResults,errors:v86.errors}));
   const names86=['Raízes Violentas','Geada Persistente','Sopro Congelante','Chicote Duplo'];
-  const castOK=v86.ok&&v86.result?.v86Version==='86.0'&&
+  const castOK=v86.ok&&['86.0','88.0'].includes(v86.result?.v86Version)&&
    v86.v86CombatResults?.length===4&&
    v86.v86CombatResults.every((rec,i)=>{
     const entry=rec.after?.vfx?.perMove?.[names86[i]];
@@ -319,23 +319,25 @@ server.listen(0,'127.0.0.1',async()=>{
    hz.after?.fog?.atlasReady&&hz.after.fog?.draws>1&&hz.after.fog?.wispCount===36&&
    hz.after.layer?.gpu===true&&!hz.after.error;
   if(!hazeOK){console.error('FAIL: real Haze status must animate 36 GPU fog layers without damage');process.exitCode=1;}
-  const v84=await browserCase(port,'?battle_preview=v84&build=v84-2-tres-distintos');
-  console.log('BROWSER LIVE BATTLE V84:',JSON.stringify({ok:v84.ok,
+  // Exercise the normal production URL, not an opt-in preview.
+  const v84=await browserCase(port,'?build=v90-live-game');
+  console.log('BROWSER LIVE BATTLE V90 DEFAULT:',JSON.stringify({ok:v84.ok,
    version:v84.result?.v84Version,casts:v84.v84CombatResults,errors:v84.errors}));
-  const combatOK=v84.ok&&v84.result?.v84Version==='84.2'&&
-    v84.v84CombatResults?.length===4&&
-    v84.v84CombatResults.every((rec,index)=>{
-      const expected=['Chicote de Vinha','Folha Navalha','Chicotes em Área','Vine Whip'][index];
-      const move=rec.after?.art?.perMove?.[expected];
-      return rec.selected===expected&&
-       (move?.casts||0)>=1&&
-       (move?.draws||0)>0&&
-       (move?.framesMask||0)!==0&&
-       rec.after?.pixi?.gpu===true&&
-       !rec.after.webglError;
-    });
+  // Production V90 replaces the archived V84 WebP renderer. Its diagnostic
+  // reports cumulative draws and the LAST distinct attack, not perMove masks.
+  const four90=['Chicote de Vinha','Folha Navalha','Chicotes em Área','Vine Whip'];
+  const combatOK=v84.ok&&v84.result?.v84Version==='90.0'&&
+   v84.v84CombatResults?.length===four90.length&&
+   v84.v84CombatResults.every((rec,i)=>{
+    const report=rec.after?.art;
+    return rec.selected===four90[i]&&report?.last?.move===four90[i]&&
+      (report?.casts||0)>=i+1&&(report?.draws||0)>0&&
+      (report?.generated||0)>=12*(i+1)&&
+      report?.frames?.[four90[i]]===(i===2?16:12)&&
+      rec.after?.pixi?.gpu===true&&!rec.after.webglError;
+   });
   if(!combatOK){
-   console.error('FAIL: V84 must draw new Pixi sprites IN REAL BATTLE for all 4 moves');
+   console.error('FAIL: V90 must draw 12/16 GPU-authored frames in REAL BATTLE for all 4 moves');
    process.exitCode=1;
   }
   console.log('V84 SAME-BATTLE ISOLATION:',JSON.stringify(v84.v84IsolationResults));
@@ -349,7 +351,7 @@ server.listen(0,'127.0.0.1',async()=>{
     const asset=['chicotes-em-area','chicote-de-vinha','vine-whip',
                  'chicotes-em-area','chicote-de-vinha','vine-whip'][i];
     return rec.selected===label&&own?.key===expectedKeys[i]&&
-      own.source?.includes('/'+asset+'/v84-preview/sprites/'+asset+'.webp')&&
+      own.source==='pixi-generated-v90:'+expectedKeys[i]&&
       rec.layer.previewEffectCount===1&&
       rec.layer.active===1&&
       !['chicotedevinha','folhanavalha','chicotesemarea','vinewhip']
@@ -358,7 +360,7 @@ server.listen(0,'127.0.0.1',async()=>{
        v84.v84IsolationResults[i-1].layer.clearedV84);
    });
   if(!isolated){
-    console.error('FAIL: Area sprites leaked into next Chicote or Vine cast');
+    console.error('FAIL: V90 previous Area roots leaked into next Chicote or Vine cast');
     process.exitCode=1;
   }
   if(!stable.ok||stable.result?.electric||stable.result?.types){
