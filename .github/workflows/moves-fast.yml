@@ -41,3 +41,6 @@ jobs:
 
       - name: Validar quatro golpes baseados em referencias V68 (40 quadros)
         run: node tests/test-v68-four.cjs
+
+      - name: Abrir galeria V68 no Chromium e validar oito quadros renderizados
+        run: node tests/test-v68-browser.cjs
