@@ -127,6 +127,21 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
        response.result?.exceptionDetails?.text||'No result'});
    }
   }
+  let iceV101Results=null;
+  if(ok&&query.includes('build=v101-approved-ice')){
+   iceV101Results=[];
+   for(let slot=0;slot<4;slot++){
+    const fired=await cmd('Runtime.evaluate',{
+     expression:"(()=>window.PokemonTorreLocalCombatTestV47?.castOfficialIceV101("+slot+")||{error:'No V101 battle QA'})()",
+     returnByValue:true});
+    const before=fired.result?.result?.value||{error:'No cast result'};
+    await sleep(700);
+    const check=await cmd('Runtime.evaluate',{
+     expression:"(()=>({fx:window.PokemonTorreIceV101?.diagnostics()||null,approved:window.PokemonTorreIceOfficialV101?.enabled||false,alive:!!document.getElementById('battleCanvas')?.isConnected}))()",
+     returnByValue:true});
+    iceV101Results.push({slot,before,after:check.result?.result?.value||{}});
+   }
+  }
   let iceV99Results=null;
   if(ok&&query.includes('battle_preview=ice99')){
    iceV99Results=[];
@@ -312,7 +327,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
    });
    moveDedupV100=report.result?.result?.value||null;
   }
-  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,moveDedupV100,errors:errors.slice(0,12)};
+  return {query:query||'default',ok,result,iceV101Results,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,moveDedupV100,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -355,6 +370,16 @@ server.listen(0,'127.0.0.1',async()=>{
     console.error('FAIL V95: Mewtwo must render actual polished pixel art in normal Lab battle');
     process.exitCode=1;
   }
+  const ice101=await browserCase(port,'?build=v101-approved-ice',true);
+  const live101=ice101.iceV101Results||[];
+  const names101=['Aurora Beam','Impacto Glacial','Raio de Gelo','Ice Beam'];
+  const keys101=['aurorabeam','impactoglacial','raiodegelo','raiodegelo'];
+  const ok101=ice101.ok&&live101.length===4&&live101.every((x,i)=>
+   x.before?.selected===names101[i]&&x.after?.approved&&x.after?.alive&&
+   x.after?.fx?.registered?.length===3&&x.after?.fx?.drawsPerMove[keys101[i]]>0);
+  console.log('BROWSER V101 ICE NORMAL MOBILE:',JSON.stringify({
+   ok:ok101,casts:live101.map(x=>x.before?.selected),errors:ice101.errors}));
+  if(!ok101){console.error('FAIL V101: 3 ice effects + 4 saved names in normal Android browser');process.exitCode=1;}
   // Four visible equipped ICE attacks, genuine casts in live Chromium battle.
   const ice99=await browserCase(port,'?battle_preview=ice99&build=v99-ice-four');
   const iceNames=['Aurora Beam','Ice Beam','Impacto Glacial','Raio de Gelo'];

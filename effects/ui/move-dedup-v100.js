@@ -12,7 +12,7 @@
  ['Chicote de Vinha','Vine Whip'],
  ['Folha Navalha','Razor Leaf'],
  ['Aurora Beam','Raio Aurora','Raio da Aurora'],
- ['Ice Beam','Raio de Gelo','Raio Congelante'],
+ ['Raio de Gelo','Ice Beam','Raio Congelante'],
  ['Hidro Bomba','Hydro Pump'],
  ['Hiper Raio','Hyper Beam'],
  ['Raio Solar','Solar Beam'],
