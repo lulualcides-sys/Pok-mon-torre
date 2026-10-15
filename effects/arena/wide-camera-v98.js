@@ -56,10 +56,10 @@ BattleEngine.prototype.bounds=function(actor){
  if(!enabled||!this._stadiumV98)return normalBounds.apply(this,arguments);
  // Extra horizontal range is truly walkable, stopping before the physical
  // stage edge. Keep top/bottom and the existing combat physics unchanged.
- const result=normalBounds.apply(this,arguments);
  const xPad=Math.max(this.h*.037,this.w*.017);
  actor.x=clamp(actor.x,xPad,this.w-xPad);
- return result;
+ actor.y=clamp(actor.y,this.h*.24,this.h*.84);
+ return undefined;
 };
 const originalDraw=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
