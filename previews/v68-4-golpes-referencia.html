@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pokémon Torre — V68 — 4 golpes fiéis / 8 quadros</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 45% 0,#142d4b,#080e1a 55%);color:#e8f6ff;font:14px/1.5 system-ui,sans-serif}
+main{width:min(1200px,100%);margin:auto;padding:clamp(13px,3vw,26px)}
+small{letter-spacing:.18em;text-transform:uppercase;color:#90f1e2;font-weight:750}
+h1{font-size:clamp(22px,4vw,32px);margin:7px 0 0}p{color:#b6cbdf}
+.tabs{display:flex;gap:7px;overflow-x:auto;margin:18px 0}.tabs button{flex:0 0 auto;background:#13263d;border:1px solid #406987;border-radius:10px;color:#bfe0ee;padding:12px 13px;font:700 13px system-ui}
+.tabs button[aria-selected=true]{background:#87e8f2;color:#06162b}
+.banner{margin:15px 0;padding:12px 15px;border-left:3px solid #9cf6f0;background:#0d2036}
+.banner strong{color:#e7ffff}h2{margin:8px 0 4px}
+.hero{border:1px solid #355978;border-radius:16px;overflow:hidden;background:radial-gradient(circle at 50% 50%,#12223c,#040b15 75%)}
+.hero canvas{display:block;width:100%;aspect-ratio:16/7}
+.hero footer{display:flex;gap:9px;align-items:center;justify-content:space-between;border-top:1px solid #2b435f;padding:9px 12px;color:#b7d8eb}
+.hero button{background:#142c4b;color:#e8f5ff;border:1px solid #6187b5;padding:6px 12px;border-radius:8px}
+h3{font-size:16px;margin:18px 0 11px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.frame{border:1px solid #254763;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 52% 53%,#142742,#07101e 78%)}
+.frame canvas{display:block;width:100%;aspect-ratio:16/10}
+.frame footer{display:flex;justify-content:space-between;border-top:1px solid #29465c;padding:8px 9px;font-size:11px;color:#c4d8e8;gap:4px}
+.note{margin-top:20px;border-left:3px solid #73a9ec;background:#0b203b;padding:11px 14px}
+@media(min-width:900px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style></head>
+<body><main>
+<small>POKÉMON TORRE — ATELIÊ / LOTE 01</small><h1>4 golpes reconstruídos com referência</h1>
+<p>Dragon Pulse agora é um feixe magenta com anéis de energia — sem cobra de desenho. Cada ataque tem animação individual e oito momentos reais, do começo à dissipação.</p>
+<div class="tabs" id="tabs" role="tablist"></div><h2 id="heading"></h2><p id="desc"></p>
+<div class="hero"><canvas id="player" width="720" height="316"></canvas><footer><span>Prévia animada · 60 FPS quando possível</span><button id="toggle" type="button">Pausar</button></footer></div>
+<h3>Oito quadros — início, trajetória e impacto</h3><div class="grid" id="frames"></div>
+<p class="note"><strong>Prévia para aprovação artística.</strong> Estes quatro novos módulos ainda não substituem os V66 em batalha; nenhum outro golpe foi alterado. Thunder, Discharge e Thunder Wave continuam excluídos.</p>
+</main>
+<script src="../effects/moves/v68-four/core.js"></script>
+<script src="../effects/moves/v68-four/dragon-pulse/index.js"></script>
+<script src="../effects/moves/v68-four/aura-sphere/index.js"></script>
+<script src="../effects/moves/v68-four/x-scissor/index.js"></script>
+<script src="../effects/moves/v68-four/dragon-claw/index.js"></script>
+<script>
+(()=>{
+'use strict';
+const VFX=window.PokemonTorreFidelityFourV68,moves=[
+ ['catalog_dragonpulse','Dragon Pulse','Referência enviada: feixe violeta/magenta horizontal, espirais rosas luminosas, carga escura na origem e explosão no alvo. Não é uma cobra.'],
+ ['catalog_aurasphere','Aura Sphere','Esfera de aura azul compacta; energia entra no núcleo, ele avança deixando resíduos e explode em anéis.'],
+ ['catalog_xscissor','X-Scissor / Corte X','Dois cortes físicos curvos, sucessivos e cruzados, com bordas afiadas azul-esverdeadas e faíscas de contato.'],
+ ['catalog_dragonclaw','Dragon Claw','Três garras dracônicas físicas em contato, deslocadas no tempo, deixando rastros violeta e fragmentos ao atingir.']
+];
+const tabs=document.getElementById('tabs'),frames=document.getElementById('frames'),hero=document.getElementById('player'),ctx=hero.getContext('2d');
+let selected=moves[0][0],paused=false,epoch=performance.now(),pauseAt=0;
+const configs={catalog_dragonpulse:[86,161,588,161],catalog_aurasphere:[86,161,588,161],catalog_xscissor:[180,161,518,161],catalog_dragonclaw:[180,161,518,161]};
+function position(key,w,h){
+ const b=configs[key]||configs.catalog_dragonpulse;
+ return {from:[b[0]/720*w,b[1]/316*h],to:[b[2]/720*w,b[3]/316*h],at:0,duration:1360};
+}
+function background(g,w,h){
+ // Background deliberately remains plain; every glow, slash and projectile comes from the renderer.
+ g.clearRect(0,0,w,h);g.save();
+ const grad=g.createRadialGradient(w*.55,h*.52,8,w*.55,h*.52,w*.72);
+ grad.addColorStop(0,'#162744');grad.addColorStop(1,'#06101f');
+ g.fillStyle=grad;g.fillRect(0,0,w,h);g.restore();
+}
+function draw(g,w,h,t,key,low=false){
+ background(g,w,h);
+ const p=position(key,w,h);
+ VFX.paint(g,p,t,t*1360,Math.min(1.2,w/640),low,key);
+}
+function select(key){
+ selected=key;epoch=performance.now();pauseAt=0;
+ const info=moves.find(x=>x[0]===key);document.getElementById('heading').textContent=info[1];document.getElementById('desc').textContent=info[2];
+ for(const child of tabs.children)child.setAttribute('aria-selected',String(child.dataset.key===key));
+ frames.replaceChildren();
+ for(let i=0;i<8;i++){
+  let article=document.createElement('article');article.className='frame';
+  let canvas=document.createElement('canvas');canvas.width=560;canvas.height=350;
+  let g=canvas.getContext('2d'),step=(i+.40)/8;
+  // Render in full source pixel dimensions then scale for the small-screen grid.
+  g.save();g.scale(560/720,350/316);
+  draw(g,720,316,step,key,false);g.restore();
+  const foot=document.createElement('footer');
+  const n=document.createElement('strong');n.textContent=String(i+1).padStart(2,'0')+'/08';
+  const phase=document.createElement('span');phase.textContent=['Concentração','Carga','Disparo','Avanço','Aproximação','Contato','Explosão','Fim'][i];
+  foot.append(n,phase);article.append(canvas,foot);frames.append(article);
+ }
+}
+for(const item of moves){
+ const btn=document.createElement('button');btn.type='button';btn.role='tab';btn.dataset.key=item[0];btn.textContent=item[1];
+ btn.addEventListener('click',()=>select(item[0]));tabs.append(btn);
+}
+const toggle=document.getElementById('toggle');
+toggle.addEventListener('click',()=>{
+ paused=!paused;
+ if(paused){pauseAt=performance.now()-epoch;toggle.textContent='Reproduzir';}
+ else{epoch=performance.now()-pauseAt;toggle.textContent='Pausar';}
+});
+function animation(now){
+ const millis=paused?pauseAt:now-epoch;
+ const t=((millis%1800)+1800)%1800/1360;
+ const sample=t>1?1:Math.max(0,t);
+ draw(ctx,hero.width,hero.height,sample,selected,false);
+ requestAnimationFrame(animation);
+}
+select(moves[0][0]);requestAnimationFrame(animation);
+})();
+</script></body></html>
