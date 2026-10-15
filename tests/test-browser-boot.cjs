@@ -277,7 +277,9 @@ server.listen(0,'127.0.0.1',async()=>{
                  'chicotes-em-area','chicote-de-vinha','vine-whip'][i];
     return rec.selected===label&&own?.key===expectedKeys[i]&&
       own.source?.includes('/'+asset+'/v83-preview/sprites/'+asset+'.webp')&&
-      rec.layer.previewEffectCount===1&&rec.layer.clearedV84>=i+4;
+      rec.layer.previewEffectCount===1&&
+      (i===0||rec.layer.clearedV84>
+       v84.v84IsolationResults[i-1].layer.clearedV84);
    });
   if(!isolated){
     console.error('FAIL: Area sprites leaked into next Chicote or Vine cast');
