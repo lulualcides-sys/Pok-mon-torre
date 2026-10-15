@@ -307,7 +307,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
   let moveDedupV100=null;
   if(ok&&query.includes('move_catalog_test=1')){
    const check=await cmd('Runtime.evaluate',{
-    expression:"(()=>({installed:!!window.PokemonTorreMoveDedupV100?.installed,mewtwo:window.PokemonTorreMoveDedupV100?.report(150,100)||null,bulbasaur:window.PokemonTorreMoveDedupV100?.report(1,100)||null,metrics:window.PokemonTorreMoveDedupV100?.diagnostics()||null}))()",
+    expression:"(()=>({installed:!!window.PokemonTorreMoveDedupV100?.installed,scope:window.PokemonTorreMoveDedupScopeV100||null,mewtwo:window.PokemonTorreMoveDedupV100?.report(150,100)||null,bulbasaur:window.PokemonTorreMoveDedupV100?.report(1,100)||null,metrics:window.PokemonTorreMoveDedupV100?.diagnostics()||null}))()",
     returnByValue:true});
    moveDedupV100=check.result?.result?.value||null;
   }
