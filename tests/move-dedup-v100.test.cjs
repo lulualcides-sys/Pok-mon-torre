@@ -28,7 +28,13 @@ const sandbox={window,console,Math,queueMicrotask:fn=>microtasks.push(fn),
  v32MoveKey:m=>[m.name,m.type,m.kind].join('|'),
  v32Catalogue:m=>moves.map(x=>({...x,move:{...x.move}})),
  v32DefaultSlots:m=>['Acid|poison|bolt','Vine Whip|grass|bolt','Raio de Gelo|ice|beam','Haze|ice|status'],
- mon:(id,level)=>({id,level}),persist:()=>{globalPersist.count++;}};
+ mon:(id,level)=>({id,level}),persist:()=>{globalPersist.count++;},
+ skillSet:m=>m.id===25?[
+  {name:'Faísca',type:'electric',kind:'bolt',power:18},
+  {name:'Faísca do Pikachu',type:'electric',kind:'bolt',power:32},
+  {name:'Thunder',type:'electric',kind:'homing',power:58},
+  {name:'Investida',type:'normal',kind:'dash',power:19}
+ ]:[]};
 vm.runInNewContext(source,sandbox,{filename:'unify-duplicates-v100.js'});
 const api=window.PokemonTorreMoveDedupV100;
 assert.equal(api.installed,true);
@@ -67,6 +73,10 @@ assert.ok(globalPersist.count>0,'Legacy saved slots must be persisted');
 const report=api.report(150,55);
 assert.equal(report.before,before);assert.equal(report.after,after);
 assert.equal(report.afterStillDuplicated,false);
+const pikachu={id:25,level:76,v32Slots:null};
+const pikachuDefaults=sandbox.v32DefaultSlots(pikachu);
+assert.equal(pikachuDefaults[2],'Trovão|electric|homing',
+ 'Must preserve offensive Thunder; never replace it with Thunder Wave status');
 assert.equal(api.canonicalOf('Vine Whip'),api.canonicalOf('Chicote de Vinha'));
 assert.notEqual(api.canonicalOf('Chicote Duplo'),api.canonicalOf('Vine Whip'));
 console.log('PASS V100: verified PT/EN aliases deduplicated, saved slots migrate, unlocked move retained, approved and distinct move names untouched',JSON.stringify({before,after,removed:before-after}));
