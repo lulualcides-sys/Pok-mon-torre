@@ -113,18 +113,24 @@
    const el=modal.querySelector(sel);if(el&&el.textContent!==msg)el.textContent=msg;
   }
   const catalog=actualCatalogue();
-  if(catalog){
-   const all=uniqueCount(catalog),available=uniqueCount(catalog.filter(x=>x.available));
-   stats.fullBefore=catalog.length;stats.fullAfter=all;
-   const buttons=modal.querySelectorAll('.v331Tabs [data-v331-filter]');
-   for(const button of buttons){
-    const kind=button.dataset.v331Filter;
-    const count=kind==='all'?all:kind==='available'?available:null;
-    if(count===null)continue;
-    const label=kind==='all'?'Todos':'Liberados';
-    const wanted=label+' ('+count+')';
-    if(button.textContent!==wanted)button.textContent=wanted;
-   }
+  const mode=modal.querySelector('.v331Tabs [data-v331-filter].gold')?.dataset.v331Filter||
+   'available';
+  // The editor can be closed over a private v32Catalogue; in that case
+  // count the actual rendered catalogue. The ALL tab contains locked moves,
+  // while LIBERADOS contains every available entry, not just type matches.
+  const all=catalog?uniqueCount(catalog):mode==='all'?rows.length:null;
+  const available=catalog?uniqueCount(catalog.filter(x=>x.available)):
+   mode==='available'?rows.length:
+   mode==='all'?rows.filter(x=>!x.disabled).length:null;
+  if(catalog){stats.fullBefore=catalog.length;stats.fullAfter=all;}
+  else if(mode==='all'){stats.fullAfter=all;}
+  for(const button of modal.querySelectorAll('.v331Tabs [data-v331-filter]')){
+   const kind=button.dataset.v331Filter;
+   const count=kind==='all'?all:kind==='available'?available:null;
+   if(count===null)continue;
+   const label=kind==='all'?'Todos':'Liberados';
+   const wanted=label+' ('+count+')';
+   if(button.textContent!==wanted)button.textContent=wanted;
   }
  }
  function mount(){
