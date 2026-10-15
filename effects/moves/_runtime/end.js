@@ -235,4 +235,13 @@ BattleEngine.prototype.drawMon=function(actor,id,isEnemy,now){
   return result;
  }finally{actor.x=ox;actor.y=oy;}
 };
+// V84 only: render the previously queued Pixi animation ON THE GAME FRAME.
+// Historic V81 and V83 code paths do not enter this wrapper.
+const previousGrassPreviewDrawV84=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){
+ const result=previousGrassPreviewDrawV84.apply(this,arguments);
+ if(typeof grassFourV84!=='undefined')pixiFX.frameV84(now);
+ return result;
+};
+
 })();
