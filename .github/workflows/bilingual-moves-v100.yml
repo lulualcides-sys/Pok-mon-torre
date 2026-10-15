@@ -1,0 +1,28 @@
+name: Alias de golpes PT EN V100
+on:
+  pull_request:
+    paths:
+      - 'effects/moves/_runtime/dedupe-bilingual-v100.js'
+      - 'parts/p008.txt'
+      - 'tests/bilingual-moves-v100.test.cjs'
+      - 'index.html'
+      - '.github/workflows/bilingual-moves-v100.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'effects/moves/_runtime/dedupe-bilingual-v100.js'
+      - 'parts/p008.txt'
+      - 'tests/bilingual-moves-v100.test.cjs'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-bilingual-choices:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/bilingual-moves-v100.test.cjs
