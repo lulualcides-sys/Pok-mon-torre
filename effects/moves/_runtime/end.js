@@ -275,4 +275,50 @@ BattleEngine.prototype.draw=function(now){
  return result;
 };
 
+// V85 — Haze, opt-in only. Do not touch the normal move renderer.
+// Retains the native status/stage-reset behavior, casting rules and zero damage.
+const oldHazePainterV85=window.PokemonTorreV360Paint;
+window.PokemonTorreV360Paint=function(g,f,now,engine){
+ if(typeof hazeV85!=='undefined'&&norm(f?.move?.name||f?.name)==='haze')
+  return true; // never draw the old catalog snow-ring over the new fog
+ return typeof oldHazePainterV85==='function'?
+  oldHazePainterV85.apply(this,arguments):false;
+};
+const previousHazeUseV85=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(slot){
+ if(typeof hazeV85==='undefined')return previousHazeUseV85.apply(this,arguments);
+ const move=battle?.active&&Number.isInteger(slot)?
+   skillSet(current())?.[slot]:null;
+ if(norm(move?.name)!=='haze')return previousHazeUseV85.apply(this,arguments);
+ const beforeCd=cooldowns?.[slot],beforeEnergy=battle?.energy,
+   start=performance.now();
+ const result=previousHazeUseV85.apply(this,arguments);
+ const accepted=result!==false&&battle?.active&&!battle?.paused&&
+  ((Number(cooldowns?.[slot])>Number(beforeCd))||
+    (Number(battle?.energy)<Number(beforeEnergy)));
+ if(!accepted)return result;
+ // Remove ONLY Haze-only generic VISUAL QUEUES from THIS cast.
+ // Original status clearing has already run in previousHazeUseV85.
+ if(Array.isArray(this.v3580Visuals))
+  this.v3580Visuals=this.v3580Visuals.filter(f=>
+    !(norm(f?.move?.name||f?.name)==='haze'&&f.at>=start-12));
+ if(Array.isArray(this.v3568StatusFX))
+  this.v3568StatusFX=this.v3568StatusFX.filter(f=>
+    norm(f?.move?.name||f?.name)!=='haze');
+ if(Array.isArray(this.v342StatusFx))
+  this.v342StatusFx=this.v342StatusFx.filter(f=>
+    norm(f?.move?.name||f?.name)!=='haze');
+ if(this.v351StatusCast&&this.v351StatusCast.at>=start-12)
+  this.v351StatusCast=null;
+ if(!pixiFX.beginHazeV85(this,start))
+  window.PokemonTorreHazeErrorV85='WebGL indisponível para Haze';
+ return result;
+};
+const previousHazeDrawV85=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){
+ const result=previousHazeDrawV85.apply(this,arguments);
+ if(typeof hazeV85!=='undefined')pixiFX.frameHazeV85(now,this);
+ return result;
+};
+
 })();
