@@ -185,6 +185,9 @@ window.PokemonTorreFightingV103=fightingV103;
    fx=engine.v359Attacks?.findLast(x=>x.move?.name===four[slot].name);
   }finally{skillSet=nativeSkills}
   return {selected:names[slot],accepted:ok!==false,
+   debug:{paused:battle.paused,running:engine.running,energy:battle.energy,
+    distance:Math.hypot(engine.player.x-engine.enemy.x,engine.player.y-engine.enemy.y),
+    cooldowns:[...cooldowns],native:window.PokemonTorreCombatV47?.().lastCast||null},
    hpBefore:hp,hitAt:fx?.v103ImpactAt||null,
    contact:engine.v47ContactToLand?.find(x=>x.name===names[slot])?.at||null,
    cast:fightingV103.diagnostics()};
