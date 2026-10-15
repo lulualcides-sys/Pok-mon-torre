@@ -184,7 +184,7 @@ window.PokemonTorreIceV101=iceOfficialV101;
   };
  }
  window.PokemonTorreIceOfficialV101=Object.freeze({
-  version:'99.0',enabled:true,diagnostics:fx.diagnostics,
+  version:'101.0',enabled:true,diagnostics:fx.diagnostics,
   names:['Aurora Beam','Impacto Glacial','Raio de Gelo']
  });
 })();
