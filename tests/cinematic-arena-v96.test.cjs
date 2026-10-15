@@ -28,7 +28,7 @@ function makeScene(preview){
    assert.ok(this.bg?.naturalWidth);return this.bg}
  }
  const location={search:preview?'?arena_preview=cinematic':'?build=normal'};
- vm.runInNewContext(src,{window,location,document,BattleEngine,console,Math});
+ vm.runInNewContext(src,{window,location,document,BattleEngine,console,Math,URLSearchParams});
  const e=new BattleEngine();e.generateBackdrop();e.draw(100);
  return{module:window.PokemonTorreArenaV96,engine:e,
   canvasCount:made,polygons,brushes,gradients};
