@@ -174,6 +174,8 @@ window.PokemonTorreFightingV103=fightingV103;
   engine.player.x=engine.enemy.x-Math.min(48,engine.h*.08);
   engine.player.y=engine.enemy.y;
   engine.enemy.inv=0;engine.enemy.spawn=0;engine.running=true;
+  // The QA start() stays paused until the cast() helper unpauses it.
+  battle.paused=false;engine.enemyAttackCD=999;engine.foeDodgeCD=999;
   battle.energy=100;cooldowns=[0,0,0,0];
   skillSet=mon=>mon===actor?four:nativeSkills(mon);
   const hp=Number(victim.hp);

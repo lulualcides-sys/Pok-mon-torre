@@ -13,6 +13,7 @@ on:
       - 'index.html'
       - 'parts/**'
       - 'effects/moves/_runtime/**'
+      - 'effects/moves/v103-fighting/**'
       - 'effects/moves/catalog/bundle.js'
       - 'effects/moves/catalog/painter.js'
   workflow_dispatch:
