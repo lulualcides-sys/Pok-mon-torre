@@ -42,6 +42,8 @@ jobs:
           python tools/build-v77-preview.py
           python tools/build-v78-preview.py
           python tools/build-v82-equipped-grass.py
+          python tools/build-v83-vine-whip.py
+          node tests/test-v83-four-grass.cjs
       - name: Verificar Chrome
         run: |
           which google-chrome || which google-chrome-stable || which chromium
