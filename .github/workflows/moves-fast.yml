@@ -5,6 +5,7 @@ on:
     paths:
       - 'effects/moves/**'
       - 'effects/atelier-v70/**'
+      - 'effects/atelier-v71/**'
       - 'tools/build-atelier-v70.py'
       - 'previews/atelier-v70.html'
       - 'index.html'
@@ -14,6 +15,7 @@ on:
     paths:
       - 'effects/moves/**'
       - 'effects/atelier-v70/**'
+      - 'effects/atelier-v71/**'
       - 'tools/build-atelier-v70.py'
       - 'previews/atelier-v70.html'
       - 'index.html'
@@ -53,11 +55,5 @@ jobs:
       - name: Abrir galeria V68 no Chromium e validar oito quadros renderizados
         run: node tests/test-v68-browser.cjs
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Gerar spritesheets 8x4 e validar Ateliê V70
-        run: |
-          python -m pip install --quiet Pillow
-          python tools/build-atelier-v70.py
-          node tests/test-atelier-v70.cjs
+      - name: Validar as quatro artes cinematograficas aprovadas V71
+        run: node tests/test-atelier-v70.cjs
