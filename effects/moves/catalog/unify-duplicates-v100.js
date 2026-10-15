@@ -158,7 +158,19 @@
   if(!mon||!Array.isArray(defaults))return defaults;
   const cat=v32Catalogue(mon);
   const keys=new Set(cat.map(x=>x.key));
+  // v34's default selector used to fall back to pool[i] when a translated
+  // move (Thunder, e.g.) disappeared. That could silently replace a DAMAGE
+  // attack with Thunder Wave, a STATUS move. Use the ACTUAL active move first.
+  const active=!Array.isArray(mon.v32Slots)&&typeof skillSet==='function'
+    ?skillSet(mon):null;
   return defaults.map((key,i)=>{
+   if(active?.[i]?.name){
+    const move=active[i],canonical=canonicalOf(move.name);
+    const preserved=cat.find(x=>canonicalOf(x.move.name)===canonical&&
+       x.move.type===move.type&&
+       (Number(x.move.power)>0)===(Number(move.power)>0)&&x.available);
+    if(preserved)return preserved.key;
+   }
    if(keys.has(key))return key;
    const parts=String(key||'').split('|');
    const target=canonicalOf(parts[0]||'');
