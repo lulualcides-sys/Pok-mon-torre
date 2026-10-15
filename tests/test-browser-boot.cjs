@@ -239,9 +239,11 @@ server.listen(0,'127.0.0.1',async()=>{
     v84.v84CombatResults?.length===4&&
     v84.v84CombatResults.every((rec,index)=>{
       const expected=['Chicote de Vinha','Folha Navalha','Chicotes em Área','Vine Whip'][index];
+      const move=rec.after?.art?.perMove?.[expected];
       return rec.selected===expected&&
-       (rec.after?.art?.draws||0)>0&&
-       (rec.after?.art?.casts||0)>=index+1&&
+       (move?.casts||0)>=1&&
+       (move?.draws||0)>0&&
+       (move?.framesMask||0)!==0&&
        (rec.after?.pixi?.active||0)>0&&
        !rec.after.webglError;
     });
