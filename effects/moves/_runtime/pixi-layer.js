@@ -10,6 +10,7 @@ const pixiFX=(()=>{
  let activeV84=null,castSerialV84=0,clearedV84=0;
  // Opt-in Haze status; independent root in the existing WebGL scene.
  let hazeActiveV85=null;
+ let activeV86=null,v86Swaps=0;
  const clamp=v=>Math.min(1,Math.max(0,v)),mix=(a,b,u)=>a+(b-a)*u;
  // Particle library is optional. A blocked emitter must not disable our sprite effects.
  const hasGPU=()=>!!(window.PIXI?.Application&&window.PIXI?.utils?.isWebGLSupported?.());
@@ -70,6 +71,8 @@ const pixiFX=(()=>{
   fx?.root?.destroy({children:true});
  }
  function reset(){
+  if(activeV86&&typeof referenceFourV86!=='undefined')referenceFourV86.destroy(activeV86);
+  activeV86=null;
   if(hazeActiveV85&&typeof hazeV85!=='undefined')hazeV85.destroy(hazeActiveV85);
   hazeActiveV85=null;
   activeV84=null;
@@ -238,6 +241,10 @@ const pixiFX=(()=>{
   if(!effects.size){app.ticker.stop();app.view.style.display='none';}
  }
  function paint(f,engine,key){
+  // The named V86 cast already renders a single authored WebGL layer.
+  // Never create a legacy ice/grassy bolt underneath, even from stale queues.
+  if(typeof referenceFourV86!=='undefined'&&
+     referenceFourV86.resolve(f?.move?.name||f?.name))return true;
   // Haze's status cast owns its own Pixi fog layer. Old catalog painter
   // must not create a second ice halo or fallback generic projectile.
   if(typeof hazeV85!=='undefined'&&norm(f?.move?.name||f?.name)==='haze')
@@ -336,9 +343,42 @@ const pixiFX=(()=>{
   }
   return true;
  }
- return {ensure,paint,beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
+ function beginV86(engine,move,now,hitAt){
+  if(typeof referenceFourV86==='undefined'||!battle?.active)return false;
+  const key=referenceFourV86.resolve(move?.name);
+  if(!key)return false;
+  if(activeV86){referenceFourV86.destroy(activeV86);activeV86=null;v86Swaps++;}
+  if(!ensure(engine))return false;
+  activeV86=referenceFourV86.cast(app,engine,
+   [engine.player.x,engine.player.y-engine.h*.13],
+   [engine.enemy.x,engine.enemy.y-engine.h*.12],
+   move.name,now,hitAt);
+  return !!activeV86;
+ }
+ function frameV86(now,engine){
+  if(typeof referenceFourV86==='undefined'||!activeV86)return false;
+  const fx=activeV86;
+  if(!battle?.active||owner!==engine||!engine?.canvas?.isConnected){
+   referenceFourV86.destroy(fx);activeV86=null;return false;
+  }
+  const t=Number.isFinite(now)?now:performance.now();
+  const alive=referenceFourV86.animate(fx,t);
+  if(!alive&&t-fx.started>=fx.duration){
+   referenceFourV86.destroy(fx);activeV86=null;
+   if(!effects.size&&!hazeActiveV85)app.view.style.display='none';
+   return false;
+  }
+  if(fx.ready){
+   position(engine);app.view.style.display='block';
+   app.renderer.render(app.stage);
+  }
+  return true;
+ }
+ return {ensure,paint,beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,
+  beginV86,frameV86,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
   sprites:!!atlas,active:effects.size,registered:registry.size,
   emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:grassFourV84.source(activeV84.key)}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
   hazeActive:!!hazeActiveV85,hazeReady:!!hazeActiveV85?.ready,
+  v86Active:!!activeV86,v86Name:activeV86?.spec?.name||null,v86Ready:!!activeV86?.ready,v86Swaps,
   clearedV84,rendered:{...drawn},error})};
 })();

@@ -16,6 +16,10 @@ window.PokemonTorrePlantStatusV64=()=>({
  actualEnemyConditions:engine?.v25?.stats?.enemy?.conditions?.slice()||[]
 });
 function paint(g,f,now,e,k){
+ // The V86 preview is fully painted by its cast-owned Pixi scene; older
+ // catalog painters must not draw unrelated circles behind it.
+ if(typeof referenceFourV86!=='undefined'&&
+   referenceFourV86.resolve(f?.move?.name||f?.name))return true;
  if(!f||!Array.isArray(f.from)||!Array.isArray(f.to)||!g)return false;
  const dur=Math.max(250,f.duration||950),t=C((now-f.at)/dur),s=C((e?.h||420)/430,.62,1.18);
  const low=!!(e?.fps>0&&e.fps<36);
@@ -275,6 +279,47 @@ BattleEngine.prototype.draw=function(now){
  return result;
 };
 
+// V86 preview: four exact names, their native hit/status queues remain
+// authoritative. This wrapper only changes WebGL DRAWING for an accepted cast.
+const previousReferencePainterV86=window.PokemonTorreV360Paint;
+window.PokemonTorreV360Paint=function(g,f,now,engine){
+ if(typeof referenceFourV86!=='undefined'&&
+  referenceFourV86.resolve(f?.move?.name||f?.name))return true;
+ return typeof previousReferencePainterV86==='function'?
+  previousReferencePainterV86.apply(this,arguments):false;
+};
+const previousReferenceUseV86=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(slot){
+ if(typeof referenceFourV86==='undefined')return previousReferenceUseV86.apply(this,arguments);
+ const move=battle?.active&&Number.isInteger(slot)?skillSet(current())?.[slot]:null;
+ if(!referenceFourV86.resolve(move?.name))return previousReferenceUseV86.apply(this,arguments);
+ const beforeCd=cooldowns?.[slot],beforeEnergy=battle?.energy,started=performance.now();
+ const prior=new Set(this.v359Attacks||[]);
+ const response=previousReferenceUseV86.apply(this,arguments);
+ // Never animate an invalid cast, a move on cooldown or lack of energy.
+ const accepted=response!==false&&battle?.active&&!battle?.paused&&
+  ((Number(cooldowns?.[slot])>Number(beforeCd))||
+   (Number(battle?.energy)<Number(beforeEnergy)));
+ if(!accepted)return response;
+ const n=referenceFourV86.resolve(move.name);
+ const actual=(this.v359Attacks||[]).find(f=>
+  !prior.has(f)&&referenceFourV86.resolve(f?.move?.name)===n);
+ let hitAt=null;
+ if(actual){
+  const times=actual.times;
+  if(Array.isArray(times)&&Number.isFinite(times[0]))
+   hitAt=actual.at+actual.duration*times[0];
+ }
+ if(!pixiFX.beginV86(this,move,started,hitAt))
+  window.PokemonTorreReferenceErrorV86='O renderizador PixiJS não iniciou '+move.name;
+ return response;
+};
+const previousReferenceDrawV86=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){
+ const result=previousReferenceDrawV86.apply(this,arguments);
+ if(typeof referenceFourV86!=='undefined')pixiFX.frameV86(now,this);
+ return result;
+};
 // V85 — Haze, opt-in only. Do not touch the normal move renderer.
 // Retains the native status/stage-reset behavior, casting rules and zero damage.
 const oldHazePainterV85=window.PokemonTorreV360Paint;

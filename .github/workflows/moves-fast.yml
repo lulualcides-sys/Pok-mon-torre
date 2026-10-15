@@ -18,6 +18,8 @@ on:
       - 'tests/test-v83-four-grass.cjs'
       - 'tests/test-v84-real-grass.cjs'
       - 'tools/build-v85-haze.py'
+      - 'tools/build-v86-four-reference.py'
+      - 'tests/test-v86-four-reference.cjs'
       - 'tests/test-v85-haze.cjs'
       - 'tools/build-v84-2-separated-vines.py'
       - 'tests/test-v84-2-distinct-art.cjs'
@@ -95,6 +97,8 @@ jobs:
           python tools/build-v83-vine-whip.py
           python tools/build-v84-2-separated-vines.py
           python tools/build-v85-haze.py
+          python tools/build-v86-four-reference.py
+          node tests/test-v86-four-reference.cjs
           node tests/test-v85-haze.cjs
           node tests/test-v84-2-distinct-art.cjs
           node tests/test-v83-four-grass.cjs
