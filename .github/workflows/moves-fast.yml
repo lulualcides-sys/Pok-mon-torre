@@ -17,6 +17,8 @@ on:
       - 'tools/build-v83-vine-whip.py'
       - 'tests/test-v83-four-grass.cjs'
       - 'tests/test-v84-real-grass.cjs'
+      - 'tools/build-v84-2-separated-vines.py'
+      - 'tests/test-v84-2-distinct-art.cjs'
       - 'effects/moves/_runtime/impact-sync-v80.js'
       - 'effects/ui/**'
       - 'tools/build-v72-battle.py'
@@ -89,6 +91,8 @@ jobs:
           python tools/build-v78-preview.py
           python tools/build-v82-equipped-grass.py
           python tools/build-v83-vine-whip.py
+          python tools/build-v84-2-separated-vines.py
+          node tests/test-v84-2-distinct-art.cjs
           node tests/test-v83-four-grass.cjs
           node tests/test-v84-real-grass.cjs
           node tests/test-v82-equipped-grass.cjs

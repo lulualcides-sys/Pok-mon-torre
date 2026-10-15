@@ -8,7 +8,7 @@ var grassFourV84=(()=>{
  const W=480,H=240,N=8;
  const specs=Object.freeze({
   chicotedevinha:{name:'Chicote de Vinha',asset:'chicote-de-vinha',impact:4,speed:5.0,scale:.94,thickness:.92},
-  folhanavalha:{name:'Folha Navalha',asset:'folha-navalha',impact:5,speed:3.35,scale:.96,thickness:.88,leaves:true},
+  folhanavalha:{name:'Folha Navalha',asset:'folha-navalha',impact:5,speed:2.25,scale:.96,thickness:.88,leaves:true},
   chicotesemarea:{name:'Chicotes em Área',asset:'chicotes-em-area',impact:5,speed:1.85,scale:.82,thickness:.61},
   vinewhip:{name:'Vine Whip',asset:'vine-whip',impact:4,speed:4.95,scale:.94,thickness:.92}
  });
@@ -18,9 +18,12 @@ var grassFourV84=(()=>{
  const resolve=n=>accepts(norm(n))?norm(n):'';
  const source=key=>{
   const id=specs[key].asset;
-  return 'effects/moves/'+id+'/v83-preview/sprites/'+id+'.webp?v=84.1';
+  // Preserve approved Folha Navalha pixels. All other three use new,
+  // geometrically DIFFERENT native RGBA spritesheets (not reused V83 VINES).
+  const preview=id==='folha-navalha'?'v83-preview':'v84-preview';
+  return 'effects/moves/'+id+'/'+preview+'/sprites/'+id+'.webp?v=84.2';
  };
- const leafPath='effects/moves/v83-preview/sprites/leaf.webp?v=84.1';
+ const leafPath='effects/moves/v83-preview/sprites/leaf.webp?v=84.2';
  const loaded=new Map(),errors=[];
  let leafRequest=null;
  const counters={casts:0,draws:0,stages:0,leafMotion:0,particles:0,last:null,perMove:{}};
@@ -175,11 +178,11 @@ var grassFourV84=(()=>{
   sizes[v.name]={width:v.scale,height:v.thickness};
  }
  function diagnostic(){return {
-  version:'84.1',...counters,errors:errors.slice(-6),atlases:loaded.size,
+  version:'84.2',...counters,errors:errors.slice(-6),atlases:loaded.size,
   timings:{speeds,contacts,sizes}
  }}
  if(typeof window!=='undefined'){
-  window.PokemonTorreGrassFourPreviewV84={version:'84.1',enabled:true,
+  window.PokemonTorreGrassFourPreviewV84={version:'84.2',enabled:true,
     diagnostics:diagnostic,timings:{speeds,contacts,sizes}};
   if(window.PIXI?.Assets){
    for(const k of Object.keys(specs))atlas(k).catch(()=>{});
@@ -189,7 +192,7 @@ var grassFourV84=(()=>{
    const tag=()=>{
     if(document.getElementById('pokemon-v84-mark'))return;
     const e=document.createElement('div');e.id='pokemon-v84-mark';
-    e.textContent='PRÉVIA V84.1 · ISOLADA';
+    e.textContent='PRÉVIA V84.2 · 3 ARTES NOVAS';
     e.style.cssText='position:fixed;bottom:6px;left:6px;z-index:9999;'+
       'font:700 10px system-ui;color:#dcffd4;background:#103a24e8;'+
       'padding:5px 8px;border:1px solid #6bd778;border-radius:6px;'+
