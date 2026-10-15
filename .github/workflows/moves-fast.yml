@@ -9,6 +9,7 @@ on:
       - 'tools/build-v77-preview.py'
       - 'tools/build-v78-preview.py'
       - 'tests/test-v78-preview.cjs'
+      - 'tests/test-v79-preview.cjs'
       - 'effects/ui/**'
       - 'tools/build-v72-battle.py'
       - 'tests/test-v72-battle.cjs'
@@ -79,6 +80,7 @@ jobs:
           python tools/build-v77-preview.py
           python tools/build-v78-preview.py
           node tests/test-v78-preview.cjs
+          node tests/test-v79-preview.cjs
           node tests/test-v77-preview.cjs
           node tests/test-v72-battle.cjs
 
