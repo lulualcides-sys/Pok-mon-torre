@@ -294,7 +294,7 @@ server.listen(0,'127.0.0.1',async()=>{
    ok:v86.ok,version:v86.result?.v86Version,
    casts:v86.v86CombatResults,sequence:v86.v86SequenceResults,errors:v86.errors}));
   const names86=['Raízes Violentas','Geada Persistente','Sopro Congelante','Chicote Duplo'];
-  const castOK=v86.ok&&['86.0','88.0'].includes(v86.result?.v86Version)&&
+  const castOK=v86.ok&&['86.0','88.0','93.0'].includes(v86.result?.v86Version)&&
    v86.v86CombatResults?.length===4&&
    v86.v86CombatResults.every((rec,i)=>{
     const entry=rec.after?.vfx?.perMove?.[names86[i]];
@@ -325,7 +325,7 @@ server.listen(0,'127.0.0.1',async()=>{
     v92.v86CombatResults.every((rec,i)=>{
       const f=rec.after?.native;
       return rec.before?.selected===v92Names[i]&&
-        f?.version==='92.0'&&f.frames?.[v92Names[i]]===(i<2?16:12)&&
+        ['92.0','93.0'].includes(f?.version)&&f.frames?.[v92Names[i]]===(i<2?16:12)&&
         (f.draws||0)>i&&rec.after?.pixi?.gpu===false;
     });
   if(!equipped92OK){
