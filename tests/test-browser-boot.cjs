@@ -292,12 +292,12 @@ server.listen(0,'127.0.0.1',async()=>{
   console.log('V86 REAL FOUR BATTLE:',JSON.stringify({
    ok:v86.ok,version:v86.result?.v86Version,
    casts:v86.v86CombatResults,sequence:v86.v86SequenceResults,errors:v86.errors}));
-  const names=['Raízes Violentas','Geada Persistente','Sopro Congelante','Chicote Duplo'];
+  const names86=['Raízes Violentas','Geada Persistente','Sopro Congelante','Chicote Duplo'];
   const castOK=v86.ok&&v86.result?.v86Version==='86.0'&&
    v86.v86CombatResults?.length===4&&
    v86.v86CombatResults.every((rec,i)=>{
-    const entry=rec.after?.vfx?.perMove?.[names[i]];
-    return rec.before?.selected===names[i]&&entry?.casts===1&&
+    const entry=rec.after?.vfx?.perMove?.[names86[i]];
+    return rec.before?.selected===names86[i]&&entry?.casts===1&&
      (entry?.draws||0)>0&&(entry?.framesMask||0)!==0&&
      rec.after?.pixi?.gpu===true&&!rec.after?.error;
    });
