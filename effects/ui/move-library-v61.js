@@ -61,6 +61,8 @@ css.textContent=[
  '.pt78Edited{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;min-width:18px;flex:0 0 18px;margin-left:1px;color:#83dccb;line-height:0;vertical-align:middle}',
  '.pt78Edited svg{width:18px;height:18px;display:block;fill:none}',
  '.v331Slots .pt78Edited,.skillV8 .pt78Edited{width:15px;height:15px;min-width:15px;flex-basis:15px;margin-left:2px}',
+ '.skillV8 .skillName b:has(.pt78Edited){display:flex!important;align-items:center;gap:4px}',
+ '.skillV8 .skillName b .pt78Edited{display:inline-flex;flex-shrink:0}',
  '.v331Slots .pt78Edited svg,.skillV8 .pt78Edited svg{width:15px;height:15px}',
  '.v331MoveList .v331Choice{align-items:center!important;min-height:61px!important;padding:10px 11px!important;gap:8px!important;border-radius:11px!important;background:linear-gradient(160deg,#142838,#102333)!important}',
  '.v331MoveList .v331Choice.equipped{border-color:#d6c079!important}',
@@ -99,11 +101,13 @@ const getPower=s=>numeric(s,/(-?\d+(?:[.,]\d+)?)\s*for[cç]a/i);
 const getCost=s=>numeric(s,/(\d+(?:[.,]\d+)?)\s*energia/i);
 const getCd=s=>numeric(s,/(\d+(?:[.,]\d+)?)\s*s\b/i);
 const strip=s=>String(s||'').replace(/^[^\p{L}\p{N}]+/u,'').trim();
+// V79 — supplemented with 4 Moltres/fire visuals, dedicated status, and aliases.
+// Modified does not mean accepted; contact approvals remain protected.
 // V78 — modified-art identifier. This is a non-emoji, hand-drawn SVG PLUS,
 // matching the 18 type icons. These names come from catalog protected effects,
 // V66 authored moves and saved V60/V63/earlier move art. Not all 312 catalog
 // entries are marked. The mark is visual only; it does not certify approval.
-const MODIFIED_MOVES=new Set(["abaloterrestre","absorver","aerialace","airslash","aquajet","aquatail","ataquedeasa","aurasphere","aurorabeam","bolasombria","bombadelodo","bombadesementes","boneclub","bonemerang","brickbreak","bugbuzz","cachoeira","calmmind","campoeletrico","ceutempestuoso","chicotedevinha","chutebaixo","chuvadedanca","closecombat","confusao","confuseray","confusion","cortex","crosschop","dancadaspetalas","descarga","dig","discharge","doubleteam","dragonaura","dragonbreath","dragonclaw","dragondance","dragonpulse","dynamicpunch","earthpower","earthquake","esporos","explosaodefogo","explosaomagmatica","extremespeed","fairywind","faiscadopikachu","fireblast","firepunch","flamethrower","flashcannon","fly","folhanavalha","furacao","furiaancestral","furycutter","gust","hidrobomba","hiperraio","hurricane","hydropump","hyperbeam","icebeam","irontail","labaredafinal","lancachamas","leechlife","leechseed","lowkick","megadreno","mordida","nevasca","nightshade","ossobumerangue","petaldance","podosono","poisonjab","psiquico","psybeam","psychic","punhodefogo","quebratijolo","quickattack","raindance","raioaurora","raiodaaurora","raiodegelo","raiosolar","razorleaf","recover","rockslide","shadowball","skullbash","sludgebomb","sococruzado","solarbeam","soprodedragao","stoneedge","stunspore","surf","swordsdance","synthesis","telecinese","telekinesis","tempestadedefolhas","tempestadedeneve","tempestadepsiquica","terremoto","thunder","thunderwave","toxic","tremor","triataque","triattack","trovao","tsunami","volttackle","waterfall","watergun","waterpulse","willowisp","wingattack","xscissor"]);
+const MODIFIED_MOVES=new Set(["abaloterrestre","absorver","aerialace","airslash","amnesia","aquajet","aquatail","ataquedeasa","aurasphere","aurorabeam","bolasombria","bombadelodo","bombadesementes","boneclub","bonemerang","brickbreak","bugbuzz","cachoeira","calmmind","campoeletrico","ceutempestuoso","chamacircular","chamasdemoltres","chicotedevinha","chutebaixo","chuvadedanca","closecombat","confusao","confuseray","confusion","cortex","crosschop","dancadaspetalas","descarga","diadesol","dig","discharge","doubleteam","dragonaura","dragonbreath","dragonclaw","dragondance","dragonpulse","dynamicpunch","earthpower","earthquake","esporos","explosaodefogo","explosaomagmatica","extremespeed","fairywind","faisca","faiscadopikachu","fireblast","firepunch","firespin","flamethrower","flashcannon","fly","folhanavalha","furacao","furiaancestral","furycutter","garradefogo","girodefogo","gust","hidrobomba","hiperraio","hurricane","hydropump","hyperbeam","icebeam","irontail","labaredafinal","lancachamas","leechlife","leechseed","lowkick","megadreno","mordida","nevasca","nightshade","ossobumerangue","petaldance","podosono","poisonjab","psiquico","psybeam","psychic","punhodefogo","quebratijolo","quickattack","raindance","raioaurora","raiodaaurora","raiodegelo","raiosolar","rajadaflamejante","rajadaignea","razorleaf","recover","rockslide","shadowball","skullbash","sludgebomb","sococruzado","solarbeam","soprodedragao","stoneedge","stunspore","sunnyday","surf","swordsdance","synthesis","telecinese","telekinesis","tempestadedefolhas","tempestadedeneve","tempestadederaios","tempestadepsiquica","terremoto","thunder","thunderwave","toxic","tremor","triataque","triattack","trovao","tsunami","volttackle","waterfall","watergun","waterpulse","willowisp","wingattack","xscissor"]);
 const moveKey=value=>norm(value).replace(/[^a-z0-9]/g,'');
 function editedIcon(){
  const outer=document.createElement('span');
@@ -133,7 +137,8 @@ function paintCombatSkills(){
   const skillLabel=button.querySelector('.skillName');
   if(skillLabel){
    const skillName=(skillLabel.childNodes[0]?.textContent||skillLabel.textContent||'').trim();
-   markEdited(skillLabel,skillName);
+   // Put the SVG beside the actual move NAME, not beneath the type/category.
+   markEdited(skillLabel.querySelector('b')||skillLabel,skillName);
   }
   // Keep category text but drop system emoji from the battle hotbar.
   if(meta){
