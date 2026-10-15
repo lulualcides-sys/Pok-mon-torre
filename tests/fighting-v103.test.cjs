@@ -77,8 +77,8 @@ for(const safe of [false,true]){
   assert.equal(sim.cooldowns[slot],time+1300,'unchanged cooldown');
   assert.equal(e.v359Attacks.length,1,'existing single native hit event');
   const ev=e.v359Attacks[0],spec=specs[slot];
-  const contact=time+spec.impactMs;
-  assert.ok(Math.abs(ev.at+ev.duration*ev.times[0]-contact)<1);
+  const contact=ev.at+ev.duration*ev.times[0];
+  assert.ok(Math.abs(contact-(time+spec.impactMs))<1);
   assert.ok(Math.abs(e.v47ContactToLand[0].at-contact)<1,'V47 fallback at visual impact');
   sim.time(contact-10);e.draw(contact-10);e.update(contact-10);
   assert.equal(sim.victim.hp,before,'no early damage');
