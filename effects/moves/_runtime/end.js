@@ -564,6 +564,7 @@ BattleEngine.prototype.useMove=function(slot){
 const previousEquippedV92Projectile=BattleEngine.prototype.drawProjectile;
 if(typeof previousEquippedV92Projectile==='function')
  BattleEngine.prototype.drawProjectile=function(shot){
+  if(Number.isFinite(this.enemy?.hp)&&this.enemy.hp<=0)return;
   const active=equippedFourV92.active(this,performance.now());
   const type=active&&(/geada|sopro/.test(active.key)?'ice':'grass');
   if(shot?.__v92Covered||(active&&shot?.from==='player'&&shot?.type===type))
@@ -572,6 +573,7 @@ if(typeof previousEquippedV92Projectile==='function')
 };
 const previousEquippedV92Painter=window.PokemonTorreV360Paint;
 window.PokemonTorreV360Paint=function(ctx,fx,now,owner){
+ if(Number.isFinite(owner?.enemy?.hp)&&owner.enemy.hp<=0)return true;
  if(equippedFourV92.hideLegacy(owner,fx?.move?.name||fx?.name,now))
   return true;
  return typeof previousEquippedV92Painter==='function'?
