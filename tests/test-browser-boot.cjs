@@ -378,8 +378,11 @@ server.listen(0,'127.0.0.1',async()=>{
       rec.layer.active===1&&
       !['chicotedevinha','folhanavalha','chicotesemarea','vinewhip']
        .some(k=>rec.layer.rendered?.[k]>0)&&
-      (i===0||rec.layer.clearedV84>
-       v84.v84IsolationResults[i-1].layer.clearedV84);
+      // Existing sprites may finish naturally before the next cast;
+      // clearedV84 then stays unchanged. The active cast serial MUST advance,
+      // and there must be exactly one preview sprite in the layer.
+      (i===0||own.id>
+       v84.v84IsolationResults[i-1].layer.activePreview?.id);
    });
   if(!isolated){
     console.error('FAIL: V90 previous Area roots leaked into next Chicote or Vine cast');
