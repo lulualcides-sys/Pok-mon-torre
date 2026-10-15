@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#070d1c"><title>Pokémon Torre · Ateliê de Golpes · Sprites V70</title>
+<meta name="theme-color" content="#070d1c"><title>Pokémon Torre · Ateliê de Golpes · Sprites V71</title>
 <style>
 :root{color-scheme:dark;--sky:#8dc7ff;--frame:#2d6eae;--bg:#050b19}
 *{box-sizing:border-box}
@@ -37,14 +37,14 @@ h3{font-size:15px;text-transform:uppercase;letter-spacing:.13em;margin:22px 0 12
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 </style></head>
 <body><main>
-<header class="mast"><div><div class="eyebrow">POKÉMON TORRE · ATELIÊ DE GOLPES</div><h1>Prévia animada de golpes</h1></div><span class="pill">V70 · 4 golpes · 8 quadros</span></header>
+<header class="mast"><div><div class="eyebrow">POKÉMON TORRE · ATELIÊ DE GOLPES</div><h1>Prévia animada de golpes</h1></div><span class="pill">V71 · artes aprovadas · 8 quadros</span></header>
 <nav id="move-tabs" role="tablist" aria-label="Escolha o golpe"></nav>
 <section class="move-meta"><div><h2 id="move-title"></h2><p id="move-type"></p></div><div class="meta"><span class="symbol" id="type-icon">✧</span><span>TIPO <strong id="type-label"></strong></span><span>CATEGORIA <strong id="category"></strong></span><span>PP <strong id="pp"></strong></span></div></section>
 <p class="description" id="description"></p>
 <section class="player" aria-label="Animação do golpe"><div id="pixi-stage"><div id="fallback-stage" role="img" aria-label="Sprites do ataque"></div></div>
 <div class="controls"><span id="state">Preparando sprites…</span><button id="pause" type="button">Pausar animação</button></div></section>
-<h3>8 quadros reais · spritesheets raster</h3><section class="frames" id="frames" aria-label="Etapas da animação"></section>
-<p class="note">Prévia para aprovação: estes quatro golpes não substituem os ataques em batalha. O artwork é feito em PNGs RGBA quadro a quadro (editáveis no LibreSprite); PixiJS reproduz o spritesheet, com partículas opcionais como acabamento. Thunder, Discharge e Thunder Wave continuam preservados.</p>
+<h3>8 quadros das artes cinematográficas aprovadas</h3><section class="frames" id="frames" aria-label="Etapas da animação"></section>
+<p class="note">Prévia para aprovação: as oito cenas de cada golpe foram recortadas diretamente das quatro artes cinematográficas aprovadas, sem desenhos genéricos. PixiJS reproduz as imagens em spritesheets, com partículas opcionais. Os efeitos de batalha não foram substituídos. Thunder, Discharge e Thunder Wave permanecem intocados.</p>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/pixi.js@7.4.3/dist/pixi.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@pixi/particle-emitter@5.0.10/dist/particle-emitter.min.js"></script>
@@ -60,9 +60,9 @@ const MOVES=[
 ];
 let app=null,animated=null,selected=MOVES[0],running=true,emitter=null,raf=0,lastFrame=0;
 const tabs=document.getElementById('move-tabs'),frames=document.getElementById('frames');
-const base='../effects/atelier-v70/sprites/';
+const base='../effects/atelier-v71/atlases/';
 const labels=['Preparação','Concentração','Disparo','Trajetória','Aproximação','Contato','Impacto','Dissipação'];
-function url(m){return base+m.id+'.png?v=70.0'}
+function url(m){return base+m.id+'.webp?v=71.0'}
 function position(frame){return (100*frame/7)+'% center'}
 function cards(m){
  frames.replaceChildren();

@@ -42,7 +42,7 @@
   function open(){
    if(!modal.hidden)return;
    restoreFocus=document.activeElement;modal.hidden=false;
-   iframe.src='previews/atelier-v70.html?embedded=1';
+   iframe.src='previews/atelier-v70.html?embedded=1&art=v71';
    btn.setAttribute('aria-expanded','true');closeBtn.focus();
   }
   function close(){
@@ -54,7 +54,7 @@
   modal.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close()}});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden){e.preventDefault();close()}});
   document.body.append(btn,modal);
-  window.PokemonTorreAtelierV70={open,close,version:'70.0',
+  window.PokemonTorreAtelierV70={open,close,version:'71.0',
    active:()=>!modal.hidden,moves:['Dragon Pulse','Aura Sphere','X-Scissor','Dragon Claw']};
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();

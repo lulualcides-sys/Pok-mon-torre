@@ -226,7 +226,7 @@ if(enableElectricPreview){
  },{once:true});
 }
 if(!enableElectricPreview){const warning='<div role="alert" style="position:fixed;top:6px;left:6px;right:6px;z-index:999999;background:#3b2531;color:#fff3d8;border:1px solid #ffbe66;border-radius:9px;padding:7px 10px;text-align:center;font:600 12px system-ui,sans-serif">MODO SEGURO: efeitos especiais novos desativados. <a href="?build=v58.0" style="color:#fff;text-decoration:underline">Abrir V58</a></div>';game=game.replace('</body>',warning+'</body>');}
-if(game.includes('</body>'))game=game.replace('</body>','<scr'+'ipt src="effects/atelier-v70/entry.js?v=70.0"></scr'+'ipt></body>');
+if(game.includes('</body>'))game=game.replace('</body>','<scr'+'ipt src="effects/atelier-v70/entry.js?v=71.0"></scr'+'ipt></body>');
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
  if(new URLSearchParams(location.search).get('safe')!=='1'){
   const safeUrl=new URL(location.href);safeUrl.searchParams.set('safe','1');
