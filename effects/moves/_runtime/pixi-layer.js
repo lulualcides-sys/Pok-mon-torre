@@ -226,8 +226,21 @@ const pixiFX=(()=>{
  // V84: guarantee Pixi/WebGL frames are produced on the real BattleEngine
  // draw cadence. A stopped/throttled Pixi ticker must not freeze the effect.
  // This route only runs if an opted-in V84 attack is currently active.
- function frameV84(now){
-  if(!app||typeof grassFourV84==='undefined'||!battle?.active)return false;
+ function frameV84(now,engine){
+  if(typeof grassFourV84==='undefined'||!battle?.active)return false;
+  // Root fix: some Grass moves land in v3580Visuals, others in v359Attacks.
+  // The legacy painter did not route BOTH queues through the same Pixi
+  // renderer. Discover each authorized move directly in the real engine.
+  if(engine?.canvas){
+   const candidates=[...(engine.v359Attacks||[]),...(engine.v3580Visuals||[])];
+   for(const f of candidates){
+    if(!f||effects.has(f)||(f.battle&&f.battle!==battle))continue;
+    const key=grassFourV84.resolve(f?.move?.name||f?.name);
+    if(!key||!Array.isArray(f.from)||!Array.isArray(f.to))continue;
+    if(ensure(engine))install(f,key);
+   }
+  }
+  if(!app)return false;
   let active=false;
   const currentTime=Number.isFinite(now)?now:performance.now();
   for(const [f,item] of effects){
