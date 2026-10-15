@@ -8,6 +8,8 @@ on:
       - 'tests/test-browser-boot.cjs'
       - 'effects/moves/_runtime/combat-hit-reliability-v47.js'
       - 'effects/moves/v103-fighting/**'
+      - 'effects/moves/v104-fighting/**'
+      - 'parts/p012.txt'
   pull_request:
     branches: [main]
     paths:
@@ -15,6 +17,7 @@ on:
       - 'parts/**'
       - 'effects/moves/_runtime/**'
       - 'effects/moves/v103-fighting/**'
+      - 'effects/moves/catalog/*/v104/**'
       - 'effects/moves/catalog/bundle.js'
       - 'effects/moves/catalog/painter.js'
   workflow_dispatch:

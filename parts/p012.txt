@@ -881,7 +881,7 @@ BattleEngine.prototype.useMove=function(i){
  const v3554Contact=s.type==='fighting' && s.power>0 && !/aurasphere|esferaaura|focusblast|vacuumwave|ondadevacuo/.test(v3554MoveName);
  if(v3554Contact){
    const distance=Math.hypot(this.player.x-this.enemy.x,this.player.y-this.enemy.y);
-   if(distance > Math.max(56,this.h*.19)){
+   if(distance > Math.max(56,this.h*(window.PokemonTorreFightingV104?.allowed?.(s)?.245:.19))){
      this.v3554OutOfReach=(this.v3554OutOfReach||0)+1;
      log('FORA DO ALCANCE · Aproxime-se para usar '+s.name+'.');
      return false;
@@ -912,7 +912,7 @@ BattleEngine.prototype.update=function(dt,now){
   while(fx.hits<fx.times.length && now>=fx.at+fx.duration*fx.times[fx.hits]){
    if(fx.kind==='contact'&&fx.move?.type==='fighting'&&!/aurasphere|esferaaura|focusblast|vacuumwave|ondadevacuo/.test(String(fx.move?.name||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]/g,''))){
      const dist=Math.hypot(this.player.x-this.enemy.x,this.player.y-this.enemy.y);
-     if(dist>Math.max(56,this.h*.19)){
+     if(dist>Math.max(56,this.h*(window.PokemonTorreFightingV104?.allowed?.(fx.move)?.245:.19))){
        fx.hits++;this.v3554Misses=(this.v3554Misses||0)+1;
        log('ERROU · '+fx.move.name+' fora do alcance.');
        continue;
@@ -944,6 +944,8 @@ function bone359(ctx,x,y,len,rot,alpha=1){
 function poly359(ctx,x,y,r,n,rot,color,alpha=1){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.globalAlpha=alpha;ctx.fillStyle=color;ctx.beginPath();for(let j=0;j<n;j++){const a=j*2*Math.PI/n,rr=r*(j%2?.82:1);if(j===0)ctx.moveTo(Math.cos(a)*rr,Math.sin(a)*rr);else ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);}ctx.closePath();ctx.fill();ctx.restore();}
 function leaf359(ctx,x,y,r,rot,alpha,color='#9ee684'){ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);ctx.rotate(rot);ctx.fillStyle=color;ctx.strokeStyle='#2f8757';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(-r,0);ctx.quadraticCurveTo(-r*.15,-r,r,0);ctx.quadraticCurveTo(-r*.15,r,-r,0);ctx.fill();ctx.stroke();ctx.restore();}
 function speciesAura359(ctx,fx,now){
+ // V104: suppress the old floating contact ring for actual Fighting melee.
+ if(window.PokemonTorreFightingV104?.allowed?.(fx?.move))return;
  const id=fx.owner?.id||0, k=fx.kind,t=c359((now-fx.at)/fx.duration),fade=c359(Math.min(t*8,(1-t)*9,1));
  const [x,y]=fx.from;
  if(id===25||id===26){if(!['thunder','thunderbolt'].includes(k))return;for(let j=0;j<6;j++){const a=j*1.04+t*12,r=12+6*Math.sin(t*8+j);poly359(ctx,x+Math.cos(a)*r,y+Math.sin(a)*r*.7,3.5,4,a,'#ffe97d',fade*.8);}}

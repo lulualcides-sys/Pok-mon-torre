@@ -1,0 +1,34 @@
+name: V104 Fighting real physical impact
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/moves/v104-fighting/**'
+      - 'effects/moves/catalog/*/v104/**'
+      - 'parts/p012.txt'
+      - 'index.html'
+      - 'tests/fighting-v104.test.cjs'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'effects/moves/v104-fighting/**'
+      - 'effects/moves/catalog/*/v104/**'
+      - 'parts/p012.txt'
+      - 'index.html'
+      - 'tests/fighting-v104.test.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/fighting-v104.test.cjs
+      - run: node tests/fighting-v103.test.cjs
+      - run: node tests/ice-v101-official.test.cjs
+      - run: node tests/stadium-arena-v97.test.cjs
+      - run: node tests/wide-stadium-v98.test.cjs

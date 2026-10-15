@@ -159,10 +159,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V103",
+      "version": "V104",
       "frames": 8,
-      "effect_file": "effects/moves/catalog/chute/v103/render.js",
-      "notes": "Prévia visual aprovada pelo usuário; versão animada funcional de contato. Não modificar sem autorização. HP e cooldown continuam no motor original."
+      "effect_file": "effects/moves/catalog/chute/v104/render.js",
+      "notes": "Usuário rejeitou V103 por parecer projétil; V104 substitui por avanço corporal, impacto LOCAL no alvo e recuo sem sobreposição. Efeito protegido; dano/cooldowns originais."
     },
     {
       "move": "Golpe de Karatê",
@@ -172,10 +172,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V103",
+      "version": "V104",
       "frames": 12,
-      "effect_file": "effects/moves/catalog/golpedekarate/v103/render.js",
-      "notes": "Prévia visual aprovada pelo usuário; versão animada funcional de contato. Não modificar sem autorização. HP e cooldown continuam no motor original."
+      "effect_file": "effects/moves/catalog/golpedekarate/v104/render.js",
+      "notes": "Usuário rejeitou V103 por parecer projétil; V104 substitui por avanço corporal, impacto LOCAL no alvo e recuo sem sobreposição. Efeito protegido; dano/cooldowns originais."
     },
     {
       "move": "Cross Chop",
@@ -185,10 +185,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V103",
+      "version": "V104",
       "frames": 16,
-      "effect_file": "effects/moves/catalog/crosschop/v103/render.js",
-      "notes": "Prévia visual aprovada pelo usuário; versão animada funcional de contato. Não modificar sem autorização. HP e cooldown continuam no motor original."
+      "effect_file": "effects/moves/catalog/crosschop/v104/render.js",
+      "notes": "Usuário rejeitou V103 por parecer projétil; V104 substitui por avanço corporal, impacto LOCAL no alvo e recuo sem sobreposição. Efeito protegido; dano/cooldowns originais."
     },
     {
       "move": "Brick Break",
@@ -198,10 +198,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V103",
+      "version": "V104",
       "frames": 16,
-      "effect_file": "effects/moves/catalog/brickbreak/v103/render.js",
-      "notes": "Prévia visual aprovada pelo usuário; versão animada funcional de contato. Não modificar sem autorização. HP e cooldown continuam no motor original."
+      "effect_file": "effects/moves/catalog/brickbreak/v104/render.js",
+      "notes": "Usuário rejeitou V103 por parecer projétil; V104 substitui por avanço corporal, impacto LOCAL no alvo e recuo sem sobreposição. Efeito protegido; dano/cooldowns originais."
     }
   ]
 }
