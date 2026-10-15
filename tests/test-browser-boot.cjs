@@ -78,7 +78,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
    try{ws.send(JSON.stringify({id,method,params}))}catch(e){pending.delete(id);rej(e)}
   });
   await cmd('Runtime.enable');await cmd('Log.enable');
-  const expression="(() => ({title:document.title,ready:document.readyState,main:!!document.getElementById('main'),resources:(document.getElementById('resources')?.textContent||'').slice(0,140),text:(document.body?.innerText||'').slice(0,200),electric:typeof window.PokemonTorreElectricV46==='function',electricVersion:window.PokemonTorreElectricV46?.().version,electricReady:window.PokemonTorreElectricV46?Object.values(window.PokemonTorreElectricV46().frames).every(n=>n===8)&&Object.values(window.PokemonTorreElectricV46().impacts).every(n=>n===4)&&window.PokemonTorreElectricV46().arcsReady===8:false,electricLabel:document.getElementById('ptFireSpriteV41Badge')?.textContent,water:typeof window.PokemonTorreWaterV43==='function',elemental:typeof window.PokemonTorreElementalV58==='function',elementalReady:typeof window.PokemonTorreElementalV58==='function'&&Object.values(window.PokemonTorreElementalV58().atlases).every(Boolean),library16:typeof window.PokemonTorreLibrary16V59==='function',library16Ready:typeof window.PokemonTorreLibrary16V59==='function'&&Object.values(window.PokemonTorreLibrary16V59().ready).every(Boolean),library16Count:window.PokemonTorreLibrary16V59?.().registeredEffects?.length,fourV60:typeof window.PokemonTorreFourFXV60==='function',fourV60Ready:typeof window.PokemonTorreFourFXV60==='function'&&Object.values(window.PokemonTorreFourFXV60().ready).every(Boolean),fourV60Count:window.PokemonTorreFourFXV60?.().catalogMoves?.length,plantV63:typeof window.PokemonTorrePlantFourV63==='function',plantV63Ready:typeof window.PokemonTorrePlantFourV63==='function'&&Object.values(window.PokemonTorrePlantFourV63().ready).every(Boolean),plantV63Decoded:typeof window.PokemonTorrePlantFourV63==='function'&&Object.values(window.PokemonTorrePlantFourV63().predecoded).every(n=>n===8),plantV63Count:window.PokemonTorrePlantFourV63?.().moves.length,fourBitmapSupported:typeof createImageBitmap==='function',fourBitmapReady:typeof window.PokemonTorreFourFXV60==='function'&&Object.values(window.PokemonTorreFourFXV60().prerendered).every(n=>n===8),pixiOverlayStarted:window.PokemonTorrePixiFX?.().ready,moveUi:typeof window.PokemonTorreMoveUIV61==='function',moveUiTypes:window.PokemonTorreMoveUIV61?.().types,types:typeof window.PokemonTorreMoveTypesV46==='function',previewVersion:window.PokemonTorreBattlePreviewV80?.version||null,hitSyncVersion:window.PokemonTorreHitSyncV80?.().version||null,approvedVersion:window.PokemonTorreBattleArtV81?.version||null,v84Version:window.PokemonTorreGrassFourPreviewV84?.version||null,safetyV91:!!window.PokemonTorreGrassSafetyV91,safetyV92:!!window.PokemonTorreEquippedSafetyV92,hazeV85Version:window.PokemonTorreHazePreviewV85?.version||null,v86Version:window.PokemonTorreReferenceFourV86?.version||null,equippedPreviewVersion:window.PokemonTorreEquippedFourPreviewV82?.version||null,equippedHitSyncVersion:window.PokemonTorreGrassImpactV82?.().version||null,grassV83Version:window.PokemonTorreGrassFourPreviewV83?.version||null,grassV83HitSyncVersion:window.PokemonTorreGrassImpactV83?.().version||null,url:location.search}))()";
+  const expression="(() => ({title:document.title,ready:document.readyState,main:!!document.getElementById('main'),resources:(document.getElementById('resources')?.textContent||'').slice(0,140),text:(document.body?.innerText||'').slice(0,200),electric:typeof window.PokemonTorreElectricV46==='function',electricVersion:window.PokemonTorreElectricV46?.().version,electricReady:window.PokemonTorreElectricV46?Object.values(window.PokemonTorreElectricV46().frames).every(n=>n===8)&&Object.values(window.PokemonTorreElectricV46().impacts).every(n=>n===4)&&window.PokemonTorreElectricV46().arcsReady===8:false,electricLabel:document.getElementById('ptFireSpriteV41Badge')?.textContent,water:typeof window.PokemonTorreWaterV43==='function',elemental:typeof window.PokemonTorreElementalV58==='function',elementalReady:typeof window.PokemonTorreElementalV58==='function'&&Object.values(window.PokemonTorreElementalV58().atlases).every(Boolean),library16:typeof window.PokemonTorreLibrary16V59==='function',library16Ready:typeof window.PokemonTorreLibrary16V59==='function'&&Object.values(window.PokemonTorreLibrary16V59().ready).every(Boolean),library16Count:window.PokemonTorreLibrary16V59?.().registeredEffects?.length,fourV60:typeof window.PokemonTorreFourFXV60==='function',fourV60Ready:typeof window.PokemonTorreFourFXV60==='function'&&Object.values(window.PokemonTorreFourFXV60().ready).every(Boolean),fourV60Count:window.PokemonTorreFourFXV60?.().catalogMoves?.length,plantV63:typeof window.PokemonTorrePlantFourV63==='function',plantV63Ready:typeof window.PokemonTorrePlantFourV63==='function'&&Object.values(window.PokemonTorrePlantFourV63().ready).every(Boolean),plantV63Decoded:typeof window.PokemonTorrePlantFourV63==='function'&&Object.values(window.PokemonTorrePlantFourV63().predecoded).every(n=>n===8),plantV63Count:window.PokemonTorrePlantFourV63?.().moves.length,fourBitmapSupported:typeof createImageBitmap==='function',fourBitmapReady:typeof window.PokemonTorreFourFXV60==='function'&&Object.values(window.PokemonTorreFourFXV60().prerendered).every(n=>n===8),pixiOverlayStarted:window.PokemonTorrePixiFX?.().ready,moveUi:typeof window.PokemonTorreMoveUIV61==='function',moveUiTypes:window.PokemonTorreMoveUIV61?.().types,types:typeof window.PokemonTorreMoveTypesV46==='function',previewVersion:window.PokemonTorreBattlePreviewV80?.version||null,hitSyncVersion:window.PokemonTorreHitSyncV80?.().version||null,approvedVersion:window.PokemonTorreBattleArtV81?.version||null,v84Version:window.PokemonTorreGrassFourPreviewV84?.version||null,safetyV91:!!window.PokemonTorreGrassSafetyV91,safetyV92:!!window.PokemonTorreEquippedSafetyV92,hazeV85Version:window.PokemonTorreHazePreviewV85?.version||null,v86Version:window.PokemonTorreReferenceFourV86?.version||null,equippedPreviewVersion:window.PokemonTorreEquippedFourPreviewV82?.version||null,equippedHitSyncVersion:window.PokemonTorreGrassImpactV82?.().version||null,grassV83Version:window.PokemonTorreGrassFourPreviewV83?.version||null,grassV83HitSyncVersion:window.PokemonTorreGrassImpactV83?.().version||null,iceOfficial:window.PokemonTorreIceOfficialV101?.version||null,url:location.search}))()";
   let result=null;
   for(let i=0;i<100;i++){
    const report=await cmd('Runtime.evaluate',{expression,returnByValue:true});
@@ -125,6 +125,21 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
     drainResults.push(response.result?.result?.value||
      {error:response.result?.exceptionDetails?.exception?.description||
        response.result?.exceptionDetails?.text||'No result'});
+   }
+  }
+  let iceV101Results=null;
+  if(ok&&query.includes('build=v101-approved-ice')){
+   iceV101Results=[];
+   for(let slot=0;slot<4;slot++){
+    const fired=await cmd('Runtime.evaluate',{
+     expression:"(()=>window.PokemonTorreLocalCombatTestV47?.castOfficialIceV101("+slot+")||{error:'No V101 battle QA'})()",
+     returnByValue:true});
+    const before=fired.result?.result?.value||{error:'No cast result'};
+    await sleep(700);
+    const check=await cmd('Runtime.evaluate',{
+     expression:"(()=>({fx:window.PokemonTorreIceV101?.diagnostics()||null,approved:window.PokemonTorreIceOfficialV101?.enabled||false,alive:!!document.getElementById('battleCanvas')?.isConnected}))()",
+     returnByValue:true});
+    iceV101Results.push({slot,before,after:check.result?.result?.value||{}});
    }
   }
   let iceV99Results=null;
@@ -312,7 +327,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
    });
    moveDedupV100=report.result?.result?.value||null;
   }
-  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,moveDedupV100,errors:errors.slice(0,12)};
+  return {query:query||'default',ok,result,iceV101Results,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,iceV99Results,uiFixture,pokemonPolishResult,arenaV97,moveDedupV100,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -326,6 +341,9 @@ server.listen(0,'127.0.0.1',async()=>{
   const port=server.address().port;
   const stable=await browserCase(port,'?safe=1');
   console.log('BROWSER STABLE:',JSON.stringify(stable));
+  if(stable.ok&&stable.result?.iceOfficial!=='101.0'){
+   console.error('FAIL V101: approved Ice renderer must load in SAFE battle');process.exitCode=1;
+  }
   const dedup100=await browserCase(port,'?dedup_test=1&build=v100-bilingual-cleanup');
   console.log('BROWSER V100 BILINGUAL DEDUP:',JSON.stringify(dedup100.moveDedupV100));
   const d100=dedup100.moveDedupV100;
@@ -355,6 +373,16 @@ server.listen(0,'127.0.0.1',async()=>{
     console.error('FAIL V95: Mewtwo must render actual polished pixel art in normal Lab battle');
     process.exitCode=1;
   }
+  const ice101=await browserCase(port,'?build=v101-approved-ice',true);
+  const live101=ice101.iceV101Results||[];
+  const names101=['Aurora Beam','Impacto Glacial','Raio de Gelo','Ice Beam'];
+  const keys101=['aurorabeam','impactoglacial','raiodegelo','raiodegelo'];
+  const ok101=ice101.ok&&live101.length===4&&live101.every((x,i)=>
+   x.before?.selected===names101[i]&&x.after?.approved&&x.after?.alive&&
+   x.after?.fx?.registered?.length===3&&x.after?.fx?.drawsPerMove[keys101[i]]>0);
+  console.log('BROWSER V101 ICE NORMAL MOBILE:',JSON.stringify({
+   ok:ok101,casts:live101.map(x=>x.before?.selected),errors:ice101.errors}));
+  if(!ok101){console.error('FAIL V101: 3 ice effects + 4 saved names in normal Android browser');process.exitCode=1;}
   // Four visible equipped ICE attacks, genuine casts in live Chromium battle.
   const ice99=await browserCase(port,'?battle_preview=ice99&build=v99-ice-four');
   const iceNames=['Aurora Beam','Ice Beam','Impacto Glacial','Raio de Gelo'];

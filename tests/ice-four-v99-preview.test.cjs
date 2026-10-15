@@ -70,8 +70,8 @@ for(let slot=0;slot<4;slot++){
 assert.ok(counts.lines>100&&counts.strokes>100,'Animation needs real shaped geometry');
 assert.equal(win.PokemonTorreIceV99.diagnostics().draws,56);
 game.enemy.hp=0;assert.equal(win.PokemonTorreIceV99.current(game),null);
-assert.ok(!fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8')
- .includes('"Impacto Glacial"'), 'Preview must remain unapproved');
+assert.ok(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8')
+ .includes('"Impacto Glacial"'), 'Promoted move protection recorded in V101');
 const index=fs.readFileSync('index.html','utf8');
 assert.ok(index.includes("get('battle_preview')==='ice99'"));
 assert.ok(index.includes(files[4]));
