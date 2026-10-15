@@ -32,6 +32,7 @@ jobs:
           python tools/build-v82-equipped-grass.py
           python tools/build-v83-vine-whip.py
           node tests/test-v83-four-grass.cjs
+          node tests/test-v84-real-grass.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
