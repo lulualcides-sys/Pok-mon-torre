@@ -256,7 +256,19 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
    pokemonPolishResult={cast:cast.result?.result?.value||{},
     ...(status.result?.result?.value||{})};
   }
-  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,uiFixture,pokemonPolishResult,errors:errors.slice(0,12)};
+  let arenaV96=null;
+  if(ok&&query.includes('arena_test=1')){
+   const start=await cmd('Runtime.evaluate',{
+    expression:"(()=>window.PokemonTorreLocalCombatTestV47?.castPreviewFourV86(0)||{error:'No battle harness'})()",
+    returnByValue:true});
+   await sleep(1200);
+   const inspect=await cmd('Runtime.evaluate',{
+    expression:"(()=>({installed:window.PokemonTorreArenaV96?.installed||false,enabled:window.PokemonTorreArenaV96?.enabled||false,scene:window.PokemonTorreArenaV96?.diagnostics()||null,canvasReady:!!document.getElementById('battleCanvas')?.isConnected}))()",
+    returnByValue:true});
+   arenaV96={start:start.result?.result?.value||{},
+    ...(inspect.result?.result?.value||{})};
+  }
+  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,uiFixture,pokemonPolishResult,arenaV96,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -285,6 +297,17 @@ server.listen(0,'127.0.0.1',async()=>{
   if(!mewtwo.ok||!p95?.installed||p95?.polish?.lastPokemonId!=='150'||
     (p95.polish.polished||0)<1||(p95.polish.framesGenerated||0)<1){
     console.error('FAIL V95: Mewtwo must render actual polished pixel art in normal Lab battle');
+    process.exitCode=1;
+  }
+  // The arena must be visible in a REAL combat, not just a standalone
+  // illustration. No changes to default backgrounds or Mewtwo's V95 polish.
+  const newArena=await browserCase(port,'?arena_preview=cinematic&arena_test=1&build=v96-forest-clearing',true);
+  const a96=newArena.arenaV96;
+  console.log('BROWSER V96 CINEMATIC ARENA:',JSON.stringify(a96));
+  if(!newArena.ok||!a96?.installed||!a96.enabled||!a96.canvasReady||
+    !a96.scene?.canvasReady||(a96.scene.builds||0)<1||
+    (a96.scene.draws||0)<1||(a96.scene.failures||0)>0){
+    console.error('FAIL V96: cinematic clearing must replace actual battle background in browser');
     process.exitCode=1;
   }
   const staged=await browserCase(port,'?battle_preview=v80&build=v80');
