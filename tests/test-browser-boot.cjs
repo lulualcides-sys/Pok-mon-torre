@@ -33,7 +33,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'pokemon-boot-'));
  const child=cp.spawn(chrome,[
   '--headless=new','--no-sandbox',
-  ...(query.includes('battle_preview=v84')?['--enable-unsafe-swiftshader','--use-gl=angle','--use-angle=swiftshader']:['--disable-gpu']),
+  ...((query.includes('battle_preview=v84')||query.includes('build=v90-live-game'))?['--enable-unsafe-swiftshader','--use-gl=angle','--use-angle=swiftshader']:['--disable-gpu']),
   '--disable-dev-shm-usage',
   '--no-first-run','--no-default-browser-check','--disable-extensions',
   '--disable-background-networking','--remote-allow-origins=*',
@@ -169,7 +169,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
    hazeResults={before,after:after.result?.result?.value||{}};
   }
   let v84CombatResults=null,v84IsolationResults=null;
-  if(ok&&query.includes('battle_preview=v84')){
+  if(ok&&(query.includes('battle_preview=v84')||query.includes('build=v90-live-game'))){
    v84CombatResults=[];
    for(let slot=0;slot<4;slot++){
     const cast=await cmd('Runtime.evaluate',{
@@ -319,8 +319,9 @@ server.listen(0,'127.0.0.1',async()=>{
    hz.after?.fog?.atlasReady&&hz.after.fog?.draws>1&&hz.after.fog?.wispCount===36&&
    hz.after.layer?.gpu===true&&!hz.after.error;
   if(!hazeOK){console.error('FAIL: real Haze status must animate 36 GPU fog layers without damage');process.exitCode=1;}
-  const v84=await browserCase(port,'?battle_preview=v84&build=v84-2-tres-distintos');
-  console.log('BROWSER LIVE BATTLE V84:',JSON.stringify({ok:v84.ok,
+  // Exercise the normal production URL, not an opt-in preview.
+  const v84=await browserCase(port,'?build=v90-live-game');
+  console.log('BROWSER LIVE BATTLE V90 DEFAULT:',JSON.stringify({ok:v84.ok,
    version:v84.result?.v84Version,casts:v84.v84CombatResults,errors:v84.errors}));
   // Production V90 replaces the archived V84 WebP renderer. Its diagnostic
   // reports cumulative draws and the LAST distinct attack, not perMove masks.
