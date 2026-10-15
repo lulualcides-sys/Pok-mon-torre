@@ -212,6 +212,21 @@ var heritage37V66 = (() => {
       sparkle(g,xx,yy,2.5*k,'#e9f9ff',fade*.7);
      }break;
     }
+    case 'leafstorm':{
+     // Sharp botanical vortex: many individually turning leaves, seeded
+     // positions, darker undersides and fine veins, not one green projectile.
+     for(let j=0;j<(low?14:25);j++){
+       const q=(j/25),angle=phase*1.3+j*2.399,spiral=(7+q*50)*k;
+       const cx=lerp(from[0],end[0],ease((t0-.09-q*.12)/.76));
+       const cy=lerp(from[1],end[1],ease((t0-.09-q*.12)/.76));
+       const px=cx+Math.cos(angle)*spiral,py=cy+Math.sin(angle)*spiral*.66;
+       leaf(g,px,py,(6+j%4*2.4)*k,angle+PI*.4,j%3?'#84d64c':'#b7f866',fade);
+       if(typeof sprite3511==='function'&&j%4===0)
+         sprite3511(g,'leaf'+(j%4),px,py,15*k,12*k,angle,fade*.7);
+     }
+     if(hit)spatter(g,end[0],end[1],38*k,19,'#bcfc5c',hit,73,low);
+     break;
+    }
     case 'swords':{
      for(let i=0;i<4;i++){
       const a=TAU*(i/4+t0*.9),rad=(26+16*ease(t0/.4))*k;
