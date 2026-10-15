@@ -184,7 +184,10 @@ const pixiFX=(()=>{
   if(!owner?.canvas?.isConnected||!battle?.active){reset();return;}
   const now=performance.now(),dt=Math.min(.05,Math.max(.001,app.ticker.deltaMS/1000));position(owner);
   for(const [f,e] of effects){
-   if(f.battle&&f.battle!==battle||now-f.at>(f.duration||e.duration)+240){
+   // V75: only the four cinematic sprite sequences outlive their original
+   // game attack animation. Hit/damage, cooldown and battle queues stay intact.
+   const lifetime=e.v72?e.visualDuration:(f.duration||e.duration);
+   if((f.battle&&f.battle!==battle)||now-f.at>lifetime+240){
     dispose(e);effects.delete(f);continue;
    }
    try{animate(e,now,dt);}catch(ex){error='VFX: '+ex.message;dispose(e);effects.delete(f);}
