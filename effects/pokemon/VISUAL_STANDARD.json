@@ -1,6 +1,6 @@
 {
   "standard": "Pokemon Torre — acabamento visual global dos Pokémon",
-  "status": "padrão definido; aplicado inicialmente apenas ao Mewtwo",
+  "status": "Padrão visual V95 aprovado pelo usuário; Mewtwo é a referência oficial.",
   "requested": "Deixar todos os Pokémon mais bonitos de uma vez no futuro, sem redesenhar sprites, sem membros animados, sem Mega Evolução e sem modificar golpes.",
   "pilot": {
     "pokemon": "Mewtwo",
@@ -8,7 +8,11 @@
     "implementation": "effects/pokemon/visual-polish-v95.js",
     "enabled_on_regular_and_safe_mode": true,
     "disable_for_A_B_test": "?pokemon_polish=off",
-    "approval": "pendente de avaliação visual do usuário"
+    "approval": "aprovado",
+    "approved_at": "2026-10-15",
+    "baseline_version": "V95",
+    "baseline_commit": "ac0b4427d3acc80d8bdbbf1a78493d20639db2f8",
+    "user_feedback": "Ficou do caralho, é nesse padrão que eu quero mesmo."
   },
   "rules": {
     "reuse_existing_sprite_frames": true,
@@ -22,8 +26,9 @@
     "no_attack_effect_changes": true,
     "preserve_existing_sprite_scale_direction_and_actions": true,
     "process_cache_per_source": true,
-    "fallback_original_on_cors_error": true
+    "fallback_original_on_cors_error": true,
+    "preserve_approved_mewtwo_appearance": true
   },
-  "rollout": "Manter apenas Mewtwo até usuário aprovar. Depois ampliar scope em lote, com testes de proporção e exceções por espécie.",
+  "rollout": "Usar o acabamento V95 do Mewtwo como modelo quando o usuário pedir melhoria global dos demais Pokémon. Não aplicar aos demais sem pedido específico. Preservar sprites e golpes aprovados; não redesenhar, não animar membros, não criar Mega Evolução.",
   "frozen_prior_move_approvals": "effects/moves/STATUS_APROVADOS.json"
 }
