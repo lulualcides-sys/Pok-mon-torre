@@ -467,7 +467,7 @@ window.PokemonTorreV33Diagnostics=()=>({version:V33_VERSION,speciesProfiles:Obje
   function paint(){
    const cat=v32Catalogue(m),defaults=v32DefaultSlots(m);
    const selected=(Array.isArray(m.v32Slots)&&m.v32Slots.length===4?m.v32Slots:defaults).slice();
-   const chosen=selected.map((key,i)=>cat.find(x=>x.key===key)||cat.find(x=>x.key===defaults[i]));
+   const chosen=selected.map((key,i)=>cat.find(x=>x.key===key)||window.PokemonTorreMoveCatalogV100?.findSaved(m,key)||cat.find(x=>x.key===defaults[i]));
    const available=cat.filter(x=>filter==='all'||(filter==='available'?x.available:!x.available));
    const controls=chosen.map((x,i)=>'<button class="v331Slot '+(slot===i?'active':'')+'" data-v331-slot="'+i+'"><b>'+(i+1)+'. '+(x?.move.icon||'✦')+' '+(x?.move.name||'Golpe')+'</b><small>'+(x?.move.cost||0)+' energia · '+(((x?.move.cd||1000)/1000).toFixed(1))+'s</small></button>').join('');
    const moves=available.map(x=>'<button class="v331Choice '+(selected.includes(x.key)?'equipped':'')+'" data-v331-pick="'+cat.indexOf(x)+'" '+(x.available?'':'disabled')+'><span><b>'+(x.move.icon||'✦')+' '+x.move.name+'</b><small>'+(TYPE_NAME[x.move.type]||x.move.type)+' · '+(x.move.power||'Defesa')+' força · '+x.move.cost+' energia · '+(x.move.cd/1000).toFixed(1)+'s</small></span><span class="pillSmall">'+(selected.includes(x.key)?'EM USO':x.available?'EQUIPAR':'Nv. '+x.level)+'</span></button>').join('');
@@ -478,7 +478,7 @@ window.PokemonTorreV33Diagnostics=()=>({version:V33_VERSION,speciesProfiles:Obje
    document.querySelectorAll('[data-v331-filter]').forEach(el=>el.onclick=()=>{filter=el.dataset.v331Filter;paint()});
    document.querySelectorAll('[data-v331-pick]').forEach(el=>el.onclick=()=>{
     const x=cat[+el.dataset.v331Pick];if(!x||!x.available)return;
-    const list=selected.slice();if(list.some((key,i)=>key===x.key && i!==slot)){const note=$('v331Feedback');if(note)note.textContent='Este golpe já ocupa outra posição.';return;}
+    const list=selected.slice();if(list.some((key,i)=>i!==slot&&(key===x.key||window.PokemonTorreMoveCatalogV100?.isEquivalent(window.PokemonTorreMoveCatalogV100.findSaved(m,key),x)))){const note=$('v331Feedback');if(note)note.textContent='Este golpe já ocupa outra posição.';return;}
     list[slot]=x.key;m.v32Slots=list;persist();
     const selectedNow=skillSet(m)[slot];
     if(selectedNow?.name!==x.move.name){m.v32Slots=selected;persist();const note=$('v331Feedback');if(note)note.textContent='Não foi possível equipar '+x.move.name;return;}
