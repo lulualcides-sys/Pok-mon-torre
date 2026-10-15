@@ -1,16 +1,16 @@
-/* Pokemon Torre V84 - opt-in ONLY (?battle_preview=v84).
+/* Pokemon Torre V88 - approved Grass quartet; normal game + preview comparison.
  * Four distinct preauthored 8-frame RGBA atlases, PixiJS WebGL sprites,
  * live per-leaf motion (Folha Navalha), and Pixi Particle Emitter.
  * Never paints attacks in CSS/Canvas2D, and never triggers HP directly.
  */
 var grassFourV84=(()=>{
  'use strict';
- const W=480,H=240,N=8;
+ const W=480,H=240,N=8; // existing approved authored key frames
  const specs=Object.freeze({
-  chicotedevinha:{name:'Chicote de Vinha',asset:'chicote-de-vinha',impact:4,speed:5.0,scale:.94,thickness:.92},
-  folhanavalha:{name:'Folha Navalha',asset:'folha-navalha',impact:5,speed:2.25,scale:.96,thickness:.88,leaves:true},
-  chicotesemarea:{name:'Chicotes em Área',asset:'chicotes-em-area',impact:5,speed:1.85,scale:.82,thickness:.61},
-  vinewhip:{name:'Vine Whip',asset:'vine-whip',impact:4,speed:4.95,scale:.94,thickness:.92}
+  chicotedevinha:{name:'Chicote de Vinha',asset:'chicote-de-vinha',impact:4,speed:1,ms:1260,weight:'medium',scale:.89,thickness:.85},
+  folhanavalha:{name:'Folha Navalha',asset:'folha-navalha',impact:5,speed:1,ms:1430,weight:'medium',scale:.93,thickness:.82,leaves:true},
+  chicotesemarea:{name:'Chicotes em Área',asset:'chicotes-em-area',impact:5,speed:1,ms:1380,weight:'heavy',scale:.69,thickness:.58},
+  vinewhip:{name:'Vine Whip',asset:'vine-whip',impact:4,speed:1,ms:1300,weight:'medium',scale:.88,thickness:.85}
  });
  const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
    .toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -21,9 +21,9 @@ var grassFourV84=(()=>{
   // Preserve approved Folha Navalha pixels. All other three use new,
   // geometrically DIFFERENT native RGBA spritesheets (not reused V83 VINES).
   const preview=id==='folha-navalha'?'v83-preview':'v84-preview';
-  return 'effects/moves/'+id+'/'+preview+'/sprites/'+id+'.webp?v=84.2';
+  return 'effects/moves/'+id+'/'+preview+'/sprites/'+id+'.webp?v=88.0';
  };
- const leafPath='effects/moves/v83-preview/sprites/leaf.webp?v=84.2';
+ const leafPath='effects/moves/v83-preview/sprites/leaf.webp?v=88.0';
  const loaded=new Map(),errors=[];
  let leafRequest=null;
  const counters={casts:0,draws:0,stages:0,leafMotion:0,particles:0,last:null,perMove:{}};
@@ -37,11 +37,11 @@ var grassFourV84=(()=>{
   }).catch(e=>{loaded.delete(key);errors.push(String(e.message||e));throw e});
   loaded.set(key,p);return p;
  }
- function makeEmitter(root,texture){
+ function makeEmitter(root,texture,maxParticles=20){
   if(!window.PIXI?.particles?.Emitter)return null;
   try{
    const e=new PIXI.particles.Emitter(root,{
-    lifetime:{min:.20,max:.53},frequency:.035,maxParticles:24,
+    lifetime:{min:.20,max:.53},frequency:.035,maxParticles,
     particlesPerWave:2,emitterLifetime:-1,addAtBack:false,pos:{x:0,y:0},
     behaviors:[
      {type:'alpha',config:{alpha:{list:[{value:.86,time:0},{value:0,time:1}]}}},
@@ -68,7 +68,10 @@ var grassFourV84=(()=>{
   app.stage.addChild(root);
   const item={v84:true,key,f,app,root,sprite,fade,motes,leafRoot,
    spec,frames:[],leafSprites:[],emitter:null,ready:false,disposed:false,
-   visualDuration:Math.max(400,f.duration||1000)*spec.speed,seen:-1};
+   visualDuration:Math.max(spec.ms,Math.min(spec.ms+200,Number(f.duration)||spec.ms)),seen:-1,
+   framePlan:typeof framePolicyV87!=='undefined'?
+    framePolicyV87.plan({weight:spec.weight,nativeFrames:N,
+      mobile:window.matchMedia?.('(pointer:coarse)')?.matches}):null};
   atlas(key).then(frames=>{
    if(item.disposed)return;
    item.frames=frames;item.ready=true;
@@ -78,7 +81,7 @@ var grassFourV84=(()=>{
   });
   leafRequest.then(tex=>{
    if(item.disposed||!tex)return;
-   item.emitter=makeEmitter(motes,tex);
+   item.emitter=makeEmitter(motes,tex,item.framePlan?.maxParticles||20);
    if(spec.leaves){
     // Real individual leaves travelling on curved paths every Pixi ticker
     // frame. The 8 preauthored frames remain underneath as visual stages.
@@ -110,15 +113,26 @@ var grassFourV84=(()=>{
   item.fade.visible=alpha>.001;
   const A=f.from,B=f.to,dx=B[0]-A[0],dy=B[1]-A[1],
    reach=Math.hypot(dx,dy)||1;
-  const width=Math.min(item.app.screen.width*1.04,
+  const area=item.key==='chicotesemarea';
+  const width=Math.min(item.app.screen.width*(area?.78:1.02),
     Math.max(85,reach*W/345))*spec.scale;
   // Compact in area without breaking horizontal battle reach.
   const height=width*H/W*spec.thickness;
   const angle=Math.atan2(dy,dx),cx=(A[0]+B[0])/2,cy=(A[1]+B[1])/2;
+  const smooth=q=>{q=clamp(q);return q*q*(3-2*q);};
+  const grow=area?.70+.30*smooth(t/.50):1;
+  // All four keep their OWN atlas; these subtle transforms make their
+  // physical motion distinct without introducing generic shapes/old vines.
+  const progress=smooth((t-.08)/.68);
+  const along=item.key==='chicotedevinha'?(-7+14*progress):
+    item.key==='vinewhip'?(-4+9*progress):0;
+  const twist=item.key==='vinewhip'?Math.sin(progress*Math.PI*1.2)*.075:
+    item.key==='chicotedevinha'?Math.sin(progress*Math.PI)*-.045:0;
+  const driftX=Math.cos(angle)*along,driftY=Math.sin(angle)*along;
   const hide=index===7?clamp((1-t)*8):1;
   for(const sp of [item.sprite,item.fade]){
-   sp.width=width;sp.height=height;sp.rotation=angle;
-   sp.position.set(cx,cy);
+   sp.width=width*grow;sp.height=height*grow;sp.rotation=angle+twist;
+   sp.position.set(cx+driftX,cy+driftY);
   }
   item.sprite.alpha=(1-alpha)*hide;
   item.fade.alpha=alpha*hide;
@@ -178,11 +192,11 @@ var grassFourV84=(()=>{
   sizes[v.name]={width:v.scale,height:v.thickness};
  }
  function diagnostic(){return {
-  version:'84.2',...counters,errors:errors.slice(-6),atlases:loaded.size,
+  version:'88.0',...counters,errors:errors.slice(-6),atlases:loaded.size,
   timings:{speeds,contacts,sizes}
  }}
  if(typeof window!=='undefined'){
-  window.PokemonTorreGrassFourPreviewV84={version:'84.2',enabled:true,
+  window.PokemonTorreGrassFourPreviewV84={version:'88.0',enabled:true,
     diagnostics:diagnostic,timings:{speeds,contacts,sizes}};
   if(window.PIXI?.Assets){
    for(const k of Object.keys(specs))atlas(k).catch(()=>{});
@@ -190,9 +204,11 @@ var grassFourV84=(()=>{
   // Minimal version marker, only in the isolated preview (NOT an Atelier).
   if(typeof document!=='undefined'){
    const tag=()=>{
+    // Badge belongs to explicit preview only, never the normal game.
+    if(!['v84','v88'].includes(new URLSearchParams(location.search).get('battle_preview')))return;
     if(document.getElementById('pokemon-v84-mark'))return;
     const e=document.createElement('div');e.id='pokemon-v84-mark';
-    e.textContent='PRÉVIA V84.2 · 3 ARTES NOVAS';
+    e.textContent='PLANTA V88 · 4 GOLPES RESTAURADOS';
     e.style.cssText='position:fixed;bottom:6px;left:6px;z-index:9999;'+
       'font:700 10px system-ui;color:#dcffd4;background:#103a24e8;'+
       'padding:5px 8px;border:1px solid #6bd778;border-radius:6px;'+
