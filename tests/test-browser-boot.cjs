@@ -242,7 +242,21 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
     combatResults.push({name,...answer,landed,attempts});
    }
   }
-  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,uiFixture,errors:errors.slice(0,12)};
+  let pokemonPolishResult=null;
+  if(ok&&query.includes('pokemon_polish_test=1')){
+   const cast=await cmd('Runtime.evaluate',{
+    expression:"(()=>window.PokemonTorreLocalCombatTestV47?.castPreviewFourV86(0)||{error:'No local combat harness'})()",
+    returnByValue:true
+   });
+   await sleep(1650);
+   const status=await cmd('Runtime.evaluate',{
+    expression:"(()=>({polish:window.PokemonTorrePokemonPolishV95?.diagnostics()||null,gameVisible:!!document.getElementById('battleCanvas')?.isConnected,installed:window.PokemonTorrePokemonPolishV95?.installed||false}))()",
+    returnByValue:true
+   });
+   pokemonPolishResult={cast:cast.result?.result?.value||{},
+    ...(status.result?.result?.value||{})};
+  }
+  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,uiFixture,pokemonPolishResult,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -261,6 +275,16 @@ server.listen(0,'127.0.0.1',async()=>{
   if(!experimental.ok||experimental.result?.approvedVersion!=='81.0'||
      experimental.result?.hitSyncVersion!=='80.0'){
     console.error('FAIL: normal game must load approved V81 FX and native hit synchronizer without preview flag');
+    process.exitCode=1;
+  }
+  // Verify the ACTUAL original Mewtwo frames are polished during a REAL Lab
+  // battle on Chrome (not just a test canvas / static illustrative preview).
+  const mewtwo=await browserCase(port,'?pokemon_polish_test=1&build=v95-mewtwo-game',true);
+  console.log('BROWSER V95 MEWTWO REAL POLISH:',JSON.stringify(mewtwo.pokemonPolishResult));
+  const p95=mewtwo.pokemonPolishResult;
+  if(!mewtwo.ok||!p95?.installed||p95?.polish?.lastPokemonId!=='150'||
+    (p95.polish.polished||0)<1||(p95.polish.framesGenerated||0)<1){
+    console.error('FAIL V95: Mewtwo must render actual polished pixel art in normal Lab battle');
     process.exitCode=1;
   }
   const staged=await browserCase(port,'?battle_preview=v80&build=v80');
