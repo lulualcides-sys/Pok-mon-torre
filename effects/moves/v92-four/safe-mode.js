@@ -20,8 +20,9 @@
   if(equippedFourV92.begin(this,move.name,time)){
    const typ=/geada|sopro/.test(key)?'ice':'grass';
    for(const shot of this.projectiles||[])
-    if(!shots.has(shot)&&shot?.from==='player'&&shot.type===typ)
-     shot.__v92Covered=true;
+    if(!shots.has(shot)&&shot?.from==='player'){
+     shot.__v92Covered=true;shot.__v94NamedEffect=key;
+    }
    if(this.particles?.length>count)this.particles.length=count;
   }
   return result;
@@ -31,8 +32,9 @@
   BattleEngine.prototype.drawProjectile=function(shot){
    if(Number.isFinite(this.enemy?.hp)&&this.enemy.hp<=0)return;
    const active=equippedFourV92.active(this,performance.now());
-   if(shot?.__v92Covered||(active&&shot?.from==='player'&&
-     shot.type===(/geada|sopro/.test(active.key)?'ice':'grass')))return;
+   if(shot?.__v92Covered||shot?.__v94NamedEffect||
+     (active&&shot?.from==='player'&&
+      shot.type===(/geada|sopro/.test(active.key)?'ice':'grass')))return;
    return oldShot.apply(this,arguments);
   };
  const oldPainter=window.PokemonTorreV360Paint;
