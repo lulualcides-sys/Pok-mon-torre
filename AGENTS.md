@@ -1,3 +1,11 @@
+## Revisão V81 — quatro golpes aprovados e dano sincronizado
+
+- Usuário **aprovou** o resultado V80 de Dragon Pulse e Aura Sphere, incluindo **impacto sincronizado ao dano**. Dragon Claw e X-Scissor já estavam aprovados desde V77. **Os quatro devem ficar na batalha normal, sem ?battle_preview e sem Ateliê.**
+- Usar `effects/moves/v81-approved/render.js` em jogo normal: mantém os atlas V77 para Dragon Claw/X-Scissor e V78 para Dragon Pulse/Aura Sphere. Tamanhos compactos e durações mantidos; **sem badge de prévia**.
+- Executar `effects/moves/_runtime/impact-sync-v80.js` após V47 também no jogo normal. Dano de Dragon Pulse e Aura Sphere ocorre no início do quadro 6/8 da animação (5/8 do tempo total), usando a fila V359 original, sem mudar hitTarget/dano, e sem o fallback V47 prematuro desses dois movimentos.
+- **Não alterar** Thunder, Discharge, Thunder Wave, outros efeitos aprovados, pontos de vida de forma artificial, recarga, custo ou proteção de status.
+- A rota `?battle_preview=v80` pode continuar como referência técnica histórica, mas o jogador deve ver as quatro animações aprovadas no link normal.
+
 # Pokémon Torre — instruções permanentes para desenvolvimento
 
 Este documento registra as regras do projeto para qualquer alteração de golpes e animações. **Não limitar as melhorias a golpes elétricos**: o tipo e os golpes trabalhados são definidos pelo pedido mais recente do usuário. Essas regras aplicam-se igualmente a fogo, água, grama, gelo, lutador, psíquico, fantasma, pedra, terra, voador, inseto, dragão, fada, venenoso, normal, sombrio, aço e elétrico, além de golpes especiais e exclusivos.

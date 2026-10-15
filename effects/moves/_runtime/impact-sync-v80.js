@@ -1,4 +1,4 @@
-/* Pokemon Torre V80, real impact synchronization for the TWO opt-in ranged moves.
+/* Pokemon Torre V81, real impact synchronization for two user-approved ranged moves.
  * Runs AFTER V47 collision-recovery wrapper. Never edits hitTarget(), RNG,
  * damage amounts, energy/cooldown or approved electric/contact moves.
  * The existing v359 attack update remains the single authoritative hit path.
@@ -21,7 +21,8 @@
     names.has(norm(event.move?.name))&&event.hits===0&&
     Number.isFinite(event.at)&&Number(event.duration)>0);
   if(!fx)return result;
-  const config=window.PokemonTorreBattlePreviewV80?.synchronization;
+  const config=window.PokemonTorreBattlePreviewV80?.synchronization||
+    window.PokemonTorreBattleArtV81?.synchronization;
   if(!config||config.impactFrame!==5||
      config.impactFraction!==5/8||config.rangedSlowdown!==3.4)return result;
   const visualMs=Math.max(250,fx.duration)*config.rangedSlowdown;
