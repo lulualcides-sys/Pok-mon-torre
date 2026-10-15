@@ -14,7 +14,7 @@ assert.ok(page.includes("effects/atelier-v71/atlases/") || page.includes("const 
 assert.ok(page.includes('PIXI.AnimatedSprite')&&page.includes('PIXI.Assets.load'),
   'AnimatedSprite GPU playback missing');
 assert.ok(page.includes('PIXI.particles.Emitter'),'Optional Pixi particle emitter missing');
-assert.ok(page.includes('8 quadros reais')&&!page.includes('getContext('),
+assert.ok(page.includes('8 quadros das artes cinematográficas aprovadas')&&!page.includes('getContext('),
   'Preview needs raster artwork rather than Canvas 2D procedural effects');
 assert.ok(deploy.includes('python tools/build-atelier-v70.py'),'Deploy does not build sprite assets');
 assert.ok(!read('effects/atelier-v70/entry.js').includes('BattleEngine.prototype'),
