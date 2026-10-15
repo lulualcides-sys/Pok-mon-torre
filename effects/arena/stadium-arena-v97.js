@@ -112,12 +112,16 @@ function seal(g,x,y,r){
 function angledRoom(g,H){
  // Geometric fencing, octagonal bevels visible at bottom of video.
  const bottom=H-57,shoulder=H-158;
- const frame=[[0,155],[78,103],[882,103],[960,155],
-  [960,shoulder],[837,bottom],[124,bottom],[0,shoulder]];
- // Gray walls with pale inner bevel and dark outside shadow.
- poly(g,frame,null,'#283b4c',22);
- poly(g,frame,null,'#e1e4e0',13);
- poly(g,frame,null,'#8a9ba1',3.5);
+ // V98: no enclosing 'square'. Side lanes have real tiled floor behind them.
+ // Only the far north/south architectural ledges remain; outside the
+ // visible viewport the world continues toward the physical side walls.
+ for(const [color,thick,y] of [
+  ['#25384a',16,139],['#cbd5d4',8,145],['#6d8999',3,151],
+  ['#25384a',16,bottom],['#d5dcd7',8,bottom-6],['#7899a1',3,bottom-12]
+ ]){
+  g.strokeStyle=color;g.lineWidth=thick;g.beginPath();
+  g.moveTo(0,y);g.lineTo(960,y);g.stroke();
+ }
  // Side walls and blue structural rails.
  for(const side of [0,1]){
   const x=side===0?0:934;
@@ -204,7 +208,7 @@ function lamp(g,x,y){
 function makeBackdrop(width,height){
  // Draw at native pixel resolution, with a 960-unit width coordinate system.
  // On portrait phones, logical height expands; tiles remain square.
- const W=Math.max(300,Math.min(960,Math.round(width))),
+ const W=Math.max(300,Math.min(1600,Math.round(width))),
   D=Math.max(240,Math.min(1280,Math.round(height)));
  const canvas=document.createElement('canvas');
  canvas.width=W;canvas.height=D;canvas.complete=true;
@@ -253,7 +257,7 @@ function makeBackdrop(width,height){
  return canvas;
 }
 function fromCache(w,h){
- const key=Math.max(300,Math.min(960,Math.round(w)))+'x'+
+ const key=Math.max(300,Math.min(1600,Math.round(w)))+'x'+
   Math.max(240,Math.min(1280,Math.round(h)));
  if(cache.has(key)){stats.cacheHits++;return cache.get(key);}
  const can=makeBackdrop(w,h);cache.set(key,can);
