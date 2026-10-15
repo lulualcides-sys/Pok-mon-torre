@@ -7,7 +7,7 @@
  const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
    .toLowerCase().replace(/[^a-z0-9]/g,'');
  const names=new Set(['chicotedevinha','folhanavalha','chicotesemarea','vinewhip']);
- const log={version:'84.0',scheduled:0,suppressed:0,last:null};
+ const log={version:'84.1',scheduled:0,suppressed:0,last:null};
  const previous=BattleEngine.prototype.useMove;
  BattleEngine.prototype.useMove=function(slot){
   const priorAttacks=new Set(this.v359Attacks||[]);

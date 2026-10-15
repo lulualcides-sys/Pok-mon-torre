@@ -18,9 +18,9 @@ var grassFourV84=(()=>{
  const resolve=n=>accepts(norm(n))?norm(n):'';
  const source=key=>{
   const id=specs[key].asset;
-  return 'effects/moves/'+id+'/v83-preview/sprites/'+id+'.webp?v=84.0';
+  return 'effects/moves/'+id+'/v83-preview/sprites/'+id+'.webp?v=84.1';
  };
- const leafPath='effects/moves/v83-preview/sprites/leaf.webp?v=84.0';
+ const leafPath='effects/moves/v83-preview/sprites/leaf.webp?v=84.1';
  const loaded=new Map(),errors=[];
  let leafRequest=null;
  const counters={casts:0,draws:0,stages:0,leafMotion:0,particles:0,last:null,perMove:{}};
@@ -175,11 +175,11 @@ var grassFourV84=(()=>{
   sizes[v.name]={width:v.scale,height:v.thickness};
  }
  function diagnostic(){return {
-  version:'84.0',...counters,errors:errors.slice(-6),atlases:loaded.size,
+  version:'84.1',...counters,errors:errors.slice(-6),atlases:loaded.size,
   timings:{speeds,contacts,sizes}
  }}
  if(typeof window!=='undefined'){
-  window.PokemonTorreGrassFourPreviewV84={version:'84.0',enabled:true,
+  window.PokemonTorreGrassFourPreviewV84={version:'84.1',enabled:true,
     diagnostics:diagnostic,timings:{speeds,contacts,sizes}};
   if(window.PIXI?.Assets){
    for(const k of Object.keys(specs))atlas(k).catch(()=>{});
@@ -189,7 +189,7 @@ var grassFourV84=(()=>{
    const tag=()=>{
     if(document.getElementById('pokemon-v84-mark'))return;
     const e=document.createElement('div');e.id='pokemon-v84-mark';
-    e.textContent='PRÉVIA V84 · 4 GOLPES';
+    e.textContent='PRÉVIA V84.1 · ISOLADA';
     e.style.cssText='position:fixed;bottom:6px;left:6px;z-index:9999;'+
       'font:700 10px system-ui;color:#dcffd4;background:#103a24e8;'+
       'padding:5px 8px;border:1px solid #6bd778;border-radius:6px;'+

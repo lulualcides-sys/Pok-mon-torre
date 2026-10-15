@@ -62,10 +62,10 @@ window.PokemonTorreV360Paint=function(g,f,now,e){
  if(typeof grassFourV84!=='undefined'){
   const key84=grassFourV84.resolve(f?.move?.name||f?.name);
   if(key84){
-   // Detect a missing GPU instead of silently displaying a legacy attack.
-   if(!pixiFX.paint(f,e,key84)){
-    window.PokemonTorreGrassPreviewErrorV84='PixiJS/WebGL indisponível';
-   }
+   // beginV84() already installed the ONE currently selected preview.
+   // Older native events may still be drawn by the engine, but must not
+   // trigger an error or create a duplicate generic effect.
+   pixiFX.paint(f,e,key84);
    return true;
   }
  }
@@ -237,6 +237,37 @@ BattleEngine.prototype.drawMon=function(actor,id,isEnemy,now){
 };
 // V84 only: render the previously queued Pixi animation ON THE GAME FRAME.
 // Historic V81 and V83 code paths do not enter this wrapper.
+// V84.1: a cast is authoritative. Determine exactly which fresh queue object
+// belongs to the move selected THIS time. Never revive prior Area attacks.
+const previousGrassPreviewUseV841=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(slot){
+ if(typeof grassFourV84==='undefined')return previousGrassPreviewUseV841.apply(this,arguments);
+ const actor=battle?.active?current():null;
+ const name=actor&&Number.isInteger(slot)?skillSet(actor)?.[slot]?.name:null;
+ const key=grassFourV84.resolve(name);
+ const previousHits=new Set(this.v359Attacks||[]);
+ const previousVisuals=new Set(this.v3580Visuals||[]);
+ const result=previousGrassPreviewUseV841.apply(this,arguments);
+ if(result===false||!battle?.active||battle.paused)return result;
+ const created=[...(this.v359Attacks||[]).filter(f=>!previousHits.has(f)),
+  ...(this.v3580Visuals||[]).filter(f=>!previousVisuals.has(f))];
+ if(!key){
+  // A different move must not inherit older preview vines or emissions.
+  if(created.length)pixiFX.clearV84();
+  return result;
+ }
+ const own=created.find(f=>grassFourV84.resolve(f?.move?.name||f?.name)===key&&
+  Array.isArray(f.from)&&Array.isArray(f.to));
+ if(own){
+  if(!pixiFX.beginV84(this,own,key))
+   window.PokemonTorreGrassPreviewErrorV84='Não foi possível iniciar o efeito '+name;
+ }else{
+  // Do not fake a cast from a stale old queue when the original engine
+  // rejected it, or when a status move created no drawable attack.
+  if(created.length)pixiFX.clearV84();
+ }
+ return result;
+};
 const previousGrassPreviewDrawV84=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
  const result=previousGrassPreviewDrawV84.apply(this,arguments);
