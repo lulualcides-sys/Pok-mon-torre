@@ -63,9 +63,21 @@ assert.ok(!source.includes('BattleEngine.prototype.useMove')&&!/\.hp\s*=|\.energ
   assert.equal(scene.sprite.visible,true,'Move hidden in battle '+key);
   assert.equal(scene.sprite.texture.frame.x,480*4,'Wrong attack animation timing '+key);
   assert.ok(scene.sprite.width>100&&scene.sprite.height>50,'Tiny/no sprite '+key);
+  // V73: the same approved artwork must be smaller, for both contact/ranged effects.
+  if(fx.specs[key].mode==='contact'){
+    assert.ok(scene.sprite.width<250,'Contact animation too wide for compact V73: '+key);
+    assert.ok(scene.sprite.width<=app.screen.width*.45,'Contact effect exceeds arena compact cap: '+key);
+    const dx=attack.to[0]-attack.from[0],dy=attack.to[1]-attack.from[1],length=Math.hypot(dx,dy);
+    const expectedX=attack.to[0]-dx/length*.15*scene.sprite.width;
+    assert.ok(Math.abs(scene.sprite.x-expectedX)<.001,'Contact displacement no longer compact: '+key);
+  }else{
+    assert.ok(scene.sprite.width<475,'Ranged animation too wide for compact V73: '+key);
+    assert.ok(scene.sprite.width<=app.screen.width*.72,'Ranged effect exceeds arena cap: '+key);
+  }
+  assert.equal(scene.sprite.height,scene.sprite.width*.5,'V73 must preserve frame aspect ratio: '+key);
   fx.dispose(scene);
   assert.equal(scene.disposed,true,'Scene was not cleaned up: '+key);
  }
  assert.equal(calls,Object.keys(required).length,'Unexpected atlas requests');
- console.log('PASS V72: four real-battle FX, 8 atlas frames, contact alignment, preserved moves, single Pixi GPU layer');
+ console.log('PASS V73: compact four real-battle FX, contact alignment, 8 atlas frames, approved artwork unchanged');
 })().catch(e=>{console.error(e);process.exitCode=1});
