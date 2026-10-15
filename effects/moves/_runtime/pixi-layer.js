@@ -8,6 +8,8 @@ const pixiFX=(()=>{
  // Old v359/v3580 visual objects may coexist while the engine cleans up;
  // they must never create an effect on top of a newer cast.
  let activeV84=null,castSerialV84=0,clearedV84=0;
+ // Opt-in Haze status; independent root in the existing WebGL scene.
+ let hazeActiveV85=null;
  const clamp=v=>Math.min(1,Math.max(0,v)),mix=(a,b,u)=>a+(b-a)*u;
  // Particle library is optional. A blocked emitter must not disable our sprite effects.
  const hasGPU=()=>!!(window.PIXI?.Application&&window.PIXI?.utils?.isWebGLSupported?.());
@@ -68,6 +70,8 @@ const pixiFX=(()=>{
   fx?.root?.destroy({children:true});
  }
  function reset(){
+  if(hazeActiveV85&&typeof hazeV85!=='undefined')hazeV85.destroy(hazeActiveV85);
+  hazeActiveV85=null;
   activeV84=null;
   for(const fx of effects.values())dispose(fx);effects.clear();
   if(app){try{app.destroy(true,{children:true,texture:false,baseTexture:false});}catch(e){}}
@@ -234,6 +238,10 @@ const pixiFX=(()=>{
   if(!effects.size){app.ticker.stop();app.view.style.display='none';}
  }
  function paint(f,engine,key){
+  // Haze's status cast owns its own Pixi fog layer. Old catalog painter
+  // must not create a second ice halo or fallback generic projectile.
+  if(typeof hazeV85!=='undefined'&&norm(f?.move?.name||f?.name)==='haze')
+   return !!hazeActiveV85;
   if(typeof grassFourV84!=='undefined'){
    const named=grassFourV84.resolve(f?.move?.name||f?.name);
    if(named){
@@ -301,7 +309,36 @@ const pixiFX=(()=>{
    clearV84();return false;
   }
  }
- return {ensure,paint,beginV84,clearV84,frameV84,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
+ function beginHazeV85(engine,now){
+  if(typeof hazeV85==='undefined'||!battle?.active)return false;
+  if(hazeActiveV85)hazeV85.destroy(hazeActiveV85);
+  hazeActiveV85=null;
+  if(!ensure(engine))return false;
+  hazeActiveV85=hazeV85.cast(app,engine,now);
+  return !!hazeActiveV85;
+ }
+ function frameHazeV85(now,engine){
+  if(typeof hazeV85==='undefined')return false;
+  if(!hazeActiveV85)return false;
+  if(!battle?.active||owner!==engine||!engine?.canvas?.isConnected){
+   hazeV85.destroy(hazeActiveV85);hazeActiveV85=null;return false;
+  }
+  const t=Number.isFinite(now)?now:performance.now();
+  const alive=hazeV85.animate(hazeActiveV85,t);
+  if(!alive&&t-hazeActiveV85.started>=hazeV85.LIFE){
+   hazeV85.destroy(hazeActiveV85);hazeActiveV85=null;
+   if(!effects.size)app.view.style.display='none';
+   return false;
+  }
+  if(hazeActiveV85.ready){
+   position(engine);app.view.style.display='block';
+   app.renderer.render(app.stage);
+  }
+  return true;
+ }
+ return {ensure,paint,beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
   sprites:!!atlas,active:effects.size,registered:registry.size,
-  emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:grassFourV84.source(activeV84.key)}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,clearedV84,rendered:{...drawn},error})};
+  emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:grassFourV84.source(activeV84.key)}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
+  hazeActive:!!hazeActiveV85,hazeReady:!!hazeActiveV85?.ready,
+  clearedV84,rendered:{...drawn},error})};
 })();
