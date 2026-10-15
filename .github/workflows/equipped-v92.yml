@@ -6,6 +6,7 @@ on:
       - 'effects/moves/v86-preview/render.js'
       - 'effects/moves/_runtime/end.js'
       - 'tests/equipped-four-v92-no-webgl.test.cjs'
+      - 'tests/equipped-four-v94-long-session.test.cjs'
       - 'index.html'
   push:
     branches: [main]
@@ -27,3 +28,4 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/equipped-four-v92-no-webgl.test.cjs
+      - run: node tests/equipped-four-v94-long-session.test.cjs
