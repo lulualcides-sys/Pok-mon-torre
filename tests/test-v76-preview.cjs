@@ -3,8 +3,8 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('nod
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const index=read('index.html'),preview=read('effects/moves/v76-preview/render.js');
 const stable=read('effects/moves/v72-battle/render.js');
-assert.ok(index.includes("get('battle_preview')==='v77'"),'Preview flag missing');
-assert.ok(index.includes('fxFiles[i]="effects/moves/v77-preview/render.js"'),'Flag must select alternate VFX without replacing main renderer');
+assert.ok(index.includes("get('battle_preview')==='v78'"),'Preview flag missing');
+assert.ok(index.includes('fxFiles[i]="effects/moves/v78-preview/render.js"'),'Flag must select alternate VFX without replacing main renderer');
 assert.ok(index.includes('"effects/moves/v72-battle/render.js"'),'Official V75 renderer must stay loaded by default');
 assert.ok(!index.includes("effects/atelier-v70/entry.js"),'Atelier button must not be loaded inside game');
 assert.ok(!preview.includes('getContext('),'No Canvas 2D procedural art allowed');

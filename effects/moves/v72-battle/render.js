@@ -22,7 +22,9 @@ var battleFourV72=(()=>{
  const counts=Object.create(null),failures=[];
  const accepts=key=>Object.hasOwn(defs,key);
  const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
- const source=id=>'effects/moves/v72-battle/sprites/'+id+'.webp?v=72.1';
+ const source=id=>['dragon-claw','x-scissor'].includes(id)?
+  'effects/moves/v77-preview/sprites/'+id+'.webp?v=77.0':
+  'effects/moves/v72-battle/sprites/'+id+'.webp?v=72.1';
  function install(app,f,key){
   if(!accepts(key)||!app?.stage||!f?.from||!f?.to||!window.PIXI?.Assets)return null;
   const definition=defs[key],root=new PIXI.Container(),sprite=new PIXI.Sprite(PIXI.Texture.EMPTY);

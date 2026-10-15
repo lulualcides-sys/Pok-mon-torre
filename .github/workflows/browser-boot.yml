@@ -40,6 +40,7 @@ jobs:
           python -m pip install --quiet Pillow
           python tools/build-v72-battle.py
           python tools/build-v77-preview.py
+          python tools/build-v78-preview.py
       - name: Verificar Chrome
         run: |
           which google-chrome || which google-chrome-stable || which chromium
