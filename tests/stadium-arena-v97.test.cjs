@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('nod
 const script=fs.readFileSync('effects/arena/stadium-arena-v97.js','utf8');
 const html=fs.readFileSync('index.html','utf8');
 assert.ok(html.includes("effects/arena/stadium-arena-v97.js"));
-assert.ok(html.includes("get('arena_preview')==='cinematic'"));
+assert.ok(html.includes("get('arena_preview')!=='off'"));
 assert.ok(!html.includes("const path='effects/arena/cinematic-arena-v96.js'"));
 function simulate(query,size){
  const calls={canvas:0,arcs:0,lines:0,gradient:0,tiles:0};
@@ -36,7 +36,7 @@ const original=simulate('?arena_preview=off',[720,1000]);
 assert.equal(original.window.PokemonTorreArenaV97.enabled,false);
 assert.equal(original.game.bg,original.oldBG);
 assert.equal(original.calls.canvas,0);
-const good=simulate('?arena_preview=cinematic',[720,1050]);
+const good=simulate('?build=v102-official',[720,1050]);
 const {game,window,calls}=good;
 assert.equal(window.PokemonTorreArenaV97.enabled,true);
 assert.equal(game.bg.width,720);
@@ -59,4 +59,4 @@ game.w=620;game.h=900;game.generateBackdrop();
 assert.notEqual(game.bg,before,'Orientation/viewport resize needs refreshed scene');
 assert.equal(window.PokemonTorreArenaV97.diagnostics().builds,2);
 assert.equal(game.bg.width,620);assert.equal(game.bg.height,900);
-console.log('PASS V97: cyan squared tiled stadium, metal border, stairs, two gold seals, no trees/ring, cache, portrait geometry, original arena preserved');
+console.log('PASS V102 official V97: cyan squared tiled stadium, metal border, stairs, two gold seals, no trees/ring, cache, portrait geometry, original arena preserved');

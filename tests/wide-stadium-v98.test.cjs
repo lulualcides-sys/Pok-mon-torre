@@ -25,7 +25,7 @@ function run(on){
    p.y=Math.max(this.h*.24,Math.min(this.h*.84,p.y));}
   draw(){this.frameCount=(this.frameCount||0)+1;}
  }
- const window={},battle={active:true},location={search:on?'?arena_preview=cinematic':'?none'};
+ const window={},battle={active:true},location={search:on?'?build=v102-official':'?arena_preview=off'};
  vm.runInNewContext(source,{window,location,BattleEngine,battle,URLSearchParams,
   Math,console,performance:{now:()=>1000}});
  const e=new BattleEngine();e.resize();return {e,window,style};
@@ -54,4 +54,4 @@ assert.ok(style.transform.startsWith('translate3d(-'),'Camera offset should be a
 const d=window.PokemonTorreArenaWideV98.diagnostics();
 assert.equal(d.worldW,620);assert.equal(d.viewportW,400);
 assert.ok(d.draws>=60);
-console.log('PASS V98: actual 155% horizontal world, Pokémon beyond old frame, camera tracks, old arena untouched');
+console.log('PASS V102 official V98: actual 155% horizontal world, Pokémon beyond old frame, camera tracks, old arena untouched');

@@ -1,5 +1,5 @@
 /* V97: arena inspirada na geometria do vídeo enviado (estádio tecnológico).
- * Prévia dentro da batalha. Apenas ?arena_preview=cinematic.
+ * Arena oficial em todas as batalhas desde V102; ?arena_preview=off desativa apenas para diagnóstico.
  * Chão azul de ladrilhos, paredes com chanfro, escadaria vermelha,
  * emblemas metálicos dourados e marcas discretas de combate.
  * NENHUM círculo gigante, árvores ou gramado. Não altera mecânica.
@@ -8,7 +8,7 @@
 'use strict';
 if(typeof BattleEngine!=='function'||!BattleEngine.prototype.generateBackdrop)return;
 if(window.PokemonTorreArenaV97?.installed)return;
-const on=new URLSearchParams(location.search).get('arena_preview')==='cinematic';
+const on=new URLSearchParams(location.search).get('arena_preview')!=='off';
 const design=Object.freeze({version:'97.0',name:'Estádio Tecnológico Kanto',
  reference:'estádio azul-claro de piso quadriculado visto de cima',
  style:'pixel art 2D; piso livre; escadaria vermelha; metal/azul/roxo',
@@ -282,6 +282,6 @@ BattleEngine.prototype.draw=function(now){
 window.PokemonTorreArenaV97=Object.freeze({
  installed:true,enabled:on,design,
  diagnostics:()=>({...stats}),
- description:'Arena jogável de referência, sem alterações em golpes/Pokémon'
+ description:'Arena oficial V98: estádio azul; nenhum golpe/Pokémon modificado'
 });
 })();

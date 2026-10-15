@@ -1,5 +1,5 @@
 /* Pokémon Torre V98 — expanded horizontal stadium viewport and follow camera.
- * Only ?arena_preview=cinematic. V97 floor still renders inside the REAL
+ * Official by default since V102 (?arena_preview=off is debug-only). V97 floor renders in the REAL
  * battle canvas. The arena, not individual Pokemon, becomes wider.
  * DOM battle HUD/joystick remain fixed; attacks/AI retain world coordinates.
  */
@@ -7,7 +7,7 @@
 'use strict';
 if(typeof BattleEngine!=='function')return;
 if(window.PokemonTorreArenaWideV98?.installed)return;
-const enabled=new URLSearchParams(location.search).get('arena_preview')==='cinematic';
+const enabled=new URLSearchParams(location.search).get('arena_preview')!=='off';
 const WORLD_FACTOR=1.55; // 55% more WORLD than the visible horizontal viewport
 const CAMERA_RESPONSE=6;
 const stats={resizes:0,draws:0,panUpdates:0,lastPan:0,
