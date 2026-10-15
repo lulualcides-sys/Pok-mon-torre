@@ -426,7 +426,11 @@
     skillSet=function(mon){return mon===actor?moves:oldSkillSet(mon);};
     const fired=this.cast(slot);
     return {requested:labels[slot],selected:fired.name,
-      cast:fired,vfx:window.PokemonTorreGrassFourPreviewV84?.diagnostics(),
+      cast:fired,liveQueue:{
+       animated:(engine?.v3580Visuals||[]).map(v=>v.move?.name),
+       hits:(engine?.v359Attacks||[]).map(v=>v.move?.name)
+      },
+      vfx:window.PokemonTorreGrassFourPreviewV84?.diagnostics(),
       sync:window.PokemonTorreGrassImpactV84?.()};
    },
    // Browser-only regression for actual Grass status moves, not image preload.
