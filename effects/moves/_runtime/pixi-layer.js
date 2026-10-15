@@ -223,7 +223,29 @@ const pixiFX=(()=>{
   if(!atlas&&typeof spriteAtlas3511!=='undefined'&&spriteAtlas3511.naturalWidth)atlas=PIXI.BaseTexture.from(spriteAtlas3511);
   return !!install(f,key);
  }
- return {ensure,paint,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
+ // V84: guarantee Pixi/WebGL frames are produced on the real BattleEngine
+ // draw cadence. A stopped/throttled Pixi ticker must not freeze the effect.
+ // This route only runs if an opted-in V84 attack is currently active.
+ function frameV84(now){
+  if(!app||typeof grassFourV84==='undefined'||!battle?.active)return false;
+  let active=false;
+  const currentTime=Number.isFinite(now)?now:performance.now();
+  for(const [f,item] of effects){
+   if(!item?.v84)continue;
+   if((f.battle&&f.battle!==battle)||currentTime-f.at>item.visualDuration+160){
+    dispose(item);effects.delete(f);continue;
+   }
+   try{grassFourV84.animate(item,currentTime,.016);active=true;frames++;}
+   catch(e){error='V84 live frame: '+e.message;dispose(item);effects.delete(f);}
+  }
+  if(active){
+   app.view.style.display='block';
+   // Force compositing even when Pixi's independent ticker is suspended.
+   app.renderer.render(app.stage);
+  }
+  return active;
+ }
+ return {ensure,paint,frameV84,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
   sprites:!!atlas,active:effects.size,registered:registry.size,
   emitterInstances:emitterCount,frames,rendered:{...drawn},error})};
 })();
