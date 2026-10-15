@@ -1,6 +1,6 @@
 {
-  "saved_at": "2026-10-13",
-  "description": "User accepted current move animations as usable; only Tri Attack previously had strong approval. Keep these versions unchanged until user requests improving a specific move.",
+  "saved_at": "2026-10-15",
+  "description": "Registro das animações que o usuário aprovou ou aceitou salvar. Preservar exatamente suas versões visuais até pedido explícito para mudar um golpe; status 'salvo' significa aceito para manter, sem afirmar perfeição estética.",
   "version_info": {
     "renderer": "effects/moves/_runtime/original-gba-vfx.js",
     "psychic": "original4v3",
@@ -26,10 +26,11 @@
     },
     {
       "move": "Chicote de Vinha",
-      "status": "salvo",
+      "status": "aprovado",
       "protect": true,
-      "effect_file": "effects/moves/_runtime/original-gba-vfx.js",
-      "notes": "Usuário disse que ficou aproveitável e que pode salvar."
+      "effect_file": "effects/moves/v89-four/render.js",
+      "notes": "Aprovado em 15/10/2026 junto com Folha Navalha e Vine Whip: 'ficou muito bom'; preservar a versão publicada, não voltar ao efeito antigo original-gba-vfx.",
+      "fallback_file": "effects/moves/v91-four/canvas-fallback.js"
     },
     {
       "move": "Confusion",
@@ -44,6 +45,77 @@
       "protect": true,
       "effect_file": "effects/moves/_runtime/original-gba-vfx.js",
       "notes": "Usuário disse: ficou mais ou menos, mas dá para salvar."
+    },
+    {
+      "move": "Folha Navalha",
+      "aliases": [
+        "Razor Leaf"
+      ],
+      "status": "aprovado",
+      "protect": true,
+      "effect_file": "effects/moves/v89-four/render.js",
+      "fallback_file": "effects/moves/v91-four/canvas-fallback.js",
+      "notes": "Usuário aprovou visual atual em 15/10/2026. Não modificar sem novo pedido."
+    },
+    {
+      "move": "Vine Whip",
+      "status": "aprovado",
+      "protect": true,
+      "effect_file": "effects/moves/v89-four/render.js",
+      "fallback_file": "effects/moves/v91-four/canvas-fallback.js",
+      "notes": "Usuário aprovou visual atual em 15/10/2026. Não confundir com Chicote Duplo."
+    },
+    {
+      "move": "Raízes Violentas",
+      "status": "salvo",
+      "protect": true,
+      "accepted_at": "2026-10-15",
+      "version": "V94",
+      "fallback_frames": 16,
+      "baseline_commit": "1cb4279bb47c8e5f2f628f208f9352089238d814",
+      "effect_file": "effects/moves/v86-preview/render.js",
+      "fallback_file": "effects/moves/v92-four/canvas-fallback.js",
+      "fallback_safe_mode": "effects/moves/v92-four/safe-mode.js",
+      "notes": "Usuário: 'Dá pra passar, salva eles tbm.' Efeitos V94 com tamanho intermediário; bloquear alterações visuais/escala não solicitadas. Não afirmar aprovação artística perfeita."
+    },
+    {
+      "move": "Geada Persistente",
+      "status": "salvo",
+      "protect": true,
+      "accepted_at": "2026-10-15",
+      "version": "V94",
+      "fallback_frames": 16,
+      "baseline_commit": "1cb4279bb47c8e5f2f628f208f9352089238d814",
+      "effect_file": "effects/moves/v86-preview/render.js",
+      "fallback_file": "effects/moves/v92-four/canvas-fallback.js",
+      "fallback_safe_mode": "effects/moves/v92-four/safe-mode.js",
+      "notes": "Usuário: 'Dá pra passar, salva eles tbm.' Efeitos V94 com tamanho intermediário; bloquear alterações visuais/escala não solicitadas. Não afirmar aprovação artística perfeita."
+    },
+    {
+      "move": "Sopro Congelante",
+      "status": "salvo",
+      "protect": true,
+      "accepted_at": "2026-10-15",
+      "version": "V94",
+      "fallback_frames": 12,
+      "baseline_commit": "1cb4279bb47c8e5f2f628f208f9352089238d814",
+      "effect_file": "effects/moves/v86-preview/render.js",
+      "fallback_file": "effects/moves/v92-four/canvas-fallback.js",
+      "fallback_safe_mode": "effects/moves/v92-four/safe-mode.js",
+      "notes": "Usuário: 'Dá pra passar, salva eles tbm.' Efeitos V94 com tamanho intermediário; bloquear alterações visuais/escala não solicitadas. Não afirmar aprovação artística perfeita."
+    },
+    {
+      "move": "Chicote Duplo",
+      "status": "salvo",
+      "protect": true,
+      "accepted_at": "2026-10-15",
+      "version": "V94",
+      "fallback_frames": 12,
+      "baseline_commit": "1cb4279bb47c8e5f2f628f208f9352089238d814",
+      "effect_file": "effects/moves/v86-preview/render.js",
+      "fallback_file": "effects/moves/v92-four/canvas-fallback.js",
+      "fallback_safe_mode": "effects/moves/v92-four/safe-mode.js",
+      "notes": "Usuário: 'Dá pra passar, salva eles tbm.' Efeitos V94 com tamanho intermediário; bloquear alterações visuais/escala não solicitadas. Não afirmar aprovação artística perfeita."
     }
   ]
 }
