@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'effects/moves/**'
+      - 'tests/test-v76-preview.cjs'
       - 'tools/build-v72-battle.py'
       - 'tests/test-v72-battle.cjs'
       - 'effects/atelier-v70/**'
@@ -16,6 +17,7 @@ on:
     branches: [main]
     paths:
       - 'effects/moves/**'
+      - 'tests/test-v76-preview.cjs'
       - 'tools/build-v72-battle.py'
       - 'tests/test-v72-battle.cjs'
       - 'effects/atelier-v70/**'
@@ -70,3 +72,6 @@ jobs:
           python -m pip install --quiet Pillow
           python tools/build-v72-battle.py
           node tests/test-v72-battle.cjs
+
+      - name: Validar previa V76 da batalha e golpes sequenciais (sem Atelie)
+        run: node tests/test-v76-preview.cjs
