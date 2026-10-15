@@ -447,9 +447,14 @@ try {
  const response=await fetch(source+'?build=v100-alias-picker',{cache:'no-store'});
  if(!response.ok)throw Error('Catalog alias module '+response.status);
  const code=await response.text();
- if(!game.includes(fireSpriteAnchor))throw Error('Move-catalog integration point missing');
- game=game.replace(fireSpriteAnchor,
-   String.fromCharCode(10)+code+String.fromCharCode(10)+fireSpriteAnchor);
+ // The catalogue is scoped to the V32 IIFE, which closes WELL BEFORE
+ // the final game-script anchor. Inject BEFORE its closure or the module
+ // silently sees v32Catalogue=undefined in Android safe mode.
+ const catalogAnchor=String.fromCharCode(10)+'})();'+String.fromCharCode(10)+
+   '/* FIM POKEMON TORRE V32 */';
+ if(!game.includes(catalogAnchor))throw Error('V32 catalogue scope anchor missing');
+ game=game.replace(catalogAnchor,
+   String.fromCharCode(10)+code+String.fromCharCode(10)+catalogAnchor);
 }catch(error){
  console.warn('Alias catalog failed to load; original list remains available',error);
 }
