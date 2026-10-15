@@ -7,7 +7,7 @@ const page=read('previews/atelier-v70.html');
 const bridge=read('effects/atelier-v70/entry.js');
 const index=read('index.html');
 const deploy=read('.github/workflows/deploy.yml');
-assert.ok(index.includes("effects/atelier-v70/entry.js"),'The game does not load the Atelier launcher');
+assert.ok(!index.includes('src="effects/atelier-v70/entry.js'), 'Retired Atelier must not appear inside gameplay');
 assert.ok(bridge.includes("previews/atelier-v70.html?embedded=1"),'The Atelier is not inside the game modal');
 assert.ok(bridge.includes('Escape')&&bridge.includes('modal.hidden'),'In-game preview cannot be closed');
 assert.ok(page.includes("effects/atelier-v71/atlases/") || page.includes("const base='../effects/atelier-v71/atlases/';"), 'Approved atlases not wired');
@@ -32,4 +32,4 @@ for(const id of ids){
 for(const name of ['Thunder','Discharge','Thunder Wave']){
  assert.ok(!bridge.includes(name),'Protected move name changed in preview bridge: '+name);
 }
-console.log('PASS V71: 4 approved-illustration WebP atlas files, in-game PixiJS playback, no gameplay hooks');
+console.log('PASS V71: 4 approved WebP artwork sheets retained in GitHub; Atelier excluded from game; no mechanics altered');
