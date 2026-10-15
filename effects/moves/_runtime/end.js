@@ -58,6 +58,12 @@ function paint(g,f,now,e,k){
 // Render de golpes ofensivos: pipeline existente. O retorno true impede duplicação por Canvas/PNG antigos.
 const prevPainter=window.PokemonTorreV360Paint;
 window.PokemonTorreV360Paint=function(g,f,now,e){
+ // V83 opt-in: four uniquely authored grass sprite animations in the REAL battle.
+ // Original V81 and all other approved effects remain intact without the flag.
+ if(typeof grassFourV83!=='undefined'){
+  const v83key=grassFourV83.resolve(f?.move?.name||f?.name);
+  if(v83key&&pixiFX.paint(f,e,v83key))return true;
+ }
  // V82 opt-in only: test the FOUR moves equipped in the screenshot. The
  // official V81 + approved original Chicote remain intact without the flag.
  if(typeof equippedGrassV82!=='undefined'){
