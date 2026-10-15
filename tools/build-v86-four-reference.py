@@ -141,7 +141,20 @@ def main():
   folder=ROOT/'effects/moves'/name/'v86-preview/sprites';folder.mkdir(parents=True,exist_ok=True)
   sheet=Image.new('RGBA',(W*N,H),(0,0,0,0));unique=set()
   for i in range(N):
-   frame=render(i);assert frame.mode=='RGBA' and frame.getchannel('A').getbbox(),(name,i)
+   frame=render(i)
+   if i==0:
+    # Readable charge/setup on stage 1; no fully transparent static frame.
+    d=ImageDraw.Draw(frame,'RGBA')
+    if name=='raizes-violentas':
+     d.line([(293,200),(346,194),(404,199)],fill=(37,54,28,170),width=3)
+     leaf(d,338,188,6,160)
+    elif name=='geada-persistente':
+     shard(d,349,175,8,174);shard(d,368,179,5,116)
+    elif name=='sopro-congelante':
+     shard(d,87,114,7,178);shard(d,94,119,4,120)
+    else:
+     leaf(d,77,84,7,170);leaf(d,77,159,7,170)
+   assert frame.mode=='RGBA' and frame.getchannel('A').getbbox(),(name,i)
    unique.add(hashlib.sha256(frame.tobytes()).hexdigest())
    sheet.alpha_composite(frame,(W*i,0))
   assert len(unique)==8,('Repeated frames',name)
