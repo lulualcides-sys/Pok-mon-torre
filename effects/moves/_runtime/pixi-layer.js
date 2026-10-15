@@ -105,6 +105,16 @@ const pixiFX=(()=>{
    v.style.width=r.width+'px';v.style.height=r.height+'px';lastRect=css;
   }
   if(app.screen.width!==engine.w||app.screen.height!==engine.h)app.renderer.resize(engine.w,engine.h);
+  // V98 sideways-scrolling stadium is wider than its visible parent.
+  // Clip the GPU effects to the REAL arena viewport, otherwise projectiles
+  // could appear on top of the HUD, buttons or outside the battle panel.
+  if(engine._stadiumV98&&engine.canvas.parentElement?.getBoundingClientRect){
+   const arena=engine.canvas.parentElement.getBoundingClientRect();
+   const left=Math.max(0,arena.left-r.left),right=Math.max(0,r.right-arena.right);
+   const top=Math.max(0,arena.top-r.top),bottom=Math.max(0,r.bottom-arena.bottom);
+   app.view.style.clipPath='inset('+top.toFixed(1)+'px '+right.toFixed(1)+
+    'px '+bottom.toFixed(1)+'px '+left.toFixed(1)+'px)';
+  }else app.view.style.clipPath='none';
   app.view.style.display=r.width>10&&r.height>10?'block':'none';
  }
  function ensure(engine){
