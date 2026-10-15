@@ -28,6 +28,14 @@ Este documento registra as regras do projeto para qualquer alteração de golpes
 
 Estas são **diretrizes permanentes de desenvolvimento**, não uma declaração de que todos os golpes já foram refeitos ou testados.
 
+## Padrão V78 — marcador positivo nos golpes modificados
+
+- Ao lado dos nomes dos golpes com **efeitos visuais já modificados**, exibir um pequeno **+ vetorial SVG**, com mesmo estilo do ícone de tipo, **não um emoji**. Ele identifica a alteração visual, não significa automaticamente aprovação. Não marcar os golpes genéricos ainda não trabalhados. Aplicar às listas de movimentos, slots equipados e comandos de batalha, sem alterar identificação dos golpes, seletores, salvamentos ou status.
+- Manter a lista de golpes alterados em `effects/ui/move-library-v61.js` sincronizada com o catálogo `protected`, o repertório V66 e aprovações registradas, acrescentando IDs quando novos efeitos forem produzidos.
+- **Dragon Claw e X-Scissor estão aprovados na V77**; usar seus quadros V77 também no combate normal e não mexer em sua arte.
+- **Dragon Pulse e Aura Sphere V78 são apenas prévias de batalha em `?battle_preview=v78`** até aprovação; versões normais desses dois continuam na V75.
+- Para ataques especiais, o movimento **não pode parecer um vídeo inteiro colado**: separar fonte/concentração, projétil avançando e impacto/explosão como quadros raster *realmente distintos*, com PixiJS para reproduzir.
+
 ## Revisão obrigatória V76 — prévias de combate no GitHub (sem Ateliê)
 
 - A pedido do usuário, **não instalar nem abrir Ateliê/modal dentro do jogo**. Os arquivos de galeria podem permanecer no GitHub como arquivos históricos ou ferramentas externas; não devem ser injetados na interface.
