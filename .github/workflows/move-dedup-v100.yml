@@ -1,0 +1,27 @@
+name: Biblioteca de golpes sem duplicatas V100
+on:
+  pull_request:
+    paths:
+      - 'effects/ui/move-dedup-v100.js'
+      - 'index.html'
+      - 'tests/move-dedup-v100.test.cjs'
+      - 'tests/test-browser-boot.cjs'
+  push:
+    branches: [main]
+    paths:
+      - 'effects/ui/move-dedup-v100.js'
+      - 'index.html'
+      - 'tests/move-dedup-v100.test.cjs'
+      - 'tests/test-browser-boot.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-duplicate-names:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/move-dedup-v100.test.cjs
