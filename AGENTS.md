@@ -28,8 +28,11 @@ Este documento registra as regras do projeto para qualquer alteração de golpes
 
 Estas são **diretrizes permanentes de desenvolvimento**, não uma declaração de que todos os golpes já foram refeitos ou testados.
 
-## Revisão obrigatória V71 — Ateliê e arte cinematográfica aprovada
+## Revisão obrigatória V76 — prévias de combate no GitHub (sem Ateliê)
 
-- Fluxo atual: prévia de **quatro golpes por lote dentro do jogo**, aberta pelo botão ✦ ATELIÊ; exibir animação PixiJS e oito quadros, preservando o layout de entrada aprovado. O painel externo antigo não é a experiência principal. Não alterar o combate até aprovação visual.
-- **Não voltar a gerar sprites geométricos ou simplórios proceduralmente**. Para Dragon Pulse, Aura Sphere, X-Scissor e Dragon Claw, usar os spritesheets em `effects/atelier-v71/atlases/`, derivados diretamente das quatro artes cinematográficas aprovadas pelo usuário. O gerador V70 foi aposentado da publicação.
-- Manter Thunder, Discharge e Thunder Wave intactos, além de todos os outros golpes aprovados. Novos efeitos devem partir de referências específicas e arte quadro a quadro aprovada; PixiJS cuida da animação, partículas apenas complementares.
+- A pedido do usuário, **não instalar nem abrir Ateliê/modal dentro do jogo**. Os arquivos de galeria podem permanecer no GitHub como arquivos históricos ou ferramentas externas; não devem ser injetados na interface.
+- Para cada lote de **4 golpes**, entregar uma **versão testável em combate no site do GitHub Pages**. O fluxo atual usa `?battle_preview=v76`, que ativa novas animações **somente na URL de teste**, mantendo o render oficial anterior quando não houver o parâmetro. Não promover as novas artes para todo o jogo sem aprovação.
+- **Staging quadro a quadro obrigatório**: preparação, contato e intervalos reais, cortes separados, rastro e dissipação. Dragon Claw deve primeiro impactar e só então mostrar garra 1, garra 2 e garra 3 em momentos distintos. X-Scissor deve ter dois cortes com um intervalo.
+- Manter o visual cinematográfico e sólido aprovado (artes de `effects/atelier-v71/atlases` convertidas nos atlas de batalha V72), o tamanho compacto V74 e o playback mais lento V75. **PixiJS** reproduz os sprites, podendo usar máscaras apenas para revelar partes, nunca voltar a desenhar o golpe genericamente via Canvas/CSS.
+- Preservar golpes aprovados e, em especial, **Thunder, Discharge e Thunder Wave**, além de mecânica, acerto, dano, cooldown, status e salvamentos.
+- O usuário quer **link executável para ver na batalha**, e não nova imagem estática nem mera proposta de código; testar carregamento, visual e inicialização antes de declarar a publicação concluída.
