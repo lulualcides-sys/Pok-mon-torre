@@ -472,4 +472,60 @@ if(new URLSearchParams(location.search).get('fx_debug')==='1'){
  else showGrassDebug();
 }
 
+
+// V91 guaranteed four-grass visibility on Android and devices without WebGL.
+// Pixi remains the enhanced layer. This Canvas renderer is NOT the old generic
+// projectile: it paints a black-outlined whip, multiple leaves or local roots.
+const previousGrassUseV91=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(slot){
+ const actor=battle?.active?current():null;
+ const move=actor&&Number.isInteger(slot)?skillSet(actor)?.[slot]:null;
+ const key=typeof grassFallbackV91!=='undefined'?grassFallbackV91.keyOf(move?.name):'';
+ if(!key)return previousGrassUseV91.apply(this,arguments);
+ const beforeEnergy=battle.energy,oldCd=Number(cooldowns?.[slot])||0;
+ const existing=new Set(this.projectiles||[]);
+ const time=performance.now();
+ const result=previousGrassUseV91.apply(this,arguments);
+ const accepted=result!==false&&battle?.active&&!battle.paused&&(
+  Number(battle.energy)<Number(beforeEnergy)||
+  Number(cooldowns?.[slot])>oldCd);
+ if(!accepted)return result;
+ grassFallbackV91.start(this,move.name,time);
+ // Native projectile remains in engine collision/hit queue; only its
+ // obsolete circle is hidden AFTER a working alternative exists.
+ for(const shot of this.projectiles||[])
+  if(!existing.has(shot)&&shot?.from==='player'&&shot.type==='grass')
+   shot.__v91CoveredByPlant=true;
+ return result;
+};
+const previousGrassProjectilePainterV91=BattleEngine.prototype.drawProjectile;
+if(typeof previousGrassProjectilePainterV91==='function')
+ BattleEngine.prototype.drawProjectile=function(shot){
+  if((shot?.__v91CoveredByPlant||
+    (shot?.from==='player'&&shot?.type==='grass'&&
+     grassFallbackV91.active(this,performance.now())))&&battle?.active)
+   return; // no bolinha, projectile keeps moving/colliding
+  return previousGrassProjectilePainterV91.apply(this,arguments);
+};
+// Both the V359 catalog painter and the native bolting-circle painter draw
+// on the original Canvas. Suppress ONLY the same four names while V91 draws.
+const previousCatalogPainterV91=window.PokemonTorreV360Paint;
+window.PokemonTorreV360Paint=function(g,fx,now,owner){
+ if(grassFallbackV91.suppressLegacy(owner,fx?.move?.name||fx?.name,now))
+  return true;
+ return typeof previousCatalogPainterV91==='function'?
+  previousCatalogPainterV91.apply(this,arguments):false;
+};
+const previousGrassDrawV91=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){
+ const result=previousGrassDrawV91.apply(this,arguments);
+ if(battle?.active)grassFallbackV91.draw(this,now);
+ return result;
+};
+const previousClearGrassV91=stopTimers;
+stopTimers=function(){
+ if(typeof engine!=='undefined'&&engine)grassFallbackV91.clear(engine);
+ return previousClearGrassV91.apply(this,arguments);
+};
+
 })();
