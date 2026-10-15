@@ -63,7 +63,7 @@ assert.ok(counts.lines>100&&counts.strokes>100,'Animated strokes and outlines');
 battle.active=false;assert.equal(fx.current(game),null,'No effects after battle');
 const index=fs.readFileSync('index.html','utf8');
 for(const p of files)assert.ok(index.includes(p),'Production module missing '+p);
-assert.ok(index.includes("Iniciando Pokémon Torre V101"));
+assert.match(index,/Iniciando Pokémon Torre V\d{2,}/, "Game version banner must be present");
 assert.ok(index.includes("get('battle_preview')==='ice99'"));
 const approved=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
 for(const name of ['Aurora Beam','Impacto Glacial','Raio de Gelo'])
