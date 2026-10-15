@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pokémon Torre — 37 golpes / 8 quadros — V66</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#050b15;color:#e8f5ff;font:14px/1.5 system-ui,sans-serif}
+main{width:min(1180px,100%);margin:auto;padding:20px}h1{font-size:24px;margin:0 0 8px}p{color:#b8c9da}
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:20px 0}select,button{border:1px solid #5589af;border-radius:8px;background:#15273d;color:white;padding:10px 12px;font:inherit}
+button{cursor:pointer}button:focus-visible,select:focus-visible{outline:2px solid #cbeaff}
+.frames{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.frame{border:1px solid #2a4867;border-radius:12px;padding:8px;background:radial-gradient(circle at 50% 50%,#132235,#07111d 64%);min-width:0}
+canvas{display:block;width:100%;aspect-ratio:1/1;image-rendering:pixelated}
+.frame strong{color:#c0dce9;font-size:12px}.info{padding:10px 13px;border-left:2px solid #6fbce9;background:#0d1b2e}
+@media(min-width:900px){.frames{grid-template-columns:repeat(8,minmax(0,1fr));}}
+@media(max-width:430px){.frames{grid-template-columns:repeat(2,minmax(0,1fr));}}
+</style></head><body><main><h1>POKÉMON TORRE — V66 · 37 golpes</h1>
+<p>Prévia externa dos oito quadros de cada animação; nenhum golpe aprovado foi substituído e os golpes Thunder, Discharge e Thunder Wave estão excluídos.</p>
+<div class="toolbar"><label for="choose">Golpe:</label><select id="choose"></select><button id="prev" type="button">Anterior</button><button id="next" type="button">Próximo</button></div>
+<h2 id="heading"></h2><div id="frames" class="frames"></div>
+<p class="info">Visualização de quadros renderizados diretamente em Canvas 2D, sem ilustração PNG estática e sem efeitos CSS. Em batalha, as mesmas rotinas usam as coordenadas reais do atacante e do alvo; o motor existente mantém acerto, dano, status e recarga.</p>
+<p>As prévias são um estágio de validação artística. Para confirmar o resultado final, também é necessário testar cada ataque durante a partida.</p></main>
+<script src="../effects/moves/_runtime/heritage-37-v66.js"></script>
+<script>
+(()=>{
+ const fx=window.PokemonTorreHeritage37, ids=Object.keys(fx.ACTIONS);
+ const choose=document.querySelector('#choose'),frames=document.querySelector('#frames');
+ for(const id of ids){const option=document.createElement('option');option.value=id;option.textContent=fx.labels[id];choose.append(option);}
+ function draw(){
+  const id=choose.value||ids[0];document.querySelector('#heading').textContent=fx.labels[id]+' — 8 quadros';
+  frames.replaceChildren();
+  for(let i=0;i<8;i++){
+   const wrapper=document.createElement('div');wrapper.className='frame';
+   const c=document.createElement('canvas');c.width=240;c.height=240;
+   const g=c.getContext('2d');g.scale(1.1,1.1);
+   const k=i/7;
+   // No Pokémon silhouette is forged in this preview: this is the pure VFX layer.
+   fx.paint(g,{from:[50,108],to:[158,108],at:0,duration:1100,move:{name:fx.labels[id]}},
+    k,i*137,.86,false,id);
+   const title=document.createElement('strong');title.textContent=String(i+1).padStart(2,'0')+'/08';
+   wrapper.append(c,title);frames.append(wrapper);
+  }
+ }
+ choose.addEventListener('change',draw);
+ document.querySelector('#prev').addEventListener('click',()=>{choose.selectedIndex=(choose.selectedIndex-1+ids.length)%ids.length;draw();});
+ document.querySelector('#next').addEventListener('click',()=>{choose.selectedIndex=(choose.selectedIndex+1)%ids.length;draw();});
+ choose.value=ids[0];draw();
+})();
+</script></body></html>

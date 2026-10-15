@@ -40,6 +40,11 @@ function paint(g,f,now,e,k){
   if(!elementalEightV58.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
  }else if(typeof catalogElectricFourV56!=='undefined'&&catalogElectricFourV56.accepts(k))
   entry.draw(g,f,t,now,s,low);
+ else if(typeof heritage37V66!=='undefined'&&heritage37V66.accepts(k)){
+  // Opt-in only to the 37 new V66 visuals. Three excluded Electric moves and
+  // all older approved sprites retain their original rendering paths.
+  if(!heritage37V66.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
+ }
  else if(!pixiFX.paint(f,e,k))entry.draw(g,f,t,now,s,low);
  g.restore();counts[k]=(counts[k]||0)+1;return true;
 }
@@ -162,5 +167,42 @@ BattleEngine.prototype.draw=function(now){
  p.x=ox+dx/dist*travel;p.y=oy+dy/dist*travel;
  try{return _firePunchDraw.call(this,now);}
  finally{p.x=ox;p.y=oy;}
+};
+// V66 — draw movement/Double Team with the real selected Pokémon sprite.
+// Restore coordinates after painting: no collision, physics or save mutation.
+const _heritage37DrawMon=BattleEngine.prototype.drawMon;
+BattleEngine.prototype.drawMon=function(actor,id,isEnemy,now){
+ if(isEnemy||actor!==this.player||!battle?.active)return _heritage37DrawMon.apply(this,arguments);
+ const normalize=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+ const moves=new Set(['quickattack','extremespeed','aquajet','irontail','dig','doubleteam']);
+ const entries=(this.v359Attacks||[]).concat(this.v3580Visuals||[]);
+ const fx=entries.find(v=>moves.has(normalize(v?.move?.name))&&now>=v.at&&now<v.at+Math.max(400,v.duration||950));
+ if(!fx)return _heritage37DrawMon.apply(this,arguments);
+ const idMove=normalize(fx.move.name),dur=Math.max(400,fx.duration||950);
+ const t=Math.max(0,Math.min(1,(now-fx.at)/dur)),ease=x=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);};
+ const ox=actor.x,oy=actor.y,dx=this.enemy.x-ox,dy=this.enemy.y-oy,dist=Math.hypot(dx,dy)||1;
+ const reach=idMove==='doubleteam'?0:idMove==='dig'?ease((t-.37)/.18)*(1-ease((t-.72)/.19)):ease((t-.08)/.37)*(1-ease((t-.65)/.28));
+ const step=Math.max(0,dist-Math.max(34,this.h*.1))*reach;
+ actor.x=ox+dx/dist*step;actor.y=oy+dy/dist*step+(idMove==='dig'&&t<.37?33*ease(t/.37):0);
+ try{
+  let result;
+  if(idMove==='dig')this.ctx.save();
+  try{
+   if(idMove==='dig')this.ctx.globalAlpha*=1-.8*ease((t-.19)/.14)*(1-ease((t-.38)/.14));
+   result=_heritage37DrawMon.call(this,actor,id,isEnemy,now);
+  }finally{if(idMove==='dig')this.ctx.restore();}
+  if(idMove==='doubleteam'){
+   // All echoes come from the existing real sprite renderer, never silhouettes.
+   for(const n of [-2,-1,1,2]){
+    const alpha=(.48-.075*Math.abs(n))*(1-ease((t-.72)/.22));
+    if(alpha<=.01)continue;
+    actor.x=ox+n*(17+21*ease(t/.3));actor.y=oy+(n%2?7:-6)*ease(t/.3);
+    this.ctx.save();this.ctx.globalAlpha*=alpha;
+    try{_heritage37DrawMon.call(this,actor,id,isEnemy,now);}
+    finally{this.ctx.restore();}
+   }
+  }
+  return result;
+ }finally{actor.x=ox;actor.y=oy;}
 };
 })();
