@@ -93,7 +93,7 @@ def charge(canvas,t,seed=5):
     leaves(canvas,80,118,max(3,int(6*t)),seed,25*t,.85)
     for j in range(3):
         a=j*2.1+t*4.4
-        sparkle(canvas,80+math.cos(a)*18*t,118+math.sin(a)*17*t,3.0,.6,seed*10+j)
+        sparkle(canvas,80+math.cos(a)*18*t,118+math.sin(a)*17*t,3.0,.6,seed=seed*10+j)
 def whip_one(i):
     im=img();charge(im,min(1,(i+1)/3),3)
     grow=[0,.18,.37,.66,.93,1,.78,.32][i]
