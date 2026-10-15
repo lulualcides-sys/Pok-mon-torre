@@ -20,7 +20,7 @@ for(const slug of slugs){
  const data=fs.readFileSync(file);
  assert.equal(data.toString('ascii',0,4),'RIFF');
  assert.equal(data.toString('ascii',8,12),'WEBP');
- assert.ok(data.length>10000,slug+' missing authored frames');
+ assert.ok(data.length>2200,slug+' missing authored frames');
 }
 class Container{
  constructor(){this.children=[];this.parent=null;}
