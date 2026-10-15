@@ -58,6 +58,10 @@ const css=document.createElement('style');css.id='pt61MoveCss';
 css.textContent=[
  '.pt61Icon{display:inline-flex;justify-content:center;align-items:center;width:26px;height:26px;flex:0 0 26px;box-sizing:border-box;line-height:0;vertical-align:middle}',
  '.pt61Icon svg{width:23px;height:23px;display:block;margin:auto;flex:none;overflow:visible}',
+ '.pt78Edited{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;min-width:18px;flex:0 0 18px;margin-left:1px;color:#83dccb;line-height:0;vertical-align:middle}',
+ '.pt78Edited svg{width:18px;height:18px;display:block;fill:none}',
+ '.v331Slots .pt78Edited,.skillV8 .pt78Edited{width:15px;height:15px;min-width:15px;flex-basis:15px;margin-left:2px}',
+ '.v331Slots .pt78Edited svg,.skillV8 .pt78Edited svg{width:15px;height:15px}',
  '.v331MoveList .v331Choice{align-items:center!important;min-height:61px!important;padding:10px 11px!important;gap:8px!important;border-radius:11px!important;background:linear-gradient(160deg,#142838,#102333)!important}',
  '.v331MoveList .v331Choice.equipped{border-color:#d6c079!important}',
  '.v331MoveList .v331Choice>span:first-child{min-width:0;flex:1}',
@@ -95,6 +99,26 @@ const getPower=s=>numeric(s,/(-?\d+(?:[.,]\d+)?)\s*for[cç]a/i);
 const getCost=s=>numeric(s,/(\d+(?:[.,]\d+)?)\s*energia/i);
 const getCd=s=>numeric(s,/(\d+(?:[.,]\d+)?)\s*s\b/i);
 const strip=s=>String(s||'').replace(/^[^\p{L}\p{N}]+/u,'').trim();
+// V78 — modified-art identifier. This is a non-emoji, hand-drawn SVG PLUS,
+// matching the 18 type icons. These names come from catalog protected effects,
+// V66 authored moves and saved V60/V63/earlier move art. Not all 312 catalog
+// entries are marked. The mark is visual only; it does not certify approval.
+const MODIFIED_MOVES=new Set(["abaloterrestre","absorver","aerialace","airslash","aquajet","aquatail","ataquedeasa","aurasphere","aurorabeam","bolasombria","bombadelodo","bombadesementes","boneclub","bonemerang","brickbreak","bugbuzz","cachoeira","calmmind","campoeletrico","ceutempestuoso","chicotedevinha","chutebaixo","chuvadedanca","closecombat","confusao","confuseray","confusion","cortex","crosschop","dancadaspetalas","descarga","dig","discharge","doubleteam","dragonaura","dragonbreath","dragonclaw","dragondance","dragonpulse","dynamicpunch","earthpower","earthquake","esporos","explosaodefogo","explosaomagmatica","extremespeed","fairywind","faiscadopikachu","fireblast","firepunch","flamethrower","flashcannon","fly","folhanavalha","furacao","furiaancestral","furycutter","gust","hidrobomba","hiperraio","hurricane","hydropump","hyperbeam","icebeam","irontail","labaredafinal","lancachamas","leechlife","leechseed","lowkick","megadreno","mordida","nevasca","nightshade","ossobumerangue","petaldance","podosono","poisonjab","psiquico","psybeam","psychic","punhodefogo","quebratijolo","quickattack","raindance","raioaurora","raiodaaurora","raiodegelo","raiosolar","razorleaf","recover","rockslide","shadowball","skullbash","sludgebomb","sococruzado","solarbeam","soprodedragao","stoneedge","stunspore","surf","swordsdance","synthesis","telecinese","telekinesis","tempestadedefolhas","tempestadedeneve","tempestadepsiquica","terremoto","thunder","thunderwave","toxic","tremor","triataque","triattack","trovao","tsunami","volttackle","waterfall","watergun","waterpulse","willowisp","wingattack","xscissor"]);
+const moveKey=value=>norm(value).replace(/[^a-z0-9]/g,'');
+function editedIcon(){
+ const outer=document.createElement('span');
+ outer.className='pt78Edited';
+ outer.setAttribute('role','img');
+ outer.setAttribute('aria-label','Golpe com efeito visual alterado');
+ outer.title='Efeito visual já modificado';
+ outer.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5.3"/><path d="M12 7.7v8.6M7.7 12h8.6"/></svg>';
+ return outer;
+}
+function markEdited(container,label){
+ if(!container||!MODIFIED_MOVES.has(moveKey(label))||container.querySelector('.pt78Edited'))return;
+ container.append(editedIcon());
+}
+
 
 function paintCombatSkills(){
  // The battle hotkey slots MUST preserve their original order; only swap art.
@@ -106,6 +130,11 @@ function paintCombatSkills(){
   const type=lookup.get(norm(typeName))||'normal';
   target.dataset.pt61Styled='1';
   target.replaceChildren(typeIcon(type));
+  const skillLabel=button.querySelector('.skillName');
+  if(skillLabel){
+   const skillName=(skillLabel.childNodes[0]?.textContent||skillLabel.textContent||'').trim();
+   markEdited(skillLabel,skillName);
+  }
   // Keep category text but drop system emoji from the battle hotbar.
   if(meta){
    const parts=meta.textContent.split('·');
@@ -268,7 +297,9 @@ function mount(){
    b.dataset.pt61Styled='1';b.textContent='';
    const caption=document.createElement('span');caption.className='pt61Label';caption.textContent=label;
    b.append(typeIcon(type),caption);
+   markEdited(b,label);
   }
+  markEdited(b,label);
   named.set(norm(label),type);
   return {row,index,power:getPower(smallText),cost:getCost(smallText),cd:getCd(smallText),label};
  }).filter(Boolean);
@@ -280,6 +311,7 @@ function mount(){
   b.dataset.pt61Styled='1';b.textContent='';
   if(number)b.append(document.createTextNode(number));
   b.append(typeIcon(type),document.createTextNode(label));
+  markEdited(b,label);
  }
  const select=modal.querySelector('.ptTypeSelect');
  if(select)mountTypePicker(select,modal.querySelector('.ptTypeBar'));
@@ -328,7 +360,8 @@ function schedule(){
 bodyObserver.observe(document.body,{childList:true});
 watchStructuralChanges();schedule();
 window.PokemonTorreMoveUIV61=()=>({
- version:'62.0',types:TYPES.length,
+ version:'78.0',types:TYPES.length,
+ modifiedCount:MODIFIED_MOVES.size,marked:document.querySelectorAll('.pt78Edited').length,
  dropdown:!!document.querySelector('.pt62TypeButton'),
  optionsInOpenMenu:activeTypePopup?.panel.querySelectorAll('.pt62TypeOption').length||0,
  modifiedRows:document.querySelectorAll('.v331MoveList .pt61Icon').length,
