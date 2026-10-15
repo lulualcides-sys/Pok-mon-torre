@@ -126,7 +126,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
        response.result?.exceptionDetails?.text||'No result'});
    }
   }
-  let v84CombatResults=null;
+  let v84CombatResults=null,v84IsolationResults=null;
   if(ok&&query.includes('battle_preview=v84')){
    v84CombatResults=[];
    for(let slot=0;slot<4;slot++){
@@ -144,6 +144,20 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
     v84CombatResults.push({slot,requested:before.requested,selected:before.selected,
      liveQueue:before.liveQueue,
      after:after.result?.result?.value||{},error:before.error});
+   }
+   // Critical regression: same battle, rapid alternation. The previous
+   // Area vines must disappear as soon as Chicote/Vine is cast.
+   v84IsolationResults=[];
+   for(const slot of [2,0,3,2,0,3]){
+    const response=await cmd('Runtime.evaluate',{
+     expression:"(()=>({cast:window.PokemonTorreLocalCombatTestV47.castPreviewGrassV84("+slot+",143,true),layer:window.PokemonTorrePixiFX?.()}))()",
+     returnByValue:true
+    });
+    const observation=response.result?.result?.value||{
+     error:response.result?.exceptionDetails?.exception?.description||'QA fail'};
+    v84IsolationResults.push({slot,selected:observation.cast?.selected,
+      layer:observation.layer,error:observation.error});
+    await sleep(270);
    }
   }
   let combatResults=null;
@@ -185,7 +199,7 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
     combatResults.push({name,...answer,landed,attempts});
    }
   }
-  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,uiFixture,errors:errors.slice(0,12)};
+  return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,uiFixture,errors:errors.slice(0,12)};
  }finally{
   if(ws&&ws.readyState===WebSocket.OPEN)ws.close();
   child.kill('SIGKILL');
@@ -250,6 +264,24 @@ server.listen(0,'127.0.0.1',async()=>{
   if(!combatOK){
    console.error('FAIL: V84 must draw new Pixi sprites IN REAL BATTLE for all 4 moves');
    process.exitCode=1;
+  }
+  console.log('V84 SAME-BATTLE ISOLATION:',JSON.stringify(v84.v84IsolationResults));
+  const expectedKeys=['chicotesemarea','chicotedevinha','vinewhip',
+                      'chicotesemarea','chicotedevinha','vinewhip'];
+  const isolated=v84.v84IsolationResults?.length===expectedKeys.length&&
+   v84.v84IsolationResults.every((rec,i)=>{
+    const own=rec.layer?.activePreview;
+    const label=['Chicotes em Área','Chicote de Vinha','Vine Whip',
+                 'Chicotes em Área','Chicote de Vinha','Vine Whip'][i];
+    const asset=['chicotes-em-area','chicote-de-vinha','vine-whip',
+                 'chicotes-em-area','chicote-de-vinha','vine-whip'][i];
+    return rec.selected===label&&own?.key===expectedKeys[i]&&
+      own.source?.includes('/'+asset+'/v83-preview/sprites/'+asset+'.webp')&&
+      rec.layer.previewEffectCount===1&&rec.layer.clearedV84>=i+4;
+   });
+  if(!isolated){
+    console.error('FAIL: Area sprites leaked into next Chicote or Vine cast');
+    process.exitCode=1;
   }
   if(!stable.ok||stable.result?.electric||stable.result?.types){
    console.error('FAIL: V45 recovery mode must boot WITHOUT the experimental modules');process.exitCode=1;
