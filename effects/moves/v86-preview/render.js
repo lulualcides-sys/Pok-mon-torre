@@ -17,7 +17,7 @@ var referenceFourV86=(()=>{
  const resolve=s=>Object.prototype.hasOwnProperty.call(specs,normalize(s))?normalize(s):'';
  const source=key=>{
   const id=specs[key].asset;
-  return 'effects/moves/'+id+'/v86-preview/sprites/'+id+'.webp?v=88.0';
+  return 'effects/moves/'+id+'/v86-preview/sprites/'+id+'.webp?v=92.0';
  };
  const assets=new Map(),errors=[];
  const counters={version:VERSION,casts:0,draws:0,overlapsPrevented:0,perMove:{},frames:0};
@@ -153,7 +153,9 @@ var referenceFourV86=(()=>{
  if(typeof window!=='undefined'){
   window.PokemonTorreReferenceFourV86={version:VERSION,diagnostics};
   if(window.PIXI?.Assets)for(const key of Object.keys(specs))load(key);
-  if(typeof document!=='undefined'){
+  // The normal battle must not show a preview badge in front of menus.
+  if(typeof document!=='undefined'&&
+    new URLSearchParams(location.search).get('battle_preview')==='v86'){
    const badge=()=>{
     if(document.getElementById('pokemon-v86-label'))return;
     const label=document.createElement('div');label.id='pokemon-v86-label';
