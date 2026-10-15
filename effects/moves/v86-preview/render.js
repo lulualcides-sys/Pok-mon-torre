@@ -5,19 +5,19 @@
  */
 var referenceFourV86=(()=>{
  'use strict';
- const VERSION='88.0',W=480,H=240;
+ const VERSION='93.0',W=480,H=240;
  const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
    .toLowerCase().replace(/[^a-z0-9]/g,'');
  const specs=Object.freeze({
-  raizesviolentas:{name:'Raízes Violentas',asset:'raizes-violentas',weight:'heavy',time:1860,scope:'target',size:.88,thick:1.00,impact:.62},
-  geadapersistente:{name:'Geada Persistente',asset:'geada-persistente',weight:'heavy',time:1940,scope:'target',size:.79,thick:.77,impact:.58},
-  soprocongelante:{name:'Sopro Congelante',asset:'sopro-congelante',weight:'medium',time:1300,scope:'line',size:.91,thick:.78,impact:.58},
-  chicoteduplo:{name:'Chicote Duplo',asset:'chicote-duplo',weight:'medium',time:1600,scope:'line',size:.89,thick:.88,impact:.55}
+  raizesviolentas:{name:'Raízes Violentas',asset:'raizes-violentas',weight:'heavy',time:1860,scope:'target',size:.81,thick:.76,impact:.62},
+  geadapersistente:{name:'Geada Persistente',asset:'geada-persistente',weight:'heavy',time:1940,scope:'target',size:.74,thick:.59,impact:.58},
+  soprocongelante:{name:'Sopro Congelante',asset:'sopro-congelante',weight:'medium',time:1300,scope:'line',size:.90,thick:.41,impact:.58},
+  chicoteduplo:{name:'Chicote Duplo',asset:'chicote-duplo',weight:'medium',time:1600,scope:'line',size:.87,thick:.43,impact:.55}
  });
  const resolve=s=>Object.prototype.hasOwnProperty.call(specs,normalize(s))?normalize(s):'';
  const source=key=>{
   const id=specs[key].asset;
-  return 'effects/moves/'+id+'/v86-preview/sprites/'+id+'.webp?v=92.0';
+  return 'effects/moves/'+id+'/v86-preview/sprites/'+id+'.webp?v=93.0';
  };
  const assets=new Map(),errors=[];
  const counters={version:VERSION,casts:0,draws:0,overlapsPrevented:0,perMove:{},frames:0};
@@ -93,9 +93,12 @@ var referenceFourV86=(()=>{
   const dx=bx-ax,dy=by-ay,dist=Math.hypot(dx,dy)||1;
   const isArea=spec.scope==='target';
   const fieldW=app.screen.width||640;
-  const width=isArea?Math.min(fieldW*.83,dist*.85+120):
-    Math.min(fieldW*.98,dist*1.15+40);
-  const finalW=Math.max(125,width*spec.size);
+  // Source atlas contains transparent margins. Bound the VISIBLE target-side
+  // figure by the opponent's combat radius rather than a whole-screen percent.
+  const foeR=Math.max(14,Math.min(50,Number(fx.engine?.enemy?.r)||fieldW*.055));
+  const width=isArea?Math.min(fieldW*.26,foeR*3.05):
+    Math.min(fieldW*.96,dist*1.15+40);
+  const finalW=Math.max(isArea?82:120,width*spec.size);
   const finalH=finalW*(H/W)*spec.thick;
   // Distinct cinematic motion on TOP of each authored sprite stage;
   // no cross-use of the Grass atlas or generic move graphics.
@@ -118,19 +121,19 @@ var referenceFourV86=(()=>{
   // Independent particle specks: ice crystals for both ice moves, greenery
   // for roots/whips; subtle, no generic cross-type explosion.
   flecks.clear();
-  const r=fx.spec.scope==='line'?dist*.24:finalW*.20;
+  const r=isArea?foeR*.42:foeR*.55;
   const color=(key==='soprocongelante'||key==='geadapersistente')?0xb1e9ff:0x94d86b;
   const on=smooth((t-.22)/.24)*(1-smooth((t-.79)/.20));
   if(on>.015){
    const budget=fx.framePlan?.maxParticles||14;
-   for(let i=0;i<Math.min(14,budget);i++){
+   for(let i=0;i<Math.min(7,budget);i++){
     const a=2.39996*i+fx.started*.001+t*4*(i%2?1:-1);
-    const len=(8+(i%5)*6)*on+r*.18;
+    const len=(3+(i%5)*2.5)*on+r*.28;
     const x=(isArea?bx:bx-12)+Math.cos(a)*len;
     const y=by+Math.sin(a)*len*.7;
-    flecks.lineStyle(.85,0x102319,on*.4);
+    flecks.lineStyle(.6,0x102319,on*.4);
     flecks.beginFill(color,on*(.25+.05*(i%4)));
-    flecks.drawEllipse(x,y,1.25+(i%3),2.1+(i%2));
+    flecks.drawEllipse(x,y,.8+(i%3)*.45,1.1+(i%2)*.5);
     flecks.endFill();
    }
   }
