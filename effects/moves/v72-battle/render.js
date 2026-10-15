@@ -7,6 +7,8 @@
 var battleFourV72=(()=>{
  'use strict';
  const FRAMES=8, FW=480,FH=240;
+ // V75: slower playback for artwork only. The hit/cooldown timeline remains unchanged.
+ const VISUAL_SLOWDOWN=1.8;
  const defs=Object.freeze({
   catalog_dragonpulse:{asset:'dragon-pulse',mode:'ranged'},
   catalog_aurasphere:{asset:'aura-sphere',mode:'ranged'},
@@ -26,7 +28,8 @@ var battleFourV72=(()=>{
   const definition=defs[key],root=new PIXI.Container(),sprite=new PIXI.Sprite(PIXI.Texture.EMPTY);
   sprite.anchor.set(.5);sprite.visible=false;root.addChild(sprite);app.stage.addChild(root);
   const item={v72:true,n:definition.asset,key,f,root,sprite,app,frames:[],ready:false,
-   disposed:false,duration:f.duration||950};
+   disposed:false,duration:f.duration||950,
+   visualDuration:Math.max(250,f.duration||950)*VISUAL_SLOWDOWN};
   // Assets.load shares the existing PixiJS texture cache across repeated casts.
   PIXI.Assets.load(source(definition.asset)).then(sheet=>{
    if(item.disposed||root.destroyed)return;
@@ -42,7 +45,7 @@ var battleFourV72=(()=>{
  }
  function animate(item,now){
   if(!item?.v72||item.disposed||!item.root||!item.app)return;
-  const f=item.f,t=clamp((now-f.at)/(f.duration||item.duration));
+  const f=item.f,t=clamp((now-f.at)/(item.visualDuration||item.duration));
   if(!item.ready){item.sprite.visible=false;return;}
   const idx=Math.min(FRAMES-1,Math.floor(t*FRAMES));
   item.sprite.texture=item.frames[idx];item.sprite.visible=true;
@@ -74,7 +77,7 @@ var battleFourV72=(()=>{
  }
  return {accepts,install,animate,dispose,source,
   specs:defs,forbidden,diagnostics:()=>({
-    version:'72.1',frames:FRAMES,keys:Object.keys(defs),
+    version:'75.0',frames:FRAMES,visualSlowdown:VISUAL_SLOWDOWN,keys:Object.keys(defs),
     draws:{...counts},errors:failures.slice()
   })};
 })();
