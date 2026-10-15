@@ -114,7 +114,7 @@ if(new URLSearchParams(location.search).get('battle_preview')==='v83'&&
     image.onload=()=>image.naturalWidth===3840&&image.naturalHeight===240?
       resolve():reject(Error('V83 spritesheet inválido '+id));
     image.onerror=()=>reject(Error('V83 spritesheet indisponível '+id));
-    image.src='effects/moves/'+id+'/v83-preview/sprites/'+id+'.webp?v=83.0';
+    image.src='effects/moves/'+id+'/v83-preview/sprites/'+id+'.webp?v=83.1';
    })));
 }
 // V59: preload authored sprite sheets without stopping the game if an optional
@@ -290,7 +290,7 @@ if(new URLSearchParams(location.search).get('safe')!=='1'){
 // V83: synchronize ONLY the four new opt-in Grass animations via native v359 hit queue.
 if(new URLSearchParams(location.search).get('battle_preview')==='v83'&&
  new URLSearchParams(location.search).get('safe')!=='1'){
- const response=await fetch('effects/moves/v83-preview/impact-sync.js?v=83.0',{cache:'no-store'});
+ const response=await fetch('effects/moves/v83-preview/impact-sync.js?v=83.1',{cache:'no-store'});
  if(!response.ok)throw Error('V83 hit synchronizer unavailable: '+response.status);
  const body=await response.text();
  if(!body.includes('PokemonTorreGrassImpactV83'))throw Error('V83 synchronizer invalid');
