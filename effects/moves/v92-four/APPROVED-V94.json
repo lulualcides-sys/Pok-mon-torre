@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "acceptedAt": "2026-10-15",
+  "userDecision": "Dá pra passar, salva eles tbm.",
+  "acceptance": "salvo_para_manter",
+  "freezeVisuals": true,
+  "rule": "Preservar as quatro animações exatamente como na V94. Não mudar arte, escala, tempos, partículas nem escolher novamente efeitos genéricos sem pedido explícito do usuário. Alterações de código compartilhado precisam manter compatibilidade com estes arquivos.",
+  "deployedBaseline": {
+    "version": "V94",
+    "commit": "1cb4279bb47c8e5f2f628f208f9352089238d814",
+    "url": "https://lulualcides-sys.github.io/Pok-mon-torre/?build=v94-1cb4279"
+  },
+  "moves": [
+    {
+      "name": "Raízes Violentas",
+      "fallbackFrames": 16,
+      "type": "grass",
+      "effect": "raízes marrons ao redor do adversário"
+    },
+    {
+      "name": "Geada Persistente",
+      "fallbackFrames": 16,
+      "type": "ice",
+      "effect": "geada e cristais no solo"
+    },
+    {
+      "name": "Sopro Congelante",
+      "fallbackFrames": 12,
+      "type": "ice",
+      "effect": "cone fino de sopro gelado"
+    },
+    {
+      "name": "Chicote Duplo",
+      "fallbackFrames": 12,
+      "type": "grass",
+      "effect": "duas chicotadas finas em sequência"
+    }
+  ],
+  "gitBlobSnapshots": {
+    "effects/moves/v92-four/canvas-fallback.js": "143eec57ef1e37639dc573d210164ed032f39b87",
+    "effects/moves/v92-four/safe-mode.js": "ccd72c42fb247dca879de8e31ddf13f721edc995",
+    "effects/moves/v86-preview/render.js": "0ba7411acc30d4d37eea1f80fc7f86f391a1f4d5",
+    "tools/build-v86-four-reference.py": "b0ddd7e901d0ed51573dbb9354fc3d5cff49dd39",
+    "effects/moves/_runtime/pixi-layer.js": "d6a2a7180ec653e7cf83532ed2522c804c8414bb",
+    "effects/moves/_runtime/end.js": "baa55a9710f2b3e897e661c2a1770f0cc38bab7a"
+  },
+  "safeguards": [
+    "O usuário aprovou para salvar (não significa que considere perfeito).",
+    "Sem alteração em golpes previamente aprovados: Chicote de Vinha, Folha Navalha, Vine Whip.",
+    "Dados de dano, colisão, energia e cooldown permanecem os do jogo; nenhum patch de gameplay foi feito para registrar esta aprovação.",
+    "Git blob SHA e commit V94 servem para recuperar a versão exata caso uma atualização futura substitua seus efeitos."
+  ]
+}
