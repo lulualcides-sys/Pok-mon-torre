@@ -58,6 +58,12 @@ function paint(g,f,now,e,k){
 // Render de golpes ofensivos: pipeline existente. O retorno true impede duplicação por Canvas/PNG antigos.
 const prevPainter=window.PokemonTorreV360Paint;
 window.PokemonTorreV360Paint=function(g,f,now,e){
+ // V82 opt-in only: test the FOUR moves equipped in the screenshot. The
+ // official V81 + approved original Chicote remain intact without the flag.
+ if(typeof equippedGrassV82!=='undefined'){
+  const key=equippedGrassV82.resolve(f?.move?.name||f?.name);
+  if(key&&pixiFX.paint(f,e,key))return true;
+ }
  // These 4 named moves draw only the source GBA pixel sprites. Intercept
  // BEFORE Pixi/semantic/old Canvas to avoid duplicate generic VFX.
  // Fire-specific sprites take priority over the generic pipeline.
