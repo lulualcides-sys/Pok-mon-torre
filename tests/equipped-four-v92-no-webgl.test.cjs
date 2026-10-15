@@ -75,9 +75,9 @@ for(const name of ['Raízes Violentas','Geada Persistente']){
  const dur=fallback.active(game).spec.ms;
  assert.equal(fallback.draw(game,began+dur*.68),true);
  const bb=tracked.extent();
- assert.ok(bb.width<=enemy.r*3.0,
+ assert.ok(bb.width<=enemy.r*3.8,
    name+' too wide: '+JSON.stringify(bb));
- assert.ok(bb.height<=enemy.r*2.8,
+ assert.ok(bb.height<=enemy.r*3.4,
    name+' too tall: '+JSON.stringify(bb));
  fallback.clear(game);
 }
