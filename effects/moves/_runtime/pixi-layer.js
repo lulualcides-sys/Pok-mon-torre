@@ -285,5 +285,5 @@ const pixiFX=(()=>{
  }
  return {ensure,paint,beginV84,clearV84,frameV84,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
   sprites:!!atlas,active:effects.size,registered:registry.size,
-  emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id}:null,clearedV84,rendered:{...drawn},error})};
+  emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:grassFourV84.source(activeV84.key)}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,clearedV84,rendered:{...drawn},error})};
 })();
