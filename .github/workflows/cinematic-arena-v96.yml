@@ -1,10 +1,11 @@
-name: Cinematic arena V96 and video stadium V97
+name: Stadium V97 with wide side scrolling V98
 on:
   pull_request:
     paths:
       - 'effects/arena/**'
       - 'tests/cinematic-arena-v96.test.cjs'
       - 'tests/stadium-arena-v97.test.cjs'
+      - 'tests/wide-stadium-v98.test.cjs'
       - 'index.html'
       - '.github/workflows/cinematic-arena-v96.yml'
   push:
@@ -13,6 +14,7 @@ on:
       - 'effects/arena/**'
       - 'tests/cinematic-arena-v96.test.cjs'
       - 'tests/stadium-arena-v97.test.cjs'
+      - 'tests/wide-stadium-v98.test.cjs'
       - 'index.html'
       - '.github/workflows/cinematic-arena-v96.yml'
   workflow_dispatch:
@@ -28,3 +30,4 @@ jobs:
           node-version: '22'
       - run: node tests/cinematic-arena-v96.test.cjs
       - run: node tests/stadium-arena-v97.test.cjs
+      - run: node tests/wide-stadium-v98.test.cjs
