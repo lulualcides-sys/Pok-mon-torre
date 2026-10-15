@@ -179,9 +179,12 @@
    return match?.key||cat[i]?.key||key;
   });
  };
- function report(speciesId=150,level=100){
+ function report(speciesId=150,level=100,fullCatalogue=false){
   if(typeof mon!=='function')return{version:'100.0',error:'Species factory unavailable'};
   const creature=mon(Number(speciesId)||150,Number(level)||100);
+  // The screenshot's "Todos (365)" belongs to V35.66 TEST Mewtwo, not
+  // a regular species learnset. Verify that exact full 365-move catalogue.
+  if(fullCatalogue&&creature.id===150)creature.v3566MewtwoTest=true;
   const original=former(creature);
   const cleaned=v32Catalogue(creature);
   const types=new Map(),duplicates=[];
