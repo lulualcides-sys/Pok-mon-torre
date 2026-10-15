@@ -146,12 +146,21 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
      "const fired=qa.cast(selectedSlot,"+JSON.stringify(options)+");"+
      "await new Promise(r=>setTimeout(r,2300));"+
      "return {initial,fired,final:qa.snapshot()};})()";
-    const response=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});
-    const answer=response.result?.result?.value||{error:response.result?.exceptionDetails?.text||'No combat result'};
-    combatResults.push({name,...answer,landed:
-      Number.isFinite(answer?.fired?.hpBefore)&&
-      Number.isFinite(answer?.final?.foeHp)&&
-      answer.final.foeHp<answer.fired.hpBefore});
+    // Real attacks can legitimately MISS due to native battle accuracy.
+    // Retry at most three independent casts rather than treating one RNG miss
+    // as a broken game. Persistent no-damage errors still fail this smoke test.
+    let answer=null,landed=false,attempts=0;
+    for(attempts=1;attempts<=3;attempts++){
+      const response=await cmd('Runtime.evaluate',
+        {expression,returnByValue:true,awaitPromise:true});
+      answer=response.result?.result?.value||
+        {error:response.result?.exceptionDetails?.text||'No combat result'};
+      landed=Number.isFinite(answer?.fired?.hpBefore)&&
+        Number.isFinite(answer?.final?.foeHp)&&
+        answer.final.foeHp<answer.fired.hpBefore;
+      if(landed)break;
+    }
+    combatResults.push({name,...answer,landed,attempts});
    }
   }
   return {query:query||'default',ok,result,combatResults,grassResults,drainResults,uiFixture,errors:errors.slice(0,12)};
