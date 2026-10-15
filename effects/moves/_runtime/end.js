@@ -240,7 +240,7 @@ BattleEngine.prototype.drawMon=function(actor,id,isEnemy,now){
 const previousGrassPreviewDrawV84=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
  const result=previousGrassPreviewDrawV84.apply(this,arguments);
- if(typeof grassFourV84!=='undefined')pixiFX.frameV84(now);
+ if(typeof grassFourV84!=='undefined')pixiFX.frameV84(now,this);
  return result;
 };
 
