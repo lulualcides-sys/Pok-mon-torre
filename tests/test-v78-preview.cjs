@@ -9,7 +9,7 @@ assert.ok(index.includes("get('battle_preview')==='v78'"),'V78 not routed to gam
 assert.ok(index.includes('fxFiles[i]="effects/moves/v78-preview/render.js"'),'wrong renderer');
 assert.ok(!index.includes('effects/atelier-v70/entry.js'),'No in-game Atelier');
 for(const k of ['const MODIFIED_MOVES=new Set(',"className='pt78Edited'",'markEdited(b,label)','markEdited(skillLabel,skillName)']){
- assert.ok(ui.includes(k), 'Missing vector '+'+' marker in move editor: '+k);
+ assert.ok(ui.includes(k), 'Missing vector plus marker in move editor: '+k);
 }
 assert.ok(ui.includes('Golpe com efeito visual alterado'),'Accessible marker label missing');
 assert.ok(!ui.includes('✅'),'Marker must be vector, not emoji');
