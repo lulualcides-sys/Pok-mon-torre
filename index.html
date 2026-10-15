@@ -130,7 +130,7 @@ if(new URLSearchParams(location.search).get('battle_preview')==='v84'&&
    img.onload=()=>img.naturalWidth===3840&&img.naturalHeight===240?
      resolve():reject(Error('V84 atlas inválido: '+id));
    img.onerror=()=>reject(Error('V84 atlas não carregou: '+id));
-   img.src='effects/moves/'+id+'/v83-preview/sprites/'+id+'.webp?v=84.1';
+   img.src='effects/moves/'+id+'/'+(id==='folha-navalha'?'v83-preview':'v84-preview')+'/sprites/'+id+'.webp?v=84.2';
   })));
 }
 // V59: preload authored sprite sheets without stopping the game if an optional
@@ -306,7 +306,7 @@ if(new URLSearchParams(location.search).get('safe')!=='1'){
 // V84: independent native HP-sync module, only on its own preview URL.
 if(new URLSearchParams(location.search).get('battle_preview')==='v84'&&
  new URLSearchParams(location.search).get('safe')!=='1'){
- const r=await fetch('effects/moves/v84-preview/impact-sync.js?v=84.1',{cache:'no-store'});
+ const r=await fetch('effects/moves/v84-preview/impact-sync.js?v=84.2',{cache:'no-store'});
  if(!r.ok)throw Error('V84 impact-sync ausente '+r.status);
  const script=await r.text();
  if(!script.includes('PokemonTorreGrassImpactV84'))throw Error('V84 hit-sync inválido');
