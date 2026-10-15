@@ -56,6 +56,7 @@ const pixiFX=(()=>{
   }catch(e){error='Particle Emitter: '+e.message;return null;}
  }
  function dispose(fx){
+  if(fx?.v72&&typeof battleFourV72!=='undefined')battleFourV72.dispose(fx);
   for(const em of [fx?.trail,fx?.burst])if(em){try{em.emit=false;em.cleanup();em.destroy();}catch(e){}}
   fx?.root?.destroy({children:true});
  }
@@ -90,6 +91,11 @@ const pixiFX=(()=>{
  }
  function install(f,kind){
   if(effects.has(f))return effects.get(f);
+  // V72 approved raster sequences share this existing PixiJS overlay. No second GPU canvas.
+  if(typeof battleFourV72!=='undefined'&&battleFourV72.accepts(kind)){
+   const authored=battleFourV72.install(app,f,kind);
+   if(authored){effects.set(f,authored);return authored;}
+  }
   // Geometry-based semantic effects work even while the legacy DS sprite atlas loads.
   const m=f.move||{},typ=m.type||'normal',col=themes[typ]||themes.normal;
   // Use each move name before the type: every catalog move gets a semantic WebGL scene.
@@ -133,6 +139,7 @@ const pixiFX=(()=>{
   effects.set(f,item);return item;
  }
  function animate(item,now,dt){
+  if(item.v72){battleFourV72.animate(item,now);frames++;return;}
   if(item.semantic){
    const t=clamp((now-item.f.at)/(item.f.duration||item.duration));
    item.semantic.draw(now,t,dt);drawn[item.n]=(drawn[item.n]||0)+1;frames++;return;
