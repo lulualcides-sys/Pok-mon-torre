@@ -3,8 +3,8 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('nod
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const index=read('index.html'),source=read('effects/moves/v77-preview/render.js'),v75=read('effects/moves/v72-battle/render.js');
 const ids=['dragon-claw','x-scissor','dragon-pulse','aura-sphere'];
-assert.ok(index.includes("get('battle_preview')==='v78'"),'Opt-in V77 query not supported');
-assert.ok(index.includes('fxFiles[i]="effects/moves/v78-preview/render.js"'),'V77 renderer not installed');
+assert.ok(index.includes("get('battle_preview')==='v79'"),'Opt-in V77 query not supported');
+assert.ok(index.includes('fxFiles[i]="effects/moves/v79-preview/render.js"'),'V77 renderer not installed');
 assert.ok(index.includes('"effects/moves/v72-battle/render.js"'),'Normal V75 battle path lost');
 assert.ok(!index.includes('effects/atelier-v70/entry.js'), 'No in-game Atelier allowed');
 assert.ok(!source.includes('getContext('),'V77 effects must be PixiJS, not Canvas 2D');
