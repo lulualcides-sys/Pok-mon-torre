@@ -74,7 +74,7 @@ assert.ok(!source.includes('BattleEngine.prototype.useMove')&&!/\.hp\s*=|\.energ
     assert.ok(scene.sprite.width<260,'Ranged animation still oversized for V74: '+key);
     assert.ok(scene.sprite.width<=app.screen.width*.41,'Ranged effect exceeds ultra-compact arena cap: '+key);
   }
-  assert.equal(scene.sprite.height,scene.sprite.width*.5,'V73 must preserve frame aspect ratio: '+key);
+  assert.ok(Math.abs(scene.sprite.height-scene.sprite.width*.5)<1e-6,'V74 must preserve frame aspect ratio: '+key);
   fx.dispose(scene);
   assert.equal(scene.disposed,true,'Scene was not cleaned up: '+key);
  }
