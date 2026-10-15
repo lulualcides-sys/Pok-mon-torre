@@ -31,6 +31,7 @@ const vmEnv=vm.createContext({window,location,URLSearchParams,BattleEngine,
 for(const p of files)vm.runInContext(fs.readFileSync(p,'utf8'),vmEnv,{filename:p});
 const fx=window.PokemonTorreIceV101;
 assert.ok(window.PokemonTorreIceOfficialV101?.enabled);
+assert.equal(window.PokemonTorreIceOfficialV101.version,'101.0');
 assert.deepEqual(Array.from(fx.diagnostics().registered,v=>v.name),
  ['Aurora Beam','Impacto Glacial','Raio de Gelo']);
 assert.equal(fx.canonicalKey('Ice Beam'),'raiodegelo');
