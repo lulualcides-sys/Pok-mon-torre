@@ -70,6 +70,21 @@ const pixiFX=(()=>{
   for(const em of [fx?.trail,fx?.burst])if(em){try{em.emit=false;em.cleanup();em.destroy();}catch(e){}}
   fx?.root?.destroy({children:true});
  }
+ // The Pixi canvas sits at z-index 9000 during combat; it must be removed
+ // synchronously when a result/menu replaces #battleCanvas, including when
+ // the Pixi ticker is STOPPED (common for long plant sprite previews).
+ function battleViewReady(engine=owner){
+  if(!battle?.active||!engine?.canvas?.isConnected)return false;
+  const modal=document.getElementById('modal');
+  const backdrop=document.getElementById('backdrop');
+  return !!(modal?.classList.contains('combatModal')&&
+   !backdrop?.classList.contains('hide')&&
+   document.getElementById('battleCanvas')===engine.canvas);
+ }
+ function onBattleUiChange(){
+  if(!battleViewReady()&&(app||activeV84||activeV86||hazeActiveV85||effects.size))
+   reset();
+ }
  function reset(){
   if(activeV86&&typeof referenceFourV86!=='undefined')referenceFourV86.destroy(activeV86);
   activeV86=null;
@@ -91,7 +106,7 @@ const pixiFX=(()=>{
   app.view.style.display=r.width>10&&r.height>10?'block':'none';
  }
  function ensure(engine){
-  if(!battle?.active||!engine?.canvas){if(app)reset();return false;}
+  if(!battleViewReady(engine)){onBattleUiChange();return false;}
   if(owner&&owner!==engine){reset();}
   if(app){position(engine);if(!app.ticker.started)app.ticker.start();return true;}
   if(!hasGPU()){error='PixiJS/WebGL/ParticleEmitter indisponível';return false;}
@@ -224,7 +239,7 @@ const pixiFX=(()=>{
   drawn[item.n]=(drawn[item.n]||0)+1;frames++;
  }
  function tick(){
-  if(!owner?.canvas?.isConnected||!battle?.active){reset();return;}
+  if(!battleViewReady()){reset();return;}
   const now=performance.now(),dt=Math.min(.05,Math.max(.001,app.ticker.deltaMS/1000));position(owner);
   for(const [f,e] of effects){
    // V75: only the four cinematic sprite sequences outlive their original
@@ -293,7 +308,8 @@ const pixiFX=(()=>{
   return true;
  }
  function frameV84(now,engine){
-  if(typeof grassFourV84==='undefined'||!battle?.active)return false;
+  if(typeof grassFourV84==='undefined')return false;
+  if(!battleViewReady(engine||owner)){onBattleUiChange();return false;}
   const a=activeV84;
   if(!a||a.battle!==battle){
    if(a)clearV84();
@@ -326,6 +342,7 @@ const pixiFX=(()=>{
  }
  function frameHazeV85(now,engine){
   if(typeof hazeV85==='undefined')return false;
+  if(!battleViewReady(engine||owner)){onBattleUiChange();return false;}
   if(!hazeActiveV85)return false;
   if(!battle?.active||owner!==engine||!engine?.canvas?.isConnected){
    hazeV85.destroy(hazeActiveV85);hazeActiveV85=null;return false;
@@ -357,6 +374,7 @@ const pixiFX=(()=>{
  }
  function frameV86(now,engine){
   if(typeof referenceFourV86==='undefined'||!activeV86)return false;
+  if(!battleViewReady(engine||owner)){onBattleUiChange();return false;}
   const fx=activeV86;
   if(!battle?.active||owner!==engine||!engine?.canvas?.isConnected){
    referenceFourV86.destroy(fx);activeV86=null;return false;
@@ -374,7 +392,8 @@ const pixiFX=(()=>{
   }
   return true;
  }
- return {ensure,paint,beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,
+ return {ensure,paint,clearAll:reset,onBattleUiChange,isBattleViewReady:battleViewReady,
+  beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,
   beginV86,frameV86,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
   sprites:!!atlas,active:effects.size,registered:registry.size,
   emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:grassFourV84.source(activeV84.key)}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,

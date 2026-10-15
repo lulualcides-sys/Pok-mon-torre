@@ -8,7 +8,11 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
 import hashlib, math, random
 ROOT=Path(__file__).resolve().parents[1]
-W,H,N=480,240,8
+W,H,BASE_FRAMES=480,240,8
+# Authoring targets: roots/frost are heavy, breath/double whip medium.
+# Existing published eight-frame atlases stay valid until this tool is run.
+FRAME_COUNTS={'raizes-violentas':16,'geada-persistente':16,
+              'sopro-congelante':12,'chicote-duplo':12}
 names=('raizes-violentas','geada-persistente','sopro-congelante','chicote-duplo')
 P=[0,.16,.38,.67,.9,1,.57,.08]
 def img():return Image.new('RGBA',(W,H),(0,0,0,0))
@@ -139,11 +143,12 @@ def double(i):
 def main():
  for name,render in zip(names,(roots,frost,breath,double)):
   folder=ROOT/'effects/moves'/name/'v86-preview/sprites';folder.mkdir(parents=True,exist_ok=True)
-  sheet=Image.new('RGBA',(W*N,H),(0,0,0,0));unique=set()
-  for i in range(N):
+  # Keep the eight manually authored key poses, then generate between-poses.
+  # Source frames never change after approval; rendering adds smooth motion.
+  base=[]
+  for i in range(BASE_FRAMES):
    frame=render(i)
    if i==0:
-    # Readable charge/setup on stage 1; no fully transparent static frame.
     d=ImageDraw.Draw(frame,'RGBA')
     if name=='raizes-violentas':
      d.line([(293,200),(346,194),(404,199)],fill=(37,54,28,170),width=3)
@@ -155,12 +160,22 @@ def main():
     else:
      leaf(d,77,84,7,170);leaf(d,77,159,7,170)
    assert frame.mode=='RGBA' and frame.getchannel('A').getbbox(),(name,i)
+   base.append(frame)
+  count=FRAME_COUNTS[name]
+  assert count in (8,12,16)
+  sheet=Image.new('RGBA',(W*count,H),(0,0,0,0));unique=set()
+  for i in range(count):
+   phase=i*(BASE_FRAMES-1)/(count-1)
+   lo=int(phase);hi=min(BASE_FRAMES-1,lo+1)
+   fraction=phase-lo
+   frame=Image.blend(base[lo],base[hi],fraction) if fraction>1e-7 else base[lo]
+   assert frame.getchannel('A').getbbox(),(name,i)
    unique.add(hashlib.sha256(frame.tobytes()).hexdigest())
    sheet.alpha_composite(frame,(W*i,0))
-  assert len(unique)==8,('Repeated frames',name)
+  assert len(unique)==count,('Repeated frames',name)
   out=folder/(name+'.webp')
   sheet.save(out,'WEBP',lossless=True,method=5,exact=True)
   probe=Image.open(out)
-  assert probe.mode=='RGBA' and probe.size==(3840,240)
-  print('PASS V86',name,'8 unique frames transparent',out.stat().st_size)
+  assert probe.mode=='RGBA' and probe.size==(W*count,H)
+  print('PASS V86',name,count,'unique frames transparent',out.stat().st_size)
 if __name__=='__main__':main()
