@@ -448,9 +448,13 @@ try{
  const response=await fetch(path+'?build=v100-consolidated-moves',{cache:'no-store'});
  if(!response.ok)throw Error('Alias catalogue unavailable '+response.status);
  const source=await response.text();
- if(!game.includes(fireSpriteAnchor))throw Error('Move catalogue anchor missing');
- game=game.replace(fireSpriteAnchor,
-  String.fromCharCode(10)+source+String.fromCharCode(10)+fireSpriteAnchor);
+ // v32Catalogue lives INSIDE the V32 closure, not in the final
+ // outer-game scope. Insert just before its own closing brace (p012).
+ const moveCatalogAnchor=String.fromCharCode(10)+
+  '})();'+String.fromCharCode(10)+'/* FIM POKEMON TORRE V32 */';
+ if(!game.includes(moveCatalogAnchor))throw Error('V32 catalogue scope boundary missing');
+ game=game.replace(moveCatalogAnchor,
+  String.fromCharCode(10)+source+String.fromCharCode(10)+moveCatalogAnchor);
 }catch(error){
  console.warn('Move dedup unavailable; keeping original catalog',error);
 }
