@@ -258,7 +258,7 @@ server.listen(0,'127.0.0.1',async()=>{
        (move?.casts||0)>=1&&
        (move?.draws||0)>0&&
        (move?.framesMask||0)!==0&&
-       (rec.after?.pixi?.active||0)>0&&
+       rec.after?.pixi?.gpu===true&&
        !rec.after.webglError;
     });
   if(!combatOK){
