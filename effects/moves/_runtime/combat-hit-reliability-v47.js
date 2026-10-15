@@ -435,6 +435,23 @@
       vfx:window.PokemonTorreGrassFourPreviewV84?.diagnostics(),
       sync:window.PokemonTorreGrassImpactV84?.()};
    },
+   // Browser-only V85 Haze non-damaging STATUS test, not available on Pages.
+   castHazePreviewV85(){
+    if(this._grassBaseSkillSet)skillSet=this._grassBaseSkillSet;
+    this.start(1,143);
+    const actor=current(),original=skillSet;
+    this._grassBaseSkillSet=original;
+    const move={name:'Haze',kind:'status',cat:'status',type:'ice',
+     power:0,cost:12,cd:1100,level:1,icon:''};
+    skillSet=mon=>mon===actor?[move]:original(mon);
+    const hpBefore=foe().hp,playerBefore=actor.hp,energyBefore=battle.energy;
+    const fired=this.cast(0);
+    return {selected:fired.name,kind:fired.kind,
+     hpBefore,hpAfter:foe().hp,playerBefore,playerAfter:actor.hp,
+     energyBefore,energyAfter:battle.energy,
+     haze:window.PokemonTorreHazePreviewV85?.diagnostics()||null,
+     pixi:window.PokemonTorrePixiFX?.()||null};
+   },
    // Browser-only regression for actual Grass status moves, not image preload.
    // Battle and team are ephemeral inside headless localhost Chromium only.
    castGrass(name,foeId=143){

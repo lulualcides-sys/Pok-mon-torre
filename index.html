@@ -51,6 +51,10 @@ if(new URLSearchParams(location.search).get('safe')!=='1'){
  if(new URLSearchParams(location.search).get('battle_preview')==='v84'){
   fxFiles.splice(i+1,0,"effects/moves/v84-preview/render.js");
  }
+ // Haze V85 is an opt-in Pixi status preview; all protected normal moves stay intact.
+ if(new URLSearchParams(location.search).get('battle_preview')==='haze85'){
+  fxFiles.splice(i+1,0,"effects/moves/haze/v85-preview/render.js");
+ }
 }let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build='+(path.includes('move-type-filter')||path.includes('move-library-v61')||path.includes('real-drain-v65')||path.includes('v63-plant/render')||path.includes('v60-four/render')||path.includes('library16-v59')||path.includes('elemental-eight-v58')||path.includes('electric-four-v56')||path.includes('catalog/bundle')||path.endsWith('/end.js')?'original-drain-v65':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.warn('Efeitos modulares indisponíveis; usando V35.80',error);plugin=await fetch('effects/mewtwo-4moves-v3580.js',{cache:'no-store'}).then(r=>r.ok?r.text():null).catch(()=>null);}if(new URLSearchParams(location.search).get('safe')!=='1'&&(!plugin||!plugin.includes('catalogElectricFourV56')||!plugin.includes('elementalEightV58')||!plugin.includes('library16V59')||!plugin.includes('cinematicFourV60')||!plugin.includes('plantFourV63')||!plugin.includes('PokemonTorreDrainV65')))throw Error('Módulos dos golpes V64 incompletos');
 // V63: all four approved Grass/status atlases loaded before a battle starts.
 // Replaces old visuals, never overlays them; keeps the status mechanics intact.
@@ -119,6 +123,17 @@ if(new URLSearchParams(location.search).get('battle_preview')==='v83'&&
     image.onerror=()=>reject(Error('V83 spritesheet indisponível '+id));
     image.src='effects/moves/'+id+'/v83-preview/sprites/'+id+'.webp?v=83.1';
    })));
+}
+// Haze V85: a real animated 6-wisp transparent sheet, not a full-screen video.
+if(new URLSearchParams(location.search).get('battle_preview')==='haze85'&&
+ new URLSearchParams(location.search).get('safe')!=='1'){
+ await new Promise((resolve,reject)=>{
+  const image=new Image();image.decoding='async';
+  image.onload=()=>image.naturalWidth===960&&image.naturalHeight===112?
+    resolve():reject(Error('Haze V85: textura inválida'));
+  image.onerror=()=>reject(Error('Haze V85: textura indisponível'));
+  image.src='effects/moves/haze/v85-preview/sprites/haze-wisps.webp?v=85.0';
+ });
 }
 // V84: verify source atlases first; they are transparent authored sprites,
  // not flattened screenshots or a video.

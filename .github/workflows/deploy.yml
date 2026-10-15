@@ -32,6 +32,8 @@ jobs:
           python tools/build-v82-equipped-grass.py
           python tools/build-v83-vine-whip.py
           python tools/build-v84-2-separated-vines.py
+          python tools/build-v85-haze.py
+          node tests/test-v85-haze.cjs
           node tests/test-v84-2-distinct-art.cjs
           node tests/test-v83-four-grass.cjs
           node tests/test-v84-real-grass.cjs
