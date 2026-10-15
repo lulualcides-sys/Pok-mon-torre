@@ -346,6 +346,22 @@ if(enableElectricPreview){
  },{once:true});
 }
 if(!enableElectricPreview){const warning='<div role="alert" style="position:fixed;top:6px;left:6px;right:6px;z-index:999999;background:#3b2531;color:#fff3d8;border:1px solid #ffbe66;border-radius:9px;padding:7px 10px;text-align:center;font:600 12px system-ui,sans-serif">MODO SEGURO: efeitos especiais novos desativados. <a href="?build=v58.0" style="color:#fff;text-decoration:underline">Abrir V58</a></div>';game=game.replace('</body>',warning+'</body>');}
+// V91: safe=1 is sometimes selected automatically after a mobile resource
+// failure. Keep the native four Grass sprites even in that recovery path.
+if(!enableElectricPreview){
+ try{
+  const parts=await Promise.all([
+   'effects/moves/v91-four/canvas-fallback.js',
+   'effects/moves/v91-four/safe-mode.js'
+  ].map(async path=>{
+   const resp=await fetch(path+'?build=v91-safe-grass',{cache:'no-store'});
+   if(!resp.ok)throw Error('V91 safety module unavailable: '+path);
+   return resp.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V91 recovery hook missing');
+  game=game.replace(fireSpriteAnchor,'\\n'+parts.join('\\n')+'\\n'+fireSpriteAnchor);
+ }catch(error){console.warn('V91 safety animation unavailable',error);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
