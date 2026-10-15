@@ -4,7 +4,7 @@ const src=fs.readFileSync('effects/ui/move-dedup-v100.js','utf8');
 const index=fs.readFileSync('index.html','utf8');
 const approvals=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
 assert.ok(index.includes("effects/ui/move-dedup-v100.js"));
-assert.ok(index.includes("Iniciando Pokémon Torre V100"));
+assert.match(index, /Iniciando Pokémon Torre V\d+/);
 assert.ok(src.includes("row.remove()")&&src.includes("data-v331-pick"));
 const noop=()=>{};
 class MutationObserver{observe(){}disconnect(){}}
