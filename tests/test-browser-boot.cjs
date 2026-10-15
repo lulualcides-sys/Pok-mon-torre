@@ -267,6 +267,21 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
     returnByValue:true});
    arenaV97={start:start.result?.result?.value||{},
     ...(inspect.result?.result?.value||{})};
+   const initial=await cmd('Runtime.evaluate',{
+    expression:"(()=>({camera:window.PokemonTorreArenaWideV98?.diagnostics()||null,width:document.getElementById('battleCanvas')?.style?.width||null}))()",
+    returnByValue:true});
+   const motion=await cmd('Runtime.evaluate',{
+    expression:"(()=>{if(typeof engine==='undefined'||!engine||!engine._stadiumV98)return {enabled:false};const before=engine._stadiumCameraX||0;engine.player.x=engine.w*.973;engine.bounds(engine.player);return {enabled:true,before,playerX:engine.player.x,formerMax:engine.w*.94};})()",
+    returnByValue:true});
+   await sleep(600);
+   const moved=await cmd('Runtime.evaluate',{
+    expression:"(()=>({pan:window.PokemonTorreArenaWideV98?.diagnostics()?.lastPan||0,transform:document.getElementById('battleCanvas')?.style.transform||'',visible:document.getElementById('arenaPro')?.getBoundingClientRect().width||0}))()",
+    returnByValue:true});
+   arenaV97.wide={
+    initial:initial.result?.result?.value||{},
+    motion:motion.result?.result?.value||{},
+    moved:moved.result?.result?.value||{}
+   };
   }
   return {query:query||'default',ok,result,combatResults,grassResults,drainResults,v84CombatResults,v84IsolationResults,hazeResults,v86CombatResults,v86SequenceResults,uiFixture,pokemonPolishResult,arenaV97,errors:errors.slice(0,12)};
  }finally{
@@ -304,11 +319,16 @@ server.listen(0,'127.0.0.1',async()=>{
   const newArena=await browserCase(port,'?arena_preview=cinematic&arena_test=1&build=v97-stadium-from-video',true);
   const a96=newArena.arenaV97;
   console.log('BROWSER V97 VIDEO-STADIUM ARENA:',JSON.stringify(a96));
+  const wide98=a96?.wide;
+  const cameraOK=wide98?.motion?.enabled&&wide98.motion.playerX>wide98.motion.formerMax&&
+   wide98?.initial?.camera?.worldW>wide98.initial.camera.viewportW*1.40&&
+   wide98?.moved?.pan>wide98.motion.before+3&&
+   wide98.moved.transform.includes('translate3d(-');
   if(!newArena.ok||!a96?.installed||!a96.enabled||!a96.canvasReady||
     (a96.scene.builds||0)<1||(a96.scene.draws||0)<1||
     (a96.scene.tiles||0)<300||(a96.scene.emblems||0)<1||
-    (a96.scene.treeShapes||0)!==0||(a96.scene.failures||0)>0){
-    console.error('FAIL V97: real tiled stadium not shown in mobile Chrome battle');
+    (a96.scene.treeShapes||0)!==0||(a96.scene.failures||0)>0||!cameraOK){
+    console.error('FAIL V98: stadium must render with real walkable side lanes and following camera');
     process.exitCode=1;
   }
   const staged=await browserCase(port,'?battle_preview=v80&build=v80');
