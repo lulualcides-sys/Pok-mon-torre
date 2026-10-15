@@ -528,4 +528,69 @@ stopTimers=function(){
  return previousClearGrassV91.apply(this,arguments);
 };
 
+
+// V92: ACTUALLY equipped Raizes Violentas / Geada Persistente / Sopro
+// Congelante / Chicote Duplo. This is separate from the V91 four old vines.
+// The V86 authored GPU sprites draw when available; 2D draws otherwise.
+const beforeEquippedV92=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(slot){
+ const actor=battle?.active?current():null;
+ const move=actor&&Number.isInteger(slot)?skillSet(actor)?.[slot]:null;
+ const key=typeof equippedFourV92!=='undefined'?equippedFourV92.keyOf(move?.name):'';
+ if(!key)return beforeEquippedV92.apply(this,arguments);
+ const previousEnergy=Number(battle.energy),previousCooldown=Number(cooldowns?.[slot])||0;
+ const shots=new Set(this.projectiles||[]);
+ const particleLength=this.particles?.length||0;
+ const ringLength=this.rings?.length||0;
+ const now=performance.now();
+ const result=beforeEquippedV92.apply(this,arguments);
+ const accepted=result!==false&&battle?.active&&!battle.paused&&
+  (Number(battle.energy)<previousEnergy||
+   (Number(cooldowns?.[slot])||0)>previousCooldown);
+ if(!accepted)return result;
+ if(!equippedFourV92.begin(this,move.name,now))return result;
+ const type=/geada|sopro/.test(key)?'ice':'grass';
+ // Retain projectile/hit queue (only hide old-circle DRAWING).
+ for(const shot of this.projectiles||[])
+  if(!shots.has(shot)&&shot?.from==='player'&&shot.type===type)
+   shot.__v92Covered=true;
+ if(this.particles?.length>particleLength)this.particles.length=particleLength;
+ if(this.rings?.length>ringLength)this.rings.length=ringLength;
+ return result;
+};
+const previousEquippedV92Projectile=BattleEngine.prototype.drawProjectile;
+if(typeof previousEquippedV92Projectile==='function')
+ BattleEngine.prototype.drawProjectile=function(shot){
+  const active=equippedFourV92.active(this,performance.now());
+  const type=active&&(/geada|sopro/.test(active.key)?'ice':'grass');
+  if(shot?.__v92Covered||(active&&shot?.from==='player'&&shot?.type===type))
+   return; // stop rendering the old little ball; native collision still runs
+  return previousEquippedV92Projectile.apply(this,arguments);
+};
+const previousEquippedV92Painter=window.PokemonTorreV360Paint;
+window.PokemonTorreV360Paint=function(ctx,fx,now,owner){
+ if(equippedFourV92.hideLegacy(owner,fx?.move?.name||fx?.name,now))
+  return true;
+ return typeof previousEquippedV92Painter==='function'?
+  previousEquippedV92Painter.apply(this,arguments):false;
+};
+const previousEquippedV92Draw=BattleEngine.prototype.draw;
+BattleEngine.prototype.draw=function(now){
+ const defeated=Number.isFinite(this.enemy?.hp)&&this.enemy.hp<=0;
+ if(defeated){
+  equippedFourV92.clear(this);
+  if(typeof pixiFX!=='undefined')pixiFX.clearAll();
+  if(Array.isArray(this.particles))this.particles.length=0;
+  if(Array.isArray(this.rings))this.rings.length=0;
+ }
+ const result=previousEquippedV92Draw.apply(this,arguments);
+ if(!defeated&&battle?.active)equippedFourV92.draw(this,now);
+ return result;
+};
+const oldStopEquippedV92=stopTimers;
+stopTimers=function(){
+ if(typeof engine!=='undefined'&&engine)equippedFourV92.clear(engine);
+ return oldStopEquippedV92.apply(this,arguments);
+};
+
 })();
