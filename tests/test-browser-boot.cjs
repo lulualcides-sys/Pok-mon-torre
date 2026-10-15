@@ -136,12 +136,13 @@ async function browserCase(port,query,mobile=false,combat=false,grass=false){
     });
     const before=cast.result?.result?.value||{error:cast.result?.exceptionDetails?.exception?.description||'QA error'};
     // Observe the actual WebGL animation after beginning the cast.
-    await sleep(850);
+    await sleep(1220);
     const after=await cmd('Runtime.evaluate',{
      expression:"(()=>({art:window.PokemonTorreGrassFourPreviewV84?.diagnostics(),hit:window.PokemonTorreGrassImpactV84?.(),pixi:window.PokemonTorrePixiFX?.(),webglError:window.PokemonTorreGrassPreviewErrorV84||null}))()",
      returnByValue:true
     });
     v84CombatResults.push({slot,requested:before.requested,selected:before.selected,
+     liveQueue:before.liveQueue,
      after:after.result?.result?.value||{},error:before.error});
    }
   }
