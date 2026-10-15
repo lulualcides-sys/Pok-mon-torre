@@ -33,3 +33,5 @@ jobs:
         run: |
           node tests/test-four-v60.cjs
           node tests/test-attack-fps-v61.cjs
+      - name: Validar os 37 golpes V66 sem interceptar os eletricos preservados
+        run: node tests/test-heritage37-v66.cjs
