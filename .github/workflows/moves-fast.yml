@@ -10,6 +10,8 @@ on:
       - 'tools/build-v78-preview.py'
       - 'tests/test-v78-preview.cjs'
       - 'tests/test-v79-preview.cjs'
+      - 'tests/test-v80-impact.cjs'
+      - 'effects/moves/_runtime/impact-sync-v80.js'
       - 'effects/ui/**'
       - 'tools/build-v72-battle.py'
       - 'tests/test-v72-battle.cjs'
@@ -81,6 +83,7 @@ jobs:
           python tools/build-v78-preview.py
           node tests/test-v78-preview.cjs
           node tests/test-v79-preview.cjs
+          node tests/test-v80-impact.cjs
           node tests/test-v77-preview.cjs
           node tests/test-v72-battle.cjs
 
