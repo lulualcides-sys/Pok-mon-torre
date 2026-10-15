@@ -440,9 +440,36 @@ if(typeof previousGrassDrawProjectileV89==='function')
   return previousGrassDrawProjectileV89.apply(this,arguments);
 };
 window.PokemonTorreGrassV89=()=>({
- version:'89.0',pixi:pixiFX.diagnostics(),
+ version:'90.0',pixi:pixiFX.diagnostics(),
  authored:typeof grassFourV84!=='undefined'?grassFourV84.diagnostics():null,
  missingWebPRequired:false
 });
+// Optional battle diagnostics: only visible with ?fx_debug=1, never in normal
+// gameplay. Lets a phone screenshot expose why WebGL could not start.
+if(new URLSearchParams(location.search).get('fx_debug')==='1'){
+ const showGrassDebug=()=>{
+  if(document.getElementById('pt-v90-fx-debug'))return;
+  const el=document.createElement('div');el.id='pt-v90-fx-debug';
+  el.style.cssText='position:fixed;top:4px;left:4px;right:4px;z-index:999999;'+
+   'padding:5px 8px;background:#122636ed;color:#d9feda;border:1px solid #7eec9d;'+
+   'border-radius:6px;font:11px monospace;pointer-events:none;white-space:pre-wrap';
+  document.body.appendChild(el);
+  const report=()=>{
+   try{
+    const info=window.PokemonTorreGrassV89();
+    const d=info.pixi,m=info.authored,last=m?.last||null;
+    el.textContent='GRASS V90 | '+(battle?.active?'BATALHA':'MENU')+
+     ' | Pixi '+(d.ready?'ATIVO':d.gpu?'DISPONIVEL':'SEM WEBGL')+
+     ' | FX '+(d.activePreview?.key||'nenhum')+
+     ' | '+(last?.move||'-')+' '+(last?.frame||0)+'/'+(last?.total||0)+
+     ' | quadros GPU '+(m?.generated||0)+
+     ' | erro '+(window.PokemonTorreGrassErrorV89||d.error||m?.failures?.at(-1)||'nenhum');
+   }catch(err){el.textContent='GRASS V90 DEBUG: '+String(err?.message||err);}
+  };
+  report();setInterval(report,400);
+ };
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',showGrassDebug,{once:true});
+ else showGrassDebug();
+}
 
 })();

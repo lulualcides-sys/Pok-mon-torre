@@ -312,15 +312,10 @@ if(new URLSearchParams(location.search).get('safe')!=='1'){
  game=game.replace(fireSpriteAnchor,'\n'+syncSource+'\n'+fireSpriteAnchor);
 }
 
-// V84: independent native HP-sync module, only on its own preview URL.
-if(new URLSearchParams(location.search).get('battle_preview')==='v84'&&
- new URLSearchParams(location.search).get('safe')!=='1'){
- const r=await fetch('effects/moves/v84-preview/impact-sync.js?v=84.2',{cache:'no-store'});
- if(!r.ok)throw Error('V84 impact-sync ausente '+r.status);
- const script=await r.text();
- if(!script.includes('PokemonTorreGrassImpactV84'))throw Error('V84 hit-sync inválido');
- game=game.replace(fireSpriteAnchor,'\n'+script+'\n'+fireSpriteAnchor);
-}
+// V90: V84 preview URL now uses the production V89/V90 GPU renderer.
+// Do NOT load the archived V84 impact-sync module; its old 5x timing would
+// delay damage after the 1.2s authored animation. Native physics owns hits.
+// The archive remains in GitHub history for comparison.
 // V83: synchronize ONLY the four new opt-in Grass animations via native v359 hit queue.
 if(new URLSearchParams(location.search).get('battle_preview')==='v83'&&
  new URLSearchParams(location.search).get('safe')!=='1'){

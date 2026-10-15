@@ -1,0 +1,31 @@
+name: Grass V90 renderer regression
+
+on:
+  pull_request:
+    paths:
+      - "effects/moves/v89-four/render.js"
+      - "effects/moves/_runtime/pixi-layer.js"
+      - "tests/grass-v90-runtime.test.cjs"
+      - ".github/workflows/test-grass-v90.yml"
+  push:
+    branches: [main]
+    paths:
+      - "effects/moves/v89-four/render.js"
+      - "effects/moves/_runtime/pixi-layer.js"
+      - "tests/grass-v90-runtime.test.cjs"
+      - ".github/workflows/test-grass-v90.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test four sprites and source diagnostics
+        run: node tests/grass-v90-runtime.test.cjs

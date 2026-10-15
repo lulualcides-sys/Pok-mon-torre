@@ -165,7 +165,7 @@ var grassFourV84=(()=>{
   const spec=specs[key];
   const fx={v84:true,root,sprite,blend,frames,app,f,key,spec,
     visualDuration:spec.life,ready:true,disposed:false,stage:-1,
-    source:'pixi-generated-v89',lastFrame:0};
+    source:'pixi-generated-v90',lastFrame:0};
   statistics.casts++;return fx;
  }
  function animate(fx,now){
@@ -204,11 +204,14 @@ var grassFourV84=(()=>{
   fx.disposed=true;fx.ready=false;fx.frames=[];
   // The central Pixi owner destroys its root; cached textures are renderer scoped.
  }
- function diagnostics(){return {...statistics,version:'89.0',
+ function diagnostics(){return {...statistics,version:'90.0',
   frames:Object.fromEntries(Object.values(specs).map(s=>[s.name,s.count]))};}
  if(typeof window!=='undefined'){
-  window.PokemonTorreGrassFourPreviewV84={version:'89.0',enabled:true,
+  window.PokemonTorreGrassFourPreviewV84={version:'90.0',enabled:true,
    diagnostics,renderer:'PixiJS GPU-generated 12/16 frame sprites'};
  }
- return {accepts,resolve,install,animate,dispose,specs,diagnostics};
+ // The shared pixi-layer diagnostics have referenced source() since V84.
+ // Keep this method even when frames are authored on the GPU and have no URL.
+ const source=key=>accepts(key)?'pixi-generated-v90:'+key:'';
+ return {accepts,resolve,source,install,animate,dispose,specs,diagnostics};
 })();

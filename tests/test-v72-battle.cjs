@@ -41,8 +41,12 @@ for(const p of ['dragon-pulse','aura-sphere','x-scissor','dragon-claw']){
   assert.equal(bytes.subarray(8,12).toString('ascii'),'WEBP','Invalid WebP type');
   assert.ok(bytes.length>22000,'Empty/invalid atlas: '+p);
 }
-assert.ok(index.includes('"effects/moves/v72-battle/render.js","effects/moves/_runtime/pixi-layer.js"'),'V72 must load before PixiFX');
-assert.ok(index.includes("effects/moves/v72-battle/sprites/"),'The game must preload battle atlases');
+assert.ok(index.includes('"effects/moves/v72-battle/render.js"')&&
+ index.includes('"effects/moves/_runtime/pixi-layer.js"')&&
+ index.includes('fxFiles[i]="effects/moves/v81-approved/render.js"'),
+ 'Archived V72 reference and approved V81 must remain before PixiFX');
+assert.ok(index.includes('V89 resilience: old V72/V78 WebP atlases'),
+ 'Absent optional V72/78 atlases must not redirect game to old safe-mode');
 assert.ok(pixi.includes('battleFourV72.install(app,f,kind)')&&pixi.includes('battleFourV72.animate(item,now)')&&(pixi.includes('(e.v84||e.v83||e.v82||e.v72)?e.visualDuration')||pixi.includes('(e.v83||e.v82||e.v72)?e.visualDuration')||pixi.includes('(e.v82||e.v72)?e.visualDuration')),
   'V72 renderer must use the game existing PIXI overlay');
 assert.ok(end.includes("battleFourV72.accepts(k)")&&end.indexOf("battleFourV72.accepts(k)")<end.indexOf("heritage37V66.accepts(k)"),

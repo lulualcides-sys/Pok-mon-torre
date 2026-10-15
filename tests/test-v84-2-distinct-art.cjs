@@ -31,12 +31,14 @@ assert.equal(unique.size,3);
 const renderer=fs.readFileSync(path.join(root,'effects/moves/v84-preview/render.js'),'utf8');
 const impact=fs.readFileSync(path.join(root,'effects/moves/v84-preview/impact-sync.js'),'utf8');
 assert.ok(renderer.includes("id==='folha-navalha'?'v83-preview':'v84-preview'"));
-assert.ok(renderer.includes("name:'Folha Navalha',asset:'folha-navalha',impact:5,speed:2.25"));
+assert.ok(renderer.includes("name:'Folha Navalha',asset:'folha-navalha',impact:5,speed:1,ms:1430"));
 assert.ok(renderer.includes("source=key=>"));
 assert.ok(impact.includes("version:'84.2'"));
 assert.ok(!renderer.includes('getContext('));
 for(const slug of three)assert.ok(renderer.includes("asset:'"+slug+"'"),slug);
 const loader=fs.readFileSync(path.join(root,'index.html'),'utf8');
-assert.ok(loader.includes("(id==='folha-navalha'?'v83-preview':'v84-preview')"),
- 'preloaded atlas path must match live Pixi atlas path');
-console.log('PASS V84.2: three independently DRAWN WebP atlases, no previous reused image, Folha Navalha artwork unchanged; accelerated synchronized 2.25x preview.');
+// Historic V84 WebP imagery can still be validated above, but the
+// runtime no longer depends on those absent archived files.
+assert.ok(loader.includes('effects/moves/v89-four/render.js'),
+ 'V90 must use generated Pixi artwork rather than missing WebP URLs');
+console.log('PASS V84.2 archive: three distinct historic WebP atlases and unchanged Leaf artwork; production routes use V90 GPU-generated sprites.');

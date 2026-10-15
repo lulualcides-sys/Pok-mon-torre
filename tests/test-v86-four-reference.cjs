@@ -9,7 +9,9 @@ const renderer=read('effects/moves/v86-preview/render.js');
 const index=read('index.html'),pixi=read('effects/moves/_runtime/pixi-layer.js'),end=read('effects/moves/_runtime/end.js');
 const moveNames=['Raízes Violentas','Geada Persistente','Sopro Congelante','Chicote Duplo'];
 const slugs=['raizes-violentas','geada-persistente','sopro-congelante','chicote-duplo'];
-assert.ok(index.includes("get('battle_preview')==='v86'"));
+// V88 centralizes preview-mode parsing; V86 remains opt-in by name.
+assert.ok(index.includes("previewModeV88==='v86'")||
+ index.includes("get('battle_preview')==='v86'"));
 assert.ok(index.includes('effects/moves/v86-preview/render.js'));
 assert.ok(pixi.includes('referenceFourV86.cast'));
 assert.ok(end.includes('previousReferenceUseV86'));
