@@ -68,7 +68,7 @@ for(const safe of [false,true]){
  const sim=sandboxFor(safe);
  const specs=sim.window.PokemonTorreFightingV103.diagnostics().registered;
  assert.equal(specs.length,4);
- assert.deepEqual(specs.map(s=>s.frames),[8,12,16,16]);
+ assert.deepEqual(Array.from(specs,s=>Number(s.frames)),[8,12,16,16]);
  for(let slot=0;slot<4;slot++){
   const e=new sim.BattleEngine(),before=sim.victim.hp;
   const time=1000+slot*3000;sim.time(time);
