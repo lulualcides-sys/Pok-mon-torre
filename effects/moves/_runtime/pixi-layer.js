@@ -318,6 +318,9 @@ const pixiFX=(()=>{
   if(!install(f,key)){
    clearV84();return false;
   }
+  // IMPORTANT: a diagnostic lookup must never break a successful cast.
+  // Older code called grassFourV84.source() unconditionally and threw
+  // when V89 switched from URL atlases to generated GPU frames.
   return true;
  }
  function frameV84(now,engine){
@@ -409,7 +412,7 @@ const pixiFX=(()=>{
   beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,
   beginV86,frameV86,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
   sprites:!!atlas,active:effects.size,registered:registry.size,
-  emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:grassFourV84.source(activeV84.key)}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
+  emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:typeof grassFourV84?.source==='function'?grassFourV84.source(activeV84.key):'gpu-generated'}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
   hazeActive:!!hazeActiveV85,hazeReady:!!hazeActiveV85?.ready,
   v86Active:!!activeV86,v86Name:activeV86?.spec?.name||null,v86Ready:!!activeV86?.ready,v86Swaps,
   clearedV84,rendered:{...drawn},error})};
