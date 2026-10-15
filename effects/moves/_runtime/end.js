@@ -40,6 +40,11 @@ function paint(g,f,now,e,k){
   if(!elementalEightV58.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
  }else if(typeof catalogElectricFourV56!=='undefined'&&catalogElectricFourV56.accepts(k))
   entry.draw(g,f,t,now,s,low);
+ else if(typeof heritage37V66!=='undefined'&&heritage37V66.accepts(k)){
+  // Opt-in only to the 37 new V66 visuals. Three excluded Electric moves and
+  // all older approved sprites retain their original rendering paths.
+  if(!heritage37V66.paint(g,f,t,now,s,low,k))entry.draw(g,f,t,now,s,low);
+ }
  else if(!pixiFX.paint(f,e,k))entry.draw(g,f,t,now,s,low);
  g.restore();counts[k]=(counts[k]||0)+1;return true;
 }
