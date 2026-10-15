@@ -85,7 +85,7 @@ def stroke(canvas, path, frac, *, heavy=17, dark=(5,24,11),
 def tail_sparks(im, i, x=408,y=120,seed=300):
     # Keep the real damage hit visually on the declared impact stage only.
     if i==3:
-        v82.sparkle(im,x,y,5.5,.23,seed)
+        v82.sparkle(im,x,y,5.5,.23,seed=seed)
     if i==4 or i==5:
         power=1.0 if i==4 else .26
         v82.burst(im,x,y,power,seed)
