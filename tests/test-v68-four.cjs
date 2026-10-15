@@ -27,7 +27,7 @@ for(const key of valid){
 }
 const dragon=fs.readFileSync(path.join(base,'effects/moves/v68-four/dragon-pulse/index.js'),'utf8');
 assert.ok(dragon.includes('beam(g,')&&dragon.includes('spinRing('),'Dragon Pulse lacks reference beam/coil');
-assert.ok(!dragon.includes('dragon head')&&!dragon.includes('serpentine blast'),'Old cartoon Dragon Pulse detected');
+assert.ok(!dragon.includes('poly(g,')&&!dragon.includes('ribbon(g,'),'Dragon Pulse must use a real energy beam, not a cartoon silhouette');
 const scissor=fs.readFileSync(path.join(base,'effects/moves/v68-four/x-scissor/index.js'),'utf8');
 assert.ok(scissor.includes('ribbon(g,...path1')&&scissor.includes('ribbon(g,...path2'),'X-Scissor not two passes');
 const preview=fs.readFileSync(path.join(base,'previews/v68-4-golpes-referencia.html'),'utf8');
