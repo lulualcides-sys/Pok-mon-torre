@@ -50,15 +50,16 @@ var battleFourV72=(()=>{
    dist=Math.hypot(dx,dy)||1,ux=dx/dist,uy=dy/dist,
    contact=defs[item.key].mode==='contact',
    ew=item.app.screen.width,eh=item.app.screen.height;
-  // V73: balanced compact sizing without changing approved sprites, frames or timing.
-  // Clamp relative to the arena so both mobile and desktop remain proportional.
+  // V74: extra-compact artwork. Approx. 45-50% smaller than V73 in
+  // common arenas; never scales up in smaller viewports. Only rendering size
+  // and target-offset change, not hit detection, move frames or timing.
   const width=contact?
-   clamp(Math.min(ew*.36,eh*.68),Math.min(115,ew*.19),Math.max(115,ew*.45)):
-   clamp(dist*1.08,Math.min(180,ew*.30),ew*.72);
+   clamp(Math.min(ew*.20,eh*.38),Math.min(62,ew*.11),Math.max(76,ew*.25)):
+   clamp(dist*.56,Math.min(100,ew*.18),ew*.41);
   const height=width*FH/FW;
   item.sprite.width=width;item.sprite.height=height;
   item.sprite.rotation=Math.atan2(dy,dx);
-  const destinationOffset=contact?.15*width:0;
+  const destinationOffset=contact?.10*width:0;
   item.sprite.position.set(
    contact?B[0]-ux*destinationOffset:(A[0]+B[0])*.5,
    contact?B[1]-uy*destinationOffset:(A[1]+B[1])*.5
