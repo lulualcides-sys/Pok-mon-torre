@@ -435,6 +435,32 @@
       vfx:window.PokemonTorreGrassFourPreviewV84?.diagnostics(),
       sync:window.PokemonTorreGrassImpactV84?.()};
    },
+   // Real four-move V86 casts, ONLY on localhost browser QA.
+   castPreviewFourV86(slot=0,foeId=143,reuseBattle=false){
+    const labels=['Raízes Violentas','Geada Persistente','Sopro Congelante','Chicote Duplo'];
+    if(!Number.isInteger(slot)||slot<0||slot>=labels.length)
+     return {error:'Invalid V86 move slot'};
+    if(!reuseBattle||!battle?.active){
+     if(this._grassBaseSkillSet)skillSet=this._grassBaseSkillSet;
+     this.start(150,foeId);
+     const actor=current(),oldSkillSet=skillSet;
+     this._grassBaseSkillSet=oldSkillSet;
+     const kinds=['area','hazard','bolt','dash'];
+     const types=['grass','ice','ice','grass'];
+     const moves=labels.map((name,i)=>({name,kind:kinds[i],
+       cat:'special',type:types[i],power:[49,12,32,29][i],
+       cost:[23,40,21,11][i],cd:900,level:1,icon:''}));
+     skillSet=function(mon){return mon===actor?moves:oldSkillSet(mon);};
+    }
+    const fired=this.cast(slot);
+    return {requested:labels[slot],selected:fired.name,
+     fired,liveQueue:{
+       animated:(engine?.v3580Visuals||[]).map(f=>f.move?.name),
+       hits:(engine?.v359Attacks||[]).map(f=>f.move?.name)
+     },
+     preview:window.PokemonTorreReferenceFourV86?.diagnostics(),
+     pixi:window.PokemonTorrePixiFX?.()};
+   },
    // Browser-only V85 Haze non-damaging STATUS test, not available on Pages.
    castHazePreviewV85(){
     if(this._grassBaseSkillSet)skillSet=this._grassBaseSkillSet;
