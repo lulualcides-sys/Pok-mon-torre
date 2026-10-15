@@ -57,7 +57,7 @@
   ['Pulso de Água','Pulso d’Água'],
   ['Jato de Água','Jato d’Água'],
   ['Encantar','Encanto','Charm'],
-  ['Pó de Sono','Pó do Sono']
+  ['Pó do Sono','Pó de Sono']
  ];
  const alias=new Map(), canonicalNorm=new Map();
  for(const g of groups){
