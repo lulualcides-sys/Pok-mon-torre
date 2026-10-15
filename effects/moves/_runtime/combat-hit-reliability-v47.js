@@ -408,6 +408,27 @@
       engine.v47ContactToLand=[];engine.v47MissingCollisions=[];}
     return this.snapshot();
    },
+   // Browser-only V84: invoke all four moves in the REAL engine, not just
+   // check that their files loaded. Available ONLY on localhost (this QA
+   // harness is never installed in the normal published game).
+   castPreviewGrassV84(slot=0,foeId=143){
+    const labels=['Chicote de Vinha','Folha Navalha','Chicotes em Área','Vine Whip'];
+    if(!Number.isInteger(slot)||slot<0||slot>=labels.length)
+      return {error:'Invalid V84 preview slot'};
+    if(this._grassBaseSkillSet)skillSet=this._grassBaseSkillSet;
+    this.start(1,foeId);
+    const actor=current(),oldSkillSet=skillSet;
+    this._grassBaseSkillSet=oldSkillSet;
+    const moves=labels.map((name,i)=>({
+      name,kind:'bolt',cat:'physical',type:'grass',power:34+i,
+      cost:0,cd:420,level:1,icon:''
+    }));
+    skillSet=function(mon){return mon===actor?moves:oldSkillSet(mon);};
+    const fired=this.cast(slot);
+    return {requested:labels[slot],selected:fired.name,
+      cast:fired,vfx:window.PokemonTorreGrassFourPreviewV84?.diagnostics(),
+      sync:window.PokemonTorreGrassImpactV84?.()};
+   },
    // Browser-only regression for actual Grass status moves, not image preload.
    // Battle and team are ephemeral inside headless localhost Chromium only.
    castGrass(name,foeId=143){
