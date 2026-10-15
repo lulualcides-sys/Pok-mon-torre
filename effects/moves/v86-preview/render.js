@@ -5,7 +5,7 @@
  */
 var referenceFourV86=(()=>{
  'use strict';
- const VERSION='86.1',W=480,H=240;
+ const VERSION='88.0',W=480,H=240;
  const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
    .toLowerCase().replace(/[^a-z0-9]/g,'');
  const specs=Object.freeze({
@@ -17,7 +17,7 @@ var referenceFourV86=(()=>{
  const resolve=s=>Object.prototype.hasOwnProperty.call(specs,normalize(s))?normalize(s):'';
  const source=key=>{
   const id=specs[key].asset;
-  return 'effects/moves/'+id+'/v86-preview/sprites/'+id+'.webp?v=86.0';
+  return 'effects/moves/'+id+'/v86-preview/sprites/'+id+'.webp?v=88.0';
  };
  const assets=new Map(),errors=[];
  const counters={version:VERSION,casts:0,draws:0,overlapsPrevented:0,perMove:{},frames:0};
@@ -97,14 +97,21 @@ var referenceFourV86=(()=>{
     Math.min(fieldW*.98,dist*1.15+40);
   const finalW=Math.max(125,width*spec.size);
   const finalH=finalW*(H/W)*spec.thick;
+  // Distinct cinematic motion on TOP of each authored sprite stage;
+  // no cross-use of the Grass atlas or generic move graphics.
+  const rise=key==='raizesviolentas'?(1-smooth(t/.42))*11:0;
+  const frostPulse=key==='geadapersistente'?.94+.06*Math.sin(t*Math.PI*2):1;
+  const doublePulse=key==='chicoteduplo'?1+.04*Math.sin(t*Math.PI*4):1;
+  const breathDrift=key==='soprocongelante'?Math.sin(t*Math.PI*2)*3:0;
+  const dynamicScale=frostPulse*doublePulse;
   // The geometry source stays in local 480x240 authored coordinates.
   // For root/frost, anchor the action near defender (x in art ~355);
   // Breath/double travel across the actual from-to line.
   const centerX=isArea?bx-(355-W/2)*finalW/W:(ax+bx)/2;
-  const centerY=isArea?by-(139-H/2)*finalH/H:(ay+by)/2;
+  const centerY=(isArea?by-(139-H/2)*finalH/H:(ay+by)/2)+rise+breathDrift;
   const angle=isArea?0:Math.atan2(dy,dx);
   for(const sp of [art,fade]){
-   sp.width=finalW;sp.height=finalH;
+   sp.width=finalW*dynamicScale;sp.height=finalH*dynamicScale;
    sp.position.set(centerX,centerY);
    sp.rotation=angle;
   }
@@ -115,7 +122,8 @@ var referenceFourV86=(()=>{
   const color=(key==='soprocongelante'||key==='geadapersistente')?0xb1e9ff:0x94d86b;
   const on=smooth((t-.22)/.24)*(1-smooth((t-.79)/.20));
   if(on>.015){
-   for(let i=0;i<14;i++){
+   const budget=fx.framePlan?.maxParticles||14;
+   for(let i=0;i<Math.min(14,budget);i++){
     const a=2.39996*i+fx.started*.001+t*4*(i%2?1:-1);
     const len=(8+(i%5)*6)*on+r*.18;
     const x=(isArea?bx:bx-12)+Math.cos(a)*len;
@@ -149,7 +157,7 @@ var referenceFourV86=(()=>{
    const badge=()=>{
     if(document.getElementById('pokemon-v86-label'))return;
     const label=document.createElement('div');label.id='pokemon-v86-label';
-    label.textContent='PRÉVIA V86 · 4 GOLPES PESQUISADOS';
+    label.textContent='PRÉVIA V88 · RAÍZES / GEADA / SOPRO / DUPLO';
     label.style.cssText='position:fixed;left:6px;bottom:6px;z-index:9999;'+
       'color:#c6f6ff;background:#152439e8;border:1px solid #6cbbd9;'+
       'border-radius:6px;padding:5px 8px;font:700 10px system-ui;pointer-events:none';
