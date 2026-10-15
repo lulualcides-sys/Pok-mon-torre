@@ -1,0 +1,29 @@
+name: Quatro golpes realmente equipados V92
+on:
+  pull_request:
+    paths:
+      - 'effects/moves/v92-four/**'
+      - 'effects/moves/v86-preview/render.js'
+      - 'effects/moves/_runtime/end.js'
+      - 'tests/equipped-four-v92-no-webgl.test.cjs'
+      - 'index.html'
+  push:
+    branches: [main]
+    paths:
+      - 'effects/moves/v92-four/**'
+      - 'effects/moves/v86-preview/render.js'
+      - 'effects/moves/_runtime/end.js'
+      - 'tests/equipped-four-v92-no-webgl.test.cjs'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-equipped-four:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/equipped-four-v92-no-webgl.test.cjs
