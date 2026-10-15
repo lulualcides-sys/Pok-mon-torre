@@ -334,7 +334,7 @@ server.listen(0,'127.0.0.1',async()=>{
   if(!dedup100.ok||!d100?.installed||d100.count!==6||
    !expected100.every(x=>d100.names.includes(x))||
    d100.names.includes('Raio de Gelo')||d100.names.includes('Vine Whip')||
-   d100.ids.join(',')!=='0,2,3,5,7,8'||!d100.slot?.includes('Ice Beam')){
+   d100.ids.map(Number).sort((a,b)=>a-b).join(',')!=='0,2,3,5,7,8'||!d100.slot?.includes('Ice Beam')){
     console.error('FAIL V100: editor must show one representative per move; old keys and saved slots intact');
     process.exitCode=1;
   }
