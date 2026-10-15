@@ -339,6 +339,7 @@ server.listen(0,'127.0.0.1',async()=>{
   const ice99=await browserCase(port,'?battle_preview=ice99&build=v99-ice-four');
   const iceNames=['Aurora Beam','Ice Beam','Impacto Glacial','Raio de Gelo'];
   const iceFrames=[16,16,12,12];
+  const iceKeys=['aurorabeam','icebeam','impactoglacial','raiodegelo'];
   const iceData=ice99.iceV99Results||[];
   console.log('BROWSER V99 FOUR ICE:',JSON.stringify(
    iceData.map((v,i)=>({name:v.fired?.selected,preview:v.after?.preview,
@@ -349,8 +350,7 @@ server.listen(0,'127.0.0.1',async()=>{
    rec.fired?.selected===iceNames[i]&&rec.after?.preview&&rec.after?.gameAlive&&
    rec.after?.fx?.registered?.length===4&&
    rec.after.fx.registered[i].frames===iceFrames[i]&&
-   rec.after.fx.drawsPerMove[iceNames[i].normalize('NFD').replace(/[\\u0300-\\u036f]/g,'')
-    .toLowerCase().replace(/[^a-z0-9]/g,'')]>0);
+   rec.after.fx.drawsPerMove[iceKeys[i]]>0);
   if(!iceOK){console.error('FAIL V99: four ice moves must animate in REAL battle');process.exitCode=1;}
   // The arena must be visible in a REAL combat, not just a standalone
   // illustration. No changes to default backgrounds or Mewtwo's V95 polish.
