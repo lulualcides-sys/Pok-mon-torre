@@ -458,11 +458,14 @@ if(new URLSearchParams(location.search).get('fx_debug')==='1'){
    try{
     const info=window.PokemonTorreGrassV89();
     const d=info.pixi,m=info.authored,last=m?.last||null;
-    el.textContent='GRASS V90 | '+(battle?.active?'BATALHA':'MENU')+
+    const eq=window.PokemonTorreEquippedV92?.();
+    el.textContent='FX V92 | '+(battle?.active?'BATALHA':'MENU')+
      ' | Pixi '+(d.ready?'ATIVO':d.gpu?'DISPONIVEL':'SEM WEBGL')+
      ' | FX '+(d.activePreview?.key||'nenhum')+
      ' | '+(last?.move||'-')+' '+(last?.frame||0)+'/'+(last?.total||0)+
      ' | quadros GPU '+(m?.generated||0)+
+     ' | EQUIPADOS '+(eq?.last?.name||'-')+' '+(eq?.last?.frame||0)+'/'+(eq?.last?.total||0)+
+     ' via '+(eq?.last?.renderer||'aguardando')+
      ' | erro '+(window.PokemonTorreGrassErrorV89||d.error||m?.failures?.at(-1)||'nenhum');
    }catch(err){el.textContent='GRASS V90 DEBUG: '+String(err?.message||err);}
   };
