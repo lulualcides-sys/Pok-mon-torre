@@ -366,4 +366,27 @@ BattleEngine.prototype.draw=function(now){
  return result;
 };
 
+
+ // V87: all game paths (win, loss, lab, capture, reset) call stopTimers().
+ // Kill GPU overlays BEFORE battleCanvas is removed; otherwise paused Pixi
+ // sprites can remain visible above the next menu at z-index 9000.
+ const previousStopTimersV87=stopTimers;
+ stopTimers=function(){
+  try{pixiFX.clearAll();}catch(e){console.warn('Pixi V87 cleanup:',e);}
+  return previousStopTimersV87.apply(this,arguments);
+ };
+ // Some menus replace the modal without calling stopTimers (pause, return,
+ // alternate flows). Observe only modal-level changes, not battle animations.
+ function observePixiModalV87(){
+  const modal=document.getElementById('modal'),backdrop=document.getElementById('backdrop');
+  if(!modal||!backdrop)return;
+  const observer=new MutationObserver(()=>pixiFX.onBattleUiChange());
+  observer.observe(modal,{attributes:true,attributeFilter:['class'],childList:true});
+  observer.observe(backdrop,{attributes:true,attributeFilter:['class']});
+  pixiFX.onBattleUiChange();
+ }
+ if(document.readyState==='loading')
+  document.addEventListener('DOMContentLoaded',observePixiModalV87,{once:true});
+ else observePixiModalV87();
+
 })();
