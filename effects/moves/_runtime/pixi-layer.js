@@ -3,6 +3,8 @@
 const pixiFX=(()=>{
  const themes={normal:[0xf9d997,0xffffff,0xa1886b],fire:[0xff602b,0xfff2b0,0xdf3725],water:[0x36aef9,0xffffff,0x386de1],grass:[0x8be566,0xffffff,0x3b9c67],ice:[0x80e7ff,0xffffff,0x528de4],electric:[0xffe75d,0xffffff,0xe59e2b],psychic:[0xd68cff,0xffffff,0x8354da],ghost:[0x8f7ddc,0xdecaff,0x30346e],dark:[0x8c75a8,0xd6c8f2,0x302247],fighting:[0xe9a17c,0xffe9c2,0xb64e39],rock:[0xbda27d,0xffecd0,0x796044],ground:[0xcfa970,0xffead6,0x81613e],steel:[0x9ac5df,0xffffff,0x607e99],bug:[0x9cce64,0xf7ffd5,0x557f38],flying:[0xa7dfff,0xffffff,0x5b83bd],dragon:[0x9884e9,0xffe2fa,0x4f49ba],poison:[0xb875d9,0xffd7ff,0x813f91],fairy:[0xf79ed8,0xffffff,0xc16b9d]};
  const effects=new Map(),drawn=Object.create(null);
+ // V89: missing old V72/V78 WebP must fall back to existing catalog art.
+ const missingLegacyAtlasesV89=new Set();
  let app=null,owner=null,atlas=null,cache=new Map(),frames=0,emitterCount=0,error='',lastRect='';
  // V84.1: at most ONE preview cast can own the four-attack Pixi layer.
  // Old v359/v3580 visual objects may coexist while the engine cleans up;
@@ -242,6 +244,10 @@ const pixiFX=(()=>{
   if(!battleViewReady()){reset();return;}
   const now=performance.now(),dt=Math.min(.05,Math.max(.001,app.ticker.deltaMS/1000));position(owner);
   for(const [f,e] of effects){
+   if(e.v72&&e.failed){
+    missingLegacyAtlasesV89.add(e.key||'');
+    dispose(e);effects.delete(f);continue;
+   }
    // V75: only the four cinematic sprite sequences outlive their original
    // game attack animation. Hit/damage, cooldown and battle queues stay intact.
    const lifetime=(e.v84||e.v83||e.v82||e.v72)?e.visualDuration:(f.duration||e.duration);
@@ -272,9 +278,16 @@ const pixiFX=(()=>{
     key=named;
    }
   }
+  if(missingLegacyAtlasesV89.has(key))return false;
   if(!ensure(engine))return false;
   if(!atlas&&typeof spriteAtlas3511!=='undefined'&&spriteAtlas3511.naturalWidth)atlas=PIXI.BaseTexture.from(spriteAtlas3511);
-  return !!install(f,key);
+  const item=install(f,key);
+  if(item?.v72&&item.failed){
+   missingLegacyAtlasesV89.add(key);
+   dispose(item);effects.delete(f);
+   return false; // V72 original catalog painter owns visual fallback
+  }
+  return !!item;
  }
  // Start a preview only from the NEW native cast, not by rescanning all
  // old v359Attacks and v3580Visuals every frame.

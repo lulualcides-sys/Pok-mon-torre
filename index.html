@@ -30,7 +30,7 @@ body:before{content:"";position:fixed;inset:0;background:repeating-linear-gradie
 <div class="pt-foot"><a href="?safe=1" id="pt-safe-link">Abrir modo seguro</a><a href="https://github.com/lulualcides-sys/Pok-mon-torre/issues" target="_blank" rel="noopener">Relatar problema</a></div>
 </main><script>
 const ptProgress=(value,phase)=>{const pct=Math.max(0,Math.min(100,Math.round(value)));const fill=document.getElementById('pt-bar-fill'),label=document.getElementById('pt-status'),number=document.getElementById('pt-percent'),bar=document.getElementById('pt-progress');if(fill)fill.style.width=pct+'%';if(label&&phase)label.textContent=phase;if(number)number.textContent=pct+'%';if(bar)bar.setAttribute('aria-valuenow',String(pct));};
-(async()=>{ptProgress(2,'Iniciando Pokémon Torre V88…');const total=25;const paths=Array.from({length:total},(_,i)=>'parts/p'+String(i).padStart(3,'0')+'.txt');let completed=0;const pieces=await Promise.all(paths.map(async path=>{const response=await fetch(path+'?build='+(path==='effects/moves/catalog/electric-four-v56.js'||path==='effects/moves/catalog/bundle.js'||path==='effects/moves/_runtime/end.js'?'electric-four-v56':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!response.ok)throw Error('Falha '+response.status+' ao carregar '+path);const txt=await response.text();completed++;ptProgress(5+completed/total*46,'Carregando recursos do jogo…');return txt}));ptProgress(52,'Montando o campo de batalha…');let game=pieces.join('');if(!game.startsWith('<!doctype html>')&&!game.startsWith('<!DOCTYPE html>'))throw Error('Conteúdo do jogo não encontrado');if(!game.includes('PokemonTorreV3579Diagnostics'))throw Error('Versão do jogo incompleta');ptProgress(60,'Preparando efeitos e animações…');const fxFiles=["effects/moves/_runtime/begin.js","effects/moves/psychic/index.js","effects/moves/confusion/index.js","effects/moves/flamethrower/index.js","effects/moves/telekinesis/index.js","effects/moves/_runtime/beam-kit.js","effects/moves/hyper-beam/index.js","effects/moves/aurora-beam/index.js","effects/moves/ice-beam/index.js","effects/moves/solar-beam/index.js","effects/moves/catalog/painter.js","effects/moves/catalog/elemental-eight-v58.js","effects/moves/catalog/library16-v59.js","effects/moves/v60-four/render.js","effects/moves/v63-plant/render.js","effects/moves/catalog/electric-four-v56.js","effects/moves/catalog/bundle.js","effects/moves/_runtime/semantic-vfx.js","effects/moves/_runtime/cinematic-vfx.js","effects/moves/tri-attack/index.js","effects/moves/v72-battle/render.js","effects/moves/_runtime/frame-policy-v87.js","effects/moves/_runtime/pixi-layer.js","effects/ui/move-type-filter.js","effects/ui/move-library-v61.js","effects/moves/_runtime/original-gba-vfx.js","effects/moves/_runtime/fire-original-vfx.js","effects/moves/_runtime/legendary-fire-vfx.js","effects/moves/_runtime/heritage-37-v66.js","effects/moves/_runtime/end.js","effects/moves/_runtime/real-drain-v65.js"];// V81: user's four approved moves are the normal-game renderer.
+(async()=>{ptProgress(2,'Iniciando Pokémon Torre V89…');const total=25;const paths=Array.from({length:total},(_,i)=>'parts/p'+String(i).padStart(3,'0')+'.txt');let completed=0;const pieces=await Promise.all(paths.map(async path=>{const response=await fetch(path+'?build='+(path==='effects/moves/catalog/electric-four-v56.js'||path==='effects/moves/catalog/bundle.js'||path==='effects/moves/_runtime/end.js'?'electric-four-v56':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!response.ok)throw Error('Falha '+response.status+' ao carregar '+path);const txt=await response.text();completed++;ptProgress(5+completed/total*46,'Carregando recursos do jogo…');return txt}));ptProgress(52,'Montando o campo de batalha…');let game=pieces.join('');if(!game.startsWith('<!doctype html>')&&!game.startsWith('<!DOCTYPE html>'))throw Error('Conteúdo do jogo não encontrado');if(!game.includes('PokemonTorreV3579Diagnostics'))throw Error('Versão do jogo incompleta');ptProgress(60,'Preparando efeitos e animações…');const fxFiles=["effects/moves/_runtime/begin.js","effects/moves/psychic/index.js","effects/moves/confusion/index.js","effects/moves/flamethrower/index.js","effects/moves/telekinesis/index.js","effects/moves/_runtime/beam-kit.js","effects/moves/hyper-beam/index.js","effects/moves/aurora-beam/index.js","effects/moves/ice-beam/index.js","effects/moves/solar-beam/index.js","effects/moves/catalog/painter.js","effects/moves/catalog/elemental-eight-v58.js","effects/moves/catalog/library16-v59.js","effects/moves/v60-four/render.js","effects/moves/v63-plant/render.js","effects/moves/catalog/electric-four-v56.js","effects/moves/catalog/bundle.js","effects/moves/_runtime/semantic-vfx.js","effects/moves/_runtime/cinematic-vfx.js","effects/moves/tri-attack/index.js","effects/moves/v72-battle/render.js","effects/moves/_runtime/frame-policy-v87.js","effects/moves/_runtime/pixi-layer.js","effects/ui/move-type-filter.js","effects/ui/move-library-v61.js","effects/moves/_runtime/original-gba-vfx.js","effects/moves/_runtime/fire-original-vfx.js","effects/moves/_runtime/legendary-fire-vfx.js","effects/moves/_runtime/heritage-37-v66.js","effects/moves/_runtime/end.js","effects/moves/_runtime/real-drain-v65.js"];// V81: user's four approved moves are the normal-game renderer.
 // The archived V80 preview remains available as a regression comparison.
 const previewModeV88=new URLSearchParams(location.search).get('battle_preview');
 const approvedGrassV88=previewModeV88===null||['v84','v86','v88','haze85'].includes(previewModeV88);
@@ -53,17 +53,17 @@ if(new URLSearchParams(location.search).get('safe')!=='1'){
  // Four previously saved Grass animations now load on NORMAL URLs.
  // v82 and v83 remain isolated regression comparisons.
  if(approvedGrassV88){
-  fxFiles.splice(i+1,0,"effects/moves/v84-preview/render.js");
+  fxFiles.splice(i+1,0,"effects/moves/v89-four/render.js");
  }
  // Haze V85 is an opt-in Pixi status preview; all protected normal moves stay intact.
  if(new URLSearchParams(location.search).get('battle_preview')==='haze85'){
   fxFiles.splice(i+1,0,"effects/moves/haze/v85-preview/render.js");
  }
  // V86/V88 opt-in: four researched moves stay unapproved, visual preview only.
- if(['v86','v88'].includes(previewModeV88)){
+ if(previewModeV88==='v86'){
   fxFiles.splice(i+1,0,"effects/moves/v86-preview/render.js");
  }
-}let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build='+(path.includes('move-type-filter')||path.includes('move-library-v61')||path.includes('real-drain-v65')||path.includes('v63-plant/render')||path.includes('v60-four/render')||path.includes('library16-v59')||path.includes('elemental-eight-v58')||path.includes('electric-four-v56')||path.includes('catalog/bundle')||path.endsWith('/end.js')?'original-drain-v65':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.warn('Efeitos modulares indisponíveis; usando V35.80',error);plugin=await fetch('effects/mewtwo-4moves-v3580.js',{cache:'no-store'}).then(r=>r.ok?r.text():null).catch(()=>null);}if(new URLSearchParams(location.search).get('safe')!=='1'&&(!plugin||!plugin.includes('catalogElectricFourV56')||!plugin.includes('elementalEightV58')||!plugin.includes('library16V59')||!plugin.includes('cinematicFourV60')||!plugin.includes('plantFourV63')||!plugin.includes('PokemonTorreDrainV65')))throw Error('Módulos dos golpes V64 incompletos');
+}let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build='+(path.includes('v89-four/render')||path.endsWith('/end.js')||path.endsWith('/pixi-layer.js')?'v89-authored-sprites-no-legacy-orb':path.includes('move-type-filter')||path.includes('move-library-v61')||path.includes('real-drain-v65')||path.includes('v63-plant/render')||path.includes('v60-four/render')||path.includes('library16-v59')||path.includes('elemental-eight-v58')||path.includes('electric-four-v56')||path.includes('catalog/bundle')||path.endsWith('/end.js')?'original-drain-v65':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.error('Falha nos módulos V89; não substituir por animações antigas',error);throw error;}if(new URLSearchParams(location.search).get('safe')!=='1'&&(!plugin||!plugin.includes('catalogElectricFourV56')||!plugin.includes('elementalEightV58')||!plugin.includes('library16V59')||!plugin.includes('cinematicFourV60')||!plugin.includes('plantFourV63')||!plugin.includes('PokemonTorreDrainV65')))throw Error('Módulos dos golpes V64 incompletos');
 // V63: all four approved Grass/status atlases loaded before a battle starts.
 // Replaces old visuals, never overlays them; keeps the status mechanics intact.
 if(new URLSearchParams(location.search).get('safe')!=='1'){
@@ -86,28 +86,10 @@ if(new URLSearchParams(location.search).get('safe')!=='1'){
   im.onerror=()=>reject(Error('Missing V60 sprite: '+id));im.src=url;
  })));
 }
-// V72: all four battle-only RGBA sprite atlases must exist before battle starts.
-// The Atelier's V71 sprites and all previously approved attacks remain unchanged.
-if(new URLSearchParams(location.search).get('safe')!=='1'){
- const approved=['dragon-pulse','aura-sphere','x-scissor','dragon-claw'];
- await Promise.all(approved.map(id=>new Promise((resolve,reject)=>{
-  const im=new Image();im.decoding='async';
-  im.onload=()=>im.naturalWidth===3840&&im.naturalHeight===240?resolve():reject(Error('V72 atlas inválido '+id));
-  im.onerror=()=>reject(Error('V72 atlas indisponível '+id));
-  im.src='effects/moves/v72-battle/sprites/'+id+'.webp?v=72.1';
- })));
-}
-// V81: preload the two approved ranged atlases so HP and visible hit can synchronize
-// are still downloading. The renderer and hit queue now share contact frame 6/8.
-if(new URLSearchParams(location.search).get('safe')!=='1'){
- await Promise.all(['dragon-pulse','aura-sphere'].map(id=>new Promise((resolve,reject)=>{
-  const img=new Image();img.decoding='async';
-  img.onload=()=>img.naturalWidth===3840&&img.naturalHeight===240?
-    resolve():reject(Error('V80 atlas inválido '+id));
-  img.onerror=()=>reject(Error('V80 atlas não carregou '+id));
-  img.src='effects/moves/v78-preview/sprites/'+id+'.webp?v=78.0';
- })));
-}
+// V89 resilience: old V72/V78 WebP atlases are absent from this repository.
+// They are optional legacy graphics, and must never redirect the entire
+// game to safe mode (which restores the generic projectile renderer).
+// Existing V81 move logic remains loaded; its own diagnostics report missing art.
 // V82 preview: make sure the four distinct sprite sequences exist before battle.
 if(new URLSearchParams(location.search).get('battle_preview')==='v82'&&
  new URLSearchParams(location.search).get('safe')!=='1'){
@@ -133,7 +115,7 @@ if(new URLSearchParams(location.search).get('battle_preview')==='v83'&&
    })));
 }
 // V86 four authentic move-inspired independent RGBA sprite atlases.
-if(['v86','v88'].includes(previewModeV88)&&
+if(previewModeV88==='v86'&&
  new URLSearchParams(location.search).get('safe')!=='1'){
  await Promise.all(['raizes-violentas','geada-persistente','sopro-congelante','chicote-duplo']
   .map(id=>new Promise((resolve,reject)=>{
@@ -155,19 +137,11 @@ if(new URLSearchParams(location.search).get('battle_preview')==='haze85'&&
   image.src='effects/moves/haze/v85-preview/sprites/haze-wisps.webp?v=85.0';
  });
 }
-// V84: verify source atlases first; they are transparent authored sprites,
- // not flattened screenshots or a video.
-if(approvedGrassV88&&
- new URLSearchParams(location.search).get('safe')!=='1'){
- await Promise.all(['chicote-de-vinha','folha-navalha','chicotes-em-area','vine-whip']
-  .map(id=>new Promise((resolve,reject)=>{
-   const img=new Image();img.decoding='async';
-   img.onload=()=>img.naturalWidth===3840&&img.naturalHeight===240?
-     resolve():reject(Error('V84 atlas inválido: '+id));
-   img.onerror=()=>reject(Error('V84 atlas não carregou: '+id));
-   img.src='effects/moves/'+id+'/'+(id==='folha-navalha'?'v83-preview':'v84-preview')+'/sprites/'+id+'.webp?v=88.0';
-  })));
-}
+// V89: no external 4-Grass WebP files are required. PixiJS generates
+// each 12/16-frame spritesheet once for its active renderer.
+if(approvedGrassV88&&new URLSearchParams(location.search).get('safe')!=='1'&&
+ !plugin.includes("PixiJS GPU-generated 12/16 frame sprites"))
+ throw Error('Renderizador dos quatro golpes V89 ausente');
 // V59: preload authored sprite sheets without stopping the game if an optional
 // reference-based effect is missing; the existing move painter remains available.
 if(new URLSearchParams(location.search).get('safe')!=='1'){

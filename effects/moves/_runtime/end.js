@@ -389,4 +389,60 @@ BattleEngine.prototype.draw=function(now){
   document.addEventListener('DOMContentLoaded',observePixiModalV87,{once:true});
  else observePixiModalV87();
 
+
+// V89: the original engine always spawns a small bullet/round leaf for
+// bolt-like attacks. Keep its physics and hit detection, but DON'T draw
+// that old circle above a properly installed, authored Pixi whip/leaf cast.
+const previousGrassCastV89=BattleEngine.prototype.useMove;
+BattleEngine.prototype.useMove=function(slot){
+ const mon=battle?.active?current():null;
+ const mv=mon&&Number.isInteger(slot)?skillSet(mon)?.[slot]:null;
+ const key=typeof grassFourV84!=='undefined'?grassFourV84.resolve(mv?.name):'';
+ if(!key)return previousGrassCastV89.apply(this,arguments);
+ const beforeEnergy=battle.energy,beforeCd=Number(cooldowns?.[slot])||0;
+ const beforePreview=pixiFX.diagnostics()?.activePreview?.id;
+ const oldProjectiles=new Set(this.projectiles||[]);
+ const oldParticles=this.particles?.length||0,oldRings=this.rings?.length||0;
+ const started=performance.now();
+ const result=previousGrassCastV89.apply(this,arguments);
+ const accepted=result!==false&&battle?.active&&!battle?.paused&&
+  ((Number(cooldowns?.[slot])||0)>beforeCd||Number(battle.energy)<beforeEnergy);
+ if(!accepted)return result;
+ // Some physical Grass moves have no v359 attack entry at all. Build a
+ // VISUAL-ONLY cast from actual attacker/target coordinates in that case.
+ let active=pixiFX.diagnostics()?.activePreview;
+ if(!active||active.key!==key||active.id===beforePreview){
+  const fx={name:mv.name,move:mv,
+   from:[this.player.x,this.player.y-this.h*.10],
+   to:[this.enemy.x,this.enemy.y-this.h*.12],
+   at:started,duration:Math.max(850,Number(mv.duration)||1000),
+   times:[.62],battle};
+  if(!pixiFX.beginV84(this,fx,key)){
+   window.PokemonTorreGrassErrorV89='Pixi não iniciou '+mv.name;
+   return result; // leave the original projectile visible if WebGL fails
+  }
+  active=pixiFX.diagnostics()?.activePreview;
+ }
+ if(!active||active.key!==key)return result;
+ // Only hide VISUAL pieces spawned by this one accepted Grass action.
+ // Native projectiles still travel, collide and register the original damage.
+ for(const bullet of this.projectiles||[])
+  if(!oldProjectiles.has(bullet)&&bullet.from==='player')
+   bullet.__v89HiddenGrassVisual=true;
+ if(this.particles?.length>oldParticles)this.particles.length=oldParticles;
+ if(this.rings?.length>oldRings)this.rings.length=oldRings;
+ return result;
+};
+const previousGrassDrawProjectileV89=BattleEngine.prototype.drawProjectile;
+if(typeof previousGrassDrawProjectileV89==='function')
+ BattleEngine.prototype.drawProjectile=function(shot){
+  if(shot?.__v89HiddenGrassVisual)return;
+  return previousGrassDrawProjectileV89.apply(this,arguments);
+};
+window.PokemonTorreGrassV89=()=>({
+ version:'89.0',pixi:pixiFX.diagnostics(),
+ authored:typeof grassFourV84!=='undefined'?grassFourV84.diagnostics():null,
+ missingWebPRequired:false
+});
+
 })();
