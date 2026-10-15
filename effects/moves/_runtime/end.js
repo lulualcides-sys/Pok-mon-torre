@@ -173,7 +173,7 @@ BattleEngine.prototype.draw=function(now){
 const _heritage37DrawMon=BattleEngine.prototype.drawMon;
 BattleEngine.prototype.drawMon=function(actor,id,isEnemy,now){
  if(isEnemy||actor!==this.player||!battle?.active)return _heritage37DrawMon.apply(this,arguments);
- const normalize=v=>String(v||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+ const normalize=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
  const moves=new Set(['quickattack','extremespeed','aquajet','irontail','dig','doubleteam']);
  const entries=(this.v359Attacks||[]).concat(this.v3580Visuals||[]);
  const fx=entries.find(v=>moves.has(normalize(v?.move?.name))&&now>=v.at&&now<v.at+Math.max(400,v.duration||950));
