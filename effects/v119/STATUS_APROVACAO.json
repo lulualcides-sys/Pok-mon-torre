@@ -1,0 +1,31 @@
+{
+  "version": "V119",
+  "approval": "aprovada",
+  "approved_on": "2026-10-16",
+  "user_message": "Pode aprovar então e vamos mexer na 120",
+  "modules": [
+    "01-enemy-shiny",
+    "02-cinematic-combat",
+    "03-leader-ai",
+    "04-weather-depth",
+    "05-capture-evolution",
+    "06-pokedex",
+    "07-league",
+    "08-mobile"
+  ],
+  "official": true,
+  "preview_only": false,
+  "diagnostic_opt_out": "?kanto119=0",
+  "preserve": [
+    "V95",
+    "V98",
+    "V101",
+    "V107/V110",
+    "V111",
+    "V118",
+    "V120",
+    "V121",
+    "V122"
+  ],
+  "note": "A prévia poison122 permanece sem aprovação."
+}

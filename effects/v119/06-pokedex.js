@@ -3,7 +3,7 @@
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto119')!=='1')return;
+if(new URLSearchParams(location.search).get('kanto119')==='0')return;
 const stats={opens:0,filters:0,last:'all'};
 const native=showPokedex;
 showPokedex=function(){
@@ -56,6 +56,6 @@ showPokedex=function(){
  filter();stats.opens++;
  return result;
 };
-window.PokemonTorrePokedexV119=Object.freeze({installed:true,previewOnly:true,
+window.PokemonTorrePokedexV119=Object.freeze({installed:true,previewOnly:false,official:true,
  diagnostics:()=>({...stats})});
 })();

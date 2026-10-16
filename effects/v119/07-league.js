@@ -3,7 +3,7 @@
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto119')!=='1')return;
+if(new URLSearchParams(location.search).get('kanto119')==='0')return;
 const champs=['Lorelei','Bruno','Agatha','Lance','Blue'],stats={previews:0,victories:0,championships:0};
 const prevStart=startBattle;
 startBattle=function(enemies,label,wild){
@@ -55,6 +55,6 @@ v27RenderLeague=function(){
  }
  return ret;
 };
-window.PokemonTorreLeagueV119=Object.freeze({installed:true,previewOnly:true,champs,
+window.PokemonTorreLeagueV119=Object.freeze({installed:true,previewOnly:false,official:true,champs,
  diagnostics:()=>({...stats,stages:champs.length,savesPreserved:true})});
 })();

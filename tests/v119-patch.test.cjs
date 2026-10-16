@@ -7,7 +7,7 @@ const root='effects/v119/';
 const html=fs.readFileSync('index.html','utf8');
 const approved=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
 assert.equal(modules.length,8);
-assert.ok(html.includes("get('kanto119')==='1'"));
+assert.ok(html.includes("get('kanto119')!=='0'"));
 for(const name of modules)assert.ok(html.includes(root+name+'.js'),'Module not in one-patch loader: '+name);
 for(const move of approved.moves.filter(x=>x.protect)){
  assert.ok(move.move);
@@ -15,7 +15,7 @@ for(const move of approved.moves.filter(x=>x.protect)){
 assert.ok(approved.moves.some(x=>x.move==='Rain Dance'&&x.protect&&x.frames===10));
 const source=Object.fromEntries(modules.map(x=>[x,fs.readFileSync(root+x+'.js','utf8')]));
 for(const [key,value] of Object.entries(source)){
- assert.ok(value.includes("get('kanto119')!=='1'"),key+' must stay preview-only');
+ assert.ok(value.includes("get('kanto119')==='0'"),key+' allows explicit diagnostics opt-out');
  assert.ok(!value.includes('BattleEngine.prototype.useMove='),'Cannot change protected moves: '+key);
 }
 function scenario(search,randoms=[.8]){
@@ -97,9 +97,13 @@ function scenario(search,randoms=[.8]){
  return {sandbox,Engine,ctx,draws,battle,save,writes:()=>writes,starts:()=>starts,
   hits:()=>originalHits,create:make};
 }
-const off=scenario('');
+const off=scenario('?kanto119=0');
 assert.equal(off.sandbox.window.PokemonTorreEnemyShinyV119,undefined);
 assert.equal(off.sandbox.window.PokemonTorreLeadersV119,undefined);
+const official=scenario('');
+assert.equal(official.sandbox.window.PokemonTorreEnemyShinyV119.installed,true);
+assert.equal(official.sandbox.window.PokemonTorreEnemyShinyV119.official,true);
+assert.equal(official.sandbox.window.PokemonTorreEnemyShinyV119.previewOnly,false);
 const run=scenario('?kanto119=1',[.005,.50,.0099,.0100,.9,.01]);
 const {sandbox:S,battle,save}=run;
 const api=S.window.PokemonTorreEnemyShinyV119;
@@ -170,4 +174,4 @@ engine.frame(6500);
 assert.equal(S.window.PokemonTorreMobileV119.diagnostics().mobile,true);
 assert.equal(S.window.PokemonTorreMobileV119.diagnostics().noAdditionalAnimationLoop,true);
 assert.equal(S.window.PokemonTorreMobileV119.diagnostics().stable60fpsClaim,false);
-console.log('PASS V119 eight modules: exact single 1% enemy shiny roll wild+trainers, cinema damage only, 8 gym AI profiles, protected rain reflections, capture 3-phase, evolution sprites, Pokédex 151, League save history, mobile no new loop, OFF official unchanged');
+console.log('PASS V119 OFFICIAL eight modules: exact single 1% enemy shiny roll wild+trainers, cinema damage only, 8 gym AI profiles, protected rain reflections, capture 3-phase, evolution sprites, Pokédex 151, League save history, mobile no new loop, OFF official unchanged');

@@ -3,7 +3,7 @@
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto119')!=='1')return;
+if(new URLSearchParams(location.search).get('kanto119')==='0')return;
 const stats={hits:0,frames:0,physical:0,special:0,darkFrames:0};
 const oldHit=BattleEngine.prototype.hitTarget;
 BattleEngine.prototype.hitTarget=function(side,type,power){
@@ -38,6 +38,6 @@ BattleEngine.prototype.draw=function(now){
  }finally{ctx.restore();}
  return result;
 };
-window.PokemonTorreCinemaV119=Object.freeze({installed:true,previewOnly:true,
+window.PokemonTorreCinemaV119=Object.freeze({installed:true,previewOnly:false,official:true,
  diagnostics:()=>({...stats,nativeDamagePreserved:true,approvedMoveEffectsUntouched:true})});
 })();

@@ -3,7 +3,7 @@
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto119')!=='1')return;
+if(new URLSearchParams(location.search).get('kanto119')==='0')return;
 const profiles=[
  {name:'Brock',cadence:1.08,dodge:.92,pressure:.85,style:'Defensivo'},
  {name:'Misty',cadence:.91,dodge:1.10,pressure:1.1,style:'Ágil'},
@@ -40,6 +40,6 @@ BattleEngine.prototype.update=function(dt,now){
  stats.last={leader:preset.name,style:preset.style,lowHp:weak};
  return ret;
 };
-window.PokemonTorreLeadersV119=Object.freeze({installed:true,previewOnly:true,profiles,
+window.PokemonTorreLeadersV119=Object.freeze({installed:true,previewOnly:false,official:true,profiles,
  diagnostics:()=>({...stats,profiles:profiles.map(x=>({name:x.name,style:x.style}))})});
 })();

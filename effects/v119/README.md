@@ -1,10 +1,16 @@
-# Pokémon Torre V119 — Kanto Total (patch integrado, somente PRÉVIA)
+# V119 — APROVADA E PROMOVIDA AO JOGO OFICIAL (16/10/2026)
+
+O usuário aprovou expressamente em 16/10/2026: “Pode aprovar então e vamos mexer na 120”. Os oito módulos V119 antes exclusivos de `?kanto119=1` passam a rodar na URL oficial (sem parâmetro). Nenhum golpe aprovado, sprite, hitbox, dano, energia, cooldown, arena V98, sistemas V120–V122 ou salvamento anterior foi reescrito neste commit.
+
+`?kanto119=0` é desligamento de diagnóstico. `?kanto119=1` continua como link legado. Nenhuma prévia V122 de Veneno é promovida.
+
+# Histórico: V119 — Kanto Total (originalmente somente prévia)
 
 Pedido do usuário de 16/10/2026: aplicar as melhorias **2, 3, 4, 5, 6, 7 e 8** de uma vez, mais **1% de chance de um Pokémon adversário nascer shiny**. Não foi pedida a melhoria 1 (sprites individuais de todas as espécies), então nenhum sprite de espécie previamente aprovado foi refeito.
 
 **Um commit, oito módulos isolados, uma prévia de batalha:**
 `https://lulualcides-sys.github.io/Pok-mon-torre/?kanto119=1`.
-`?kanto119=1&safe=1` habilita o modo seguro. O site normal continua com a V117/V118 oficial até aprovação visual da V119.
+`?kanto119=1&safe=1` habilita o modo seguro. O site normal foi promovido à V119 depois da aprovação expressa.
 
 ## Implementação
 
@@ -24,4 +30,4 @@ Pedido do usuário de 16/10/2026: aplicar as melhorias **2, 3, 4, 5, 6, 7 e 8** 
 - A apresentação dos líderes e da Liga reaproveita sprites e gameplay existentes, não são filmes ou novas ilustrações estáticas.
 - A evolução usa artes reais já configuradas; se um recurso externo estiver offline, mantém fallback sem bloquear o jogo.
 - Uma auditoria de 151 espécies não equivale a todas as direções reais baixadas; isso fica separado da V119.
-- A aprovação visual do usuário é necessária antes de substituir a versão oficial.
+- A aprovação visual aconteceu em 16/10/2026, com a promoção documentada acima.

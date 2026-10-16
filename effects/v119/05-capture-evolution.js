@@ -3,7 +3,7 @@
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto119')!=='1')return;
+if(new URLSearchParams(location.search).get('kanto119')==='0')return;
 const stats={shakes:0,evolutions:0,rendered:0};
 const update=BattleEngine.prototype.v25Update;
 if(typeof update==='function'){
@@ -67,6 +67,6 @@ resultScreen=function(title,description,win,caught){
  stats.evolutions+=events.length;
  return result;
 };
-window.PokemonTorreCaptureEvolutionV119=Object.freeze({installed:true,previewOnly:true,
+window.PokemonTorreCaptureEvolutionV119=Object.freeze({installed:true,previewOnly:false,official:true,
  diagnostics:()=>({...stats,originalCaptureRate:true,originalXP:true})});
 })();

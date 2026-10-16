@@ -4,7 +4,7 @@
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto119')!=='1')return;
+if(new URLSearchParams(location.search).get('kanto119')==='0')return;
 const rolls=new WeakMap();
 const stats={odds:.01,rolls:0,shiny:0,wild:0,trainer:0,enemyEntries:0,forced:0};
 function assign(mon,kind){
@@ -59,6 +59,6 @@ nextFoe=function(){
  return result;
 };
 window.PokemonTorreEnemyShinyV119=Object.freeze({
- installed:true,previewOnly:true,odds:.01,diagnostics:()=>({...stats})
+ installed:true,previewOnly:false,official:true,odds:.01,diagnostics:()=>({...stats})
 });
 })();

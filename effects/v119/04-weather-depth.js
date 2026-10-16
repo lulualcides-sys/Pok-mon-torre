@@ -3,7 +3,7 @@
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto119')!=='1')return;
+if(new URLSearchParams(location.search).get('kanto119')==='0')return;
 const stats={rainReflections:0,stormFlashes:0,otherFrames:0};
 const native=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
@@ -35,6 +35,6 @@ BattleEngine.prototype.draw=function(now){
  }finally{c.restore();}
  return result;
 };
-window.PokemonTorreWeatherV119=Object.freeze({installed:true,previewOnly:true,
+window.PokemonTorreWeatherV119=Object.freeze({installed:true,previewOnly:false,official:true,
  preservesRainDance:true,diagnostics:()=>({...stats})});
 })();
