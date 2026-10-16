@@ -70,11 +70,7 @@ async function test(port,safe,preview){
   };
   let ready=null;
   for(let n=0;n<200;n++){
-   ready=await evaluate("(()=>({boot:!!document.getElementById('main'),modules:[!!window.PokemonTorreSpriteAuditV117?.installed,!!window.PokemonTorreShinyV117?.installed,!!window.PokemonTorreGymsV117?.installed,!!window.PokemonTorreCombatV117?.installed,!!window.PokemonTorreMobileV117?.installed],mewtwo:!!window.PokemonTorrePokemonPolishV95?.installed,global:!!window.PokemonTorrePokemonPolishV115?.installed,scale:!!window.PokemonTorreVisualPreviewV116?.approved,qa:typeof window.PokemonTorreLocalCombatTestV47?.prepareVisualV116==='function',rain:!!window.PokemonTorreRainDanceV118?.installed,arena:!!window.PokemonTorreArenaWideV98?.enabled,v119:[
-!!window.PokemonTorreEnemyShinyV119?.installed,!!window.PokemonTorreCinemaV119?.installed,
-!!window.PokemonTorreLeadersV119?.installed,!!window.PokemonTorreWeatherV119?.installed,
-!!window.PokemonTorreCaptureEvolutionV119?.installed,!!window.PokemonTorrePokedexV119?.installed,
-!!window.PokemonTorreLeagueV119?.installed,!!window.PokemonTorreMobileV119?.installed]}))()");
+   ready=await evaluate("(()=>({boot:!!document.getElementById('main'),modules:[!!window.PokemonTorreSpriteAuditV117?.installed,!!window.PokemonTorreShinyV117?.installed,!!window.PokemonTorreGymsV117?.installed,!!window.PokemonTorreCombatV117?.installed,!!window.PokemonTorreMobileV117?.installed],mewtwo:!!window.PokemonTorrePokemonPolishV95?.installed,global:!!window.PokemonTorrePokemonPolishV115?.installed,scale:!!window.PokemonTorreVisualPreviewV116?.approved,qa:typeof window.PokemonTorreLocalCombatTestV47?.prepareVisualV116==='function',rain:!!window.PokemonTorreRainDanceV118?.installed,arena:!!window.PokemonTorreArenaWideV98?.enabled,v119:[ !!window.PokemonTorreEnemyShinyV119?.installed,!!window.PokemonTorreCinemaV119?.installed, !!window.PokemonTorreLeadersV119?.installed,!!window.PokemonTorreWeatherV119?.installed, !!window.PokemonTorreCaptureEvolutionV119?.installed,!!window.PokemonTorrePokedexV119?.installed, !!window.PokemonTorreLeagueV119?.installed,!!window.PokemonTorreMobileV119?.installed]}))()");
    if(ready?.boot&&ready.modules?.every(Boolean)&&ready.mewtwo&&ready.global&&ready.scale&&ready.qa&&ready.rain&&ready.arena&&ready.v119?.every(Boolean))break;
    await pause(125);
   }
