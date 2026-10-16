@@ -1,0 +1,17 @@
+{
+  "version": "V124.1",
+  "status": "aprovado_com_ressalvas",
+  "protected": true,
+  "published": true,
+  "approved_at": "2026-10-16",
+  "approval_text": "Ficou mais ou menos mas dá pra salvar",
+  "approval_scope": "Estado visual atual da troca com Pokébola vermelha, treinador corrigido, animação de entrada e IA de troca inimiga",
+  "reviewed_commit": "b7eab794d1752a4c60d8d1e2bd21d52691cd19d6",
+  "preserve": [
+    "effects/v124/recall-ai.js — aparência aprovada com ressalvas; não alterar sem novo pedido",
+    "raio vermelho de recolhimento e envio para jogador e adversário",
+    "troca estratégica inimiga sem modificar HP, shiny, status, vitórias e derrotas",
+    "V123 aprovada e todas as versões anteriores protegidas"
+  ],
+  "note": "Usuário considera visual aceitável para salvar, mas ainda passível de futuras melhorias. Não considerar pedido de nova modificação neste aceite."
+}

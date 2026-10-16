@@ -1,5 +1,9 @@
 # V124 — Troca de Pokémon com Pokébola vermelha e IA estratégica
 
+## Aprovação da V124.1 (16/10/2026)
+
+**Aprovada com ressalvas pelo usuário:** “Ficou mais ou menos mas dá pra salvar”. O estado V124.1 do commit `b7eab794d1752a4c60d8d1e2bd21d52691cd19d6` deve ser preservado, sem ajustes extras até uma nova solicitação. Os testes do commit passaram e o GitHub Pages confirmou a publicação. Ver `effects/v124/STATUS_APROVACAO.json`.
+
 ## V124.1 — Ajuste visual do treinador (16/10/2026)
 
 Feedback após jogar: o raio vermelho e a troca estratégica foram aprovados, mas o sprite do treinador na troca estava distorcido/duplicado. O patch **V124.1** mantém as mecânicas e só corrige a transição visual:
