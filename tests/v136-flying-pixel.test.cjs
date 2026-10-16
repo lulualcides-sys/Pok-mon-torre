@@ -69,7 +69,8 @@ class BattleEngine{
  }
 }
 function setup(search){
- const window={PokemonTorreV360Paint:()=>{draw2d++;return false}};
+ const window={PokemonTorreV360Paint:()=>{draw2d++;return false},
+  PokemonTorrePixelFlyingBridge:pixiFX};
  const globals={Image:ImageFake,window,URLSearchParams,location:{search},BattleEngine,
   performance:{now:()=>1000},battle,skillSet:()=>skills,current:()=>actor,pixiFX,console};
  vm.runInNewContext(script,globals,{timeout:3000});
