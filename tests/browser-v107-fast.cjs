@@ -71,11 +71,11 @@ async function test(port,safe){
    return x.result?.result?.value;
   };
   let ready=null;for(let n=0;n<120;n++){
-   ready=await evaluate("(()=>({boot:!!document.getElementById('main'),v104:window.PokemonTorreFightingV104?.diagnostics()?.version,ink:window.PokemonTorreFightingInkV105?.diagnostics()?.version,real:window.PokemonTorreFightingSpritesV107?.diagnostics()?.version,realReady:window.PokemonTorreFightingSpritesV107?.diagnostics()?.ready?.length,heavy:window.PokemonTorreFightingKineticV106?.diagnostics()?.version,qa:typeof window.PokemonTorreLocalCombatTestV47?.castFightingV104==='function',arena:!!window.PokemonTorreArenaWideV98?.enabled}))()");
-   if(ready?.boot&&ready.v104==='104.0'&&ready.ink==='105.0'&&ready.heavy==='106.0'&&ready.real==='107.0'&&ready.realReady===4&&ready.qa&&ready.arena)break;
+   ready=await evaluate("(()=>({boot:!!document.getElementById('main'),v104:window.PokemonTorreFightingV104?.diagnostics()?.version,ink:window.PokemonTorreFightingInkV105?.diagnostics()?.version,real:window.PokemonTorreFightingSpritesV107?.diagnostics()?.version,realReady:window.PokemonTorreFightingSpritesV107?.diagnostics()?.ready?.length,pixels108:window.PokemonTorreFightingPixelsV108?.diagnostics()?.version,pixelsReady:window.PokemonTorreFightingPixelsV108?.diagnostics()?.ready?.length,heavy:window.PokemonTorreFightingKineticV106?.diagnostics()?.version,qa:typeof window.PokemonTorreLocalCombatTestV47?.castFightingV104==='function',arena:!!window.PokemonTorreArenaWideV98?.enabled}))()");
+   if(ready?.boot&&ready.v104==='104.0'&&ready.ink==='105.0'&&ready.heavy==='106.0'&&ready.real==='107.0'&&ready.realReady===4&&ready.pixels108==='108.0'&&ready.pixelsReady===3&&ready.qa&&ready.arena)break;
    await pause(180);
   }
-  if(!ready?.qa||ready.ink!=='105.0'||ready.heavy!=='106.0'||ready.real!=='107.0'||ready.realReady!==4||!ready.arena)throw Error('V106 boot incomplete '+JSON.stringify(ready));
+  if(!ready?.qa||ready.ink!=='105.0'||ready.heavy!=='106.0'||ready.real!=='107.0'||ready.realReady!==4||ready.pixels108!=='108.0'||ready.pixelsReady!==3||!ready.arena)throw Error('V106 boot incomplete '+JSON.stringify(ready));
   const names=['Chute','Golpe de Karatê','Cross Chop','Brick Break','Soco Dinâmico','Aura Sphere'];
   const styles=['kick','karate','cross','brick','punch','aura'];
   let successes=0;
@@ -86,12 +86,15 @@ async function test(port,safe){
    for(let attempt=1;attempt<=3;attempt++){
     const before=await evaluate('(()=>window.PokemonTorreLocalCombatTestV47.castFightingV104('+i+',true))()');
     await pause(2000);
-    const after=await evaluate("(()=>({...window.PokemonTorreLocalCombatTestV47.fightingStateV104(),heavy:window.PokemonTorreFightingKineticV106?.diagnostics()||null,real:window.PokemonTorreFightingSpritesV107?.diagnostics()||null,pixi:window.PokemonTorrePixiFX?.()||null}))()");
-    const ink=after?.pixel||{},heavy=after?.heavy||{},real=after?.real||{},fx=after?.fx||{},
+    const after=await evaluate("(()=>({...window.PokemonTorreLocalCombatTestV47.fightingStateV104(),heavy:window.PokemonTorreFightingKineticV106?.diagnostics()||null,real:window.PokemonTorreFightingSpritesV107?.diagnostics()||null,pixels108:window.PokemonTorreFightingPixelsV108?.diagnostics()||null,pixi:window.PokemonTorrePixiFX?.()||null}))()");
+    const ink=after?.pixel||{},heavy=after?.heavy||{},real=after?.real||{},pixels108=after?.pixels108||{},fx=after?.fx||{},
      n=names[i].normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
-    const artOk=i<4?
-      (real.rendered?.[['chute','karate','cross','brick'][i]]||0)>0&&real.ready?.length===4&&
-       real.pixiFrames+real.canvasFrames>0&&heavy.frames===0:
+    const newStyle={0:'chute',1:'karate',3:'brick'}[i];
+    const artOk=i<4?(newStyle?
+      (pixels108.draws?.[newStyle]||0)>0&&pixels108.ready?.length===3&&
+       pixels108.pixiFrames+pixels108.canvasFrames>0:
+      (real.rendered?.cross||0)>0&&real.ready?.length===4&&
+       real.pixiFrames+real.canvasFrames>0):
       (ink.perStyle?.[styles[i]]||0)>0&&ink.frames>=12;
     const physicalOk=before?.accepted&&before?.afterInputEnergy===100&&
      before?.initialGap>after.h*.45&&after.safe===safe&&after.canvasReady&&after.running&&
@@ -101,14 +104,14 @@ async function test(port,safe){
     ok=physicalOk&&landed;
     report={passed:ok,attempt,damage:before?.hpBefore-after?.hp,
      physicalOk,artOk,approach:fx.approaches,retreat:fx.retreats,
-     pixelTiles:ink.frames,heavyFrames:heavy.frames,illustrated:real.rendered,realCanvas:real.canvasFrames,realPixi:real.pixiFrames,gpu:after.pixi?.gpu,pixiError:after.pixi?.error,filled:heavy.filled,
+     pixelTiles:ink.frames,heavyFrames:heavy.frames,illustrated:real.rendered,pixelGBA:pixels108.draws,pixelLoaded:pixels108.ready,realCanvas:real.canvasFrames,realPixi:real.pixiFrames,gpu:after.pixi?.gpu,pixiError:after.pixi?.error,filled:heavy.filled,
      thickDraws:heavy.draws,inkDraws:ink.perStyle?.[styles[i]],
      engineDraws:fx.draws?.[n],inkErrors:ink.errors,engineVisual:fx.visualVersion};
     if(ok||!physicalOk)break;
     console.log('V107 legit dodge/unlanded melee, retesting '+names[i]+' attempt '+attempt);
    }
    console.log('V107 '+(safe?'SAFE':'NORMAL')+' '+names[i]+' '+JSON.stringify(report));
-   if(!ok)throw Error('V107 real sprite smoke failed: '+names[i]);
+   if(!ok)throw Error('V108 pixel contact sprite failed: '+names[i]);
    successes++;
   }
   const final=await evaluate("(()=>window.PokemonTorreFightingInkV105.diagnostics())()");
@@ -122,7 +125,7 @@ async function test(port,safe){
   if(thick.frames!==0||thick.contactFrames!==0||thick.filled!==0||
      ['chute','karate','cross','brick'].some(n=>(thick.draws?.[n]||0)>0))
    throw Error('V107: unexpected geometric overlay '+JSON.stringify(thick));
-  console.log('PASS V107 REAL ANDROID '+(safe?'SAFE':'NORMAL')+
+  console.log('PASS V108 REAL ANDROID '+(safe?'SAFE':'NORMAL')+
    ': '+successes+' melee hits, sprite frames, physical recoil, distinct pixel art');
  }finally{
   ws?.close();proc.kill('SIGKILL');

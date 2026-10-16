@@ -34,7 +34,8 @@ window.PokemonTorreFightingSpritesV107=(()=>{
   const t=clamp(a.t),frame=Math.min(sp.frames-1,Math.floor(t*sp.frames));
   const x=a.to[0],y=a.to[1],scale=Math.max(.78,Math.min(1.28,Number(a.scale)||1));
   // A full-illustration impact, centred on the opponent, not its travel path.
-  const w=258*scale,h=194*scale,alpha=t>.87?clamp((1-t)/.13):1;
+  const ratio=name==='cross'?.48:1;
+  const w=258*scale*ratio,h=194*scale*ratio,alpha=t>.87?clamp((1-t)/.13):1;
   let pixi=false;
   try{
    if(typeof pixiFX!=='undefined'&&typeof engine!=='undefined'&&
@@ -52,7 +53,7 @@ window.PokemonTorreFightingSpritesV107=(()=>{
    g.save();
    try{
     g.globalAlpha*=alpha;
-    g.imageSmoothingEnabled=true;
+    g.imageSmoothingEnabled=name==='cross';
     g.drawImage(im,frame*W,0,W,H,x-w*.5,y-h*.53,w,h);
    }finally{g.restore();}
    canvasFrames++;

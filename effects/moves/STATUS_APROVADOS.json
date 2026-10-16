@@ -159,12 +159,12 @@
       "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V107",
+      "version": "V108",
       "frames": 8,
-      "effect_file": "effects/moves/v107-fighting/real-sprites.js",
-      "notes": "V107 novo sprite ilustrado animado, SEM efeitos geométricos/CSS. Corpo a corpo, distância, hit e recuo nativos V104 inalterados. Só aprovar após o usuário testar.",
-      "v107_review": "Aguardando avaliação do usuário; aparência V106 rejeitada.",
-      "visual_source": "Spritesheets WEBP transparentes construídos com Pillow a partir dos atlases ilustrados X-Scissor V71, Dragon Claw V71 e explosion/spikes V59. Renderização PixiJS ou Canvas somente sprites."
+      "effect_file": "effects/moves/v108-fighting/real-pixel-sprites.js",
+      "notes": "V108 novo pixel art a partir do sprite original da galeria, animado com Pillow + PixiJS/Canvas drawImage, sem vídeo, traço CSS ou projétil; mantendo V104 corpo a corpo.",
+      "v107_review": "V107 mantido somente no Cross Chop",
+      "visual_source": "GBA Ruby/Sapphire original do usuário: recortes de mãos, impacto e rocha; sapato/pé criado em pixel art; 8/12/16 quadros"
     },
     {
       "move": "Golpe de Karatê",
@@ -174,12 +174,12 @@
       "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V107",
+      "version": "V108",
       "frames": 12,
-      "effect_file": "effects/moves/v107-fighting/real-sprites.js",
-      "notes": "V107 novo sprite ilustrado animado, SEM efeitos geométricos/CSS. Corpo a corpo, distância, hit e recuo nativos V104 inalterados. Só aprovar após o usuário testar.",
-      "v107_review": "Aguardando avaliação do usuário; aparência V106 rejeitada.",
-      "visual_source": "Spritesheets WEBP transparentes construídos com Pillow a partir dos atlases ilustrados X-Scissor V71, Dragon Claw V71 e explosion/spikes V59. Renderização PixiJS ou Canvas somente sprites."
+      "effect_file": "effects/moves/v108-fighting/real-pixel-sprites.js",
+      "notes": "V108 novo pixel art a partir do sprite original da galeria, animado com Pillow + PixiJS/Canvas drawImage, sem vídeo, traço CSS ou projétil; mantendo V104 corpo a corpo.",
+      "v107_review": "V107 mantido somente no Cross Chop",
+      "visual_source": "GBA Ruby/Sapphire original do usuário: recortes de mãos, impacto e rocha; sapato/pé criado em pixel art; 8/12/16 quadros"
     },
     {
       "move": "Cross Chop",
@@ -189,12 +189,12 @@
       "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V107",
+      "version": "V108",
       "frames": 16,
       "effect_file": "effects/moves/v107-fighting/real-sprites.js",
-      "notes": "V107 novo sprite ilustrado animado, SEM efeitos geométricos/CSS. Corpo a corpo, distância, hit e recuo nativos V104 inalterados. Só aprovar após o usuário testar.",
-      "v107_review": "Aguardando avaliação do usuário; aparência V106 rejeitada.",
-      "visual_source": "Spritesheets WEBP transparentes construídos com Pillow a partir dos atlases ilustrados X-Scissor V71, Dragon Claw V71 e explosion/spikes V59. Renderização PixiJS ou Canvas somente sprites."
+      "notes": "Usuário aprovou visual vermelho V107; preservado totalmente, só escala a 48% perto do tamanho do Pokémon. Aproximação/dano/recuo V104 preservados.",
+      "v107_review": "V107 mantido somente no Cross Chop",
+      "visual_source": "V107 sprite x-scissor vermelho existente, dimensão reduzida"
     },
     {
       "move": "Brick Break",
@@ -204,12 +204,12 @@
       "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V107",
+      "version": "V108",
       "frames": 16,
-      "effect_file": "effects/moves/v107-fighting/real-sprites.js",
-      "notes": "V107 novo sprite ilustrado animado, SEM efeitos geométricos/CSS. Corpo a corpo, distância, hit e recuo nativos V104 inalterados. Só aprovar após o usuário testar.",
-      "v107_review": "Aguardando avaliação do usuário; aparência V106 rejeitada.",
-      "visual_source": "Spritesheets WEBP transparentes construídos com Pillow a partir dos atlases ilustrados X-Scissor V71, Dragon Claw V71 e explosion/spikes V59. Renderização PixiJS ou Canvas somente sprites."
+      "effect_file": "effects/moves/v108-fighting/real-pixel-sprites.js",
+      "notes": "V108 novo pixel art a partir do sprite original da galeria, animado com Pillow + PixiJS/Canvas drawImage, sem vídeo, traço CSS ou projétil; mantendo V104 corpo a corpo.",
+      "v107_review": "V107 mantido somente no Cross Chop",
+      "visual_source": "GBA Ruby/Sapphire original do usuário: recortes de mãos, impacto e rocha; sapato/pé criado em pixel art; 8/12/16 quadros"
     }
   ]
 }
