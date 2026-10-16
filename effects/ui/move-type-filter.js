@@ -29,10 +29,20 @@
  css.id='ptMoveTypeCss';
  css.textContent='.ptTypeBar{display:flex;align-items:center;gap:8px;margin:7px 0 9px}.ptTypeBar label{font-size:12px;color:#a9d7d7;flex:0 0 auto}.ptTypeSelect{min-width:0;flex:1;max-width:100%;border:1px solid #6b9ba4;border-radius:10px;padding:10px 9px;background:#123142;color:#f0fbff;font:600 13px system-ui;min-height:42px;outline-offset:2px}.ptTypeCount{font-size:11px;color:#a9d7d7;text-align:right;margin-bottom:6px}.v331Choice.ptFilteredOut{display:none!important}@media(max-width:390px){.ptTypeBar label{font-size:11px}.ptTypeSelect{font-size:12px}}';
  document.head.appendChild(css);
- function matchesType(row){
-  if(chosen==='all')return true;
+ // V129: the type is attached to both the original catalogue metadata
+ // (the <small> label) and the V61 type glyph. Read either, without mutating
+ // the move, its power, unlock level or the four equipped slots.
+ function rowType(row){
+  const explicit=String(row.dataset?.moveType||'').toLowerCase();
+  if(aliases[explicit])return explicit;
   const category=normalize(row.querySelector('small')?.textContent||'').split('·')[0].trim();
-  return (aliases[chosen]||[]).some(label=>category===label);
+  for(const [type,labels] of Object.entries(aliases))
+   if(labels.some(label=>category===label))return type;
+  const glyph=row.querySelector('.pt61Icon[data-type]');
+  return aliases[glyph?.dataset?.type]?glyph.dataset.type:'';
+ }
+ function matchesType(row){
+  return chosen==='all'||rowType(row)===chosen;
  }
  function apply(modal,list){
   if(working)return;working=true;
@@ -41,7 +51,15 @@
    const search=modal.querySelector('#v3566FindMove');
    if(search)term=search.value||'';
    const q=normalize(term);
-   for(const row of list.querySelectorAll('.v331Choice')){
+   const rows=[...list.querySelectorAll('.v331Choice')];
+   // If Terra is absent solely because the editor is on "Liberados" or
+   // "Futuros", open the existing "Todos" tab. Locked moves remain locked.
+   // Do not synthesize moves or change the catalogue/save.
+   if(chosen==='ground'&&rows.length&&!rows.some(row=>rowType(row)==='ground')){
+    const all=modal.querySelector('[data-v331-filter="all"]');
+    if(all&&!all.classList.contains('gold')){all.click();return;}
+   }
+   for(const row of rows){
     const match=matchesType(row)&&normalize(row.textContent).includes(q);
     row.classList.toggle('ptFilteredOut',!match);
     // Search from V35.66 may have previously hidden the row. Reset that
@@ -69,7 +87,18 @@
    select.setAttribute('aria-label','Filtrar golpes por tipo de Pokémon');
    for(const [value,title] of types){const option=document.createElement('option');option.value=value;option.textContent=title;select.appendChild(option);}
    select.value=chosen;
-   select.addEventListener('change',()=>{chosen=select.value;apply(modal,list);});
+   select.addEventListener('change',()=>{
+    chosen=select.value;
+    // An old Água/name search can make Terra appear to have vanished.
+    // Selecting Terra explicitly starts with a clean search, without touching
+    // equipment or another Pokémon's progression.
+    if(chosen==='ground'){
+     term='';
+     const search=modal.querySelector('#v3566FindMove');
+     if(search&&search.value)search.value='';
+    }
+    apply(modal,list);
+   });
    bar.append(label,select);
    const search=modal.querySelector('.v3566Search');
    if(search)search.insertAdjacentElement('afterend',bar);
@@ -103,5 +132,5 @@
  });
  bodyObserver.observe(document.body,{childList:true,subtree:false});
  mount();
- window.PokemonTorreTypeFilter=()=>({version:'36.02',selected:chosen,options:types.length,mounted:!!document.querySelector('.ptTypeSelect')});
+ window.PokemonTorreTypeFilter=()=>({version:'129.0',selected:chosen,options:types.length,mounted:!!document.querySelector('.ptTypeSelect'),groundKnown:types.some(x=>x[0]==='ground'),groundVisible:[...(document.querySelector('.v331MoveList')?.querySelectorAll('.v331Choice')||[])].filter(row=>rowType(row)==='ground'&&!row.classList.contains('ptFilteredOut')).length});
 })();

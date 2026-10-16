@@ -1,5 +1,11 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V129 — RESTAURAR VISIBILIDADE DOS GOLPES DE TERRA (16/10/2026)
+
+Relato do usuário: **“Os golpes de terra sumiram”**. Na fonte `parts/p008.txt` a lista de Terra ainda existe (Tapa de Lama, Soco de Terra, Tremor, Abalo Terrestre, Terremoto etc.). Revisar apresentação e filtragem de golpes sem modificar dados/salvamentos/níveis: `effects/ui/move-type-filter.js` V129 prioriza metadados do tipo Terra ou rótulo e ícones, limpa buscas antigas ao selecionar Terra e abre aba **Todos** quando a aba Liberados/Futuros não contém Terra. **Nenhum golpe é adicionado, removido ou desbloqueado indevidamente.** Proteger TODOS os golpes aprovados, inclusive V128 Água. Testes `tests/v129-ground-catalog.test.cjs`. Confirmar testes e publicação antes de afirmar correção efetiva no celular.
+
+
+
 ## V128 APROVADA E PROTEGIDA (16/10/2026)
 
 O usuário testou a prévia e respondeu: **“Ficou muito bom”**. Promover exatamente as animações sem alterar os arquivos de arte de **Withdraw, Pistola d’Água, Bolhas e Mergulho**. Ativar na URL normal e manter `?water128=0` para visuais antigos e `?safe=1` para fallback seguro. Cauda de Água e Pulso de Água seguem previamente aprovados, protegidos e intactos. Registro `effects/moves/STATUS_APROVADOS.json` (36 protegidos) e `effects/v127/edited-moves.json` (68 fichas; 32 históricos) sincronizados com vistos ✓. Não editar outros golpes aprovados, combate, HP, energia, recarga, menus, arena ou salvos. Só afirmar publicação após CI/deploy.
