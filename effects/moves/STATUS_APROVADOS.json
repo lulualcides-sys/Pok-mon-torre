@@ -156,52 +156,60 @@
     {
       "move": "Chute",
       "aliases": [],
-      "status": "aprovado",
+      "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V106",
+      "version": "V107",
       "frames": 8,
-      "effect_file": "effects/moves/catalog/chute/v106/render.js",
-      "notes": "V106 refeito sob pedido do usuário: efeitos com massa e silhuetas espessas, sem riscos; Cross Chop X vermelho baseado na coreografia do X-Scissor V68. Não mexer em HP, colisões e recuo V104 nem em outros efeitos protegidos sem aprovação."
+      "effect_file": "effects/moves/v107-fighting/real-sprites.js",
+      "notes": "V107 novo sprite ilustrado animado, SEM efeitos geométricos/CSS. Corpo a corpo, distância, hit e recuo nativos V104 inalterados. Só aprovar após o usuário testar.",
+      "v107_review": "Aguardando avaliação do usuário; aparência V106 rejeitada.",
+      "visual_source": "Spritesheets WEBP transparentes construídos com Pillow a partir dos atlases ilustrados X-Scissor V71, Dragon Claw V71 e explosion/spikes V59. Renderização PixiJS ou Canvas somente sprites."
     },
     {
       "move": "Golpe de Karatê",
       "aliases": [
         "Karate Chop"
       ],
-      "status": "aprovado",
+      "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V106",
+      "version": "V107",
       "frames": 12,
-      "effect_file": "effects/moves/catalog/golpedekarate/v106/render.js",
-      "notes": "V106 refeito sob pedido do usuário: efeitos com massa e silhuetas espessas, sem riscos; Cross Chop X vermelho baseado na coreografia do X-Scissor V68. Não mexer em HP, colisões e recuo V104 nem em outros efeitos protegidos sem aprovação."
+      "effect_file": "effects/moves/v107-fighting/real-sprites.js",
+      "notes": "V107 novo sprite ilustrado animado, SEM efeitos geométricos/CSS. Corpo a corpo, distância, hit e recuo nativos V104 inalterados. Só aprovar após o usuário testar.",
+      "v107_review": "Aguardando avaliação do usuário; aparência V106 rejeitada.",
+      "visual_source": "Spritesheets WEBP transparentes construídos com Pillow a partir dos atlases ilustrados X-Scissor V71, Dragon Claw V71 e explosion/spikes V59. Renderização PixiJS ou Canvas somente sprites."
     },
     {
       "move": "Cross Chop",
       "aliases": [
         "Soco Cruzado"
       ],
-      "status": "aprovado",
+      "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V106",
+      "version": "V107",
       "frames": 16,
-      "effect_file": "effects/moves/catalog/crosschop/v106/render.js",
-      "notes": "V106 refeito sob pedido do usuário: efeitos com massa e silhuetas espessas, sem riscos; Cross Chop X vermelho baseado na coreografia do X-Scissor V68. Não mexer em HP, colisões e recuo V104 nem em outros efeitos protegidos sem aprovação."
+      "effect_file": "effects/moves/v107-fighting/real-sprites.js",
+      "notes": "V107 novo sprite ilustrado animado, SEM efeitos geométricos/CSS. Corpo a corpo, distância, hit e recuo nativos V104 inalterados. Só aprovar após o usuário testar.",
+      "v107_review": "Aguardando avaliação do usuário; aparência V106 rejeitada.",
+      "visual_source": "Spritesheets WEBP transparentes construídos com Pillow a partir dos atlases ilustrados X-Scissor V71, Dragon Claw V71 e explosion/spikes V59. Renderização PixiJS ou Canvas somente sprites."
     },
     {
       "move": "Brick Break",
       "aliases": [
         "Quebra-Tijolo"
       ],
-      "status": "aprovado",
+      "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V106",
+      "version": "V107",
       "frames": 16,
-      "effect_file": "effects/moves/catalog/brickbreak/v106/render.js",
-      "notes": "V106 refeito sob pedido do usuário: efeitos com massa e silhuetas espessas, sem riscos; Cross Chop X vermelho baseado na coreografia do X-Scissor V68. Não mexer em HP, colisões e recuo V104 nem em outros efeitos protegidos sem aprovação."
+      "effect_file": "effects/moves/v107-fighting/real-sprites.js",
+      "notes": "V107 novo sprite ilustrado animado, SEM efeitos geométricos/CSS. Corpo a corpo, distância, hit e recuo nativos V104 inalterados. Só aprovar após o usuário testar.",
+      "v107_review": "Aguardando avaliação do usuário; aparência V106 rejeitada.",
+      "visual_source": "Spritesheets WEBP transparentes construídos com Pillow a partir dos atlases ilustrados X-Scissor V71, Dragon Claw V71 e explosion/spikes V59. Renderização PixiJS ou Canvas somente sprites."
     }
   ]
 }

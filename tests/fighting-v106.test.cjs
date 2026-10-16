@@ -25,7 +25,7 @@ const names=['Chute','Golpe de Karatê','Cross Chop','Brick Break'],
 assert.equal(register.size,4);
 for(let i=0;i<4;i++){
  const row=registry.moves.find(x=>x.move===names[i]);
- assert.equal(row.version,'V106');assert.equal(row.protect,true);assert.equal(row.frames,count[i]);
+ assert.ok(['V106','V107'].includes(row.version));assert.equal(row.protect,true);assert.equal(row.frames,count[i]);
 }
 function mock(){
  const op={fills:0,strokes:0,polygons:0,points:[],palette:new Set(),radial:0,

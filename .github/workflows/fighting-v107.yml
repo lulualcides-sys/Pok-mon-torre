@@ -1,0 +1,35 @@
+name: V107 illustrated sprites, Pillow build and real Android
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/build-v107-fighting.py'
+      - 'effects/moves/v107-fighting/**'
+      - 'effects/moves/_runtime/pixi-layer.js'
+      - 'tests/fighting-v107.test.cjs'
+      - 'tests/browser-v107-fast.cjs'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --quiet Pillow
+      - name: Bake 52 actual illustrated transparent sprite frames
+        run: python tools/build-v107-fighting.py
+      - name: Verify four illustrated sheets and no geometric runtime
+        run: node tests/fighting-v107.test.cjs
+      - name: Verify previous V104 contact rules
+        run: node tests/fighting-v104.test.cjs
+      - name: Four hit/recoil attacks and safe fallback in real Android Chromium
+        run: node tests/browser-v107-fast.cjs

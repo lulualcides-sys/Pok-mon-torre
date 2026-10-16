@@ -6,6 +6,7 @@ const pixiFX=(()=>{
  // V89: missing old V72/V78 WebP must fall back to existing catalog art.
  const missingLegacyAtlasesV89=new Set();
  let app=null,owner=null,atlas=null,cache=new Map(),frames=0,emitterCount=0,error='',lastRect='';
+ let combatSheet=null,lastCombatSheetFrame=0,combatFrames=0,combatEmitterCount=0;
  // V84.1: at most ONE preview cast can own the four-attack Pixi layer.
  // Old v359/v3580 visual objects may coexist while the engine cleans up;
  // they must never create an effect on top of a newer cast.
@@ -88,6 +89,11 @@ const pixiFX=(()=>{
    reset();
  }
  function reset(){
+  if(combatSheet){
+   try{combatSheet.emitter?.destroy();combatSheet.root.destroy({children:true})}catch(e){}
+   combatSheet=null;
+  }
+  lastCombatSheetFrame=0;
   if(activeV86&&typeof referenceFourV86!=='undefined')referenceFourV86.destroy(activeV86);
   activeV86=null;lastV86RenderAt=0;
   if(hazeActiveV85&&typeof hazeV85!=='undefined')hazeV85.destroy(hazeActiveV85);
@@ -278,7 +284,11 @@ const pixiFX=(()=>{
   // Mobile: PIXI's transparent WebGL canvas must not keep running alongside
   // the battle renderer when the last GPU effect has finished. Restart on
   // demand in ensure(), preserving existing graphics and particle behavior.
-  if(!effects.size){app.ticker.stop();app.view.style.display='none';}
+  if(combatSheet&&performance.now()-lastCombatSheetFrame>140){
+   try{combatSheet.emitter?.destroy();combatSheet.root.destroy({children:true})}catch(e){}
+   combatSheet=null;
+  }
+  if(!effects.size&&!combatSheet&&!activeV84&&!activeV86&&!hazeActiveV85){app.ticker.stop();app.view.style.display='none';}
  }
  function paint(f,engine,key){
   // The named V86 cast already renders a single authored WebGL layer.
@@ -439,11 +449,45 @@ const pixiFX=(()=>{
    return false;
   }
  }
- return {ensure,paint,clearAll:reset,onBattleUiChange,isBattleViewReady:battleViewReady,
+ // V107: decoded REAL illustrated WebP sprite frames displayed on PixiJS.
+ // No Canvas/HTML geometric effects or flying shot, only impact-area atlas.
+ function paintFightingSheet(engine,id,img,frame,info){
+  if(!img?.complete||!img.naturalWidth||!engine)return false;
+  if(!battleViewReady(engine)){onBattleUiChange();return false;}
+  if(!ensure(engine)||!app||app.renderer?.gl?.isContextLost?.())return false;
+  try{
+   if(!combatSheet||combatSheet.image!==img||combatSheet.engine!==engine||combatSheet.id!==id){
+    if(combatSheet){combatSheet.emitter?.destroy();combatSheet.root.destroy({children:true});}
+    const base=PIXI.BaseTexture.from(img),textures=Array.from({length:info.frames},(_,i)=>
+     new PIXI.Texture(base,new PIXI.Rectangle(i*info.width,0,info.width,info.height)));
+    const root=new PIXI.Container(),sp=new PIXI.Sprite(textures[0]);
+    sp.anchor.set(.5);root.addChild(sp);app.stage.addChild(root);
+    combatSheet={image:img,id,engine,root,sp,textures,emitter:null};
+   }
+   const item=combatSheet;
+   item.sp.texture=item.textures[Math.max(0,Math.min(item.textures.length-1,frame))];
+   item.sp.position.set(info.x,info.y);
+   item.sp.width=info.displayW;item.sp.height=info.displayH;
+   item.sp.alpha=info.alpha;
+   item.sp.blendMode=PIXI.BLEND_MODES.NORMAL;
+   if(info.t>=info.hit&&info.t<info.hit+.18){
+    if(!item.emitter&&window.PIXI?.particles?.Emitter){
+     item.emitter=particles(item.root,item.textures[Math.floor(info.frames*info.hit)],
+      [0xffaa77,0xffe5b2,0x49273b],true);
+     if(item.emitter)combatEmitterCount++;
+    }
+    if(item.emitter){item.emitter.updateOwnerPos(info.x,info.y);item.emitter.emit=true;item.emitter.update(.016);}
+   }else if(item.emitter){item.emitter.emit=false;item.emitter.update(.016);}
+   position(engine);lastCombatSheetFrame=performance.now();combatFrames++;
+   app.view.style.display='block';app.renderer.render(app.stage);
+   return true;
+  }catch(e){error='V107 Pixi illustrated sprite '+String(e?.message||e);return false;}
+ }
+ return {ensure,paint,paintFightingSheet,clearAll:reset,onBattleUiChange,isBattleViewReady:battleViewReady,
   beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,
   beginV86,frameV86,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
   sprites:!!atlas,active:effects.size,registered:registry.size,
-  emitterInstances:emitterCount,frames,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:typeof grassFourV84?.source==='function'?grassFourV84.source(activeV84.key):'gpu-generated'}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
+  emitterInstances:emitterCount,frames,combatSprites:combatFrames,combatEmitterInstances:combatEmitterCount,combatSpriteActive:!!combatSheet,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:typeof grassFourV84?.source==='function'?grassFourV84.source(activeV84.key):'gpu-generated'}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
   hazeActive:!!hazeActiveV85,hazeReady:!!hazeActiveV85?.ready,
   v86Active:!!activeV86,v86Name:activeV86?.spec?.name||null,
   v86Ready:!!activeV86?.ready,
