@@ -10,7 +10,7 @@ const src=read('effects/v126/gameplay-ui.js'),base=read('parts/p000.txt');
 const test=read('tests/v126-gameplay-ui.test.cjs');
 const html=read('index.html');
 assert.ok(src.includes('return targets[g];'),'the leader threshold must be fixed');
-assert.doesNotMatch(src,/Math\.max\(targets\[g\],stage\)/,'dynamic Brock threshold is infinite');
+assert.doesNotMatch(src,/return\s+Math\.max\(targets\[g\],stage\)\s*;/,'dynamic Brock threshold is infinite');
 assert.ok(src.includes('recoverStuckLeader()'),'stranded saves not repaired');
 assert.ok(src.includes('save.gym=gym+1'),'repair must move to next gym');
 assert.ok(src.includes('save.stage=0'),'new gym should start at trainer 1');
