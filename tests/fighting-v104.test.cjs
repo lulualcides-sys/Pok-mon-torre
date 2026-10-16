@@ -22,7 +22,7 @@ assert.ok(core.includes('if(window.PokemonTorreFightingV104?.allowed?.(fx?.move)
 const registry=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
 for(const name of ['Chute','Golpe de Karatê','Cross Chop','Brick Break']){
  const row=registry.moves.find(x=>x.move===name);
- assert.ok(['V104','V105','V106','V107','V108','V109'].includes(row?.version));assert.equal(row?.protect,true);
+ assert.ok(['V104','V105','V106','V107','V108','V109','V110'].includes(row?.version));assert.equal(row?.protect,true);
 }
 const names=['Chute','Golpe de Karatê','Cross Chop','Brick Break','Soco Dinâmico','Aura Sphere'];
 function test(safe){

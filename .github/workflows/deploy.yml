@@ -37,6 +37,8 @@ jobs:
           python tools/build-v107-fighting.py
           python tools/build-v108-fighting.py
           python tools/build-v109-fighting.py
+          python tools/build-v110-fighting.py
+          node tests/fighting-v110.test.cjs
           node tests/fighting-v109.test.cjs
           node tests/fighting-v108.test.cjs
           node tests/test-v86-four-reference.cjs
