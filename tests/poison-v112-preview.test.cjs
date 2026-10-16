@@ -45,7 +45,7 @@ function demo(search){
  const window={PokemonTorreV360Paint(){prior.push('old');return false}};
  const location={search,hostname:'remote.example'};
  const context=vm.createContext({window,location,Image:FakeImage,Math,Number,Array,
-  BattleEngine:Engine,battle:{active:true},current:()=>({}),skillSet:()=>skills,
+  URLSearchParams,BattleEngine:Engine,battle:{active:true},current:()=>({}),skillSet:()=>skills,
   pixiFX:{paintFightingSheet:()=>false},performance:{now:()=>500},console});
  vm.runInContext(fs.readFileSync(base+'runtime.js','utf8'),context,{timeout:3000});
  for(let i=0;i<4;i++){
