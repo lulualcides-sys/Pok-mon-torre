@@ -122,7 +122,11 @@ const pixiFX=(()=>{
    }
    const root=new PIXI.Container(),sprite=new PIXI.Sprite(entry.frames[0]);
    sprite.anchor.set(.5);sprite.roundPixels=true;
-   sprite.scale.set(spec.scale||1.18);
+   // V138: the ATLAS pixels are real near-black art with a crisp silver rim.
+   // Never tint to solid black: multiplication would erase the 1px contrast rim.
+   sprite.tint=0xffffff;
+   sprite.alpha=1;
+   sprite.scale.set((spec.scale||1.18)*1.12);
    root.addChild(sprite);app.stage.addChild(root);
    // The emitter uses a 1x1 nearest-neighbour PIXI pixel, never Canvas.
    // Low density, no second ticker/RAF, same Particle Emitter V5 already used.
@@ -135,7 +139,11 @@ const pixiFX=(()=>{
       pos:{x:0,y:0},addAtBack:true,
       behaviors:[
        {type:'alpha',config:{alpha:{list:[{value:.68,time:0},{value:0,time:1}]}}},
-       {type:'scale',config:{scale:{list:[{value:2.4,time:0},{value:.4,time:1}]}}},
+       {type:'scale',config:{scale:{list:[{value:3.1,time:0},{value:1.0,time:1}]}}},
+       // Near-black V138 pixel particles, not cyan/white default emitter.
+       {type:'color',config:{color:{list:[
+        {value:'101318',time:0},{value:'050608',time:1}
+       ],isStepped:false}}},
        {type:'moveSpeed',config:{speed:{list:[{value:48,time:0},{value:10,time:1}],isStepped:false}}},
        {type:'rotationStatic',config:{min:0,max:360}},
        {type:'spawnShape',config:{type:'point',data:{x:0,y:0}}},
@@ -170,7 +178,9 @@ const pixiFX=(()=>{
    if(key==='Roost'){x=A[0];y=A[1]+4-7*Math.sin(Math.PI*t);}
    if(key==='Bicada'){const v=Math.min(1,Math.max(0,(t-.17)/.47));x=A[0]+(B[0]-A[0])*v;y=A[1]+(B[1]-A[1])*v;}
    o.root.position.set(Math.round(x),Math.round(y));
-   o.sprite.alpha=Math.min(1,t*10,Math.max(0,(1-t)*7));
+   // Dark pixel shapes with bright one-pixel border must not fade out too
+   // early against the blue arena. Only the first/final 50ms transition fades.
+   o.sprite.alpha=Math.min(1,t*20,Math.max(0,(1-t)*20));
    o.sprite.rotation=key==='Roost'?0:Math.atan2(B[1]-A[1],B[0]-A[0])*.16;
    if(o.emitter){
     // Following its parent root; no particle resources survive after the cast.

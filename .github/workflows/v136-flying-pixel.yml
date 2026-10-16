@@ -30,6 +30,7 @@ jobs:
           python -m pip install --quiet Pillow
           python tools/build-v136-flying-pixel.py
           python tools/test-v136-flying-art.py
+          node tests/v138-flying-black-contrast.test.cjs
       - name: Assert no Canvas 2D for four moves and battle native hit logic
         run: |
           node tests/v136-flying-pixel.test.cjs

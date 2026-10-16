@@ -137,6 +137,37 @@ def peck(frame,total,d):
             x=50+int(rr*cos(angle));y=31+int(rr*.7*sin(angle))
             pix(d,x,y,WHITE if j%3==0 else MID)
 
+# V138: deep BLACK pixel silhouettes (not a pale blue wind matching the arena).
+# A single opaque silver-pixel rim makes the dark silhouette readable over dark
+# blue/black battle grounds, without vector glows, blur, CSS or canvas gradients.
+# Preserve each original animated frame's geometric pixel positions.
+DARK_V138={
+ BLACK:(4,6,8,255),DEEP:(7,10,13,255),MID:(13,17,22,255),
+ PALE:(20,25,31,255),WHITE:(46,53,58,255),FOG:(16,21,26,255),
+ BLUE:(8,12,16,255),SILVER:(19,23,29,255),BEAK:(15,18,21,255),
+ STONE:(24,28,33,255)
+}
+SILVER_PIXEL_RIM=(217,225,232,255)
+
+def black_with_pixel_outline(frame):
+    """Recolor real frame pixels to black and add a ONE-PIXEL opaque rim."""
+    src=frame.convert('RGBA')
+    dst=Image.new('RGBA',src.size,(0,0,0,0))
+    si=src.load();o=dst.load()
+    w,h=src.size
+    for y in range(h):
+        for x in range(w):
+            rgba=si[x,y]
+            if rgba[3]==0:continue
+            o[x,y]=DARK_V138.get(rgba,(12,16,19,255))
+    # On empty neighboring pixels only, not over silhouette: optical separation.
+    for y in range(1,h-1):
+        for x in range(1,w-1):
+            if si[x,y][3]:continue
+            if any(si[x+dx,y+dy][3] for dx,dy in ((-1,0),(1,0),(0,-1),(0,1))):
+                o[x,y]=SILVER_PIXEL_RIM
+    return dst
+
 def build(slug,frames,draw_fn):
     folder=ROOT/slug
     folder.mkdir(parents=True,exist_ok=True)
@@ -144,6 +175,9 @@ def build(slug,frames,draw_fn):
     for i in range(frames):
         im=Image.new('RGBA',(SIZE,SIZE),(0,0,0,0));d=ImageDraw.Draw(im)
         draw_fn(i,frames,d)
+        # Animate actual V138 black/dark-pixel art rather than applying a GPU tint
+        # (GPU tint alone also blacks out crucial contour highlights).
+        im=black_with_pixel_outline(im)
         atlas.paste(im,(i%COLS*SIZE,i//COLS*SIZE),im)
     out=folder/'spritesheet.png'
     atlas.save(out,optimize=True)

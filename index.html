@@ -1001,7 +1001,7 @@ if(new URLSearchParams(location.search).get('flying135')==='preview'&&
   game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+flyCode.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V135 preview not loaded; approved effects preserved',error);}
 }
-// V137 — load pixel-art Flying effects IN THE NORMAL GAME by default.
+// V138 — dark pixel-art Flying effects with a bright 1px rim, IN THE NORMAL GAME.
 // The old ?flying136=pixel link was only a preview, hence users saw no change
 // at the canonical URL. Do NOT install the rejected V135 Canvas renderer.
 // ?flying136=0 rolls back only these 4 GPU effects for diagnosis.
@@ -1010,7 +1010,7 @@ if(new URLSearchParams(location.search).get('flying136')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const script='effects/moves/v136-flying-pixel/runtime.js';
-  const response=await fetch(script+'?build=v137-flying-pixel-official-loader',{cache:'no-store'});
+  const response=await fetch(script+'?build=v138-flying-black-contrast',{cache:'no-store'});
   if(!response.ok)throw Error('V136 '+response.status);
   if(!game.includes(fireSpriteAnchor))throw Error('V136 existing battle anchor absent');
   game=game.replace(fireSpriteAnchor,

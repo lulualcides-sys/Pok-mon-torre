@@ -19,8 +19,15 @@ for name,frames in expected.items():
         opaque=sum(p[3]>0 for p in pixels)
         assert 40<opaque<3200,(name,n,opaque)
         assert all(p[3] in (0,255) for p in pixels),(name,n,'anti-aliased alpha')
-        assert any(p[:3]==(17,28,40) and p[3]==255 for p in pixels),(name,n,'missing dark pixel contour')
+        # V138: BLACK is the dominant colour; the narrow silver pixel rim
+        # avoids disappearing against the dark blue arena, without blur/CSS.
+        black=sum(p[3]==255 and max(p[:3])<=65 for p in pixels)
+        rim=sum(p==(217,225,232,255) for p in pixels)
+        assert black>max(30,int(opaque*.38)),(name,n,'missing black silhouette',black,opaque)
+        assert rim>=6,(name,n,'missing 1px contrast rim',rim)
+        assert not any(p[3] and p[:3] in ((152,206,218),(225,247,245),(80,140,165))
+                       for p in pixels),(name,n,'old pale-blue arena-matching palette')
     assert len(frame_hashes)>=frames//2,(name,'repeated static frames',len(frame_hashes))
     assert path.stat().st_size<120_000,(name,'asset too large')
     print(f'PASS PIXEL ART {name}: {frames} unique-animation frames, nearest-neighbour transparency, {path.stat().st_size} bytes')
-print('PASS V136: 4 real pixel spritesheets, no static PNG pretending to animate.')
+print('PASS V138: four 12/16-frame near-BLACK sprite atlases with crisp silver pixel rims; zero pale-blue V136 frames.')

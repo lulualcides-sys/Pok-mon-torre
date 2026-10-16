@@ -22,7 +22,8 @@ const norm=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
  .toLowerCase().replace(/[^a-z0-9]/g,'');
 const lookup=new Map(),cast=new WeakMap();
 const state={installed:true,previewOnly,officialLoad:!previewOnly,renderer:'PixiJS WebGL',particleSystem:'@pixi/particle-emitter',
- ready:0,failures:[],casts:0,queued:0,mounted:0,suppressed2D:0,frames:0};
+ ready:0,failures:[],casts:0,queued:0,mounted:0,suppressed2D:0,frames:0,
+ pixelPalette:'near-black with one-pixel silver contrast rim',particlePalette:'black'};
 for(const spec of specs){
  for(const alias of [spec.name,...spec.aliases]){
   const key=norm(alias),other=lookup.get(key);
@@ -38,7 +39,7 @@ for(const spec of specs){
    else state.failures.push(spec.name+': sprite dimensions invalid');
  };
  spec.image.onerror=()=>{state.failures.push(spec.name+': spritesheet not served');};
- spec.image.src=base+spec.dir+'/spritesheet.png?v=137';
+ spec.image.src=base+spec.dir+'/spritesheet.png?v=138-black-pixel';
 }
 window.PokemonTorreFlyingPixelV136=Object.freeze({
  installed:true,previewOnly,officialLoad:!previewOnly,moves:specs.map(s=>s.name),

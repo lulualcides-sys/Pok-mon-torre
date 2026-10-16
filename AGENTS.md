@@ -1,5 +1,12 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V138 — quatro Voadores PRETOS, alto contraste e PIXEL (16/10/2026)
+
+O usuário informou que os quatro golpes Voadores estão invisíveis ou na cor da arena e pediu **todos pretos**. V138 NÃO muda golpes aprovados, progressão Brock/Misty, movimento do Pokémon, cooldown ou hit nativo. A geração em `tools/build-v136-flying-pixel.py` agora rasteriza os 12/16 quadros da V136 em uma paleta **quase preta** com um contorno externo nítido de um pixel prata claro para manter legibilidade sobre fundo azul escuro. Não aplica `PIXI.Sprite.tint=0x000000` porque isso apagaria a borda e pioraria o sumiço; usa texturas efetivamente pretas (`tint=0xffffff`) e textura nearest-neighbour. O `PIXI.particles.Emitter` da cena existente colore suas partículas de preto via comportamento `color` com valores `101318→050608`, mantendo um único ticker WebGL e limpeza normal da batalha. Os quatro golpes são **Roost, Rajada, Air Slash, Bicada**; permanecem ainda sem visto ✓ até serem aprovados visualmente, apesar de carregarem no jogo normal desde V137. URLs da textura `?v=138-black-pixel` e carregador `?build=v138-flying-black-contrast` anulam cache da V137. Não usar Canvas2D, CSS, SVG, PNG estático, nem Ateliê: o PNG é spritesheet de quadros animados.
+
+Testar `node tests/v138-flying-black-contrast.test.cjs` e `python tools/build-v136-flying-pixel.py && python tools/test-v136-flying-art.py` e verificar Pages (não prometer FPS real do Android). Rollback pontual `?flying136=0` preservado.
+
+
 ## V137 — Brock libera Misty + Voadores pixel art na URL normal (16/10/2026)
 
 Usuário informou **"Não mudou nada. E no broock tá travado ganha dele mas não passa a fase"**. Dois problemas concretos:
