@@ -218,7 +218,7 @@ if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname||'')){
   qa.poisonPreviewStateV114=()=>({
    hp:Number(foe()?.hp),active:!!battle?.active,paused:!!battle?.paused,
    running:!!engine?.running,canvasReady:!!engine?.canvas?.isConnected,
-   dpr:engine?.dpr,fps:engine?.fps,
+   dpr:engine?.dpr,fps:engine?.fps,groundY:engine?.enemy?.y,
    preview:window.PokemonTorrePoisonPreviewV114?.diagnostics(),
    safe:new URLSearchParams(location.search).get('safe')==='1'
   });
