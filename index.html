@@ -664,6 +664,18 @@ if(new URLSearchParams(location.search).get('pokemon_polish')!=='off'){
    String.fromCharCode(10)+code+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(e){console.warn('V115 global appearance skipped; original sprites preserved',e);}
 }
+// V116 optional sprite-only polish preview: sizes, true shiny entry, recoil.
+// The approved global V115 and Mewtwo V95 remain official unchanged.
+if(new URLSearchParams(location.search).get('pokemon_visual_preview')==='v116'){
+ try{
+  const file='effects/pokemon/visual-preview-v116.js';
+  const response=await fetch(file+'?build=v116-scale-shiny-recoil',{cache:'no-store'});
+  if(!response.ok)throw Error('V116 preview not available HTTP '+response.status);
+  const code=await response.text();
+  if(!game.includes(fireSpriteAnchor))throw Error('V116 game insertion point missing');
+  game=game.replace(fireSpriteAnchor,'\n'+code+'\n'+fireSpriteAnchor);
+ }catch(e){console.warn('V116 sprite preview unavailable; approved V115 preserved',e);}
+}
 // V100: merge bilingual duplicate DISPLAY entries in the four-move
 // editor without changing underlying move keys, equipped saves or VFX.
 try{

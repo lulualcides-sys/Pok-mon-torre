@@ -36,11 +36,30 @@
     "version": "V115",
     "implementation": "effects/pokemon/visual-polish-v115.js",
     "scope": "all existing valid Pokemon IDs other than 150; Mewtwo continues using untouched V95 module",
-    "state": "implemented_pending_CI",
+    "state": "approved_and_deployed",
     "pixel_style": "same numerical contrast, saturation, rim light, subtle bottom shadow and black pixel outline as V95",
     "frame_source": "unchanged existing sprite assets; per-frame raster polish only",
     "mobile_cache_budget_bytes": 25165824,
     "query_toggle": "?pokemon_polish=off",
-    "no_replacements_of_approved_move_animations": true
+    "no_replacements_of_approved_move_animations": true,
+    "approval": "aprovado",
+    "approved_at": "2026-10-16",
+    "protect": true,
+    "user_feedback": "A modificação global ficou muito bom, pode salvar",
+    "commit_confirmed": "a961cc8fa89dd956e9f96d8a0c039b89325d9084"
+  },
+  "v116_preview": {
+    "version": "V116-preview",
+    "status": "não aprovado; demonstração somente na batalha com ?pokemon_visual_preview=v116",
+    "request": "Tamanho proporcional entre espécies, melhorar shinies e reação física ao receber dano; reutilizar sprites existentes",
+    "implementation": "effects/pokemon/visual-preview-v116.js",
+    "rules": [
+      "V95 Mewtwo e V115 globais intocados",
+      "Não mudar quadros, paletas shiny, poses nem golpes aprovados",
+      "Shinies somente com paletas originais existentes; nunca recoloração genérica",
+      "Recuo estritamente visual, sem mudança de hitboxes ou HP",
+      "Estrelas nativas aproximadamente 1.5 segundos",
+      "Teste em batalha antes de promoção"
+    ]
   }
 }
