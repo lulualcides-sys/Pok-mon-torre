@@ -1,5 +1,11 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## Status V123–V124 (16/10/2026)
+
+- **V123 aprovada expressamente** em 16/10/2026, salva/protegida em `effects/v123/STATUS.json`. Preservar IA, progressão, centro, cinco encontros por etapa, carreira/Elite Four/Blue/reset, recompensas, Torre Infinita, medidas contra travamentos, arena ampliada e sprites. Aprovada pelo usuário após jogar no celular.
+- **V124 solicitada**: raio vermelho de retorno à Pokébola e entrada do próximo Pokémon com treinador original V27, efeitos de ambos os lados, e treinador inimigo realizando trocas táticas, sem duplicar roster nem resetar HP/status/shiny. Guardar V123. V124 requer confirmação de testes + deploy, sem declarar aprovada visualmente antes do usuário.
+- Continuar proibido alterar golpes aprovados sem autorização; nova animação de troca não deve mexer em nenhum golpe. Leia `effects/v124/README.md`.
+
 ## Continuidade oficial confirmada em 16/10/2026 — V119 a V122
 
 - V119 aprovada pelo usuário e incorporada à URL normal, com `?kanto119=0` para diagnóstico; registro em `effects/v119/STATUS_APROVACAO.json`.

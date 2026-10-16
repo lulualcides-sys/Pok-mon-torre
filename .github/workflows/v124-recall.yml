@@ -1,0 +1,31 @@
+name: V124 Trainer red recall and tactical enemy switches
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/v124/**'
+      - 'tests/v124-recall-ai.test.cjs'
+      - 'index.html'
+      - '.github/workflows/v124-recall.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  recall:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate real sprite recall and tactical enemy roster
+        run: |
+          node --check effects/v124/recall-ai.js
+          node tests/v124-recall-ai.test.cjs
+      - name: Regression V123 and fighting close contact
+        run: |
+          node tests/v123-mega.test.cjs
+          node tests/v123-core.test.cjs
+          node tests/enemy-fighting-v121.test.cjs
+          node tests/battle-layout-v120.test.cjs

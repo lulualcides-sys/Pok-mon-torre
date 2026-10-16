@@ -49,6 +49,7 @@ jobs:
           node tests/battle-v122.test.cjs
           node tests/v123-mega.test.cjs
           node tests/v123-core.test.cjs
+          node tests/v124-recall-ai.test.cjs
           node tests/rain-v118.test.cjs
           node tests/patch-v117.test.cjs
           node tests/battle-layout-v120.test.cjs

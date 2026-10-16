@@ -836,6 +836,18 @@ if(new URLSearchParams(location.search).get('game123legacy')==='1')try{
  if(!game.includes(fireSpriteAnchor))throw Error('V123 insertion marker absent');
  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
 }catch(error){console.warn('V123 mega game unavailable; V122 remains stable',error);}
+// V124: official cinematic trainer Pokeball recall/send and tactical enemy swaps.
+// Loaded after all V123 systems. ?swap124=0 disables just this patch for comparison.
+if(new URLSearchParams(location.search).get('swap124')!=='0'){
+ try{
+  const file='effects/v124/recall-ai.js';
+  const res=await fetch(file+'?build=v124-trainer-red-recall',{cache:'no-store'});
+  if(!res.ok)throw Error('V124 HTTP '+res.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V124 insertion marker absent');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.error('V124 fallback to native swaps',error);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{

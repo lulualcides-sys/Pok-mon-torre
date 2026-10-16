@@ -1,7 +1,7 @@
 {
   "version": "V123",
-  "status": "implementacao_inicial",
-  "published": false,
+  "status": "aprovado",
+  "published": true,
   "features": [
     "recordes persistentes",
     "recompensas após vitória",
@@ -9,18 +9,26 @@
     "torre infinita após Liga",
     "arena mobile maior",
     "sprites 124%",
-    "limpeza de cache menos agressiva"
+    "limpeza de cache menos agressiva",
+    "IA progressiva Kanto e progressão balanceada",
+    "cinco encontros por etapa e espécies raras",
+    "escolha de recompensas",
+    "estatísticas de carreira, resets, Elite Four e Blue",
+    "limite de poções durante combate",
+    "Torre Infinita original com recordes",
+    "melhorias de cache e combate mobile"
   ],
   "pending": [
-    "IA tática mais profunda",
-    "progressão dos líderes",
-    "encontros raros calibrados",
-    "limite de itens por combate",
-    "testes extensivos da Torre Infinita"
+    "Acompanhar possíveis travamentos em dispositivos Android físicos",
+    "Medir taxa de quadros real em diferentes celulares"
   ],
   "preserve": [
     "V95-V122",
     "todos os golpes aprovados",
     "salvamentos"
-  ]
+  ],
+  "protected": true,
+  "approved_at": "2026-10-16",
+  "approved_by": "Usuário: Salva att 123",
+  "last_verified_deploy": "a0c1d01481d9669e6130ad77c3ca58fb6cdbdab3"
 }
