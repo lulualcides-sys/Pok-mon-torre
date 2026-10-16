@@ -85,9 +85,9 @@ const markSandbox=vm.createContext({window:markWindow,document:markDom,
  skillMarkup:s=>{originalMarks++;return htmlSkill(s)}});
 vm.runInContext(markCode,markSandbox,{timeout:2500});
 assert.ok(markSandbox.skillMarkup({name:'Rain Dance'},0).includes('>+</i>'));
-assert.ok(markSandbox.skillMarkup({name:'Venoshock'},1).includes('✓'));
-assert.ok(!markSandbox.skillMarkup({name:'Golpe de Veneno'},2).includes('✓'));
-assert.ok(!markSandbox.skillMarkup({name:'Toxina Pesada'},3).includes('✓'));
+assert.ok(markSandbox.skillMarkup({name:'Venoshock'},1).includes('>+</i>'));
+assert.ok(!markSandbox.skillMarkup({name:'Golpe de Veneno'},2).includes('>+</i>'));
+assert.ok(!markSandbox.skillMarkup({name:'Toxina Pesada'},3).includes('>+</i>'));
 assert.equal(originalMarks,4);
 const layout=get('effects/ui/battle-proportion-v122.js');
 for(const word of ['orientation:portrait','orientation:landscape','grid-template-columns','requestFullscreen','screen.orientation','height:clamp(370px,57dvh','drawMon'])
