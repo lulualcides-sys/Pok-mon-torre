@@ -812,7 +812,7 @@ if(new URLSearchParams(location.search).get('poison122')!=='0'){
 // V123 integrated official mega patch: strategy, career statistics, five encounters,
 // Pokemon Centre, Infinite Tower record, bounded cast effects and larger visible sprites.
 // Protected move renderers V95-V122 are loaded first and never replaced here.
-if(new URLSearchParams(location.search).get('game123')!=='0'){
+if(new URLSearchParams(location.search).get('game123')!=='0'&&new URLSearchParams(location.search).get('game123legacy')!=='1'){
  for(const file of [
   'effects/v123/gameplay.js',
   'effects/v123/encounters-ui.js',
@@ -827,8 +827,9 @@ if(new URLSearchParams(location.search).get('game123')!=='0'){
   }catch(error){console.error('V123 module disabled: '+file,error);}
  }
 }
-// V123: mega campaign + records + healing + rewards + infinite tower + larger mobile arena.
-try{
+// V123 legacy alternative kept in repository for regression comparison only.
+// Enabling both gameplay engines by default duplicates rewards, Centre and Tower.
+if(new URLSearchParams(location.search).get('game123legacy')==='1')try{
  const file='effects/v123/gameplay-mega.js';
  const res=await fetch(file+'?build=v123-mega-campaign',{cache:'no-store'});
  if(!res.ok)throw Error('V123 HTTP '+res.status);

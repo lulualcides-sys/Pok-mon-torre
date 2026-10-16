@@ -77,30 +77,8 @@ BattleEngine.prototype.frame=function(now){
  if(dt>26)stats.slowFrames++;
  return result;
 };
-// V122 approved Pokémon sprites are already 1.145x; this is a mild extra
-// 1.075x around the same baseline and without modifying any battle collider.
-const prevDraw=BattleEngine.prototype.drawMon;
-if(typeof prevDraw==='function')BattleEngine.prototype.drawMon=function(){
- const ctx=this.ctx;if(!ctx||typeof ctx.drawImage!=='function')return prevDraw.apply(this,arguments);
- const base=ctx.drawImage;let wrapped=false;
- try{
-  ctx.drawImage=function(image,...args){
-   const index=args.length===8?4:args.length===4?0:-1;
-   if(index>=0&&args.slice(index,index+4).every(Number.isFinite)){
-    const ratio=1.075,w=args[index+2],h=args[index+3];
-    if(w>0&&h>0){
-     args[index]-=w*(ratio-1)/2;args[index+1]-=h*(ratio-1);
-     args[index+2]=w*ratio;args[index+3]=h*ratio;
-     stats.monstersScaled++;
-    }
-   }
-   return base.call(ctx,image,...args);
-  };
-  wrapped=ctx.drawImage!==base;
- }catch(e){}
- try{stats.draws++;return prevDraw.apply(this,arguments)}
- finally{if(wrapped){try{ctx.drawImage=base}catch(e){}}}
-};
+// V122 1.24x now owns Pokémon drawing proportions. Do not wrap drawMon
+// again: avoid nested Canvas function substitutions on every active frame.
 const style=document.createElement('style');style.id='v123-battle-size';
 style.textContent='#modal.combatModal{overflow-x:hidden!important;overflow-y:auto!important}'+
  '#modal.combatModal .arenaPro{height:clamp(435px,60dvh,740px)!important;max-height:none!important}'+
@@ -115,5 +93,5 @@ style.textContent='#modal.combatModal{overflow-x:hidden!important;overflow-y:aut
 document.head.appendChild(style);
 window.PokemonTorrePerformanceV123=Object.freeze({installed:true,official:true,
  diagnostics:()=>({...stats,mobile,oldV122Preserved:!!window.PokemonTorreBattleV122?.installed,
-  extraVisualScale:1.075,noSecondFrameLoop:true,stable60fpsPromised:false})});
+  extraVisualScale:1,noSecondFrameLoop:true,stable60fpsPromised:false})});
 })();
