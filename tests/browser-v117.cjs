@@ -38,13 +38,13 @@ async function test(port,safe,preview){
  let ws=null,seq=0,pending=new Map();
  try{
   const portFile=path.join(tmp,'DevToolsActivePort');let devport=0;
-  for(let n=0;n<120;n++){
+  for(let n=0;n<260;n++){
    if(fs.existsSync(portFile)){devport=Number(fs.readFileSync(portFile,'utf8').split('\n')[0]);break}
    if(proc.exitCode!==null)throw Error('Chrome exited '+proc.exitCode);
    await pause(120);
   }
   if(!devport)throw Error('Chromium CDP unavailable');
-  let page=null;for(let n=0;n<60;n++){
+  let page=null;for(let n=0;n<120;n++){
    const pages=await getJson('http://127.0.0.1:'+devport+'/json/list').catch(()=>[]);
    page=pages.find(x=>x.type==='page'&&x.url.includes('127.0.0.1:'+port));
    if(page)break;await pause(100);
@@ -117,6 +117,20 @@ async function test(port,safe,preview){
 }
 (async()=>{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
- try{const port=server.address().port;await test(port,false,true);await test(port,true,true)}
+ try{
+  const port=server.address().port;
+  async function check(safe,preview=false){
+   for(let attempt=1;attempt<=3;attempt++){
+    try{return await test(port,safe,preview)}
+    catch(error){
+     if(!/Chromium CDP unavailable|Chromium page never opened|Chrome exited/i.test(String(error))||attempt===3)throw error;
+     console.warn('V118 CI Chromium startup transient, retry '+attempt,String(error));
+     await pause(1400);
+    }
+   }
+  }
+  await check(false);
+  await check(true);
+ }
  finally{server.close()}
 })().catch(e=>{console.error('FAIL V117 global Pokemon Chromium',e.stack||e);process.exitCode=1;server.close()});
