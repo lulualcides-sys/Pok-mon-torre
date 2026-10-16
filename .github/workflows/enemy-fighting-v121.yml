@@ -1,0 +1,43 @@
+name: V121 enemy Fighting Pokemon close-contact AI repair
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/combat/enemy-fighting-contact-v121.js'
+      - 'tests/enemy-fighting-v121.test.cjs'
+      - 'tests/browser-enemy-fighting-v121.cjs'
+      - '.github/workflows/enemy-fighting-v121.yml'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fighter-contacts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Unit test all Fighting enemy types and protected attacks
+        run: |
+          node tests/enemy-fighting-v121.test.cjs
+          node tests/pokemon-polish-v95.test.cjs
+          node tests/pokemon-polish-v115.test.cjs
+          node tests/visual-v116.test.cjs
+      - name: Prepare previously approved battle sprites
+        run: |
+          python -m pip install --quiet Pillow
+          python tools/build-v107-fighting.py
+          python tools/build-v108-fighting.py
+          python tools/build-v109-fighting.py
+          python tools/build-v110-fighting.py
+          python tools/build-v111-poison.py
+          python tools/build-v113-poison-preview.py
+          python tools/build-v114-ground.py
+      - name: Actual mobile Chromium contact hit against Machamp Hitmonlee Hitmonchan normal and safe
+        run: node tests/browser-enemy-fighting-v121.cjs
