@@ -1,6 +1,8 @@
-# V138 — pixel-art PRETO de alto contraste / PixiJS WebGL / PixiJS Particle Emitter
+# V139 — animação Voadores corrigida: PIXEL preto e PixiJS WebGL
 
-**STATUS V138: os quatro sprites pixelados agora são pretos (contorno prateado pixelado de 1 px) e os emissores têm partículas pretas para melhor contraste com a arena azul. Ativado na URL NORMAL. Aguardando avaliação visual, sem ✓.** Ainda aguardando avaliação visual do usuário antes de conceder ✓.** A V135 de Canvas 2D foi rejeitada. O usuário proibiu esse tipo de efeito. Quatro golpes foram refeitos inteiramente como **spritesheets pixel-art animados**, com quadros reais e contorno preto: Roost, Rajada (Gust), Air Slash e Bicada (Peck).
+**STATUS V139: corrigidas as falhas silenciosas de montagem Pixi, com CDN alternativo, aviso de erro GPU e animação visual do Roost mesmo sendo golpe de status. O quadro preto permanece.**
+
+**Anterior — V138:** os quatro sprites pixelados agora são pretos (contorno prateado pixelado de 1 px) e os emissores têm partículas pretas para melhor contraste com a arena azul. Ativado na URL NORMAL. Aguardando avaliação visual, sem ✓.** Ainda aguardando avaliação visual do usuário antes de conceder ✓.** A V135 de Canvas 2D foi rejeitada. O usuário proibiu esse tipo de efeito. Quatro golpes foram refeitos inteiramente como **spritesheets pixel-art animados**, com quadros reais e contorno preto: Roost, Rajada (Gust), Air Slash e Bicada (Peck).
 
 **JOGO NORMAL:** https://lulualcides-sys.github.io/Pok-mon-torre/ — já utiliza a nova pixel art dos quatro golpes. Comparação direta: https://lulualcides-sys.github.io/Pok-mon-torre/?flying136=pixel. Reversão dos quatro apenas: ?flying136=0.
 

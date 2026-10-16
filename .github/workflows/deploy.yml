@@ -65,6 +65,8 @@ jobs:
           node tests/v136-flying-pixel.test.cjs
           node tests/v137-brock-progression.test.cjs
           node tests/v138-flying-black-contrast.test.cjs
+          node tests/v139-flying-visible.test.cjs
+          node tests/v139-pixi-stage.test.cjs
           node tests/rain-v118.test.cjs
           node tests/patch-v117.test.cjs
           node tests/battle-layout-v120.test.cjs

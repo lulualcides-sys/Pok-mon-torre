@@ -21,8 +21,51 @@ const specs=[
 const norm=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
  .toLowerCase().replace(/[^a-z0-9]/g,'');
 const lookup=new Map(),cast=new WeakMap();
+let fallbackStarted=false,lastWarning='';
+function warning(message){
+ if(typeof document==='undefined')return;
+ // Visible diagnostic instead of pretending the GPU sprite was painted.
+ // Text HUD is not an attack animation and does not use Canvas2D/CSS VFX.
+ if(lastWarning===message)return;
+ lastWarning=message;
+ const arena=document.getElementById('arenaPro');
+ if(!arena)return;
+ let note=document.getElementById('pixelFlyingGpuNotice');
+ if(!note){note=document.createElement('div');note.id='pixelFlyingGpuNotice';
+  note.style.cssText='position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);z-index:10000;color:#fff;background:#111c27f0;border:1px solid #f6d88b;border-radius:8px;padding:6px 10px;font:600 11px system-ui;max-width:80%;text-align:center;pointer-events:none';
+  arena.appendChild(note);}
+ note.textContent='Pixel V139: '+message;
+}
+function clearWarning(){
+ lastWarning='';
+ if(typeof document==='undefined')return;
+ document.getElementById('pixelFlyingGpuNotice')?.remove();
+}
+function loadGpuFallback(){
+ if(fallbackStarted||window.PIXI?.Application)return;
+ fallbackStarted=true;
+ const urls=[
+  'https://unpkg.com/pixi.js@7.4.3/dist/pixi.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.3/pixi.min.js'
+ ];
+ function next(i){
+  if(window.PIXI?.Application){
+   const emitter=document.createElement('script');
+   emitter.src='https://unpkg.com/@pixi/particle-emitter@5.0.10/dist/particle-emitter.min.js';
+   emitter.async=true;document.head.appendChild(emitter);
+   return;
+  }
+  if(i>=urls.length){state.failures.push('PixiJS indisponível após dois CDNs');warning('WebGL/PixiJS não carregou neste navegador');return;}
+  const script=document.createElement('script');
+  script.src=urls[i];script.async=true;
+  script.onload=()=>window.PIXI?.Application?next(i+1):next(i+1);
+  script.onerror=()=>next(i+1);
+  document.head.appendChild(script);
+ }
+ next(0);
+}
 const state={installed:true,previewOnly,officialLoad:!previewOnly,renderer:'PixiJS WebGL',particleSystem:'@pixi/particle-emitter',
- ready:0,failures:[],casts:0,queued:0,mounted:0,suppressed2D:0,frames:0,
+ ready:0,failures:[],casts:0,queued:0,mounted:0,suppressed2D:0,frames:0,visualStatusCasts:0,loadRetries:0,lastMountFailure:null,
  pixelPalette:'near-black with one-pixel silver contrast rim',particlePalette:'black'};
 for(const spec of specs){
  for(const alias of [spec.name,...spec.aliases]){
@@ -38,8 +81,11 @@ for(const spec of specs){
    if(spec.loaded)state.ready++;
    else state.failures.push(spec.name+': sprite dimensions invalid');
  };
- spec.image.onerror=()=>{state.failures.push(spec.name+': spritesheet not served');};
- spec.image.src=base+spec.dir+'/spritesheet.png?v=138-black-pixel';
+ spec.image.onerror=()=>{
+  state.failures.push(spec.name+': spritesheet not served');
+  warning(spec.name+': spritesheet não encontrado (verifique conexão)');
+ };
+ spec.image.src=base+spec.dir+'/spritesheet.png?v=139-visible-gpu';
 }
 window.PokemonTorreFlyingPixelV136=Object.freeze({
  installed:true,previewOnly,officialLoad:!previewOnly,moves:specs.map(s=>s.name),
@@ -49,10 +95,29 @@ window.PokemonTorreFlyingPixelV136=Object.freeze({
 });
 if(typeof BattleEngine!=='function')return;
 function mount(engine,fx,spec){
- if(!spec.loaded||typeof pixiFX==='undefined'||
-    typeof pixiFX.mountPixelFlying!=='function')return false;
+ if(!spec.loaded){
+  state.loadRetries++;
+  state.lastMountFailure=spec.name+': spritesheet ainda carregando';
+  return false;
+ }
+ if(typeof pixiFX==='undefined'||typeof pixiFX.mountPixelFlying!=='function'){
+  state.lastMountFailure=spec.name+': PixiJS bridge indisponível';
+  loadGpuFallback();
+  warning('carregando motor gráfico PixiJS para '+spec.name);
+  return false;
+ }
  const ok=pixiFX.mountPixelFlying(engine,fx,spec);
- if(ok&&!cast.get(fx)){cast.set(fx,true);state.mounted++;}
+ if(ok){
+  if(!cast.get(fx)){cast.set(fx,true);state.mounted++;}
+  state.lastMountFailure=null;
+  clearWarning();
+ }else{
+  const diagnosis=typeof pixiFX.diagnostics==='function'?pixiFX.diagnostics():null;
+  state.lastMountFailure=spec.name+': '+(diagnosis?.error||'GPU stage not ready');
+  if(!window.PIXI?.Application)loadGpuFallback();
+  if(diagnosis?.error||!window.PIXI?.Application)
+   warning('falha GPU: '+(diagnosis?.error||'PixiJS não carregado'));
+ }
  return ok;
 }
 const paintBefore=window.PokemonTorreV360Paint;
@@ -67,16 +132,42 @@ window.PokemonTorreV360Paint=function(ctx,fx,now,engine){
   mount(engine,fx,spec);
  return true;
 };
+// Status moves like Roost are handled by the NATIVE engine without emitting a
+// V359 damaging attack event. Add a PURELY VISUAL zero-hit cue to the same
+// attack-animation list. Roost recovery stays 100% owned by original gameplay.
+function addStatusVisual(engine,move,spec,b){
+ const at=performance.now();
+ const cue={kind:'pixel-flying-status',move,at,end:at+spec.ms,duration:spec.ms,
+  battle:b,owner:current(),target:foe(),hits:0,times:[],
+  from:[engine.player.x,engine.player.y-(engine.h||420)*.13],
+  to:[engine.enemy.x,engine.enemy.y-(engine.h||420)*.12]};
+ if(!Array.isArray(engine.v359Attacks))engine.v359Attacks=[];
+ engine.v359Attacks.push(cue);
+ engine.v359Attacks=engine.v359Attacks.slice(-16);
+ state.visualStatusCasts++;
+ return cue;
+}
 const useBefore=BattleEngine.prototype.useMove;
 BattleEngine.prototype.useMove=function(slot){
  const move=battle?.active&&Number.isInteger(slot)?skillSet(current())?.[slot]:null,
        spec=lookup.get(norm(move?.name));
  if(!spec)return useBefore.apply(this,arguments);
  const before=new Set(this.v359Attacks||[]);
+ const beforeEnergy=battle.energy;
+ const beforeCD=typeof cooldowns!=='undefined'&&Array.isArray(cooldowns)?
+  Number(cooldowns[slot])||0:null;
  const result=useBefore.apply(this,arguments);
  if(result===false||!battle?.active)return result;
- const fx=(this.v359Attacks||[]).find(e=>!before.has(e)&&e.battle===battle&&
+ let fx=(this.v359Attacks||[]).find(e=>!before.has(e)&&e.battle===battle&&
    norm(e.move?.name)===norm(move.name));
+ if(!fx&&norm(move.name)==='roost'){
+  // Status engine returns undefined even on SUCCESS. Guard cooldown/energy
+  // to prevent creating a fake healing visual for a blocked cast.
+  const afterCD=beforeCD!==null?Number(cooldowns[slot])||0:null;
+  const succeeded=beforeCD===null?(result===true||battle.energy<beforeEnergy):
+   afterCD>beforeCD;
+  if(succeeded)fx=addStatusVisual(this,move,spec,battle);
+ }
  if(fx){
   // Native original V359 hit at times[0], one event only. No heal/damage here.
   fx.duration=spec.ms;fx.end=fx.at+spec.ms;state.casts++;

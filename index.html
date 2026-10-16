@@ -1010,7 +1010,7 @@ if(new URLSearchParams(location.search).get('flying136')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const script='effects/moves/v136-flying-pixel/runtime.js';
-  const response=await fetch(script+'?build=v138-flying-black-contrast',{cache:'no-store'});
+  const response=await fetch(script+'?build=v139-flying-visible',{cache:'no-store'});
   if(!response.ok)throw Error('V136 '+response.status);
   if(!game.includes(fireSpriteAnchor))throw Error('V136 existing battle anchor absent');
   game=game.replace(fireSpriteAnchor,
