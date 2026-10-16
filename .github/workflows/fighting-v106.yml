@@ -1,0 +1,33 @@
+name: V106 thick red Cross Chop and physical impacts
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/moves/v106-fighting/**'
+      - 'effects/moves/catalog/*/v106/**'
+      - 'tests/fighting-v106.test.cjs'
+      - 'index.html'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'effects/moves/v106-fighting/**'
+      - 'effects/moves/catalog/*/v106/**'
+      - 'tests/fighting-v106.test.cjs'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/fighting-v106.test.cjs
+      - run: node tests/fighting-v105.test.cjs
+      - run: node tests/fighting-v104.test.cjs
+      - run: node tests/stadium-arena-v97.test.cjs
+      - run: node tests/wide-stadium-v98.test.cjs
+      - run: node tests/ice-v101-official.test.cjs

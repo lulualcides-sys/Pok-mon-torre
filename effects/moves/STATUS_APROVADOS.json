@@ -159,10 +159,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V105",
+      "version": "V106",
       "frames": 8,
-      "effect_file": "effects/moves/catalog/chute/v105/render.js",
-      "notes": "Refeito a pedido do usuário: rejeitou visual cartoon V104. Animação pixel-ink de 8/12/16/16 quadros com contorno preto e impacto local; movimentação corporal/HP/recua V104 preservada. Não substituir sem autorização."
+      "effect_file": "effects/moves/catalog/chute/v106/render.js",
+      "notes": "V106 refeito sob pedido do usuário: efeitos com massa e silhuetas espessas, sem riscos; Cross Chop X vermelho baseado na coreografia do X-Scissor V68. Não mexer em HP, colisões e recuo V104 nem em outros efeitos protegidos sem aprovação."
     },
     {
       "move": "Golpe de Karatê",
@@ -172,10 +172,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V105",
+      "version": "V106",
       "frames": 12,
-      "effect_file": "effects/moves/catalog/golpedekarate/v105/render.js",
-      "notes": "Refeito a pedido do usuário: rejeitou visual cartoon V104. Animação pixel-ink de 8/12/16/16 quadros com contorno preto e impacto local; movimentação corporal/HP/recua V104 preservada. Não substituir sem autorização."
+      "effect_file": "effects/moves/catalog/golpedekarate/v106/render.js",
+      "notes": "V106 refeito sob pedido do usuário: efeitos com massa e silhuetas espessas, sem riscos; Cross Chop X vermelho baseado na coreografia do X-Scissor V68. Não mexer em HP, colisões e recuo V104 nem em outros efeitos protegidos sem aprovação."
     },
     {
       "move": "Cross Chop",
@@ -185,10 +185,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V105",
+      "version": "V106",
       "frames": 16,
-      "effect_file": "effects/moves/catalog/crosschop/v105/render.js",
-      "notes": "Refeito a pedido do usuário: rejeitou visual cartoon V104. Animação pixel-ink de 8/12/16/16 quadros com contorno preto e impacto local; movimentação corporal/HP/recua V104 preservada. Não substituir sem autorização."
+      "effect_file": "effects/moves/catalog/crosschop/v106/render.js",
+      "notes": "V106 refeito sob pedido do usuário: efeitos com massa e silhuetas espessas, sem riscos; Cross Chop X vermelho baseado na coreografia do X-Scissor V68. Não mexer em HP, colisões e recuo V104 nem em outros efeitos protegidos sem aprovação."
     },
     {
       "move": "Brick Break",
@@ -198,10 +198,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V105",
+      "version": "V106",
       "frames": 16,
-      "effect_file": "effects/moves/catalog/brickbreak/v105/render.js",
-      "notes": "Refeito a pedido do usuário: rejeitou visual cartoon V104. Animação pixel-ink de 8/12/16/16 quadros com contorno preto e impacto local; movimentação corporal/HP/recua V104 preservada. Não substituir sem autorização."
+      "effect_file": "effects/moves/catalog/brickbreak/v106/render.js",
+      "notes": "V106 refeito sob pedido do usuário: efeitos com massa e silhuetas espessas, sem riscos; Cross Chop X vermelho baseado na coreografia do X-Scissor V68. Não mexer em HP, colisões e recuo V104 nem em outros efeitos protegidos sem aprovação."
     }
   ]
 }
