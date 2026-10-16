@@ -9,6 +9,7 @@ on:
       - 'tests/poison-v111.test.cjs'
       - 'tests/browser-v111-fast.cjs'
       - 'index.html'
+      - '.github/workflows/poison-v111.yml'
   pull_request:
     branches: [main]
     paths:
@@ -18,6 +19,7 @@ on:
       - 'tests/poison-v111.test.cjs'
       - 'tests/browser-v111-fast.cjs'
       - 'index.html'
+      - '.github/workflows/poison-v111.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -38,7 +40,7 @@ jobs:
         run: python tools/build-v111-poison.py
       - name: Test HP timing, image frames and mobile raster/HUD
         run: node tests/poison-v111.test.cjs
-      - name: Regression: existing approved stadium and fighting visual effects
+      - name: Regression of approved stadium and fighting effects
         run: |
           node tests/ice-v101-official.test.cjs
           node tests/stadium-arena-v97.test.cjs
