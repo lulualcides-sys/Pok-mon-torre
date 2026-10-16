@@ -112,7 +112,7 @@ mountWorks=false;
 const fx=engine.v359Attacks[1];
 assert.equal(ui.PokemonTorreV360Paint(forbiddenCanvas,fx,1200,engine),true);
 assert.ok(document.getElementById('pixelFlyingGpuNotice'),'GPU failure must be visible to user');
-assert.match(api.diagnostics().lastMountFailure||'','WebGL mobile indisponível');
+assert.match(api.diagnostics().lastMountFailure||'',/WebGL mobile indisponível/);
 mountWorks=true;
 assert.equal(ui.PokemonTorreV360Paint(forbiddenCanvas,fx,1300,engine),true);
 assert.equal(document.getElementById('pixelFlyingGpuNotice'),null,'hide warning after successful recovery');
