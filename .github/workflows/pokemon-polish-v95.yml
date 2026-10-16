@@ -24,4 +24,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node tests/pokemon-polish-v95.test.cjs
+      - run: |
+          node tests/pokemon-polish-v95.test.cjs
+          node tests/pokemon-polish-v115.test.cjs

@@ -1,6 +1,6 @@
 {
   "standard": "Pokemon Torre — acabamento visual global dos Pokémon",
-  "status": "Padrão visual V95 aprovado pelo usuário; Mewtwo é a referência oficial.",
+  "status": "Padrão Mewtwo V95 preservado; acabamento estendido aos demais via V115 quando solicitado.",
   "requested": "Deixar todos os Pokémon mais bonitos de uma vez no futuro, sem redesenhar sprites, sem membros animados, sem Mega Evolução e sem modificar golpes.",
   "pilot": {
     "pokemon": "Mewtwo",
@@ -29,6 +29,18 @@
     "fallback_original_on_cors_error": true,
     "preserve_approved_mewtwo_appearance": true
   },
-  "rollout": "Usar o acabamento V95 do Mewtwo como modelo quando o usuário pedir melhoria global dos demais Pokémon. Não aplicar aos demais sem pedido específico. Preservar sprites e golpes aprovados; não redesenhar, não animar membros, não criar Mega Evolução.",
-  "frozen_prior_move_approvals": "effects/moves/STATUS_APROVADOS.json"
+  "rollout": "V115: pedido explícito em 16/10/2026 para arrumar os sprites de todos os Pokémon no padrão Mewtwo V95. Aplicar em batalha à totalidade dos IDs válidos exceto Mewtwo, mantendo o processamento V95 dele intacto. Não redesenhar ou modificar sprites base, quadros, poses, golpes nem movimento; cache global limitado e fallback original em falhas. Ligar também no modo seguro.",
+  "frozen_prior_move_approvals": "effects/moves/STATUS_APROVADOS.json",
+  "global_rollout": {
+    "requested_at": "2026-10-16",
+    "version": "V115",
+    "implementation": "effects/pokemon/visual-polish-v115.js",
+    "scope": "all existing valid Pokemon IDs other than 150; Mewtwo continues using untouched V95 module",
+    "state": "implemented_pending_CI",
+    "pixel_style": "same numerical contrast, saturation, rim light, subtle bottom shadow and black pixel outline as V95",
+    "frame_source": "unchanged existing sprite assets; per-frame raster polish only",
+    "mobile_cache_budget_bytes": 25165824,
+    "query_toggle": "?pokemon_polish=off",
+    "no_replacements_of_approved_move_animations": true
+  }
 }
