@@ -30,7 +30,7 @@ def stamp(dst,img,x,y,w,h,opacity=1):
 def frame(i):
     p=i/15
     grow=min(1,(i+1)/8)
-    tail=min(1,(15-i)/3)
+    tail=max(.12,min(1,(16-i)/3))
     out=Image.new('RGBA',(W,W))
     phase=(i%8)
     # Wide and shallow: an animated puddle, NOT a travelling purple projectile.
