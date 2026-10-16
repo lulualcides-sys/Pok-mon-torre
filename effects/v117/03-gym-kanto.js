@@ -4,7 +4,7 @@
 (()=>{
 'use strict';
 if(new URLSearchParams(location.search).get('kanto117')!=='1')return;
-if(typeof GYMS==='undefined'||GYMS.length!==8)return;
+if(typeof GYMS==='undefined'||GYMS.length<8)return; // Extra League stages are permitted and untouched.
 const leaders=[
  {name:'Ginásio de Pewter',leader:'Brock',type:'rock',medal:'🪨',accent:'#927a58',
   pool:[74,74,95,75,74,95],boss:[74,95],wild:[74,27,66,41,10,19]},
@@ -67,8 +67,8 @@ BattleEngine.prototype.update=function(dt,now){
  return result;
 };
 window.PokemonTorreGymsV117=Object.freeze({
- installed:true,previewOnly:true,version:'117.0',names:GYMS.map(g=>g.leader),
- diagnostics:()=>({...stats,leaderTeams:GYMS.map(g=>({leader:g.leader,boss:g.boss.slice()}))})
+ installed:true,previewOnly:true,version:'117.0',names:GYMS.slice(0,8).map(g=>g.leader),
+ diagnostics:()=>({...stats,leaderTeams:GYMS.slice(0,8).map(g=>({leader:g.leader,boss:g.boss.slice()}))})
 });
 if(typeof render==='function'&&!battle?.active&&save?.starter)try{render()}catch(e){console.warn('V117 gym UI refresh skipped',e)}
 })();
