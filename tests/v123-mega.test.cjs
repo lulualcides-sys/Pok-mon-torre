@@ -59,6 +59,18 @@ const sandbox=vm.createContext({window:{},document,navigator:{userAgent:'Android
  BattleEngine,GYMS,KANTO_RARE:new Set([25]),KANTO_LEGENDS:new Set(),
  clamp:(v,a,b)=>Math.min(b,Math.max(a,v)),mon,D,
  advantage:()=>1,log(){},overlay(){},close(){},awardXP(){},console});
+// Native stubs must mutate vm globals, not host-module lexical variables.
+sandbox.startBattle=function(arr,label,wild){
+ oldStarts++;sandbox.battle={active:true,wild,foe:arr[0],label,enemies:[],paused:false};return true;
+};
+sandbox.finishBattle=function(win){
+ oldEnds++;if(win)sandbox.save.wins++;else sandbox.save.losses++;
+ sandbox.battle.active=false;sandbox.battle=null;sandbox.persist();
+};
+sandbox.finishCapture=function(){sandbox.battle.active=false;sandbox.battle=null;};
+sandbox.foe=()=>sandbox.battle?.foe;
+sandbox.battlePotion=function(){sandbox.save.potions--};
+sandbox.battleSuperPotion=function(){sandbox.save.superPotions--};
 for(const path of ['gameplay.js','encounters-ui.js','performance-visual.js'])
  vm.runInContext(read(base+path),sandbox,{filename:path,timeout:5000});
 assert.equal(sandbox.window.PokemonTorreGameplayV123.installed,true);
