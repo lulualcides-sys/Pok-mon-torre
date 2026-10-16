@@ -14,7 +14,7 @@ const fightingV104=(()=>{
  const allowed=m=>!!m&&m.type==='fighting'&&Number(m.power)>0&&
   m.cat!=='status'&&!['shield','status','recover','illusion','weather'].includes(m.kind);
  const log={version:'104.0',casts:0,frames:0,approaches:0,contact:0,
-  retreats:0,nativeHits:0,removedGeneric:0,rejected:0,
+  retreats:0,nativeHits:0,nativeRecovered:0,removedGeneric:0,rejected:0,
   distances:[],draws:{},last:null};
  function register(name,frames,duration,impact,paint,other=[]){
   if(![8,12,16].includes(frames)||typeof paint!=='function')
@@ -228,7 +228,7 @@ const fightingV104=(()=>{
    fx.connected=true;log.nativeHits++;
   }
  }
- return {register,allowed,styleOf,step,draw,start,cancel,state,approach,hit,gap,
+ return {register,allowed,styleOf,step,draw,start,cancel,state,approach,hit,gap,report:log,
   diagnostics:()=>({...log,distances:log.distances.slice(),draws:{...log.draws},
    active:typeof engine!=='undefined'&&engine?state.get(engine)?.name||null:null,
    pending:typeof engine!=='undefined'&&engine?!!approach.get(engine):false,
@@ -259,16 +259,48 @@ window.PokemonTorreFightingV104=fightingV104;
   const beforeEvents=new Set(this.v359Attacks||[]),
    beforeContacts=new Set(this.v47ContactToLand||[]),
    beforeMisses=new Set(this.v47MissingCollisions||[]),
+   beforeShots=new Set(this.projectiles||[]),beforeBeam=this.telegraph,
    energy=Number(battle.energy),cd=Number(cooldowns[slot]||0);
   const result=priorUse.apply(this,arguments);
-  const event=(this.v359Attacks||[]).findLast(f=>!beforeEvents.has(f)&&
+  if(!battle?.active||battle.paused||owner!==current()||victim!==foe())return result;
+  let event=(this.v359Attacks||[]).findLast(f=>!beforeEvents.has(f)&&
    f.move?.name===move.name&&f.battle===battle&&f.owner===owner);
-  if(result===false||!battle?.active||battle.paused||
-   !(event||Number(battle.energy)<energy||Number(cooldowns[slot]||0)>cd)){
-   return result;
+  const charged=Number(battle.energy)<energy||Number(cooldowns[slot]||0)>cd;
+  if(!event){
+   // Some old V81/V80 "ranged Fighting" adapters swallow Aura Sphere's cast
+   // without allocating a V359 hit event. It must not become an invisible
+   // zero-damage animation. Recover using the SAME native V359 hit queue,
+   // energy, cooldown and hitTarget(); never apply fake damage here.
+   if(!charged){
+    if(result!==false&&this.v33Windup?.until>now)return result;
+    if(Number(battle.energy)<Number(move.cost||0)||(cooldowns[slot]||0)>now)
+     return result;
+    battle.energy=Math.max(0,Number(battle.energy)-Number(move.cost||0));
+    cooldowns[slot]=now+Math.max(450,Number(move.cd)||1000);
+   }
+   event={kind:'contact',move,at:now,end:now+540,duration:540,
+    battle,owner,target:victim,hits:0,times:[.64],
+    from:[this.player.x,this.player.y-this.h*.13],
+    to:[this.enemy.x,this.enemy.y-this.h*.12]};
+   this.v359Attacks||=[];
+   this.v359Attacks.push(event);
+   this.v359Attacks=this.v359Attacks.slice(-16);
+   this.v359Casts=(this.v359Casts||0)+1;
+   this.v359LastMove=move.name;
+   api.report.nativeRecovered=(api.report.nativeRecovered||0)+1;
   }
+  // A few legacy Fighting moves still spawn a projectile in parallel with
+  // their contact event. Discard only those spawned by THIS physical cast,
+  // never shots from an older or different-type approved move.
+  if(Array.isArray(this.projectiles)){
+   const before=this.projectiles.length;
+   this.projectiles=this.projectiles.filter(p=>beforeShots.has(p)||p.from!=='player');
+   api.report.removedGeneric+=before-this.projectiles.length;
+  }
+  if(this.telegraph!==beforeBeam&&this.telegraph?.from==='player')
+   this.telegraph=beforeBeam;
   api.start(this,move,event,owner,victim,now,beforeContacts,beforeMisses);
-  return result;
+  return result===false?true:result;
  };
  const prevUpdate=BattleEngine.prototype.update;
  BattleEngine.prototype.update=function(dt,now){
