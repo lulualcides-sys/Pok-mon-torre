@@ -15,7 +15,7 @@
   im.src=originalFrames['weather_rain_'+String(i).padStart(2,'0')];
   return im;
  });
- const state={activations:0,blocked:0,originalRendererFrames:0,
+ const state={activations:0,blocked:0,recoveredCasts:0,originalRendererFrames:0,
   fallbackFrames:0,failures:0,lastName:null,lastTime:null,frameCount:frames.length};
  const useMove=BattleEngine.prototype.useMove;
  BattleEngine.prototype.useMove=function(slot){
@@ -25,11 +25,26 @@
   if(!move||!matches(move.name))return useMove.apply(this,arguments);
   const energy=Number(b.energy),cooldown=Number(cooldowns[slot]||0);
   const now=performance.now();
+  // Check the standard gameplay gates BEFORE trying the legacy handlers.
+  const cost=Math.max(0,Number(move.cost)||0);
+  const allowed=!!b.active&&!b.paused&&mon?.hp>0&&
+    Number.isFinite(energy)&&energy>=cost&&Number(cooldowns[slot]||0)<=now;
   const outcome=useMove.apply(this,arguments);
-  // Rain must only start after the native engine accepts the cast.
-  const accepted=!!b?.active&&b===battle&&
+  let accepted=!!b?.active&&b===battle&&
     (outcome===true||(Number.isFinite(energy)&&Number(b.energy)<energy-.001)||
       Number(cooldowns[slot]||0)>Math.max(now,cooldown)+1);
+  // Rain Dance is an unconditional field-weather status move. Old versions can
+  // reject it before setting v32Weather. Recover ONLY an otherwise legal cast,
+  // charging the original cost and cooldown once, never touching HP or attacks.
+  if(!accepted&&allowed&&b===battle&&b.active&&mon?.hp>0){
+   b.energy=Math.max(0,energy-cost);
+   const cd=Math.max(650,Math.min(16000,Number(move.cd)||5700));
+   cooldowns[slot]=now+cd;
+   if(this.attackActs)this.attackActs.player=Math.max(this.attackActs.player||0,(this.time||0)+.36);
+   state.recoveredCasts++;
+   if(typeof log==='function')log((typeof D!=='undefined'?D[mon.id]?.name:'Pokémon')+' usou Rain Dance! CHUVA');
+   accepted=true;
+  }
   if(!accepted){state.blocked++;return outcome;}
   b.v32Weather='rain'; // the V35.64 PMD weather renderer reads this exact state
   b.v118RainCastAt=now;
@@ -78,6 +93,8 @@
     const nativeBefore=window.PokemonTorreV3564WeatherDiagnostics?.();
     const weatherBefore=battle.v32Weather||'clear';
     const beforeEnergy=battle.energy;
+    const previousCooldown=cooldowns[0];
+    cooldowns[0]=0; // Fresh test battle, no carry-over timing from previous QA casts.
     try{
      skillSet=function(mon){
       const list=oldSkillSet(mon);
@@ -91,6 +108,7 @@
     }finally{skillSet=oldSkillSet;}
     return {activated:battle.v32Weather==='rain',before:weatherBefore,
      energyBefore:beforeEnergy,energyAfter:battle.energy,
+     cooldownBefore:previousCooldown,cooldownAfter:cooldowns[0],
      nativeBefore,diagnostics:window.PokemonTorreRainDanceV118.diagnostics()};
    }catch(error){return {error:String(error),stack:String(error?.stack||'')}}
   };
