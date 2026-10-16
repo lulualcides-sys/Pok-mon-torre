@@ -402,6 +402,32 @@
       "notes": "Animação isolada 16 quadros PMD. Dano, recarga e energia continuam nativos V359; não substituir sem pedido explícito.",
       "approval_reconfirmed_at": "2026-10-16",
       "reconfirmation_note": "Usuário reiterou a aprovação dos últimos golpes Veneno; versão visual original protegida."
+    },
+    {
+      "move": "Cauda de Água",
+      "aliases": [
+        "Aqua Tail",
+        "Cauda da Água"
+      ],
+      "effect_file": "effects/moves/aqua-tail/index.js",
+      "status": "aprovado",
+      "protect": true,
+      "version": "V45 (arte prévia aprovada)",
+      "accepted_at": "2026-10-16",
+      "notes": "Usuário confirmou aprovação em 16/10/2026; preservar animação existente, não alterar durante a prévia de Withdraw, Pistola d'Água, Bolhas e Mergulho."
+    },
+    {
+      "move": "Pulso de Água",
+      "aliases": [
+        "Water Pulse",
+        "Pulso d'Água"
+      ],
+      "effect_file": "effects/moves/water-pulse/index.js",
+      "status": "aprovado",
+      "protect": true,
+      "version": "V45 (arte prévia aprovada)",
+      "accepted_at": "2026-10-16",
+      "notes": "Usuário confirmou aprovação em 16/10/2026; preservar animação existente, não alterar durante a prévia de Withdraw, Pistola d'Água, Bolhas e Mergulho."
     }
   ]
 }

@@ -886,6 +886,23 @@ if(new URLSearchParams(location.search).get('marks127')!=='0'){
   game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V127 status badges unavailable; existing move animations retained',error);}
 }
+// V128 opt-in: ONLY the four water moves shown equipped by the user.
+if(new URLSearchParams(location.search).get('battle_preview')==='water128'){
+ try{
+  const files=['effects/moves/v128-water-preview/runtime.js',
+   'effects/moves/v128-water-preview/withdraw/index.js',
+   'effects/moves/v128-water-preview/water-gun/index.js',
+   'effects/moves/v128-water-preview/bubbles/index.js',
+   'effects/moves/v128-water-preview/dive/index.js'];
+  const parts=await Promise.all(files.map(async file=>{
+   const response=await fetch(file+'?build=v128-water-preview',{cache:'no-store'});
+   if(!response.ok)throw Error('V128 '+file+' HTTP '+response.status);
+   return response.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V128 battle anchor missing');
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+parts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V128 preview not loaded; normal effects preserved',error);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
