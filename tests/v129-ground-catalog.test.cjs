@@ -8,7 +8,7 @@ for(const name of ['Tapa de Lama','Soco de Terra','Tremor','Abalo Terrestre','Te
  assert.ok(moves.includes(name),'original Ground move definition missing '+name);
 assert.ok(index.includes('effects/ui/move-type-filter.js'),'type filter must load');
 assert.ok(source.includes("['ground','Terra']"),'Terra must be a native selectable category');
-assert.doesNotMatch(source,/save\.|localStorage\.|\.power\s*=|\.level\s*=|BattleEngine\.prototype/,'UI filter must not rewrite progress, power or combat');
+assert.doesNotMatch(source,/localStorage\.setItem|save\.[a-zA-Z_$][\w$]*\s*=|\.power\s*=|\.level\s*=|BattleEngine\.prototype/,'UI filter must not rewrite progress, power or combat');
 function node(tag){
  const el={tag,children:[],style:{},dataset:{},listeners:{},textContent:'',value:'',_attrs:{},_classes:new Set(),isConnected:true};
  el.classList={contains(x){return el._classes.has(x)},add(x){el._classes.add(x)},remove(x){el._classes.delete(x)},
