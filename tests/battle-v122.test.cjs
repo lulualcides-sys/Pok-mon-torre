@@ -12,7 +12,7 @@ for(const p of ['effects/performance/cast-smooth-v122.js','effects/ui/battle-pro
  'rajadaacida/spec.js','golpedeveneno/spec.js'].map(x=>root+x)]){
  assert.ok(html.includes(p),'Module must be loaded '+p);assert.ok(fs.statSync(p).size>80);
 }
-assert.ok(html.includes("get('battle_preview')==='poison122'"),'new effects must be preview only');
+assert.ok(html.includes("get('poison122')!=='0'"),'V122 must load officially by default');
 const renderer=get(root+'runtime.js');
 assert.ok(!renderer.includes('hitTarget(')&&!renderer.includes('.hp='),'No direct damage manipulation');
 const supported=['Venoshock','Toxina Pesada','Rajada Ácida','Golpe de Veneno'];
@@ -41,15 +41,16 @@ const run=query=>{
   location:{search:query,hostname:'example.test'},battle,current:()=>mon,skillSet:()=>supported.map((name)=>({name})),
   performance:{now:()=>200},console,Number,Math,Map,Set,WeakMap});
  vm.runInContext(renderer,context,{timeout:4000});
- if(query==='?battle_preview=poison122'){
+ if(query!=='?poison122=0'){
   for(const id of ids)vm.runInContext(get(root+id+'/spec.js'),context,{timeout:2000});
  }
  return {window,context};
 };
-assert.equal(run('').window.PokemonTorrePoisonV122,undefined,'Official battle MUST stay unchanged');
-const preview=run('?battle_preview=poison122');
+assert.equal(run('?poison122=0').window.PokemonTorrePoisonV122,undefined,'V111 rollback must remain available');
+const preview=run('');
 const api=preview.window.PokemonTorrePoisonV122;
-assert.equal(api.previewOnly,true);
+assert.equal(api.previewOnly,false);
+assert.equal(api.official,true);
 assert.equal(api.diagnostics().ready.length,4);
 const engine=new BattleEngine();
 for(let i=0;i<4;i++){
@@ -86,9 +87,10 @@ const markSandbox=vm.createContext({window:markWindow,document:markDom,
 vm.runInContext(markCode,markSandbox,{timeout:2500});
 assert.ok(markSandbox.skillMarkup({name:'Rain Dance'},0).includes('>+</i>'));
 assert.ok(markSandbox.skillMarkup({name:'Venoshock'},1).includes('>+</i>'));
-assert.ok(!markSandbox.skillMarkup({name:'Golpe de Veneno'},2).includes('>+</i>'));
-assert.ok(!markSandbox.skillMarkup({name:'Toxina Pesada'},3).includes('>+</i>'));
-assert.equal(originalMarks,4);
+assert.ok(markSandbox.skillMarkup({name:'Golpe de Veneno'},2).includes('>+</i>'));
+assert.ok(markSandbox.skillMarkup({name:'Toxina Pesada'},3).includes('>+</i>'));
+assert.ok(markSandbox.skillMarkup({name:'Rajada Ácida'},4).includes('>+</i>'));
+assert.equal(originalMarks,5);
 const layout=get('effects/ui/battle-proportion-v122.js');
 for(const word of ['orientation:portrait','orientation:landscape','grid-template-columns','requestFullscreen','screen.orientation','height:clamp(370px,57dvh','drawMon'])
  assert.ok(layout.includes(word),'UI responsive feature missing '+word);
@@ -98,5 +100,7 @@ for(const word of ['particlesAt','particleCap','warm','requestIdleCallback','cas
  assert.ok(perf.includes(word),'FPS stabilizer missing '+word);
 assert.ok(!perf.includes('.hp=')&&!perf.includes('cooldowns['));
 assert.equal(approved.moves.filter(m=>m.status==='em_teste').length,4);
+assert.equal(approved.moves.filter(m=>m.version==='V122'&&m.status==='aprovado'&&m.protect).length,4);
+assert.equal(approved.moves.find(m=>m.move==='Venoshock')?.previous_approved?.version,'V111');
 assert.ok(approved.moves.some(m=>m.move==='Rain Dance'&&m.protect));
-console.log('PASS V122 original Poison: 4 real isolated 16-frame sprites, hit timing preserved, player-approved ticks only, portrait and landscape, cast particle budget; official moves unchanged');
+console.log('PASS V122 official Poison: four protected 16-frame effects, rollback V111 intact, native damage, approved + labels, mobile responsive layout and cast budget');

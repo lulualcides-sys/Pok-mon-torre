@@ -787,9 +787,9 @@ for(const file of [
    String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V122 optional module disabled: '+file,error);}
 }
-// FOUR POISON GBA/PMD sprite previews in LIVE battle, not an Atelier.
-// They NEVER replace saved visuals until explicit approval.
-if(new URLSearchParams(location.search).get('battle_preview')==='poison122'){
+// V122 approved: FOUR POISON sprites now active in official LIVE battles.
+// Previous V111 version remains intact; ?poison122=0 is diagnostics rollback.
+if(new URLSearchParams(location.search).get('poison122')!=='0'){
  try{
   const files=[
    'effects/moves/v122-poison-preview/runtime.js',
@@ -807,7 +807,7 @@ if(new URLSearchParams(location.search).get('battle_preview')==='poison122'){
   game=game.replace(fireSpriteAnchor,
    String.fromCharCode(10)+chunks.join(String.fromCharCode(10))+
    String.fromCharCode(10)+fireSpriteAnchor);
- }catch(error){console.error('V122 Poison preview unavailable; prior moves untouched',error);}
+ }catch(error){console.error('V122 approved Poison renderer unavailable; V111 fallback preserved',error);}
 }
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.

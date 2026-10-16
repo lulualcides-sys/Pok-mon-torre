@@ -13,8 +13,16 @@ assert.ok(wf.includes('build-v111-poison.py'));
 const approved=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
 for(let i=0;i<4;i++){
  const row=approved.moves.find(x=>x.move===names[i]);
- assert.equal(row?.version,'V111');assert.equal(row?.status,'aprovado');
- assert.equal(row?.aprovacao_visual,'salvo_com_ressalvas');assert.equal(row?.protect,true);
+ if(names[i]==='Venoshock'){
+  assert.equal(row?.version,'V122');
+  assert.equal(row?.previous_approved?.version,'V111');
+  assert.equal(row?.previous_approved?.aprovacao_visual,'salvo_com_ressalvas');
+  assert.equal(row?.fallback_file,d+'renderer.js');
+ }else{
+  assert.equal(row?.version,'V111');
+  assert.equal(row?.aprovacao_visual,'salvo_com_ressalvas');
+ }
+ assert.equal(row?.status,'aprovado');assert.equal(row?.protect,true);
  assert.equal(row?.frames,frames[i]);
  const path=d+'sheets/'+ids[i]+'.webp',buf=fs.readFileSync(path);
  assert.equal(buf.toString('ascii',0,4),'RIFF');assert.equal(buf.toString('ascii',8,12),'WEBP');

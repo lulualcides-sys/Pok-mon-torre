@@ -1,4 +1,16 @@
-# V122 — Golpes Veneno / Arena Android / estabilidade (16/10/2026)
+# V122 — APROVADA E OFICIAL (16/10/2026)
+
+O usuário declarou: “Aprovada a 121 e a 122 volta de onde parou”. Os quatro efeitos funcionais **Venoshock, Toxina Pesada, Rajada Ácida e Golpe de Veneno** foram autorizados e passam a carregar na **batalha normal sem parâmetros especiais**. Cada um conserva 16 quadros PMD, estrutura isolada, cronograma nativo de HP/dano, energia e cooldown. Os marcadores `+` incluem os quatro efeitos aprovados.
+
+Os 4 módulos antigos V111 continuam armazenados intactos. **Venoshock V111** pode ser visualizado na versão de contingência `?poison122=0`; Picada Tóxica, Picada Venenosa e Ferrão Venenoso preservam os visuais V111. A URL antiga `?battle_preview=poison122` segue compatível, mas não é mais necessária. O modo seguro normal continua disponível com `?safe=1`. A aprovação não altera outros golpes, a arena V98 ou os arquivos V120 e V121.
+
+**Jogo oficial:** https://lulualcides-sys.github.io/Pok-mon-torre/
+
+---
+
+## Histórico V122 (pré-aprovação)
+
+# V122 — Golpes Veneno / Arena Android / estabilidade (prévia inicial, 16/10/2026)
 
 ## Alterações
 - **Oficiais e reversíveis:** `effects/ui/battle-proportion-v122.js` amplia a arena no retrato, melhora a distribuição dos HUDs, aumenta discretamente o desenho dos Pokémon (sem modificar sprites nem hitboxes) e cria controle **⛶ Deitado**. Em modo paisagem usa duas colunas e controles refluídos. Quando a rotação programática é bloqueada pelo navegador, orienta a girar fisicamente. Não promete forçar orientação Android.

@@ -1,5 +1,16 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## Continuidade oficial confirmada em 16/10/2026 — V119 a V122
+
+- V119 aprovada pelo usuário e incorporada à URL normal, com `?kanto119=0` para diagnóstico; registro em `effects/v119/STATUS_APROVACAO.json`.
+- V120 aprovada e protegida; correção de layout Blaine, registros em `effects/v120/STATUS_APROVACAO.json`.
+- **V121 aprovada expressamente em 16/10/2026**, manter `effects/combat/enemy-fighting-contact-v121.js` e registrar em `effects/v121/STATUS_APROVACAO.json`. Não regredir para projéteis Lutador à distância.
+- **V122 aprovada expressamente em 16/10/2026**, incluindo os quatro golpes Veneno da prévia: **Venoshock, Toxina Pesada, Rajada Ácida, Golpe de Veneno**. Integrar ao jogo **normal**, preservar V111, V114 e todos outros golpes aprovados. O marcador `+` desses quatro deve aparecer no menu. O parâmetro `?poison122=0` restaura visual anterior de Venoshock para diagnóstico. Ver `effects/v122/STATUS_APROVACAO.json` e `effects/moves/STATUS_APROVADOS.json`.
+- Manter escala/efeitos V95, arena tecnológica azul V98, Raio de Gelo V101, Cross Chop V107, golpes V110 em teste e Rain Dance V118.
+- Testar Node e Chromium Android normal/seguro e confirmar CI + deploy do commit antes de declarar a atualização concluída. A simulação Chromium não é teste em dispositivo Android físico.
+- Demais instruções históricas abaixo, inclusive referência antiga dizendo 'V111 última', descrevem o estado anterior à aprovação V119–V122 e não revogam este cabeçalho.
+
+
 **INSTRUÇÕES ATUAIS E PRIORITÁRIAS.** Em caso de divergência com revisões históricas abaixo, aplicar este Script Mestre. Repositório: https://github.com/lulualcides-sys/Pok-mon-torre. Jogo: https://lulualcides-sys.github.io/Pok-mon-torre/.
 
 1. **Alterar o jogo real:** trabalhar diretamente no GitHub quando o acesso estiver disponível; implementar, testar e publicar via Pages. Não substituir programação por imagens, Ateliê, código solto ou arquivo para baixar. **Nunca declarar concluído sem confirmar commit, testes e publicação.** Informar o link jogável.

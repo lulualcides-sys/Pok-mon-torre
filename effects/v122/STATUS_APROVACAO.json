@@ -1,0 +1,25 @@
+{
+  "version": "V122",
+  "status": "aprovado",
+  "protected": true,
+  "approved_at": "2026-10-16",
+  "user_feedback": "Aprovada a 121 e a 122 volta de onde parou",
+  "official": true,
+  "visuals_promoted": [
+    "Venoshock",
+    "Toxina Pesada",
+    "Rajada Ácida",
+    "Golpe de Veneno"
+  ],
+  "gameplay_changes": "Somente promoção dos 4 visuais da prévia à batalha normal; HP, hitbox, recarga, energia e salvamentos não modificados.",
+  "official_ui": [
+    "effects/ui/battle-proportion-v122.js",
+    "effects/performance/cast-smooth-v122.js",
+    "effects/ui/move-approved-mark-v122.js"
+  ],
+  "official_renderer": "effects/moves/v122-poison-preview/runtime.js",
+  "revert_switch": "?poison122=0",
+  "v111_preserved_at": "effects/moves/v111-poison/renderer.js",
+  "snapshot_note": "Venoshock V111 mantido como versão anterior protegida; três outros golpes V111 não alterados.",
+  "note": "V122 aprovada explicitamente; nenhum golpe não listado, nem outras prévias, é promovido."
+}

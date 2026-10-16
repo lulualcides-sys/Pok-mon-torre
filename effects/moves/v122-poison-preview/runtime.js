@@ -1,11 +1,11 @@
-/* V122 FOUR POISON PREVIEWS in the real battle, not image or CSS mockups.
+/* V122 FOUR POISON APPROVED effects in the real battle, not image or CSS mockups.
  * Authentic PMD pixel sprites derived from the user's existing V113 library.
  * Each move has independent art direction, 16 authored frames, native HP timing.
- * Enabled exclusively by ?battle_preview=poison122 until visual approval.
+ * Official since 16/10/2026; ?poison122=0 restores the V111 renderer.
  */
 (()=>{
 'use strict';
-const enabled=new URLSearchParams(location.search).get('battle_preview')==='poison122';
+const enabled=new URLSearchParams(location.search).get('poison122')!=='0';
 if(!enabled||window.PokemonTorrePoisonV122?.installed)return;
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
  .toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -129,7 +129,7 @@ if(typeof oldShot==='function')
   return oldShot.apply(this,arguments);
  };
 window.PokemonTorrePoisonV122=Object.freeze({
- installed:true,previewOnly:true,register,
+ installed:true,official:true,previewOnly:false,register,
  diagnostics:()=>({...stats,registered:[...specs.keys()],
   ready:[...specs.values()].filter(ready).map(s=>s.id),errors:stats.errors.slice(-8)})
 });

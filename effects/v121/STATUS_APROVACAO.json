@@ -1,0 +1,22 @@
+{
+  "version": "V121",
+  "status": "aprovado",
+  "protected": true,
+  "approved_at": "2026-10-16",
+  "user_feedback": "Aprovada a 121 e a 122 volta de onde parou",
+  "official": true,
+  "base_commit": "394e2bbc06d297130a1017078d205da0e75bb329",
+  "effect_files": [
+    "effects/combat/enemy-fighting-contact-v121.js"
+  ],
+  "description": "Adversários Lutadores se aproximam antes de golpes físicos e só causam dano em contato; sem projéteis genéricos à distância.",
+  "preserve": [
+    "Mewtwo V95",
+    "Arena V98",
+    "golpes aprovados V101/V111/V114/V118",
+    "V119",
+    "V120",
+    "V122"
+  ],
+  "note": "Aprovação registrada sem alterar o comportamento funcional já publicado."
+}

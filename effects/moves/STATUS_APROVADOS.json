@@ -240,12 +240,22 @@
       "aliases": [],
       "status": "aprovado",
       "protect": true,
-      "version": "V111",
+      "version": "V122",
       "frames": 16,
-      "effect_file": "effects/moves/v111-poison/renderer.js",
-      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. sem alterar dano, energia e recarga. Salvo por autorização do usuário, com ressalvas quanto à qualidade visual.",
-      "aprovacao_visual": "salvo_com_ressalvas",
-      "feedback_usuario": "Aceito para salvar em 2026-10-15, apesar de o usuário considerar os efeitos visualmente ruins. Não modificar sem novo pedido explícito."
+      "effect_file": "effects/moves/v122-poison-preview/runtime.js",
+      "notes": "Duplo choque ácido em 16 quadros PMD, V359 mantém HP, energia e cooldown. V111 preservada e recuperável por ?poison122=0.",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "feedback_usuario": "Usuário aprovou a V122 em 2026-10-16, autorizando integrar a prévia de Venoshock, preservando a versão V111 anterior.",
+      "accepted_at": "2026-10-16",
+      "spec_file": "effects/moves/v122-poison-preview/venoshock/spec.js",
+      "previous_approved": {
+        "version": "V111",
+        "effect_file": "effects/moves/v111-poison/renderer.js",
+        "aprovacao_visual": "salvo_com_ressalvas",
+        "feedback_usuario": "Aceito para salvar em 2026-10-15, apesar de o usuário considerar os efeitos visualmente ruins. Não modificar sem novo pedido explícito."
+      },
+      "fallback_file": "effects/moves/v111-poison/renderer.js",
+      "rollback_parameter": "?poison122=0"
     },
     {
       "move": "Ferrão Venenoso",
@@ -331,6 +341,51 @@
       "notes": "Usuário autorizou restaurar a chuva que já havia sido aprovada. O módulo usa somente os 10 quadros PMD originais; respeita uso do golpe, energia, cooldown e desenho nativo do clima, sem sobreposição ou troca de outros golpes. Confirmado pelo usuário após testes Chromium normal/seguro e publicação GitHub Pages; preservar os 10 quadros PMD originais, visuais sem CSS, e a lógica nativa de energia/recarga.",
       "aprovacao_visual": "aprovado_pelo_usuario",
       "feedback_usuario": "Pode salvar — aprovação expressa após correção da chuva original V118 e dos cinco módulos V117, 2026-10-16."
+    },
+    {
+      "move": "Toxina Pesada",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V122",
+      "frames": 16,
+      "effect_file": "effects/moves/v122-poison-preview/runtime.js",
+      "spec_file": "effects/moves/v122-poison-preview/toxinapesada/spec.js",
+      "visual_source": "Galeria original Pokémon Mystery Dungeon V113",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "feedback_usuario": "Usuário aprovou a V122 em 2026-10-16.",
+      "notes": "Animação isolada 16 quadros PMD. Dano, recarga e energia continuam nativos V359; não substituir sem pedido explícito."
+    },
+    {
+      "move": "Rajada Ácida",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V122",
+      "frames": 16,
+      "effect_file": "effects/moves/v122-poison-preview/runtime.js",
+      "spec_file": "effects/moves/v122-poison-preview/rajadaacida/spec.js",
+      "visual_source": "Galeria original Pokémon Mystery Dungeon V113",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "feedback_usuario": "Usuário aprovou a V122 em 2026-10-16.",
+      "notes": "Animação isolada 16 quadros PMD. Dano, recarga e energia continuam nativos V359; não substituir sem pedido explícito."
+    },
+    {
+      "move": "Golpe de Veneno",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V122",
+      "frames": 16,
+      "effect_file": "effects/moves/v122-poison-preview/runtime.js",
+      "spec_file": "effects/moves/v122-poison-preview/golpedeveneno/spec.js",
+      "visual_source": "Galeria original Pokémon Mystery Dungeon V113",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "feedback_usuario": "Usuário aprovou a V122 em 2026-10-16.",
+      "notes": "Animação isolada 16 quadros PMD. Dano, recarga e energia continuam nativos V359; não substituir sem pedido explícito."
     }
   ]
 }

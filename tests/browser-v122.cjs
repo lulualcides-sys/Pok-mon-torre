@@ -35,7 +35,7 @@ async function test(port,safe){
   '--remote-debugging-port=0','--window-size=440,940',
   '--user-agent=Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
   '--user-data-dir='+tmp,
-  'http://127.0.0.1:'+port+'/?battle_preview=poison122&build=v122-poison-preview'+(safe?'&safe=1':'')
+  'http://127.0.0.1:'+port+'/?build=v122-poison-official'+(safe?'&safe=1':'')
  ],{stdio:'ignore'});
  let ws=null,seq=0,pending=new Map();
  try{
@@ -119,4 +119,4 @@ async function test(port,safe){
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
  try{const port=server.address().port;await test(port,false);await test(port,true)}
  finally{server.close()}
-})().catch(e=>{console.error('FAIL V122 preview Chromium',e.stack||e);process.exitCode=1;server.close()});
+})().catch(e=>{console.error('FAIL V122 official Chromium',e.stack||e);process.exitCode=1;server.close()});
