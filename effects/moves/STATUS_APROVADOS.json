@@ -214,42 +214,50 @@
     {
       "move": "Picada Tóxica",
       "aliases": [],
-      "status": "em_teste",
+      "status": "aprovado",
       "protect": true,
       "version": "V111",
       "frames": 12,
       "effect_file": "effects/moves/v111-poison/renderer.js",
-      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. Aprovação visual pendente; sem alterar dano, energia e recarga."
+      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. sem alterar dano, energia e recarga. Salvo por autorização do usuário, com ressalvas quanto à qualidade visual.",
+      "aprovacao_visual": "salvo_com_ressalvas",
+      "feedback_usuario": "Aceito para salvar em 2026-10-15, apesar de o usuário considerar os efeitos visualmente ruins. Não modificar sem novo pedido explícito."
     },
     {
       "move": "Picada Venenosa",
       "aliases": [],
-      "status": "em_teste",
+      "status": "aprovado",
       "protect": true,
       "version": "V111",
       "frames": 12,
       "effect_file": "effects/moves/v111-poison/renderer.js",
-      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. Aprovação visual pendente; sem alterar dano, energia e recarga."
+      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. sem alterar dano, energia e recarga. Salvo por autorização do usuário, com ressalvas quanto à qualidade visual.",
+      "aprovacao_visual": "salvo_com_ressalvas",
+      "feedback_usuario": "Aceito para salvar em 2026-10-15, apesar de o usuário considerar os efeitos visualmente ruins. Não modificar sem novo pedido explícito."
     },
     {
       "move": "Venoshock",
       "aliases": [],
-      "status": "em_teste",
+      "status": "aprovado",
       "protect": true,
       "version": "V111",
       "frames": 16,
       "effect_file": "effects/moves/v111-poison/renderer.js",
-      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. Aprovação visual pendente; sem alterar dano, energia e recarga."
+      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. sem alterar dano, energia e recarga. Salvo por autorização do usuário, com ressalvas quanto à qualidade visual.",
+      "aprovacao_visual": "salvo_com_ressalvas",
+      "feedback_usuario": "Aceito para salvar em 2026-10-15, apesar de o usuário considerar os efeitos visualmente ruins. Não modificar sem novo pedido explícito."
     },
     {
       "move": "Ferrão Venenoso",
       "aliases": [],
-      "status": "em_teste",
+      "status": "aprovado",
       "protect": true,
       "version": "V111",
       "frames": 12,
       "effect_file": "effects/moves/v111-poison/renderer.js",
-      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. Aprovação visual pendente; sem alterar dano, energia e recarga."
+      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. sem alterar dano, energia e recarga. Salvo por autorização do usuário, com ressalvas quanto à qualidade visual.",
+      "aprovacao_visual": "salvo_com_ressalvas",
+      "feedback_usuario": "Aceito para salvar em 2026-10-15, apesar de o usuário considerar os efeitos visualmente ruins. Não modificar sem novo pedido explícito."
     }
   ]
 }
