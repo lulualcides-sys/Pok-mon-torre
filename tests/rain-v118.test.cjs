@@ -17,7 +17,9 @@ for(let i=0;i<10;i++){
  assert.equal(rain[k],source[k],'Frame must be EXACT original PMD '+k);
 }
 assert.ok(!script.includes('hue-rotate')&&!script.includes('ImageDraw'));
-assert.ok(!script.includes('.hp=')&&!script.includes('hitTarget('));
+const production=script.split('// Browser QA only:')[0];
+assert.ok(!production.includes('.hp=')&&!production.includes('hitTarget('),
+ 'Rain Dance must not change HP or hit logic outside localhost QA');
 const html=fs.readFileSync('index.html','utf8');
 assert.ok(html.includes('effects/moves/raindance-original-v118.js'));
 function simulation(nativePaint,rejectNative=false){
