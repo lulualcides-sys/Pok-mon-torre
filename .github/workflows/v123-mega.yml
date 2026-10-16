@@ -1,0 +1,29 @@
+name: V123 mega patch - strategy stats and mobile combat
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/v123/**'
+      - 'tests/v123-mega.test.cjs'
+      - 'index.html'
+      - '.github/workflows/v123-mega.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v123:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Strategy, records, resets, wild and battle performance
+        run: node tests/v123-mega.test.cjs
+      - name: Keep V119 and V120-122 native combat
+        run: |
+          node tests/v119-patch.test.cjs
+          node tests/battle-layout-v120.test.cjs
+          node tests/enemy-fighting-v121.test.cjs
+          node tests/battle-v122.test.cjs

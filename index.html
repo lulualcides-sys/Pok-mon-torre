@@ -809,6 +809,24 @@ if(new URLSearchParams(location.search).get('poison122')!=='0'){
    String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.error('V122 approved Poison renderer unavailable; V111 fallback preserved',error);}
 }
+// V123 integrated official mega patch: strategy, career statistics, five encounters,
+// Pokemon Centre, Infinite Tower record, bounded cast effects and larger visible sprites.
+// Protected move renderers V95-V122 are loaded first and never replaced here.
+if(new URLSearchParams(location.search).get('game123')!=='0'){
+ for(const file of [
+  'effects/v123/gameplay.js',
+  'effects/v123/encounters-ui.js',
+  'effects/v123/performance-visual.js'
+ ]){
+  try{
+   const response=await fetch(file+'?build=v123-kanto-mega',{cache:'no-store'});
+   if(!response.ok)throw Error(file+' HTTP '+response.status);
+   if(!game.includes(fireSpriteAnchor))throw Error('V123 game anchor absent');
+   game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
+  }catch(error){console.error('V123 module disabled: '+file,error);}
+ }
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
