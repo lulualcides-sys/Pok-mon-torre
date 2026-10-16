@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - 'effects/v117/**'
+      - 'effects/moves/raindance-original-v118.js'
+      - 'tests/rain-v118.test.cjs'
       - 'tests/patch-v117.test.cjs'
       - 'tests/browser-v117.cjs'
       - 'index.html'
