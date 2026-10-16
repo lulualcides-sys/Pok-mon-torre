@@ -13,8 +13,8 @@ for(const p of ['effects/performance/cast-smooth-v122.js','effects/ui/battle-pro
  assert.ok(html.includes(p),'Module must be loaded '+p);assert.ok(fs.statSync(p).size>80);
 }
 assert.ok(html.includes("get('battle_preview')==='poison122'"),'new effects must be preview only');
-const module=get(root+'runtime.js');
-assert.ok(!module.includes('hitTarget(')&&!module.includes('.hp='),'No direct damage manipulation');
+const renderer=get(root+'runtime.js');
+assert.ok(!renderer.includes('hitTarget(')&&!renderer.includes('.hp='),'No direct damage manipulation');
 const supported=['Venoshock','Toxina Pesada','Rajada Ácida','Golpe de Veneno'];
 const ids=['venoshock','toxinapesada','rajadaacida','golpedeveneno'];
 let calls=[];
@@ -40,7 +40,7 @@ const run=query=>{
  const context=vm.createContext({window,BattleEngine,Image,URLSearchParams,
   location:{search:query,hostname:'example.test'},battle,current:()=>mon,skillSet:()=>supported.map((name)=>({name})),
   performance:{now:()=>200},console,Number,Math,Map,Set,WeakMap});
- vm.runInContext(module,context,{timeout:4000});
+ vm.runInContext(renderer,context,{timeout:4000});
  if(query==='?battle_preview=poison122'){
   for(const id of ids)vm.runInContext(get(root+id+'/spec.js'),context,{timeout:2000});
  }
