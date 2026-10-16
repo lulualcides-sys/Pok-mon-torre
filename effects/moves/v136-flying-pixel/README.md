@@ -1,8 +1,8 @@
 # V136 — PIXEL-ART real / PixiJS WebGL / PixiJS Particle Emitter
 
-**STATUS: prévia jogável; aguardando aprovação visual.** A V135 de Canvas 2D foi rejeitada. O usuário proibiu esse tipo de efeito. Quatro golpes foram refeitos inteiramente como **spritesheets pixel-art animados**, com quadros reais e contorno preto: Roost, Rajada (Gust), Air Slash e Bicada (Peck).
+**STATUS V137: nova pixel art ativada na URL NORMAL para corrigir a falta de mudança visível. Ainda aguardando avaliação visual do usuário antes de conceder ✓.** A V135 de Canvas 2D foi rejeitada. O usuário proibiu esse tipo de efeito. Quatro golpes foram refeitos inteiramente como **spritesheets pixel-art animados**, com quadros reais e contorno preto: Roost, Rajada (Gust), Air Slash e Bicada (Peck).
 
-**Prévia no jogo:** https://lulualcides-sys.github.io/Pok-mon-torre/?flying136=pixel
+**JOGO NORMAL:** https://lulualcides-sys.github.io/Pok-mon-torre/ — já utiliza a nova pixel art dos quatro golpes. Comparação direta: https://lulualcides-sys.github.io/Pok-mon-torre/?flying136=pixel. Reversão dos quatro apenas: ?flying136=0.
 
 **Sem Canvas 2D nesses golpes:** `runtime.js` nunca desenha linhas, formas ou polígonos; só intercepta o evento do ataque e chama `pixiFX.mountPixelFlying()`. A implementação em `effects/moves/_runtime/pixi-layer.js` reusa EXATAMENTE o WebGL Pixi existente na arena, texturas `PIXI.Texture` com `PIXI.SCALE_MODES.NEAREST`, e `PIXI.particles.Emitter` opcional com no máximo 12 pixels de apoio. O ticker já existente avança 12 ou 16 quadros do sprite atlas, sem criar segunda aplicação Pixi, canvas adicional ou outro requestAnimationFrame. O sistema destrói texturas de cena/emitter ao terminar o golpe ou batalha; texturas-base ficam em cache durante a sessão.
 

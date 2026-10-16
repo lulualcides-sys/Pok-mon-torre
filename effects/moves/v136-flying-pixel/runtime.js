@@ -1,13 +1,15 @@
-/* V136 PIXEL-ART FLYING MOVES — WebGL-only PixiJS + Particle Emitter.
- * Replaces the rejected V135 vector Canvas painter ONLY in ?flying136=pixel.
+/* V137 PIXEL-ART FLYING MOVES — WebGL-only PixiJS + Particle Emitter.
+ * Activates all four real pixel spritesheets in normal battles; V135 rejected.
  * Sprite atlases: real 12/16-frame nearest-neighbour pixel animation generated
  * by tools/build-v136-flying-pixel.py. No CanvasRenderingContext2D drawing,
  * no CSS VFX, no still-image effect, no extra renderer or requestAnimationFrame.
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('flying136')!=='pixel'||
-   new URLSearchParams(location.search).get('safe')==='1')return;
+const query=new URLSearchParams(location.search);
+if(query.get('flying136')==='0'||query.get('flying135')==='preview'||
+   query.get('safe')==='1')return;
+const previewOnly=query.get('flying136')==='pixel';
 if(window.PokemonTorreFlyingPixelV136?.installed)return;
 const base='effects/moves/v136-flying-pixel/';
 const specs=[
@@ -19,7 +21,7 @@ const specs=[
 const norm=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
  .toLowerCase().replace(/[^a-z0-9]/g,'');
 const lookup=new Map(),cast=new WeakMap();
-const state={installed:true,previewOnly:true,renderer:'PixiJS WebGL',particleSystem:'@pixi/particle-emitter',
+const state={installed:true,previewOnly,officialLoad:!previewOnly,renderer:'PixiJS WebGL',particleSystem:'@pixi/particle-emitter',
  ready:0,failures:[],casts:0,queued:0,mounted:0,suppressed2D:0,frames:0};
 for(const spec of specs){
  for(const alias of [spec.name,...spec.aliases]){
@@ -36,10 +38,11 @@ for(const spec of specs){
    else state.failures.push(spec.name+': sprite dimensions invalid');
  };
  spec.image.onerror=()=>{state.failures.push(spec.name+': spritesheet not served');};
- spec.image.src=base+spec.dir+'/spritesheet.png?v=136';
+ spec.image.src=base+spec.dir+'/spritesheet.png?v=137';
 }
 window.PokemonTorreFlyingPixelV136=Object.freeze({
- installed:true,previewOnly:true,moves:specs.map(s=>s.name),
+ installed:true,previewOnly,officialLoad:!previewOnly,moves:specs.map(s=>s.name),
+ hasMove:(name)=>lookup.has(norm(name)),
  diagnostics:()=>({...state,loaded:specs.filter(s=>s.loaded).map(s=>s.name),
   protected:['Osso','Grande Fissura','Garra de Areia','Soco de Terra','Lança de Areia','Fenda Rasa']})
 });

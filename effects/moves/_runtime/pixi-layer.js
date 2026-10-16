@@ -386,8 +386,9 @@ const pixiFX=(()=>{
   if(!effects.size&&!pixelFlying.size&&!combatSheet&&!activeV84&&!activeV86&&!hazeActiveV85){app.ticker.stop();app.view.style.display='none';}
  }
  function paint(f,engine,key){
-  // V136 pixel textures own these casts; do not overlay generic Pixi scenes.
-  if(pixelFlying.has(f))return true;
+  // V137: a pixel-only Flying move must NEVER produce semantic/legacy effects,
+  // even if its spritesheet is still downloading on the first game frame.
+  if(pixelFlying.has(f)||window.PokemonTorreFlyingPixelV136?.hasMove?.(f?.move?.name||f?.name))return true;
   // The named V86 cast already renders a single authored WebGL layer.
   // Never create a legacy ice/grassy bolt underneath, even from stale queues.
   if(typeof referenceFourV86!=='undefined'&&

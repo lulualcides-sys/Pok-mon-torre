@@ -8,7 +8,7 @@ const read=p=>fs.readFileSync(p,'utf8');
 const script=read('effects/moves/v136-flying-pixel/runtime.js');
 const pixi=read('effects/moves/_runtime/pixi-layer.js'),index=read('index.html');
 assert.doesNotThrow(()=>new vm.Script(script));
-assert.ok(index.includes("get('flying136')==='pixel'"));
+assert.ok(index.includes("get('flying136')!=='0'"),'normal URL must activate the new pixel art');
 assert.ok(index.includes('effects/moves/v136-flying-pixel/runtime.js'));
 assert.ok(index.includes('pixi.js@7.4.3')&&index.includes('@pixi/particle-emitter@5.0.10'));
 assert.match(pixi,/function mountPixelFlying\(engine,fx,spec\)/);
@@ -18,6 +18,11 @@ assert.match(pixi,/new PIXI.particles.Emitter/);
 assert.match(pixi,/updatePixelFlying\(now,dt\)/);
 assert.match(pixi,/pixelFlying\.size/);
 assert.match(pixi,/destroyPixelFlying\(fx\)/);
+const nativeDraw=read('parts/p013.txt');
+assert.ok(nativeDraw.includes("if(!window.PokemonTorreFlyingPixelV136?.hasMove?.(fx.move?.name))speciesAura359(ctx,fx,now)"),
+ 'new Flying pixel moves must NOT get legacy 2D species aura');
+assert.ok(pixi.includes("window.PokemonTorreFlyingPixelV136?.hasMove?.(f?.move?.name||f?.name)"),
+ 'new Flying moves must suppress generic PIXI semantic effects too');
 assert.ok(!/(\.beginPath|\.lineTo|\.arc\(|\.stroke\(|\.fill\(|drawImage\(|requestAnimationFrame\(|getContext\()/.test(script),
  'V136 runtime contains Canvas/geometry rather than GPU spritesheet');
 const approved=JSON.parse(read('effects/moves/STATUS_APROVADOS.json')).moves;
@@ -70,12 +75,20 @@ function setup(search){
  vm.runInNewContext(script,globals,{timeout:3000});
  return window;
 }
-assert.equal(setup('').PokemonTorreFlyingPixelV136,undefined,'default route must remain stable');
+assert.equal(setup('').PokemonTorreFlyingPixelV136?.officialLoad,true,
+ 'normal game must mount Pixi pixel effects by default');
+assert.equal(setup('?flying136=0').PokemonTorreFlyingPixelV136,undefined,
+ 'explicit rollback must restore previous Flying renderer');
+assert.equal(setup('?flying135=preview').PokemonTorreFlyingPixelV136,undefined,
+ 'old rejected V135 comparison must remain isolated');
 assert.equal(setup('?flying136=pixel&safe=1').PokemonTorreFlyingPixelV136,undefined);
-const window=setup('?flying136=pixel');
+const window=setup('');
 const plugin=window.PokemonTorreFlyingPixelV136;
 assert.equal(plugin?.installed,true);
-assert.equal(plugin?.previewOnly,true);
+assert.equal(plugin?.previewOnly,false);
+assert.equal(plugin?.officialLoad,true);
+assert.equal(setup('?flying136=pixel').PokemonTorreFlyingPixelV136?.previewOnly,true);
+assert.equal(plugin.hasMove('Air Slash'),true);
 assert.equal(plugin.diagnostics().ready,4);
 assert.deepEqual([...plugin.moves],names);
 const engine=new BattleEngine();
@@ -108,4 +121,4 @@ battle.active=false;
 const count=mounts;
 assert.equal(window.PokemonTorreV360Paint({},engine.v359Attacks[1],1200,engine),true);
 assert.equal(mounts,count,'no new GPU effect after battle');
-console.log('PASS V136: 12/16-frame pixel spritesheets on shared PixiJS WebGL, Particle Emitter, absolutely no Canvas2D per Flying move, Roost native heal and hits unique.');
+console.log('PASS V137: pixel spritesheets now load on NORMAL URL, rollback works, PixiJS/Particle Emitter and native heal/hit intact; no 2D move painter.');

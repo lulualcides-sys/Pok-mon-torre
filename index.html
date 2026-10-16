@@ -860,6 +860,8 @@ if(new URLSearchParams(location.search).get('mart125')!=='0'){
    String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V125 sprite UI unavailable; native shop retained',error);}
 }
+// V137: FIX Brock victory advancing to Misty (stable gym trainer threshold)
+// and recover formerly stranded save.stage=14+ in V126's module.
 // V126: 13–27 trainers before each Kanto leader, tap Pokemon for 4 moves,
 // remove emojis behind loaded sprites, reduce Android modal/catalogue paint cost.
 // Protected V125 items, V124.2 red recall and all V95–V123 moves untouched.
@@ -867,7 +869,7 @@ if(new URLSearchParams(location.search).get('mart125')!=='0'){
 if(new URLSearchParams(location.search).get('ui126')!=='0'){
  try{
   const file='effects/v126/gameplay-ui.js';
-  const response=await fetch(file+'?build=v126-kanto-team-performance',{cache:'no-store'});
+  const response=await fetch(file+'?build=v137-brock-badge-stage-fix',{cache:'no-store'});
   if(!response.ok)throw Error('V126 HTTP '+response.status);
   if(!game.includes(fireSpriteAnchor))throw Error('V126 insertion anchor missing');
   game=game.replace(fireSpriteAnchor,
@@ -999,14 +1001,16 @@ if(new URLSearchParams(location.search).get('flying135')==='preview'&&
   game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+flyCode.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V135 preview not loaded; approved effects preserved',error);}
 }
-// V136 — ALL-PIXEL WebGL preview. Rejected V135 Canvas2D remains disabled.
-// Loads 12/16-frame nearest-neighbour spritesheets and renders with the
-// EXISTING PixiJS overlay + @pixi/particle-emitter, never Canvas2D for these moves.
-if(new URLSearchParams(location.search).get('flying136')==='pixel'&&
+// V137 — load pixel-art Flying effects IN THE NORMAL GAME by default.
+// The old ?flying136=pixel link was only a preview, hence users saw no change
+// at the canonical URL. Do NOT install the rejected V135 Canvas renderer.
+// ?flying136=0 rolls back only these 4 GPU effects for diagnosis.
+if(new URLSearchParams(location.search).get('flying136')!=='0'&&
+   new URLSearchParams(location.search).get('flying135')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const script='effects/moves/v136-flying-pixel/runtime.js';
-  const response=await fetch(script+'?build=v136-flying-pixel-art',{cache:'no-store'});
+  const response=await fetch(script+'?build=v137-flying-pixel-official-loader',{cache:'no-store'});
   if(!response.ok)throw Error('V136 '+response.status);
   if(!game.includes(fireSpriteAnchor))throw Error('V136 existing battle anchor absent');
   game=game.replace(fireSpriteAnchor,

@@ -7,18 +7,47 @@
 if(window.PokemonTorreV126?.installed)return;
 if(new URLSearchParams(location.search).get('ui126')==='0')return;
 const stats={teamTaps:0,openedEditors:0,renderPasses:0,frames:0,slowFrames:0,
- maxFrameMs:0,originalFallbacks:0};
+ maxFrameMs:0,originalFallbacks:0,stageRecoveries:0,lastRecovered:null};
 const targets=Object.freeze(Array.from({length:8},(_,gym)=>13+gym*2));
 const oldTrainerCount=v29TrainerCount;
 v29TrainerCount=function(g){
  if(Number.isInteger(g)&&g>=0&&g<8){
-  // Count represents the 13..27 TRAINERS before the original leader,
-  // not battles including leader. No reset or skip on older saved journeys.
-  const stage=g===save.gym?Math.max(0,Number(save.stage)||0):0;
-  return Math.max(targets[g],stage);
+  // CRITICAL Brock fix: the threshold must NOT track save.stage.
+  // The native win logic increments stage BEFORE testing
+  // save.stage === v29TrainerCount(save.gym)+1.
+  // Dynamic Math.max(targets[g],stage) made that equality impossible.
+  return targets[g];
  }
  return oldTrainerCount(g);
 };
+
+/* V137: repair saves already stranded after defeating a gym leader under
+ * V126's former dynamic count. Stages strictly beyond the leader's fixed
+ * threshold can only be reached by a successful trainer/leader battle.
+ * Award the missing badge/bonus exactly once; DO NOT reset the campaign.
+ */
+function recoverStuckLeader(){
+ if(!save?.starter||battle?.active)return false;
+ const gym=Number(save.gym),stage=Number(save.stage);
+ if(!Number.isInteger(gym)||gym<0||gym>=8||!Number.isFinite(stage))return false;
+ const threshold=targets[gym];
+ if(stage<threshold+1)return false;
+ if(!Array.isArray(save.medals))save.medals=[];
+ if(!save.medals.includes(gym)){
+  save.medals.push(gym);
+  save.coins=(Number(save.coins)||0)+120;
+  save.balls=(Number(save.balls)||0)+3;
+  save.potions=(Number(save.potions)||0)+2;
+ }
+ const repaired={gym,stage,nextGym:gym+1};
+ save.gym=gym+1;
+ save.stage=0;
+ persist();
+ stats.stageRecoveries++;
+ stats.lastRecovered=repaired;
+ return true;
+}
+
 function openSummary(index){
  if(battle?.active||!save?.starter)return false;
  if(!Number.isInteger(index)||index<0||index>=save.team.length)return false;
@@ -66,6 +95,7 @@ function bindHomeCards(){
 }
 const priorRender=render;
 render=function(){
+ recoverStuckLeader();
  const result=priorRender.apply(this,arguments);
  stats.renderPasses++;
  if(!battle?.active&&save?.starter)bindHomeCards();
@@ -104,9 +134,9 @@ style.textContent=
  '.v331MoveList{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}'+
  '}';
 document.head.appendChild(style);
-if(save?.starter&&!battle?.active)bindHomeCards();
+if(save?.starter&&!battle?.active){recoverStuckLeader();bindHomeCards();}
 window.PokemonTorreV126=Object.freeze({installed:true,official:true,
- trainers:[...targets],mobile,openSummary,
+ trainers:[...targets],mobile,openSummary,recoverStuckLeader,
  diagnostics:()=>({...stats,trainers:[...targets],teamSize:save.team?.length||0,
   preservesV123:true,preservesV124:true,preservesV125:true,
   noAdditionalRaf:true,measuredPhysicalAndroid:false})});

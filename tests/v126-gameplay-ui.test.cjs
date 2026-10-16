@@ -10,8 +10,8 @@ assert.ok(approvals.moves.filter(x=>x.protect&&x.version==='V122').length===4,'a
 assert.doesNotMatch(src,/hitTarget\s*=|BattleEngine\.prototype\.useMove\s*=|damage\s*=|save\.team\s*=/,
  'no rewriting damage, player attacks or team saves');
 const party=[{id:25,hp:70,maxHp:95,level:21},{id:7,hp:25,maxHp:25,level:5}];
-const save={starter:25,gym:0,stage:3,team:party};
-let clicks=0,selected=-1,summaryOpened=false,oldCounts=0,frames=0,then=0;
+const save={starter:25,gym:0,stage:3,team:party,medals:[],coins:40,balls:2,potions:1};
+let clicks=0,selected=-1,summaryOpened=false,oldCounts=0,frames=0,then=0,persistCalls=0;
 function node(){
  return {dataset:{},attrs:{},listeners:{},children:[],style:{},className:'',
   setAttribute(k,v){this.attrs[k]=v},addEventListener(t,fn){this.listeners[t]=fn},appendChild(x){this.children.push(x);return x},
@@ -36,7 +36,7 @@ const s={window:{},URLSearchParams,location:{search:''},document:doc,
  TYPE_NAME:{electric:'Elétrico',water:'Água'},
  battle:null,
  v29TrainerCount:g=>{oldCounts++;return 6+g},render(){},
- showTeam(){},performance:{now(){return ++then}},
+ showTeam(){},persist(){persistCalls++;},performance:{now(){return ++then}},
  console,Math,Number,Array,Date};
 vm.runInNewContext(src,s,{filename:'effects/v126/gameplay-ui.js',timeout:2500});
 assert.equal(s.window.PokemonTorreV126.installed,true);
@@ -46,9 +46,20 @@ for(let g=0;g<8;g++){
  assert.equal(s.v29TrainerCount(g),13+g*2,'number of PRE-leader trainers in gym '+g);
 }
 save.gym=1;save.stage=18;
-assert.equal(s.v29TrainerCount(1),18,'must not skip already progressed saved step');
+assert.equal(s.v29TrainerCount(1),15,'fixed leader threshold must NOT drift with save.stage');
 assert.equal(s.v29TrainerCount(9),15,'native Elite Four untouched');
-save.gym=0;save.stage=0;
+// V137: recover a save stuck AFTER Brock's winning fight, with no badge.
+save.gym=0;save.stage=14;save.medals=[];save.coins=70;save.balls=4;save.potions=3;
+assert.equal(s.v29TrainerCount(0),13);
+assert.equal(s.window.PokemonTorreV126.recoverStuckLeader(),true);
+assert.equal(save.gym,1,'Brock must unlock Misty');
+assert.equal(save.stage,0,'Misty must start at first trainer');
+assert.deepEqual(save.medals,[0],'award missing Boulder badge exactly once');
+assert.equal(save.coins,190);assert.equal(save.balls,7);assert.equal(save.potions,5);
+const recoveredCalls=persistCalls;
+assert.equal(s.window.PokemonTorreV126.recoverStuckLeader(),false,'recovery must be idempotent');
+assert.equal(persistCalls,recoveredCalls,'do not save multiple times');
+save.gym=0;save.stage=0;save.medals=[];
 s.render();
 assert.equal(cards[0].attrs.role,'button');
 assert.equal(cards[0].attrs.tabindex,'0');
@@ -68,4 +79,4 @@ assert.ok(css.includes('.spritewrap:has(img.sprite) > .placeholder'),'remove emo
 assert.ok(css.includes('content-visibility:auto'),'large TM/Mewtwo catalogue should be virtualized for painting');
 assert.ok(css.includes('backdrop-filter:none'),'disable heavy blur on mobile');
 assert.ok(!css.includes('.shopEmoji'),'item/TM original sprites must not change');
-console.log('PASS V126: 13–27 trainers, old stage preserved, direct Pokémon move editor + accessible home card, emoji hidden, Android paint optimization, native battle unchanged.');
+console.log('PASS V137: stable 13–27 trainer counts, Brock stage 14 auto-recovered into Misty exactly once, direct editor, Android optimizations and combat untouched.');

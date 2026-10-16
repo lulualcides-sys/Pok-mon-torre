@@ -67,7 +67,7 @@ BattleEngine.prototype.draw=function(now){
  try{oldDraw359.call(this,now);}finally{for(const key of Object.keys(previous))this[key]=previous[key];}
  if(!battle?.active||!this.ctx)return;
  const ctx=this.ctx;
- ctx.save();for(const fx of (this.v359Attacks||[]))if(fx.end>now&&fx.battle===battle){speciesAura359(ctx,fx,now);if(!(window.PokemonTorreV360Paint&&window.PokemonTorreV360Paint(ctx,fx,now,this)))attack359(ctx,fx,now,this);}ctx.restore();
+ ctx.save();for(const fx of (this.v359Attacks||[]))if(fx.end>now&&fx.battle===battle){if(!window.PokemonTorreFlyingPixelV136?.hasMove?.(fx.move?.name))speciesAura359(ctx,fx,now);if(!(window.PokemonTorreV360Paint&&window.PokemonTorreV360Paint(ctx,fx,now,this)))attack359(ctx,fx,now,this);}ctx.restore();
 };
 const css359=document.createElement('style');css359.id='v359Styles';css359.textContent=`
  .v359DropNotice{font-size:12px;color:#f6e6aa;font-weight:700;text-align:center;padding:11px;border:1px solid #bda263;border-radius:10px;background:#5e4a271a}
