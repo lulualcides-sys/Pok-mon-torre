@@ -28,8 +28,7 @@ async function test(port,safe){
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'poke-v105-'));
  const proc=cp.spawn(chrome,[
   '--headless=new','--no-sandbox',
-  ...(safe?['--disable-gpu','--disable-webgl','--disable-webgl2']:
-    ['--enable-unsafe-swiftshader','--use-gl=angle','--use-angle=swiftshader']),
+  '--disable-gpu',
   '--disable-dev-shm-usage',
   '--disable-background-networking','--disable-extensions',
   '--no-first-run','--no-default-browser-check','--remote-allow-origins=*',
