@@ -258,6 +258,48 @@
       "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. sem alterar dano, energia e recarga. Salvo por autorização do usuário, com ressalvas quanto à qualidade visual.",
       "aprovacao_visual": "salvo_com_ressalvas",
       "feedback_usuario": "Aceito para salvar em 2026-10-15, apesar de o usuário considerar os efeitos visualmente ruins. Não modificar sem novo pedido explícito."
+    },
+    {
+      "move": "Névoa Venenosa",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V114",
+      "frames": 16,
+      "effect_file": "effects/moves/v114-poison/runtime.js",
+      "source_file": "effects/moves/v113-poison-preview/nevoavenenosa/sprites",
+      "scale_adjustment": "135/153 (−11,8%)",
+      "art_source": "V113 original Poison Gas/Smog",
+      "notes": "Usuário aprovou visual V113 e pediu redução muito pequena de tamanho antes de salvar. V114 salva apenas esta redução de escala; não alterar novamente sem autorização. Vida, energia e cooldown originais preservados."
+    },
+    {
+      "move": "Poison Jab",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V114",
+      "frames": 16,
+      "effect_file": "effects/moves/v114-poison/runtime.js",
+      "source_file": "effects/moves/v113-poison-preview/poisonjab/sprites",
+      "scale_adjustment": "100/112 (−10,7%)",
+      "art_source": "V113 original Poison Jab",
+      "notes": "Usuário aprovou visual V113 e pediu redução muito pequena de tamanho antes de salvar. V114 salva apenas esta redução de escala; não alterar novamente sem autorização. Vida, energia e cooldown originais preservados."
+    },
+    {
+      "move": "Ácido",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V114",
+      "frames": 16,
+      "effect_file": "effects/moves/v114-poison/runtime.js",
+      "source_file": "effects/moves/v113-poison-preview/acido/sprites",
+      "scale_adjustment": "96/108 (−11,1%)",
+      "art_source": "V113 original Acid",
+      "notes": "Usuário aprovou visual V113 e pediu redução muito pequena de tamanho antes de salvar. V114 salva apenas esta redução de escala; não alterar novamente sem autorização. Vida, energia e cooldown originais preservados."
     }
   ]
 }

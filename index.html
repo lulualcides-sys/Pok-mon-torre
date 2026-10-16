@@ -629,6 +629,28 @@ if(new URLSearchParams(location.search).get('battle_preview')==='poison113'){
   game=game.replace(fireSpriteAnchor,'\n'+parts.join('\n')+'\n'+fireSpriteAnchor);
  }catch(error){console.error('V113 authentic preview unavailable; official effects untouched',error);}
 }
+// V114: THREE approved Poison original animations (small scale reduction)
+// go to NORMAL battle. Ground-only sludge is opt-in until user approves.
+// Historical V112/V113 preview links remain untouched and fully archived.
+const v114mode=new URLSearchParams(location.search).get('battle_preview');
+if(v114mode===null||v114mode==='poison114'){
+ try{
+  const files=[
+   'effects/moves/v114-poison/runtime.js',
+   'effects/moves/v114-poison/nevoavenenosa/spec.js',
+   'effects/moves/v114-poison/poisonjab/spec.js',
+   'effects/moves/v114-poison/acido/spec.js',
+   'effects/moves/v114-poison/lamacorrosiva/spec.js'
+  ];
+  const code=await Promise.all(files.map(async path=>{
+   const r=await fetch(path+'?build=v114-approved-three-ground-preview',{cache:'no-store'});
+   if(!r.ok)throw Error('V114 missing: '+path+' HTTP '+r.status);
+   return r.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V114 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,'\n'+code.join('\n')+'\n'+fireSpriteAnchor);
+ }catch(e){console.error('V114 unavailable; preserving prior move logic',e);}
+}
 // V100: merge bilingual duplicate DISPLAY entries in the four-move
 // editor without changing underlying move keys, equipped saves or VFX.
 try{
