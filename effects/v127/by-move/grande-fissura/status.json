@@ -1,0 +1,13 @@
+{
+  "move": "Grande Fissura",
+  "aliases": [
+    "Fissure"
+  ],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "parts/p008.txt",
+  "reference": "STATUS_APROVADOS.json",
+  "approval_confirmed_at": "2026-10-16",
+  "approval_confirmation": "Grande fissura, pode aprovar",
+  "scope": "Somente aprovação; não modificar efeito já existente."
+}

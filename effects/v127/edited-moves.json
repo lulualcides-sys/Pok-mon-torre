@@ -1,7 +1,7 @@
 {
-  "version": "V128",
+  "version": "V130",
   "as_of": "2026-10-16",
-  "description": "Auditoria dos golpes alterados: aprovados/salvos via STATUS_APROVADOS e histórico de edições V122, com status distinguíveis. Metadados por golpe não implicam motor de efeito individual. Complementado com golpes previamente editados mencionados no histórico do usuário, sem elevar automaticamente seu estado a 'aprovado'. Em 16/10/2026 o usuário confirmou aprovação dos quatro Lutador que constavam erroneamente em teste e reiterou aprovação dos quatro Veneno V122. Nenhuma animação foi substituída. Em 16/10/2026 o usuário reconfirmou Cauda de Água e Pulso de Água como aprovados, sem mudar seus visuais; o registro tem 64 golpes. Aprovação expressa de quatro golpes Água V128 ('Ficou muito bom'), promovidos oficialmente sem mudar sprites/animações, 36 oficiais e 32 editados legados.",
+  "description": "Auditoria dos golpes alterados: aprovados/salvos via STATUS_APROVADOS e histórico de edições V122, com status distinguíveis. Metadados por golpe não implicam motor de efeito individual. Complementado com golpes previamente editados mencionados no histórico do usuário, sem elevar automaticamente seu estado a 'aprovado'. Em 16/10/2026 o usuário confirmou aprovação dos quatro Lutador que constavam erroneamente em teste e reiterou aprovação dos quatro Veneno V122. Nenhuma animação foi substituída. Em 16/10/2026 o usuário reconfirmou Cauda de Água e Pulso de Água como aprovados, sem mudar seus visuais; o registro tem 64 golpes. Aprovação expressa de quatro golpes Água V128 ('Ficou muito bom'), promovidos oficialmente sem mudar sprites/animações, 36 oficiais e 32 editados legados. Em 16/10/2026, usuário aprovou explicitamente Grande Fissura. Preservar animação existente; os quatro efeitos V130 seguem em prévia sem aprovação.",
   "states": {
     "aprovado": "Golpe aprovado, preservar",
     "salvo": "Efeito aceito para salvar",
@@ -381,6 +381,18 @@
       "status": "aprovado",
       "effect_file": "effects/moves/v128-water-preview/dive/index.js",
       "version": "V128",
+      "source": "STATUS_APROVADOS.json",
+      "protect": true,
+      "approval_confirmed_at": "2026-10-16"
+    },
+    {
+      "name": "Grande Fissura",
+      "aliases": [
+        "Fissure"
+      ],
+      "status": "aprovado",
+      "effect_file": "parts/p008.txt",
+      "version": "V130",
       "source": "STATUS_APROVADOS.json",
       "protect": true,
       "approval_confirmed_at": "2026-10-16"

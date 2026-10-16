@@ -54,6 +54,7 @@ jobs:
           node tests/v126-gameplay-ui.test.cjs
           node tests/v127-move-marks.test.cjs
           node tests/v129-ground-catalog.test.cjs
+          node tests/v130-ground-preview.test.cjs
           node tests/rain-v118.test.cjs
           node tests/patch-v117.test.cjs
           node tests/battle-layout-v120.test.cjs

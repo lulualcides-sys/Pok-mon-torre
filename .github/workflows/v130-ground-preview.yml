@@ -1,0 +1,31 @@
+name: V130 Ground — playable preview regression
+on:
+  push:
+    branches: [main]
+    paths:
+      - "effects/moves/v130-ground-preview/**"
+      - "effects/moves/STATUS_APROVADOS.json"
+      - "effects/v127/**"
+      - "tests/v130-ground-preview.test.cjs"
+      - "tests/v127-move-marks.test.cjs"
+      - "index.html"
+      - ".github/workflows/v130-ground-preview.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ground-v130:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Four battle animations and approved move regression
+        run: |
+          node tests/v130-ground-preview.test.cjs
+          node tests/v127-move-marks.test.cjs
+          node tests/v128-water-preview.test.cjs
+          node tests/v129-ground-catalog.test.cjs
+          node tests/v126-gameplay-ui.test.cjs

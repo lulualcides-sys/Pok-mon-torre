@@ -1,5 +1,13 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V130 — 4 golpes de Terra em PRÉVIA JOGÁVEL (16/10/2026)
+
+Usuário pediu melhorar exatamente os quatro golpes equipados no print de Mewtwo: **Tapa de Lama, Osso, Mud Shot e Poder Terrestre**, pesquisando a mecânica original, sem PNG e sem imagens conceituais. A implementação é uma **prévia funcional dentro da batalha** acessada somente com `?ground130=preview`, no jogo público GitHub Pages. Quatro animações cinemáticas independentes, 12/16 quadros dinâmicos Canvas 2D, com contorno escuro, lama e pedras, impacto ajustado ao hit original V359. Padrões: Tapa de Lama salpica lama no rosto; Osso usa Bone Club em arco de contato (sem virar Bonemerang); Mud Shot dispara um projétil compacto veloz; Poder Terrestre abre rachaduras no chão sob o alvo e levanta pilares. Sem gerar PNG, CSS animado ou Ateliê. Não modificar dano, energia, recarga, progresso ou efeitos aprovados. **Não promover os quatro visuais ao jogo normal sem o usuário aprovar a prévia.** Desativar retirando `ground130` ou usando `?safe=1`.
+
+**Grande Fissura explicitamente APROVADA** pelo usuário na mesma mensagem. Registrar aprovação com ✓ em `effects/moves/STATUS_APROVADOS.json` e fichas V127, sem mexer em sua animação ou mecânica. Cauda/Pulso de Água e os quatro Água V128 continuam protegidos. Testar sintaxe, timing e publicação no GitHub antes de afirmar finalizado.
+
+
+
 ## V129 — RESTAURAR VISIBILIDADE DOS GOLPES DE TERRA (16/10/2026)
 
 Relato do usuário: **“Os golpes de terra sumiram”**. Na fonte `parts/p008.txt` a lista de Terra ainda existe (Tapa de Lama, Soco de Terra, Tremor, Abalo Terrestre, Terremoto etc.). Revisar apresentação e filtragem de golpes sem modificar dados/salvamentos/níveis: `effects/ui/move-type-filter.js` V129 prioriza metadados do tipo Terra ou rótulo e ícones, limpa buscas antigas ao selecionar Terra e abre aba **Todos** quando a aba Liberados/Futuros não contém Terra. **Nenhum golpe é adicionado, removido ou desbloqueado indevidamente.** Proteger TODOS os golpes aprovados, inclusive V128 Água. Testes `tests/v129-ground-catalog.test.cjs`. Confirmar testes e publicação antes de afirmar correção efetiva no celular.

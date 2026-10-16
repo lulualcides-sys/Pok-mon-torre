@@ -903,6 +903,28 @@ if(new URLSearchParams(location.search).get('water128')!=='0'&&new URLSearchPara
   game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+parts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V128 official water visuals unavailable; old effects preserved',error);}
 }
+// V130: four EARTH-type battle-only playable previews, not an illustration.
+// Exact matches: Tapa de Lama, Osso, Mud Shot, Poder Terrestre.
+// The normal URL remains unchanged until the user approves these four.
+if(new URLSearchParams(location.search).get('ground130')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const files=[
+   'effects/moves/v130-ground-preview/runtime.js',
+   'effects/moves/v130-ground-preview/mud-slap/index.js',
+   'effects/moves/v130-ground-preview/bone-club/index.js',
+   'effects/moves/v130-ground-preview/mud-shot/index.js',
+   'effects/moves/v130-ground-preview/earth-power/index.js'
+  ];
+  const scripts=await Promise.all(files.map(async file=>{
+   const response=await fetch(file+'?build=v130-ground-four-'+Date.now(),{cache:'no-store'});
+   if(!response.ok)throw Error('V130 '+file+' HTTP '+response.status);
+   return response.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V130 original battle anchor missing');
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+scripts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V130 ground preview unavailable; previous combat VFX unchanged',error);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{

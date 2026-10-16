@@ -500,6 +500,20 @@
       "feedback_usuario": "Ficou muito bom",
       "rollback_parameter": "?water128=0",
       "notes": "V128 mesmo visual da prévia aprovada; preservar animação e regras originais de combate."
+    },
+    {
+      "move": "Grande Fissura",
+      "aliases": [
+        "Fissure"
+      ],
+      "status": "aprovado",
+      "protect": true,
+      "version": "V130 (aprovacao declarada)",
+      "accepted_at": "2026-10-16",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "feedback_usuario": "Grande fissura, pode aprovar",
+      "effect_file": "parts/p008.txt",
+      "notes": "Apenas registro de aprovação para a animação de Grande Fissura existente. Preservar efeito, dano, recarga e aparência. Não pertence ao lote de quatro golpes V130 em teste."
     }
   ]
 }
