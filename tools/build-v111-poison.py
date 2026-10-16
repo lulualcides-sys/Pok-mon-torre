@@ -51,7 +51,7 @@ def needle(d,x,y,width=17,twist=0,c=VIOLET):
 def drop(d,x,y,r=5):
  d.ellipse((x-r-1,y-r-1,x+r+1,y+r+1),fill=INK)
  d.ellipse((x-r+1,y-r+1,x+r-1,y+r-1),fill=VIOLET)
- d.ellipse((x-r+2,y-r+2,x-1,y-1),fill=LILAC)
+ d.point((x-r+1,y-r+1),fill=LILAC)
 def toxic_stab(frame,n):
  out=img();d=ImageDraw.Draw(out)
  u=frame/(n-1);threshold=.53
