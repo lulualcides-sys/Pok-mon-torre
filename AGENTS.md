@@ -1,5 +1,12 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V133 — 4 novos golpes de Terra em PRÉVIA JOGÁVEL (16/10/2026)
+
+Usuário mostrou a tela com **Garra de Areia, Soco de Terra, Lança de Areia e Fenda Rasa** e solicitou animações fiéis ao estilo Pokémon, cinematográficas, sem PNG ou visual cartonado. Os nomes são próprios do catálogo do projeto, logo não há uma animação oficial de Pokémon homônima para copiar literalmente. Referência: ataques de areia granular, rocha, rachadura e impacto seco. Cada efeito é um módulo isolado, 12 ou 16 quadros dinâmicos no Canvas original da batalha.
+
+**Prévia no jogo:** `?ground133=preview` (não ativar URL normal sem aprovação). Garra de Areia: três cortes minerais afiados; Soco de Terra: soco compacto com revestimento rochoso e fragmentos; Lança de Areia: lança de grãos compactados com ponta e rastro; Fenda Rasa: rachadura baixa correndo no chão, menor que Grande Fissura. **Proteger V132 Osso e Grande Fissura**, golpes Água V128 e todo o catálogo de efeitos aprovados. V133 intercepta APENAS esses quatro nomes sem cálculo de dano, mudança de HP, energia, cooldown, status, save ou UI. Remover parâmetro retorna às versões oficiais. Sem imagens ilustrativas, PNG, Ateliê ou CSS animado. Confirmar testes e deploy antes de afirmar concluído.
+
+
 ## V132 — Osso 40% + Grande Fissura geológica OFICIAIS (16/10/2026)
 
 **Autorização:** "Diminuí um pouco mais o osso e pode salvar os 2". O usuário aprovou **Osso** e **Grande Fissura** V131, solicitando apenas Osso um pouco menor. Na V132 Osso fica **40%** da escala V130 (antes 47%), incluindo trilha e impacto menores; Grande Fissura geológica V131 permanece **idêntica, sem redesenho**. Ambos são os únicos dois efeitos de Terra V132 ativados na URL normal. Os arquivos da V130 e V131 continuam preservados para comparar: `?ground130=preview` e `?ground131=preview`. Para desativar apenas os dois novos efeitos oficiais: `?ground132=0`; `?safe=1` também desativa.
