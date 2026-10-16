@@ -619,7 +619,7 @@ const pixiFX=(()=>{
   mountPixelFlying,
   beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,
   beginV86,frameV86,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
-  sprites:!!atlas,active:effects.size,registered:registry.size,pixelFlyingLastIssue,
+  sprites:!!atlas,active:effects.size,registered:typeof registry==='undefined'?0:registry.size,pixelFlyingLastIssue,
   emitterInstances:emitterCount,frames,pixelFlyingActive:pixelFlying.size,pixelFlyingFrames,pixelFlyingStarts,pixelFlyingFailures,combatSprites:combatFrames,combatEmitterInstances:combatEmitterCount,combatSpriteActive:!!combatSheet,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:typeof grassFourV84?.source==='function'?grassFourV84.source(activeV84.key):'gpu-generated'}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
   hazeActive:!!hazeActiveV85,hazeReady:!!hazeActiveV85?.ready,
   v86Active:!!activeV86,v86Name:activeV86?.spec?.name||null,
