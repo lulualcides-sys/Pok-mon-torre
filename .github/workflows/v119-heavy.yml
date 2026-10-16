@@ -1,0 +1,46 @@
+name: V119 Kanto Total - 8 modules and exact 1 percent enemy shinies
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/v119/**'
+      - 'tests/v119-patch.test.cjs'
+      - 'tests/browser-v119.cjs'
+      - '.github/workflows/v119-heavy.yml'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v119-heavy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Protect approved Pokemon sprites, original rain and V117
+        run: |
+          node tests/pokemon-polish-v95.test.cjs
+          node tests/pokemon-polish-v115.test.cjs
+          node tests/visual-v116.test.cjs
+          node tests/patch-v117.test.cjs
+          node tests/rain-v118.test.cjs
+          node tests/v119-patch.test.cjs
+      - name: Build all original approved battle sprites
+        run: |
+          python -m pip install --quiet Pillow
+          python tools/build-v107-fighting.py
+          python tools/build-v108-fighting.py
+          python tools/build-v109-fighting.py
+          python tools/build-v110-fighting.py
+          python tools/build-v111-poison.py
+          python tools/build-v112-poison-preview.py
+          python tools/build-v113-poison-preview.py
+          python tools/build-v114-ground.py
+      - name: Android-size Chromium battle (normal and safe)
+        run: node tests/browser-v119.cjs
