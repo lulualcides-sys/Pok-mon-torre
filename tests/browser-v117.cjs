@@ -95,7 +95,7 @@ async function test(port,safe,preview){
    results.push({id,okay,seen,spriteSpecies:sprite?.observedSpecies,decoded:sprite?.decodedSpecies,protectedShiny:state.shiny?.animatedProtected,cache:state.global?.cacheBytes});
    if(!okay)throw Error('V117 real combat sprite audit failed: '+JSON.stringify(results.at(-1)));
   }
-  const hit=await evaluate("(()=>{try{const qa=window.PokemonTorreLocalCombatTestV47;qa.prepareVisualV116(25,false,false);const e=typeof engine!=='undefined'?engine:null;if(!e?.enemy)return {error:'engine missing or enemy undefined'};e.enemy.inv=0;const hp=foe().hp;e.hitTarget('enemy','fighting',5);return {hpBefore:hp,hpAfter:foe().hp,diagnostics:window.PokemonTorreCombatV117.diagnostics()}}catch(err){return {error:String(err),stack:String(err?.stack||'')}}})()");
+  const hit=await evaluate("(()=>window.PokemonTorreLocalCombatTestV47.verifyHitV117?.()||{error:'V117 hit hook missing'})()");
   if(!(hit.hpAfter<hit.hpBefore&&hit.diagnostics.verifiedDamage>=1))
    throw Error('V117 native combat hit not verified: '+JSON.stringify(hit));
   console.log('PASS V117 '+(safe?'SAFE':'NORMAL')+' ALL 5: '+JSON.stringify({modules:ready.modules,leaders:leaderList,combat:hit,results}));
