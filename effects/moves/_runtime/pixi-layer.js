@@ -21,7 +21,7 @@ const pixiFX=(()=>{
  // Particle library is optional. A blocked emitter must not disable our sprite effects.
  // Legacy isWebGLSupported may be absent or inaccurate in mobile PixiJS.
  // Forced WebGL renderer creation is the authoritative test (never Canvas).
- const hasGPU=()=>!!window.PIXI?.Application;
+ const hasGPU=()=>!!(window.PIXI?.Application&&window.PIXI?.utils?.isWebGLSupported?.());
  function tex(key){
   if(cache.has(key))return cache.get(key);
   const area=typeof spriteFrames3511!=='undefined'&&spriteFrames3511[key];
@@ -109,7 +109,7 @@ const pixiFX=(()=>{
    return false;
   }
   if(pixelFlying.has(fx))return true;
-  if(!ensure(engine)){
+  if(!ensure(engine,true)){
    pixelFlyingLastIssue=error||'GPU stage ainda não inicializado';
    return false;
   }
@@ -244,18 +244,26 @@ const pixiFX=(()=>{
   }else app.view.style.clipPath='none';
   app.view.style.display=r.width>10&&r.height>10?'block':'none';
  }
- function ensure(engine){
+ function ensure(engine,requirePixelWebGL=false){
   if(!battleViewReady(engine)){onBattleUiChange();return false;}
   if(owner&&owner!==engine){reset();}
   if(app){
+   if(requirePixelWebGL&&!app.renderer?.gl){
+    error='PixiJS atual não tem WebGL para sprites pixel';
+    return false;
+   }
    if(app.renderer?.gl?.isContextLost?.()||contextLostV94){reset();}
    else {position(engine);if(!app.ticker.started)app.ticker.start();return true;}
   }
-  if(!hasGPU()){error='PixiJS/WebGL/ParticleEmitter indisponível';return false;}
+  // Do NOT modify V84/V90 or other approved Pixi behavior. The mobile
+  // helper bypass applies only to the 4 pixel Flying spells.
+  if(!hasGPU()&&!(requirePixelWebGL&&window.PIXI?.Application)){
+   error='PixiJS/WebGL/ParticleEmitter indisponível';return false;
+  }
   try{
    app=new PIXI.Application({width:engine.w,height:engine.h,backgroundAlpha:0,transparent:true,antialias:false,resolution:1,
     powerPreference:'high-performance',forceCanvas:false});
-   if(!app.renderer?.gl)throw Error('WebGL não está disponível neste navegador');
+   if(requirePixelWebGL&&!app.renderer?.gl)throw Error('WebGL não está disponível neste navegador');
    app.view.style.cssText='position:fixed;pointer-events:none;touch-action:none;z-index:9000;max-width:none';
    document.body.appendChild(app.view);owner=engine;contextLostV94=false;
    // Chrome on Android can lose WebGL after prolonged use. No stale
@@ -618,7 +626,7 @@ const pixiFX=(()=>{
  return {ensure,paint,paintFightingSheet,clearAll:reset,onBattleUiChange,isBattleViewReady:battleViewReady,
   mountPixelFlying,
   beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,
-  beginV86,frameV86,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
+  beginV86,frameV86,diagnostics:()=>({version:'35.85',gpu:hasGPU()||!!app?.renderer?.gl,ready:!!app,
   sprites:!!atlas,active:effects.size,registered:typeof registry==='undefined'?0:registry.size,pixelFlyingLastIssue,
   emitterInstances:emitterCount,frames,pixelFlyingActive:pixelFlying.size,pixelFlyingFrames,pixelFlyingStarts,pixelFlyingFailures,combatSprites:combatFrames,combatEmitterInstances:combatEmitterCount,combatSpriteActive:!!combatSheet,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:typeof grassFourV84?.source==='function'?grassFourV84.source(activeV84.key):'gpu-generated'}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
   hazeActive:!!hazeActiveV85,hazeReady:!!hazeActiveV85?.ready,

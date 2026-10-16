@@ -18,7 +18,7 @@ assert.match(runtime,/function loadGpuFallback\(\)/);
 assert.match(runtime,/pixelFlyingGpuNotice/,'GPU failure must not remain invisible and silent');
 assert.match(runtime,/pixelFlyingLastIssue|diagnosis\?\.error/);
 assert.match(pixi,/WebGL não está disponível/,'Pixi stage must use WebGL not Canvas renderer');
-assert.match(pixi,/const hasGPU=\(\)=>!!window\.PIXI\?\.Application/);
+assert.match(pixi,/requirePixelWebGL&&window\.PIXI\?\.Application/,'legacy WebGL helper bypass must be Flying-only');
 assert.match(pixi,/pixelFlyingLastIssue/);
 assert.match(index,/build=v139-flying-visible/,'browser must fetch the corrected runtime');
 assert.doesNotMatch(runtime,/getContext\(|drawImage\(|requestAnimationFrame\(|\.fillRect\(/,'four effects can never use Canvas2D');
