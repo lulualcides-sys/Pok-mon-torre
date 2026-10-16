@@ -53,10 +53,11 @@ function panel(){
  });
  add('report',row,'📊 Relatório completo',()=>{
   const history=save.v119LeagueHistory?.victories||{};
-  const names=leaders.slice(8).map(x=>x+': '+(history[x]||lifetime.leaders[x]||0)).join(' · ');
+  const names=leaders.slice(8).map(x=>x+': '+Math.max(history[x]||0,lifetime.leaders[x]||0)).join(' · ');
   alert('Campanha '+(save.gym+1)+' / 13 · Vitórias '+(save.wins||0)+' · Derrotas '+(save.losses||0)+
  '\nResets: '+lifetime.resets+' · Elite Four: '+lifetime.eliteVictories+' · Blue: '+lifetime.championWins+
- '\nMaior sequência: '+lifetime.bestStreak+' · Torre: '+lifetime.towerRecord+
+ '\nMaior sequência: '+lifetime.bestStreak+' · Torre: '+Math.max(lifetime.towerRecord,save.v32?.tower?.best||0)+
+ '\nÚltima vitória contra Blue: '+(lifetime.lastChampionVictory||'sem registro')+
  '\nLiga: '+names+'\nCapturas registradas: '+lifetime.captures);
  });
  if(save.gym>=13)add('tower',row,'♾️ Torre Infinita',()=>{
@@ -96,13 +97,20 @@ finishBattle=function(win){
  if(!battle?.active)return originalFinish.apply(this,arguments);
  const mode=battle.v123Mode,label=battle.v123Label||'',gym=battle.v123BeforeGym;
  const wild=!!battle.wild,legacyTower=battle.v32Mode==='tower'||/♾️ TORRE · ANDAR/.test(label);
+ const leagueRematch=battle.v32Mode==='league',leagueIndex=Number(battle.v32LeagueStage);
  const special=battle.v33Type==='lab'||battle.v33Type==='legendary';
  const state=sync(),tower=mode==='tower'||legacyTower,before=Number(save.wins)||0;
  const result=originalFinish.apply(this,arguments);
  if(special)return result;
  if(win){lifetime.wins++;lifetime.streak++;lifetime.bestStreak=Math.max(lifetime.bestStreak,lifetime.streak);
-  if(!tower&&!wild&&gym>=8&&gym<=11){lifetime.eliteVictories++;lifetime.leaders[leaders[gym]]=(lifetime.leaders[leaders[gym]]||0)+1;}
-  if(!tower&&!wild&&gym===12){lifetime.championWins++;lifetime.leaders.Blue=(lifetime.leaders.Blue||0)+1;}
+  if(!tower&&!wild&&(gym>=8&&gym<=11||leagueRematch&&leagueIndex>=0&&leagueIndex<4)){
+   const who=leagueRematch?leaders[8+leagueIndex]:leaders[gym];
+   lifetime.eliteVictories++;lifetime.leaders[who]=(lifetime.leaders[who]||0)+1;
+  }
+  if(!tower&&!wild&&(gym===12||leagueRematch&&leagueIndex===4)){
+   lifetime.championWins++;lifetime.leaders.Blue=(lifetime.leaders.Blue||0)+1;
+   lifetime.lastChampionVictory=new Date().toISOString().slice(0,10);
+  }
   if(tower){lifetime.towerRecord=Math.max(lifetime.towerRecord,save.v32?.tower?.best||0);}
   else if(!/LABORATÓRIO|LENDÁRIO/.test(label)&&!wild&&save.gym<=13&&Number(save.wins)>before){
    state.pendingReward=(state.pendingReward||0)+1;
@@ -115,7 +123,8 @@ render=function(){sync();const out=origRender.apply(this,arguments);panel();rewa
 const oldWin=renderWin;
 renderWin=function(){const out=oldWin.apply(this,arguments);panel();rewards();return out;};
 const prevUse=BattleEngine.prototype.useMove;
-BattleEngine.prototype.useMove=function(){const begin=performance.now();const ret=prevUse.apply(this,arguments);
+BattleEngine.prototype.useMove=function(){const begin=performance.now();this._v123CastAt=begin;
+ const ret=prevUse.apply(this,arguments);
  lastCastAt=performance.now();if(lastCastAt-begin>24)slowCasts++;tracked++;return ret;};
 const css=document.createElement('style');css.id='v123-mobile-arena';
 css.textContent='#modal.combatModal .arenaPro{height:clamp(390px,61dvh,690px)!important;min-height:390px!important}'+
