@@ -1,0 +1,9 @@
+{
+  "move": "Impacto Glacial",
+  "aliases": [],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/catalog/impactoglacial/v101-approved/render.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

@@ -1,0 +1,11 @@
+{
+  "move": "Mordida",
+  "aliases": [
+    "Bite"
+  ],
+  "approval_state": "editado_legado",
+  "protected_effect": false,
+  "source_effect": null,
+  "reference": "Histórico de edições e aprovações do projeto (registro antigo não consolidado)",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

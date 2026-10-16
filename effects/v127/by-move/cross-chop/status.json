@@ -1,0 +1,11 @@
+{
+  "move": "Cross Chop",
+  "aliases": [
+    "Soco Cruzado"
+  ],
+  "approval_state": "em_teste",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v107-fighting/real-sprites.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

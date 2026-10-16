@@ -1,0 +1,11 @@
+{
+  "move": "Brick Break",
+  "aliases": [
+    "Quebra-Tijolo"
+  ],
+  "approval_state": "em_teste",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v110-fighting/impact-only.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

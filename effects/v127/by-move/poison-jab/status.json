@@ -1,0 +1,9 @@
+{
+  "move": "Poison Jab",
+  "aliases": [],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v114-poison/runtime.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

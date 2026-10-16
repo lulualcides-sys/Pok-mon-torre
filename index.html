@@ -874,6 +874,18 @@ if(new URLSearchParams(location.search).get('ui126')!=='0'){
     String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.error('V126 unavailable; V125 and original campaign preserved',error);}
 }
+// V127: single approval registry marks both battle buttons and V33.1
+// equipped/catalogue lists, preserving move renderers and V126 performance.
+// ?marks127=0 restores the prior V122 + marker for diagnosis.
+if(new URLSearchParams(location.search).get('marks127')!=='0'){
+ try{
+  const file='effects/v127/approval-marks.js';
+  const response=await fetch(file+'?build=v127-approved-registry',{cache:'no-store'});
+  if(!response.ok)throw Error('V127 HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V127 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V127 status badges unavailable; existing move animations retained',error);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{

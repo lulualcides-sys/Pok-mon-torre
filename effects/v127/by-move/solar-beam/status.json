@@ -1,0 +1,11 @@
+{
+  "move": "Solar Beam",
+  "aliases": [
+    "Raio Solar"
+  ],
+  "approval_state": "editado_legado",
+  "protected_effect": false,
+  "source_effect": "effects/moves/solar-beam/index.js",
+  "reference": "Histórico de edições e aprovações do projeto (registro antigo não consolidado)",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

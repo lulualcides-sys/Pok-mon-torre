@@ -1,0 +1,12 @@
+{
+  "move": "Raio de Gelo",
+  "aliases": [
+    "Ice Beam",
+    "Raio Congelante"
+  ],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/raio-de-gelo/v101-approved/render.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

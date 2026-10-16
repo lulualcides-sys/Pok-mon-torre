@@ -1,0 +1,12 @@
+{
+  "move": "Rain Dance",
+  "aliases": [
+    "Dança da Chuva",
+    "Danca da Chuva"
+  ],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/raindance-original-v118.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

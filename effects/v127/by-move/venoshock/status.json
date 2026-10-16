@@ -1,0 +1,9 @@
+{
+  "move": "Venoshock",
+  "aliases": [],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v122-poison-preview/runtime.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

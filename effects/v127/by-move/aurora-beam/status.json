@@ -1,0 +1,12 @@
+{
+  "move": "Aurora Beam",
+  "aliases": [
+    "Raio Aurora",
+    "Raio da Aurora"
+  ],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/aurora-beam/v101-approved/render.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

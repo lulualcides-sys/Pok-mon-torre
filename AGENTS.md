@@ -1,5 +1,13 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V127 — conferência dos golpes editados e vistos (16/10/2026)
+
+- Usuário: “Já separou os golpes que editei e colocou o visto? Por que tinha alguns que não tinha”. Auditoria encontrou que V122 mostrava "+" apenas no botão de batalha; V33.1 não mostrava marca de aprovação. Corrigir em **ambos os menus** via V127.
+- 62 fichas de **registro isolado** em `effects/v127/by-move/<slug>/status.json`; 30 status da fonte oficial de golpes e 32 com edição histórica sem aprovação individual confirmada. Não confundir metadados separados com renderers necessariamente separados. Não afirmar que golpes em teste são aprovados.
+- Insígnias: `✓` aceito, `✓ EDITADO` histórico e `TESTE` não aprovado; marcas discretas não emoji na batalha e no editor de 4 golpes. Preservar animações aprovadas, V123–V126, V124.2 Pokébola, V125 item sprites e performance de menus.
+- `?marks127=0` reverte só o visto. Não publicar/aprovar sem CI+deploy; V127 ainda depende de aceite visual do usuário.
+
+
 ## V126 — ginásios longos, equipe clicável e Android (16/10/2026)
 
 - **V125 APROVADA** expressamente pelo usuário no pedido seguinte (“Aprovado…”). Preservar sprites Gen5 da PokéMart, TMs, compras e preços; arquivo `effects/v125/STATUS_APROVACAO.json`.

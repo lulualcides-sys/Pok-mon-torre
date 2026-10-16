@@ -1,0 +1,9 @@
+{
+  "move": "Geada Persistente",
+  "aliases": [],
+  "approval_state": "salvo",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v86-preview/render.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

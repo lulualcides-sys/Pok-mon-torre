@@ -1,0 +1,9 @@
+{
+  "move": "Tempestade Psíquica",
+  "aliases": [],
+  "approval_state": "salvo",
+  "protected_effect": true,
+  "source_effect": "effects/moves/_runtime/original-gba-vfx.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}

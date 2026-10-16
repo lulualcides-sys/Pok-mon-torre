@@ -1,0 +1,12 @@
+{
+  "move": "Hurricane / Furacão",
+  "aliases": [
+    "Hurricane",
+    "Furacão"
+  ],
+  "approval_state": "editado_legado",
+  "protected_effect": false,
+  "source_effect": null,
+  "reference": "move-approved-mark-v122.js (registro anterior, confirmação individual pendente)",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+}
