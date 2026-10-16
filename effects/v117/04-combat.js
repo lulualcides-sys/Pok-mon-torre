@@ -3,7 +3,8 @@
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto117')!=='1')return;
+const mode117=new URLSearchParams(location.search).get('kanto117');
+if(mode117==='off'||(mode117!==null&&mode117!=='1'))return;
 const hits={physical:0,special:0,status:0,reactionFrames:0,verifiedDamage:0};
 const physical=new Set(['normal','fighting','bug','rock','ground','steel','flying','dark']);
 const nativeHit=BattleEngine.prototype.hitTarget;
@@ -91,6 +92,6 @@ if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname||'')&&
  };
 }
 window.PokemonTorreCombatV117=Object.freeze({
- installed:true,previewOnly:true,diagnostics:()=>({...hits,originalHitOwner:true,hpUnmodified:true})
+ installed:true,previewOnly:false,approved:true,diagnostics:()=>({...hits,originalHitOwner:true,hpUnmodified:true})
 });
 })();

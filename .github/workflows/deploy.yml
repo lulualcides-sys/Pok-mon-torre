@@ -46,6 +46,8 @@ jobs:
           node tests/poison-v112-preview.test.cjs
           node tests/poison-v113-preview.test.cjs
           node tests/poison-v114.test.cjs
+          node tests/rain-v118.test.cjs
+          node tests/patch-v117.test.cjs
           node tests/fighting-v110.test.cjs
           node tests/fighting-v109.test.cjs
           node tests/fighting-v108.test.cjs

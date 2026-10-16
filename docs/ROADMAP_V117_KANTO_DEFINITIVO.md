@@ -1,6 +1,6 @@
-# Pokémon Torre — V117: Kanto Definitivo (PATCH ÚNICO EM PRÉVIA)
+# Pokémon Torre — V117: Kanto Definitivo (PATCH ÚNICO APROVADO)
 
-Status: **cinco módulos implementados em um único patch sob ?kanto117=1**. V116 é a versão oficial protegida; efeitos novos da V117 aguardam avaliação visual antes de promoção. Ver `effects/v117/README.md` para limites e instruções de teste.
+Status: **V117 aprovada pelo usuário em 16/10/2026 e habilitada no jogo oficial**, com cinco módulos integrados. V116/V115/V95 continuam protegidas; compare usando `?kanto117=off`. Ver `effects/v117/README.md` para limites e instruções de teste.
 
 ## Objetivo
 Uma atualização grande que transforme as batalhas e a progressão de Kanto, sem reconstruir a base funcional e sem alterar efeitos já aprovados.

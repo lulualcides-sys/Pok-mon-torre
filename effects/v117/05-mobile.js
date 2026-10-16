@@ -3,7 +3,8 @@
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto117')!=='1')return;
+const mode117=new URLSearchParams(location.search).get('kanto117');
+if(mode117==='off'||(mode117!==null&&mode117!=='1'))return;
 const mobile=/Android|iPhone|Mobile/i.test(navigator?.userAgent||'');
 const stats={mobile,resizes:0,adjustments:0,particlesTrimmed:0,assetsEvicted:0,
  fpsSamples:[],dprSamples:[],mode:new URLSearchParams(location.search).get('safe')==='1'?'safe':'normal'};
@@ -58,7 +59,7 @@ BattleEngine.prototype.frame=function(now){
  return out;
 };
 window.PokemonTorreMobileV117=Object.freeze({
- installed:true,previewOnly:true,diagnostics:()=>({...stats,
+ installed:true,previewOnly:false,approved:true,diagnostics:()=>({...stats,
    measured:stats.fpsSamples.length>0,latestFps:stats.fpsSamples.at(-1)||null})
 });
 })();

@@ -314,6 +314,21 @@
       "art_source": "Pixels originais Gunk Shot da biblioteca do usuário; lama rasteira sob o adversário",
       "visual_preset": "poça rasa animada sob os pés do Pokémon, 16 quadros, proporção achatada 120×48 (relativa)",
       "notes": "Usuário respondeu 'Excelente' à prévia da poça de lama V114 em 16/10/2026, após ser solicitado a aprovar ou rejeitar. Promovido ao modo oficial sem alterar quadros, dimensões, posicionamento, dano, energia ou cooldown. Proteger sem nova autorização."
+    },
+    {
+      "move": "Rain Dance",
+      "aliases": [
+        "Dança da Chuva",
+        "Danca da Chuva"
+      ],
+      "status": "restaurado_original",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V118",
+      "frames": 10,
+      "effect_file": "effects/moves/raindance-original-v118.js",
+      "source_file": "parts/p019.txt — V35.64 weather_rain_00..09",
+      "notes": "Usuário autorizou restaurar a chuva que já havia sido aprovada. O módulo usa somente os 10 quadros PMD originais; respeita uso do golpe, energia, cooldown e desenho nativo do clima, sem sobreposição ou troca de outros golpes."
     }
   ]
 }

@@ -70,8 +70,8 @@ async function test(port,safe,preview){
   };
   let ready=null;
   for(let n=0;n<200;n++){
-   ready=await evaluate("(()=>({boot:!!document.getElementById('main'),modules:[!!window.PokemonTorreSpriteAuditV117?.installed,!!window.PokemonTorreShinyV117?.installed,!!window.PokemonTorreGymsV117?.installed,!!window.PokemonTorreCombatV117?.installed,!!window.PokemonTorreMobileV117?.installed],mewtwo:!!window.PokemonTorrePokemonPolishV95?.installed,global:!!window.PokemonTorrePokemonPolishV115?.installed,scale:!!window.PokemonTorreVisualPreviewV116?.approved,qa:typeof window.PokemonTorreLocalCombatTestV47?.prepareVisualV116==='function',arena:!!window.PokemonTorreArenaWideV98?.enabled}))()");
-   if(ready?.boot&&ready.modules?.every(Boolean)&&ready.mewtwo&&ready.global&&ready.scale&&ready.qa&&ready.arena)break;
+   ready=await evaluate("(()=>({boot:!!document.getElementById('main'),modules:[!!window.PokemonTorreSpriteAuditV117?.installed,!!window.PokemonTorreShinyV117?.installed,!!window.PokemonTorreGymsV117?.installed,!!window.PokemonTorreCombatV117?.installed,!!window.PokemonTorreMobileV117?.installed],mewtwo:!!window.PokemonTorrePokemonPolishV95?.installed,global:!!window.PokemonTorrePokemonPolishV115?.installed,scale:!!window.PokemonTorreVisualPreviewV116?.approved,qa:typeof window.PokemonTorreLocalCombatTestV47?.prepareVisualV116==='function',rain:!!window.PokemonTorreRainDanceV118?.installed,arena:!!window.PokemonTorreArenaWideV98?.enabled}))()");
+   if(ready?.boot&&ready.modules?.every(Boolean)&&ready.mewtwo&&ready.global&&ready.scale&&ready.qa&&ready.rain&&ready.arena)break;
    await pause(125);
   }
   if(!ready?.boot||!ready.modules?.every(Boolean)||!ready.mewtwo||!ready.global||!ready.scale||!ready.qa||!ready.arena)
@@ -100,6 +100,14 @@ async function test(port,safe,preview){
    throw Error('V117 original hit engine not preserved: '+JSON.stringify(hit));
   // Game invincibility may legitimately prevent a synthetic hit. The unit test
   // asserts the actual HP-decrease reaction independently.
+  const rain=await evaluate("(()=>window.PokemonTorreLocalCombatTestV47.testRainDanceV118?.()||{error:'Rain Dance QA missing'})()");
+  if(!rain?.activated||rain?.diagnostics?.activations<1)
+   throw Error('V118 Rain Dance failed to activate real PMD weather: '+JSON.stringify(rain));
+  await pause(370);
+  const rainVisual=await evaluate("(()=>({v118:window.PokemonTorreRainDanceV118?.diagnostics(),native:window.PokemonTorreV3564WeatherDiagnostics?.()}))()");
+  if(rainVisual.v118.weather!=='rain'||(rainVisual.v118.originalRendererFrames<1&&rainVisual.v118.fallbackFrames<1))
+   throw Error('V118 rain original frames not visible in battle: '+JSON.stringify(rainVisual));
+  console.log('PASS V118 '+(safe?'SAFE':'NORMAL')+' real Rain Dance cast + restored PMD pixels: '+JSON.stringify(rainVisual));
   console.log('PASS V117 '+(safe?'SAFE':'NORMAL')+' ALL 5: '+JSON.stringify({modules:ready.modules,leaders:leaderList,combat:hit,results}));
  }finally{
   ws?.close();proc.kill('SIGKILL');

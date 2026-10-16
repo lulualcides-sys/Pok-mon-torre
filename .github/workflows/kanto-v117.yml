@@ -29,6 +29,7 @@ jobs:
           node tests/pokemon-polish-v115.test.cjs
           node tests/visual-v116.test.cjs
           node tests/patch-v117.test.cjs
+          node tests/rain-v118.test.cjs
       - name: Build already-approved real attack sprites, offline
         run: |
           python -m pip install --quiet Pillow

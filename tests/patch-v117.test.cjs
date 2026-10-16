@@ -16,8 +16,9 @@ assert.ok(audit.pokemon.every(p=>p.actions.Faint==='unverified'), 'unseen Faint 
 assert.ok(standard.global_rollout.protect&&standard.v116_preview.protect);
 assert.equal(approved.moves.filter(x=>x.protect&&x.version==='V114').length,4);
 for(const mod of mods)assert.ok(html.includes(base+mod+'.js'),mod+' not loaded');
-assert.ok(html.includes("get('kanto117')==='1'"),'V117 must be opt-in');
-assert.ok(!html.includes("get('kanto117')!== 'off'"));
+assert.ok(html.includes("q117===null||q117==='1'"),'V117 must be official');
+assert.ok(html.includes('raindance-original-v118.js'),'Restored native rain missing');
+assert.ok(approved.moves.some(x=>x.move==='Rain Dance'&&x.protect&&x.frames===10));
 const real=Object.fromEntries(audit.pokemon.map(p=>[p.id,{id:p.id,name:p.name}]));
 const leaders=[{leader:'Falkner',boss:[17,22],name:'Old first gym',type:'flying',accent:'#447ca7'}];
 while(leaders.length<8)leaders.push({leader:'Old',boss:[25],name:'Old gym',type:'electric',accent:'#447ca7'});
@@ -56,10 +57,11 @@ function scenario(search){
  for(const mod of mods)vm.runInContext(fs.readFileSync(base+mod+'.js','utf8'),sandbox,{timeout:2500});
  return {Engine,sandbox,actors,battle,ctx,state,stats,leaders,window};
 }
-const baseline=scenario('');
+const baseline=scenario('?kanto117=off');
 assert.equal(baseline.window.PokemonTorreGymsV117,undefined);
 assert.equal(baseline.leaders[0].leader,'Falkner');
-const a=scenario('?kanto117=1');
+const a=scenario('');
+assert.ok(scenario('?kanto117=1').window.PokemonTorreGymsV117?.installed,'Legacy preview link still works');
 assert.equal(a.window.PokemonTorreSpriteAuditV117.installed,true);
 assert.equal(a.window.PokemonTorreShinyV117.installed,true);
 assert.equal(a.window.PokemonTorreGymsV117.installed,true);
@@ -97,4 +99,4 @@ assert.equal(a.stats.start,1);
 assert.equal(a.window.PokemonTorreGymsV117.diagnostics().leaderFights,1);
 assert.equal(a.window.PokemonTorreGymsV117.diagnostics().savedGymUnchanged,true);
 assert.equal(a.sandbox.save.stage,0,'saves unchanged');
-console.log('PASS V117 all five modules: Kanto 151 audit, original shiny only, Brock and eight authentic teams, damage verified/no hitbox changes, measured Android DPR and particle cap; V116 off unaffected');
+console.log('PASS V117 all five modules: Kanto 151 audit, original shiny only, Brock and eight authentic teams, damage verified/no hitbox changes, measured Android DPR and particle cap; V116 protected and opt-out available');

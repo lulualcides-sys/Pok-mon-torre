@@ -4,7 +4,8 @@
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto117')!=='1')return;
+const mode117=new URLSearchParams(location.search).get('kanto117');
+if(mode117==='off'||(mode117!==null&&mode117!=='1'))return;
 const protectedIds=new Set([6,18,62,68,94,105]),cache=new Map();
 const stats={requested:0,loaded:0,failed:0,authenticFrames:0,animatedProtected:0,unknown:0,evictions:0};
 function get(id){
@@ -44,7 +45,7 @@ BattleEngine.prototype.drawMon=function(actor,id,enemy,now){
  finally{if(patched){try{ctx.drawImage=old}catch(e){}}}
 };
 window.PokemonTorreShinyV117=Object.freeze({
- installed:true,previewOnly:true,protectedIds:[...protectedIds],
+ installed:true,previewOnly:false,approved:true,protectedIds:[...protectedIds],
  diagnostics:()=>({...stats,cacheSize:cache.size,ids:[...cache.keys()]})
 });
 })();

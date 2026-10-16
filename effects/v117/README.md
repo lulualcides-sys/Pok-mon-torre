@@ -1,6 +1,6 @@
-# V117 Kanto Definitivo — PATCH ÚNICO (prévia integrada)
+# V117 Kanto Definitivo — PATCH ÚNICO (OFICIAL, APROVADO)
 
-V117 cobre **1 a 5 em um só commit** e roda apenas com `?kanto117=1` até aprovação visual. O jogo oficial permanece na V116 aprovada. Scripts protegidos V95/V98/V101/V111–V116 e `effects/moves/STATUS_APROVADOS.json` não são alterados.
+V117 reúne **as melhorias 1–5 em um único patch**. O usuário aprovou com **«Pode salvar» em 16/10/2026**, e agora a URL oficial (sem parâmetros) executa todas as cinco frentes. `?kanto117=off` permite comparar com a V116 sem mudar o salvamento. Scripts protegidos V95/V98/V101/V111–V116 e `effects/moves/STATUS_APROVADOS.json` não são alterados.
 
 ## O que está implementado
 
@@ -15,4 +15,8 @@ V117 cobre **1 a 5 em um só commit** e roda apenas com `?kanto117=1` até aprov
 - Prévia completa V117: `https://lulualcides-sys.github.io/Pok-mon-torre/?kanto117=1`
 - Modo seguro V117: `https://lulualcides-sys.github.io/Pok-mon-torre/?kanto117=1&safe=1`
 
-Os cinco scripts são executados **somente** no preview até o jogador aprovar. A biblioteca anterior permanece preservada. Os testes unitários validam todos os recursos e a integração Chrome/Android-sized verifica carregamento, Pokémon, oito ginásios, e dano real; não inventar cobertura comprovada de todas as imagens remotas.
+Os cinco scripts agora executam no modo **oficial**; a biblioteca anterior permanece preservada e `?kanto117=1` ainda funciona como link de compatibilidade. Os testes unitários validam todos os recursos e a integração Chrome/Android-sized verifica carregamento, Pokémon, oito ginásios, e dano real; não inventar cobertura comprovada de todas as imagens remotas.
+
+## V118 — Rain Dance restaurado
+
+O mesmo pacote promove a V117 e carrega `effects/moves/raindance-original-v118.js`, usando **somente** os 10 sprites PMD originais `weather_rain_00..09` do código V35.64. A ativação só ocorre após um lançamento aceito pelo motor nativo; o fallback só desenha os mesmos sprites se o pintor nativo não o fizer. Nenhum outro golpe ou efeito de clima foi substituído.

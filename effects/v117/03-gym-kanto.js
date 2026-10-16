@@ -1,9 +1,10 @@
 /* V117 | 03 — Kanto's eight actual Gym Leaders and faithful Gen-I species.
- * Preview only; trainer-stage counts and player save format are preserved.
+ * Approved and official; trainer-stage counts and player save format are preserved.
  */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('kanto117')!=='1')return;
+const mode117=new URLSearchParams(location.search).get('kanto117');
+if(mode117==='off'||(mode117!==null&&mode117!=='1'))return;
 if(typeof GYMS==='undefined'||GYMS.length<8)return; // Extra League stages are permitted and untouched.
 const leaders=[
  {name:'Ginásio de Pewter',leader:'Brock',type:'rock',medal:'🪨',accent:'#927a58',
@@ -67,7 +68,7 @@ BattleEngine.prototype.update=function(dt,now){
  return result;
 };
 window.PokemonTorreGymsV117=Object.freeze({
- installed:true,previewOnly:true,version:'117.0',names:GYMS.slice(0,8).map(g=>g.leader),
+ installed:true,previewOnly:false,approved:true,version:'117.0',names:GYMS.slice(0,8).map(g=>g.leader),
  diagnostics:()=>({...stats,leaderTeams:GYMS.slice(0,8).map(g=>({leader:g.leader,boss:g.boss.slice()}))})
 });
 if(typeof render==='function'&&!battle?.active&&save?.starter)try{render()}catch(e){console.warn('V117 gym UI refresh skipped',e)}

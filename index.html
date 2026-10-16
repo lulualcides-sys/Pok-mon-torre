@@ -680,9 +680,10 @@ if(v116Params.get('pokemon_polish')!=='off'&&
   game=game.replace(fireSpriteAnchor,'\n'+code+'\n'+fireSpriteAnchor);
  }catch(e){console.warn('V116 approved sprite effect unavailable; V115 preserved',e);}
 }
-// V117 ALL-IN-ONE: five independent modules, single opt-in preview patch.
-// No mutation to V95/V98/V111-V116 or approved moves without player sign-off.
-if(new URLSearchParams(location.search).get('kanto117')==='1'){
+// V117 OFFICIAL: all five modules approved and saved by the user.
+// Use ?kanto117=off for regression comparison; protected visuals untouched.
+const q117=new URLSearchParams(location.search).get('kanto117');
+if(q117===null||q117==='1'){
  try{
   const modules=[
    'effects/v117/01-sprite-audit.js',
@@ -699,8 +700,19 @@ if(new URLSearchParams(location.search).get('kanto117')==='1'){
   if(!game.includes(fireSpriteAnchor))throw Error('V117 insertion anchor missing');
   game=game.replace(fireSpriteAnchor,
    String.fromCharCode(10)+code.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
- }catch(err){console.warn('V117 preview unavailable; preserving approved V116',err);}
+ }catch(err){console.warn('V117 official unavailable; preserving approved V116',err);}
 }
+// V118: restore the original 10-frame PMD rainfall for Rain Dance.
+// Existing V35.64 painter remains primary; fallback draws only if it did not render.
+try{
+ const file='effects/moves/raindance-original-v118.js';
+ const response=await fetch(file+'?build=v118-pmd-original-rain',{cache:'no-store'});
+ if(!response.ok)throw Error('Rain Dance restoration HTTP '+response.status);
+ const code=await response.text();
+ if(!game.includes(fireSpriteAnchor))throw Error('Rain Dance insertion anchor missing');
+ game=game.replace(fireSpriteAnchor,
+  String.fromCharCode(10)+code+String.fromCharCode(10)+fireSpriteAnchor);
+}catch(error){console.warn('Keeping native PMD rain animation as fallback',error);}
 // V100: merge bilingual duplicate DISPLAY entries in the four-move
 // editor without changing underlying move keys, equipped saves or VFX.
 try{

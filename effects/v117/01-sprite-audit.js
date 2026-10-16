@@ -4,8 +4,8 @@
  */
 (()=>{
 'use strict';
-const active=new URLSearchParams(location.search).get('kanto117')==='1';
-if(!active)return;
+const mode117=new URLSearchParams(location.search).get('kanto117');
+if(mode117==='off'||(mode117!==null&&mode117!=='1'))return;
 const rows=new Map(),errors=[];
 const tracked=["Idle","Walk","Attack","Hurt","Faint"];
 const auditEntry=(id,e)=>{
@@ -48,7 +48,7 @@ const observe=()=>{
 };
 observe();
 window.PokemonTorreSpriteAuditV117=Object.freeze({
- installed:true,previewOnly:true,version:'117.0',
+ installed:true,previewOnly:false,approved:true,version:'117.0',
  refresh:observe,
  getSpecies:id=>{observe();const record=rows.get(Number(id));return record?JSON.parse(JSON.stringify(record)):null},
  diagnostics:()=>{observe();const data=[...rows.values()];
