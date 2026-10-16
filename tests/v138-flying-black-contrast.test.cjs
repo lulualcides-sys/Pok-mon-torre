@@ -23,11 +23,11 @@ assert.match(pixi,/value:'101318'/,'particles should start near-black');
 assert.match(pixi,/value:'050608'/,'particles should finish black');
 assert.match(pixi,/PIXI\.SCALE_MODES\.NEAREST/);
 assert.match(pixi,/updatePixelFlying\(now,dt\)/);
-assert.match(runtime,/spritesheet\.png\?v=138-black-pixel/,'sprite URL must bust browser cache');
+assert.match(runtime,/spritesheet\.png\?v=(?:138-black-pixel|139-visible-gpu)/,'sprite URL must bust browser cache');
 assert.match(runtime,/pixelPalette:'near-black with one-pixel silver contrast rim'/);
 assert.ok(!/(getContext\(|requestAnimationFrame\(|drawImage\()/.test(runtime),'never return to Canvas 2D');
 assert.ok(html.includes("get('flying136')!=='0'"),'the normal game must load pixel Flying effects');
-assert.match(html,/build=v138-flying-black-contrast/,'cache bust for the loader');
+assert.match(html,/build=v(?:138-flying-black-contrast|139-flying-visible)/,'cache bust for the loader');
 const oldProtected=JSON.parse(get('effects/moves/STATUS_APROVADOS.json')).moves;
 assert.equal(oldProtected.length,42,'not yet visually approved: do not mark new Flying effects');
 for(const name of ['Osso','Grande Fissura','Garra de Areia','Soco de Terra','Lança de Areia','Fenda Rasa']){
