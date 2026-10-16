@@ -29,7 +29,7 @@ window.PokemonTorrePoisonPreviewV113=(()=>{
  }
  const isReady=id=>{
   const s=registered.get(id),im=images.get(id);
-  return !!(s&&im?.complete&&im.naturalWidth===s.frames*96&&im.naturalHeight===96);
+  return !!(s&&im?.complete&&im.naturalWidth===s.frames*128&&im.naturalHeight===128);
  };
  const previousPaint=window.PokemonTorreV360Paint;
  const paint=function(g,fx,now,e){
