@@ -1,0 +1,25 @@
+{
+  "version": "V124.2",
+  "status": "pendente_aprovacao_visual",
+  "published": false,
+  "protected": false,
+  "date": "2026-10-16",
+  "reason": "Sincronizar laser vermelho com centro real da Pokébola no recolhimento e envio",
+  "changes": [
+    "Alinhamento DOM–Canvas a cada frame de efeito",
+    "Raio acompanha Pokébola própria no recolhimento",
+    "Raio acompanha a Pokébola nativa do treinador V27 durante o envio",
+    "Backup preservado da V124.1 aprovada"
+  ],
+  "preserve": [
+    "V124.1 aprovada com ressalvas",
+    "V123 aprovada",
+    "IA estratégica V124 e HP/status/shiny",
+    "Golpes e efeitos V95–V122"
+  ],
+  "verification": [
+    "tests/v124-recall-ai.test.cjs",
+    "Github Actions + GitHub Pages"
+  ],
+  "approved_by_user": false
+}

@@ -3,6 +3,7 @@
 ## Status V123–V124 (16/10/2026)
 
 - **V123 aprovada expressamente** em 16/10/2026, salva/protegida em `effects/v123/STATUS.json`. Preservar IA, progressão, centro, cinco encontros por etapa, carreira/Elite Four/Blue/reset, recompensas, Torre Infinita, medidas contra travamentos, arena ampliada e sprites. Aprovada pelo usuário após jogar no celular.
+- **V124.2 solicitada (ainda não aprovada)**: corrigir desalinhamento do raio vermelho com a Pokébola em movimento; no recolhimento e envio ler centro real da bola no DOM e converter em coordenadas Canvas. V124.1 permanece protegida/arquivada em `effects/v124/approved/recall-ai-v124-1.js`. Não modificar combate, sprites de golpes, tamanho, física nem trocas táticas. Ver `effects/v124/STATUS_V124_2.json`.
 - **V124.1 APROVADA COM RESSALVAS** em 16/10/2026: o usuário disse “Ficou mais ou menos mas dá pra salvar”. Guardar como versão aceitável, sem alterar o efeito vermelho de recolhimento/envio, os sprites do treinador, as trocas estratégicas inimigas e a proteção de V123/V95–V122 sem novo pedido. Commit visual revisado `b7eab794d1752a4c60d8d1e2bd21d52691cd19d6`. Testes e publicação deste commit confirmados. Aprovação registrada em `effects/v124/STATUS_APROVACAO.json`.
 - Continuar proibido alterar golpes aprovados sem autorização; nova animação de troca não deve mexer em nenhum golpe. Leia `effects/v124/README.md`.
 

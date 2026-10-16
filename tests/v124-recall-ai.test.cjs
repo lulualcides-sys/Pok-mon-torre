@@ -31,19 +31,29 @@ function el(tag='div'){
  const e={tag,style:{},dataset:{},className:'',textContent:'',children:[],removed:false,
   classList:{add(){},remove(){}},append(...args){this.children.push(...args)},
   appendChild(x){this.children.push(x);return x},remove(){this.removed=true},
-  setAttribute(){},querySelector(){return null},querySelectorAll(){return []}};
+  setAttribute(){},
+  getBoundingClientRect(){return this.className==='v124Ball'?{left:90,top:140,width:22,height:22}:null},
+  querySelector(q){return q==='.v124Ball'?this.children.find(x=>x.className==='v124Ball')||null:null},
+  querySelectorAll(){return []}};
  return e;
 }
 const arena=el('arena'),sheet=el('swap'),head=el('head');
 const oldV27Coach=el('div');
-arena.querySelectorAll=q=>q==='.v27Throw'?[oldV27Coach]:[];
+const nativeSendRight=el('ball'),nativeSendLeft=el('ball');
+nativeSendRight.getBoundingClientRect=()=>({left:455,top:170,width:18,height:18});
+nativeSendLeft.getBoundingClientRect=()=>({left:55,top:200,width:18,height:18});
+arena.querySelectorAll=q=>q==='.v27Throw'?[oldV27Coach]:
+ q==='.v27Throw.right .v27ThrowBall'&&nativeNew>0?[nativeSendRight]:
+ q==='.v27Throw.left .v27ThrowBall'&&nativeManual>0?[nativeSendLeft]:[];
 const buttons=[0,1].map(i=>{const e=el('button');e.dataset.swap=String(i);return e});
 sheet.querySelectorAll=q=>q==='[data-swap]'?buttons:[];
 const document={head,createElement:el,getElementById:id=>id==='swapSheet'?sheet:id==='arenaPro'?arena:null};
 const gradient={addColorStop:dummy};
+const beamOrigins=[];
+
 const ctx={
  save:dummy,restore:dummy,translate:dummy,scale:dummy,createLinearGradient:()=>gradient,
- beginPath:dummy,moveTo:dummy,lineTo:dummy,stroke:dummy,ellipse:dummy,arc:dummy,fill:dummy,globalAlpha:1
+ beginPath:dummy,moveTo:(x,y)=>beamOrigins.push([x,y]),lineTo:dummy,stroke:dummy,ellipse:dummy,arc:dummy,fill:dummy,globalAlpha:1
 };
 const sandbox={
  window:{},URLSearchParams,location:{search:''},document,console,performance:{now:()=>ms},
@@ -65,6 +75,7 @@ class Engine{
  constructor(){
   this.player={x:100,y:260,r:30,inv:0};this.enemy={x:420,y:170,r:30,inv:0};
   this.h=400;this.w=600;this.time=0;this.ctx=ctx;
+  this.canvas={getBoundingClientRect:()=>({left:15,top:25,width:600,height:400})};
  }
  update(dt){this.time+=dt}
  draw(){
@@ -90,11 +101,14 @@ assert.equal(sandbox.battle.paused,true,'AI pauses combat during red recall');
 assert.equal(sandbox.battle.foe,old,'opponent must stay on field until red recall completes');
 assert.equal(sandbox.battle.enemies.length,2);
 sandbox.engine.draw();
+assert.ok(beamOrigins.length>=1,'red beam must be drawn while recalling');
+assert.deepEqual(beamOrigins.at(-2),[86,126],'recall beam begins at the REAL animated Pokeball centre (canvas coordinates)');
 const enemyRecall=arena.children.find(x=>x.className==='v124RecallTrainer enemy');
 assert.ok(enemyRecall&&!enemyRecall.removed,'V27-compatible recall coach is visible initially');
 assert.ok(oldV27Coach.removed,'stale native throw overlay must be cleared');
 ms+=560;
 sandbox.engine.draw();
+assert.deepEqual(beamOrigins.at(-2),[449,154],'send beam follows the native V27 throwing Pokeball, not fixed canvas coordinates');
 assert.equal(sandbox.battle.foe,good,'AI brings the favorable attacker');
 assert.equal(sandbox.battle.enemies.length,2,'roster count cannot change during switch');
 assert.ok(sandbox.battle.enemies.includes(old),'recalled enemy retained');
@@ -119,6 +133,7 @@ assert.equal(sandbox.battle.pIndex,0);
 const allyRecall=arena.children.find(x=>x.className==='v124RecallTrainer ally'&&!x.removed);
 assert.ok(allyRecall,'trainer recall shown during manual player switch');
 ms+=560;sandbox.engine.draw();
+assert.deepEqual(beamOrigins.at(-2),[49,184],'ally send beam follows its native V27 Pokeball');
 assert.ok(allyRecall.removed,'player recall trainer removed before native send');
 assert.equal(sandbox.battle.pIndex,1,'selected teammate is sent only after recall');
 assert.equal(sandbox.battle.energy,88,'manual switch retains existing energy tax');
@@ -131,4 +146,6 @@ sandbox.finishBattle();
 sandbox.startBattle([old],'🌾 WILD',true);
 sandbox.engine.time=7;sandbox.engine.update(.8);
 assert.equal(sandbox.window.PokemonTorreRecallV124.diagnostics().enemy,1,'wild encounter never tactical-switches');
-console.log('PASS V124.1: coach not mirrored or duplicated, handoff to native send, real red trainer recall player/enemy, HP/shiny/status/energy preserved and AI safe');
+assert.ok(sandbox.window.PokemonTorreRecallV124.diagnostics().syncedRecallFrames>0,'recall sync measured');
+assert.ok(sandbox.window.PokemonTorreRecallV124.diagnostics().syncedSendFrames>0,'send sync measured');
+console.log('PASS V124.2: laser anchors to moving DOM ball on BOTH sides and phases; V124.1 trainer/AI protected');

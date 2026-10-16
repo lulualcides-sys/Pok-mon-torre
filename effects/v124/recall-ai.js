@@ -7,7 +7,7 @@
 if(window.PokemonTorreRecallV124?.installed)return;
 const params=new URLSearchParams(location.search);
 if(params.get('swap124')==='0')return;
-const stat={manual:0,enemy:0,automatic:0,recalls:0,sends:0,coachSprites:0,decisions:0,rejected:0,completed:0,oldOverlaysCleared:0,recallHandoff:0,last:null};
+const stat={manual:0,enemy:0,automatic:0,recalls:0,sends:0,coachSprites:0,decisions:0,rejected:0,completed:0,oldOverlaysCleared:0,recallHandoff:0,syncedRecallFrames:0,syncedSendFrames:0,fallbackFrames:0,lastAnchor:null,last:null};
 const clock=()=>performance.now();
 const EASE=t=>1-Math.pow(1-Math.max(0,Math.min(1,t)),3);
 const N=n=>Number.isFinite(n)?n:0;
@@ -110,6 +110,37 @@ function sceneClock(){
  if(t>=1.42){end(a);return null;}
  a.phase=t;return a;
 }
+// V124.2 — the red beam must leave the *visible* Poke Ball, not a
+// hard-coded arena position. The Ball is DOM/CSS-animated while the beam is
+// Canvas-rendered, so translate actual screen coordinates each frame.
+function ballAnchor(scene,renderer,w,h){
+ const canvas=renderer?.canvas,canvasRect=canvas?.getBoundingClientRect?.();
+ const arena=document.getElementById('arenaPro');
+ const selector=scene.side==='ally'?'.v27Throw.left .v27ThrowBall':'.v27Throw.right .v27ThrowBall';
+ let ball=null;
+ if(scene.done){
+  const candidates=arena?.querySelectorAll?.(selector);
+  if(candidates?.length)ball=candidates[candidates.length-1];
+ }else{
+  ball=backdrop?.querySelector?.('.v124Ball')||null;
+ }
+ const ballRect=ball?.getBoundingClientRect?.();
+ if(canvasRect&&ballRect&&canvasRect.width>0&&canvasRect.height>0&&ballRect.width>0&&ballRect.height>0){
+  const x=((ballRect.left+ballRect.width*.5-canvasRect.left)/canvasRect.width)*w;
+  const y=((ballRect.top+ballRect.height*.5-canvasRect.top)/canvasRect.height)*h;
+  if(Number.isFinite(x)&&Number.isFinite(y)){
+   const point={x,y};
+   scene.anchor=point;
+   if(scene.done)stat.syncedSendFrames++;else stat.syncedRecallFrames++;
+   stat.lastAnchor={side:scene.side,phase:scene.done?'send':'recall',x:+x.toFixed(1),y:+y.toFixed(1)};
+   return point;
+  }
+ }
+ // Keep the last measured point only when the CSS ball temporarily disappears
+ // during the handoff. This is better than snapping the ray across the arena.
+ stat.fallbackFrames++;
+ return scene.anchor||{x:scene.side==='ally'?w*.095:w*.905,y:scene.side==='ally'?h*.67:h*.47};
+}
 // Native paint uses same scene clock; no second RAF and no additional animation timer.
 const prevDraw=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(now){
@@ -119,8 +150,8 @@ BattleEngine.prototype.draw=function(now){
   const c=this.ctx,h=Math.max(240,N(this.h)),w=Math.max(280,N(this.w));
   const actor=scene.side==='ally'?this.player:this.enemy;
   const x=actor?.x??scene.x,y=actor?.y??scene.y;
-  const left=scene.side==='ally';
-  const ballX=left?w*.095:w*.905,ballY=left?h*.67:h*.47;
+  const ball=ballAnchor(scene,this,w,h);
+  const ballX=ball.x,ballY=ball.y;
   const entering=scene.phase>=.52;
   const strength=entering?Math.max(0,1-(scene.phase-.52)/.74):Math.max(0,1-scene.phase/.60);
   const beams=Math.max(0,Math.min(1,strength));
@@ -283,6 +314,6 @@ style.textContent='.v124RecallTrainer{position:absolute;z-index:8;pointer-events
  '@media(max-width:650px){.v124RecallTrainer{transform:scale(.77);transform-origin:bottom left}'+
  '.v124RecallTrainer.enemy{transform:scale(.77);transform-origin:bottom right}}';
 document.head.appendChild(style);
-window.PokemonTorreRecallV124=Object.freeze({installed:true,official:true,version:'124.1',
+window.PokemonTorreRecallV124=Object.freeze({installed:true,official:true,version:'124.2',
  diagnostics:()=>({...stat,active:!!activeScene,queueLength:battle?.enemies?.length||0})});
 })();

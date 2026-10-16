@@ -4,6 +4,20 @@
 
 **Aprovada com ressalvas pelo usuário:** “Ficou mais ou menos mas dá pra salvar”. O estado V124.1 do commit `b7eab794d1752a4c60d8d1e2bd21d52691cd19d6` deve ser preservado, sem ajustes extras até uma nova solicitação. Os testes do commit passaram e o GitHub Pages confirmou a publicação. Ver `effects/v124/STATUS_APROVACAO.json`.
 
+## V124.2 — Sincronização Pokébola × raio vermelho (16/10/2026)
+
+**Motivo:** feedback: a Pokébola se movia por animação CSS/DOM, mas o raio vermelho nascia de uma coordenada fixa no Canvas, causando desalinhamento no celular, na rotação e nas trocas do adversário.
+
+- Antes de cada desenho do feixe, converter o **centro real da Pokébola visível** em coordenadas do Canvas usando `getBoundingClientRect()` da bola e do Canvas (`x=(ball.centerX-canvas.left)/canvas.width*engine.w`, mesma fórmula para `y`).
+- No recolhimento, acompanhar a `.v124Ball` animada do treinador. Na entrada, acompanhar a `.v27Throw.left/.right .v27ThrowBall` nativa do treinador V27, inclusive durante o arremesso.
+- Se o sprite HTML ainda não estiver medível numa troca, conservar o último ponto válido para não fazer o feixe saltar entre dois pontos.
+- Nenhum outro temporizador, RAF, segunda Pokébola, CSS ilustrativo ou alteração de hitbox, dano, HP, shiny, IA, tamanhos ou golpes.
+- Arquivada a V124.1 aprovada em `effects/v124/approved/recall-ai-v124-1.js`, **sem alterar seu código**. O jogo normal utiliza V124.2 após a aprovação do usuário para corrigir apenas a sincronia; `?swap124=0` segue como rollback.
+- Regressão `tests/v124-recall-ai.test.cjs`: verifica origem geométrica exata do laser nas duas fases e nos dois lados, treinador único, HP/status/shiny e IA; validar publicação em GitHub Actions antes de declarar concluído.
+
+**Status:** implementada para avaliação visual do usuário; **ainda não aprovada**.
+
+
 ## V124.1 — Ajuste visual do treinador (16/10/2026)
 
 Feedback após jogar: o raio vermelho e a troca estratégica foram aprovados, mas o sprite do treinador na troca estava distorcido/duplicado. O patch **V124.1** mantém as mecânicas e só corrige a transição visual:
