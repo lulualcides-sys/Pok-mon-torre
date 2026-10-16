@@ -1,0 +1,13 @@
+{
+  "move": "Pulso de Água",
+  "aliases": [
+    "Water Pulse",
+    "Pulso d'Água"
+  ],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/water-pulse/index.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Somente registro; o golpe V45 já aprovado continua sem alterações visuais.",
+  "approval_confirmed_at": "2026-10-16"
+}

@@ -1,7 +1,7 @@
 {
   "version": "V127",
   "as_of": "2026-10-16",
-  "description": "Auditoria dos golpes alterados: aprovados/salvos via STATUS_APROVADOS e histórico de edições V122, com status distinguíveis. Metadados por golpe não implicam motor de efeito individual. Complementado com golpes previamente editados mencionados no histórico do usuário, sem elevar automaticamente seu estado a 'aprovado'. Em 16/10/2026 o usuário confirmou aprovação dos quatro Lutador que constavam erroneamente em teste e reiterou aprovação dos quatro Veneno V122. Nenhuma animação foi substituída.",
+  "description": "Auditoria dos golpes alterados: aprovados/salvos via STATUS_APROVADOS e histórico de edições V122, com status distinguíveis. Metadados por golpe não implicam motor de efeito individual. Complementado com golpes previamente editados mencionados no histórico do usuário, sem elevar automaticamente seu estado a 'aprovado'. Em 16/10/2026 o usuário confirmou aprovação dos quatro Lutador que constavam erroneamente em teste e reiterou aprovação dos quatro Veneno V122. Nenhuma animação foi substituída. Em 16/10/2026 o usuário reconfirmou Cauda de Água e Pulso de Água como aprovados, sem mudar seus visuais; o registro tem 64 golpes.",
   "states": {
     "aprovado": "Golpe aprovado, preservar",
     "salvo": "Efeito aceito para salvar",
@@ -306,6 +306,32 @@
       "source": "STATUS_APROVADOS.json",
       "protect": true,
       "approval_reconfirmed_at": "2026-10-16"
+    },
+    {
+      "name": "Cauda de Água",
+      "aliases": [
+        "Aqua Tail",
+        "Cauda da Água"
+      ],
+      "status": "aprovado",
+      "effect_file": "effects/moves/aqua-tail/index.js",
+      "version": "V45 (arte prévia aprovada)",
+      "source": "STATUS_APROVADOS.json",
+      "protect": true,
+      "approval_confirmed_at": "2026-10-16"
+    },
+    {
+      "name": "Pulso de Água",
+      "aliases": [
+        "Water Pulse",
+        "Pulso d'Água"
+      ],
+      "status": "aprovado",
+      "effect_file": "effects/moves/water-pulse/index.js",
+      "version": "V45 (arte prévia aprovada)",
+      "source": "STATUS_APROVADOS.json",
+      "protect": true,
+      "approval_confirmed_at": "2026-10-16"
     },
     {
       "name": "Abalo Terrestre",

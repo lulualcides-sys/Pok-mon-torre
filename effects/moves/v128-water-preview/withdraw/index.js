@@ -27,6 +27,6 @@ window.PokemonTorreWaterV128?.register({
    g.strokeStyle='#e4ffff';g.lineWidth=1.8;g.stroke();}
   g.restore();
   g.save();g.globalAlpha*=a*.54;
-  ring(g,x,y,R*(.68+.12*Math.sin(t*15)),R*.38,'#95eaff',2);g.restore();
+  ring(g,x,y,R*(.68+.12*Math.sin(t*15)),R*.38,.72,'#95eaff',2);g.restore();
  }
 });

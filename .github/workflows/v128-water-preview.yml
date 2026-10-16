@@ -1,0 +1,27 @@
+name: V128 Water Preview — four original moves
+on:
+  push:
+    paths:
+      - "effects/moves/v128-water-preview/**"
+      - "effects/moves/STATUS_APROVADOS.json"
+      - "effects/v127/**"
+      - "tests/v128-water-preview.test.cjs"
+      - "tests/v127-move-marks.test.cjs"
+      - "index.html"
+      - ".github/workflows/v128-water-preview.yml"
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify visual preview + native protections
+        run: |
+          node tests/v128-water-preview.test.cjs
+          node tests/v127-move-marks.test.cjs
+          node tests/ice-v101-official.test.cjs
+          node tests/v126-gameplay-ui.test.cjs

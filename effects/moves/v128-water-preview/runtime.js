@@ -36,7 +36,7 @@ function register(spec){
  if(!spec||!spec.key||typeof spec.draw!=='function'||byKey.has(spec.key))throw Error('V128 water duplicate');
  const clean={...spec,frames:spec.frames||16};
  byKey.set(clean.key,clean);
- for(const alias of [clean.key,...clean.aliases||[]]){const k=norm(alias);if(paints.has(k))throw Error('V128 duplicate name '+k);paints.set(k,clean);}
+ for(const alias of [clean.key,...(clean.aliases||[])]){const k=norm(alias);if(paints.has(k)&&paints.get(k)!==clean)throw Error('V128 duplicate name '+k);paints.set(k,clean);}
 }
 window.PokemonTorreWaterV128=Object.freeze({installed:true,previewOnly:true,register,
  diagnostics:()=>({...stats,registered:[...byKey.keys()],approvedUnchanged:['Cauda de Água','Pulso de Água']})});
