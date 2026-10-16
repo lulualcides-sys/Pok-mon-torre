@@ -7,7 +7,7 @@
 if(window.PokemonTorreRecallV124?.installed)return;
 const params=new URLSearchParams(location.search);
 if(params.get('swap124')==='0')return;
-const stat={manual:0,enemy:0,automatic:0,recalls:0,sends:0,coachSprites:0,decisions:0,rejected:0,completed:0,last:null};
+const stat={manual:0,enemy:0,automatic:0,recalls:0,sends:0,coachSprites:0,decisions:0,rejected:0,completed:0,oldOverlaysCleared:0,recallHandoff:0,last:null};
 const clock=()=>performance.now();
 const EASE=t=>1-Math.pow(1-Math.max(0,Math.min(1,t)),3);
 const N=n=>Number.isFinite(n)?n:0;
@@ -29,6 +29,10 @@ function trainerName(side){
 function showRecallTrainer(side){
  const arena=document.getElementById('arenaPro');
  if(!arena||typeof arena.appendChild!=='function')return;
+ // Clear only stale V27 trainer throws from a previous entry. Reusing the
+ // same actor as V27 must not display two trainers on the same arena side.
+ const oldThrows=arena.querySelectorAll?.('.v27Throw')||[];
+ for(const prior of oldThrows){if(prior?.remove){prior.remove();stat.oldOverlaysCleared++;}}
  const wrap=document.createElement('div');
  wrap.className='v124RecallTrainer '+(side==='ally'?'ally':'enemy');
  wrap.setAttribute('aria-hidden','true');
@@ -71,6 +75,9 @@ function commit(scene){
  if(scene.side==='ally'){
   const index=scene.targetIndex,mon=save.team[index];
   if(!mon||mon.hp<=0||index===b.pIndex){end(scene);return;}
+  // Hand off the trainer picture to the EXISTING V27 send animation.
+  // Leaving V124's recall coach visible would render two overlapped trainers.
+  if(backdrop){backdrop.remove();backdrop=null;stat.recallHandoff++;}
   b.pIndex=index;b.energy=Math.max(0,b.energy-12);
   cooldowns=[0,0,0,0];
   engine?.switchMon(); // existing V27 trainer throw, native HUD/skills/sounds
@@ -82,6 +89,7 @@ function commit(scene){
   queue.splice(i,1);
   // The recalled foe retains its exact HP/status/shiny/level. Never duplicate it.
   if(scene.oldMon?.hp>0)queue.push(scene.oldMon);
+  if(backdrop){backdrop.remove();backdrop=null;stat.recallHandoff++;}
   b.foe=scene.newMon;
   if(b.v30Boss){b.v30Phase=b.v30Phase||1;} // AI switch is NOT a boss phase knockout.
   engine?.newEnemy(); // native asset loading, V27 trainer appearance, HUD, AI resets
@@ -262,15 +270,19 @@ finishBattle=function(){
 const style=document.createElement('style');
 style.id='v124-pokeball-recall';
 style.textContent='.v124RecallTrainer{position:absolute;z-index:8;pointer-events:none;bottom:19%;left:3%;width:90px;height:110px;opacity:.94;filter:drop-shadow(0 6px 6px #051021aa)}'+
- '.v124RecallTrainer.enemy{left:auto;right:3%;bottom:34%;transform:scaleX(-1)}'+
- '.v124RecallTrainer .v27ThrowTrainer{position:absolute;bottom:5px;left:0}'+
+ '.v124RecallTrainer.enemy{left:auto;right:3%;bottom:34%;transform:none}'+
+ // Native V27 move rotates the trainer; on the recall frame keep a stable
+ // pixel-art pose and let the original V27 animation perform the SEND phase.
+ '.v124RecallTrainer .v27ThrowTrainer{position:absolute;bottom:5px;left:0;animation:none!important;transform:none!important}'+
+ '.v124RecallTrainer.enemy .v27ThrowTrainer{left:12px}'+
+ '.v124RecallTrainer.enemy .v124Ball{left:9px}'+
  '.v124RecallTrainer .v124Ball{position:absolute;left:57px;bottom:64px;width:19px;height:19px;'+
  'border:2px solid #121e2d;border-radius:50%;background:linear-gradient(#e94b57 0 45%,#182431 46% 55%,#fff 56%);'+
  'box-shadow:0 0 12px #fb476888;animation:v124BallPulse .48s ease-in-out both}'+
  '@keyframes v124BallPulse{0%{transform:translateY(8px) scale(.7)}65%{transform:translateY(-8px) scale(1.1)}100%{transform:translateY(0) scale(1)}}'+
  '@media(max-width:650px){.v124RecallTrainer{transform:scale(.77);transform-origin:bottom left}'+
- '.v124RecallTrainer.enemy{transform:scaleX(-1) scale(.77);transform-origin:bottom right}}';
+ '.v124RecallTrainer.enemy{transform:scale(.77);transform-origin:bottom right}}';
 document.head.appendChild(style);
-window.PokemonTorreRecallV124=Object.freeze({installed:true,official:true,version:'124.0',
+window.PokemonTorreRecallV124=Object.freeze({installed:true,official:true,version:'124.1',
  diagnostics:()=>({...stat,active:!!activeScene,queueLength:battle?.enemies?.length||0})});
 })();

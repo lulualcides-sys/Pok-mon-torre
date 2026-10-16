@@ -1,5 +1,19 @@
 # V124 — Troca de Pokémon com Pokébola vermelha e IA estratégica
 
+## V124.1 — Ajuste visual do treinador (16/10/2026)
+
+Feedback após jogar: o raio vermelho e a troca estratégica foram aprovados, mas o sprite do treinador na troca estava distorcido/duplicado. O patch **V124.1** mantém as mecânicas e só corrige a transição visual:
+
+- Ao iniciar o recolhimento, elimina um eventual sprite de arremesso V27 anterior que ainda esteja na arena (não apaga sprites do Pokémon).
+- Durante o recolhimento, apresenta somente o treinador e a Pokébola com pose estável, mantendo o sprite da galeria V27.
+- Quando chega a hora de enviar o novo Pokémon, **remove o treinador de recolhimento antes de chamar o `switchMon`/`newEnemy` nativo**, que já apresenta o treinador V27 enviando a Pokébola. Assim não ficam dois treinadores sobrepostos.
+- No inimigo, remove o `scaleX(-1)` sobre a figura inteira, que espelhava e podia distorcer o sprite de líder; aplica posições específicas de treinador e Pokébola.
+- Não altera raio vermelho, sincronização do Pokémon, IA estratégica, HP, status, shiny, golpes aprovados, progressão ou salvamentos.
+- O teste `tests/v124-recall-ai.test.cjs` verifica o handoff, ausência de espelhamento e sprite duplicado para os dois lados; o workflow exige `node --check` e regressões V123/V121.
+
+A aprovação visual final de V124.1 depende de jogar no celular; nenhuma imagem externa, PNG estático ou mockup foi utilizado.
+
+
 Implementado a pedido do usuário em 16/10/2026, preservando a **V123 aprovada** e todos os golpes V95–V122.
 
 ## Animações e interação
