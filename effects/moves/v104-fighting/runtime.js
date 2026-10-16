@@ -13,7 +13,7 @@ const fightingV104=(()=>{
  const lerp=(a,b,u)=>a+(b-a)*u;
  const allowed=m=>!!m&&m.type==='fighting'&&Number(m.power)>0&&
   m.cat!=='status'&&!['shield','status','recover','illusion','weather'].includes(m.kind);
- const log={version:'104.0',casts:0,frames:0,approaches:0,contact:0,
+ const log={version:'104.0',visualVersion:'105.0',casts:0,frames:0,approaches:0,contact:0,
   retreats:0,nativeHits:0,nativeRecovered:0,removedGeneric:0,rejected:0,
   distances:[],draws:{},last:null};
  function register(name,frames,duration,impact,paint,other=[]){
@@ -38,7 +38,7 @@ const fightingV104=(()=>{
  function specFor(move){
   return specByName.get(norm(move?.name))||
    {name:move?.name||'Lutador',duration:1000,frames:12,impact:.59,
-    style:styleOf(move?.name),paint:generic};
+    style:styleOf(move?.name),paint:window.PokemonTorreFightingInkV105?.generic||generic};
  }
  function shaft(g,a,b,w,fill,edge='#131721',alpha=1){
   if(alpha<=0)return;
@@ -120,6 +120,16 @@ const fightingV104=(()=>{
    shard(g,B[0]+Math.cos(q)*rr,B[1]+Math.sin(q)*rr*.83,
     (3+i%3*2)*s,q,colors[i%2],fade*(1-i*.07));
   }
+ }
+ // V105 only swaps paint callbacks. Battle movement, original native hit,
+ // distance, cooldown, energy, saves and sprite animation never change.
+ function retexture(name,painter){
+  if(typeof painter!=='function')throw Error('V105 painter invalid '+name);
+  const original=specByName.get(norm(name));
+  if(!original)throw Error('V105 protected move not found '+name);
+  const newer=Object.freeze({...original,paint:painter});
+  for(const [alias,item] of specByName)if(item===original)specByName.set(alias,newer);
+  return newer;
  }
  const gap=(e,f=.226)=>Math.max(57,(e.h||560)*f);
  function legal(e,fx){
@@ -228,7 +238,7 @@ const fightingV104=(()=>{
    fx.connected=true;log.nativeHits++;
   }
  }
- return {register,allowed,styleOf,step,draw,start,cancel,state,approach,hit,gap,report:log,
+ return {register,retexture,allowed,styleOf,step,draw,start,cancel,state,approach,hit,gap,report:log,
   diagnostics:()=>({...log,distances:log.distances.slice(),draws:{...log.draws},
    active:typeof engine!=='undefined'&&engine?state.get(engine)?.name||null:null,
    pending:typeof engine!=='undefined'&&engine?!!approach.get(engine):false,
