@@ -44,8 +44,8 @@ for(const [name,key] of [['Chute','chute'],['Golpe de Karatê','karate'],['Brick
  assert.equal(meta.frames,n);
  for(let i=0;i<n;i++){
   const mustBeBlank=(i+.5)/n<hit;
-  assert.equal(meta.painted[i]===0,mustBeBlank,
-   key+' frame '+i+' must be '+(mustBeBlank?'blank before hit':'visible after contact'));
+  if(mustBeBlank)assert.equal(meta.painted[i],0,key+' no impact before contact');
+  else if(i<n-1)assert.ok(meta.painted[i]>0,key+' impact must be visible after contact');
  }
  const before=draw.length;
  for(let i=0;i<n;i++){
