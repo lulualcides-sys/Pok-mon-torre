@@ -57,12 +57,13 @@ const world={window,PIXI,battle,document,performance:{now:()=>now},
  TriAttackVFX:null,Math,console};
 const bridge=vm.runInNewContext(src+'\npixiFX;',world,{timeout:5000});
 assert.ok(bridge);
-assert.equal(bridge.diagnostics().gpu,true,'missing legacy helper cannot falsely disable WebGL');
+assert.equal(bridge.diagnostics().gpu,false,'legacy helper can be absent before the pixel renderer initializes');
 const spec={name:'Air Slash',frames:16,ms:1510,scale:1.32,particles:false,
  image:{naturalWidth:512,naturalHeight:128}};
 const fx={move:{name:'Air Slash'},battle,at:1000,end:2510,duration:1510,
  from:[170,270],to:[680,200]};
 assert.equal(bridge.mountPixelFlying(engine,fx,spec),true,'must install real GPU sprite');
+assert.equal(bridge.diagnostics().gpu,true,'the live WebGL renderer must be recognized after pixel mount');
 assert.equal(bridge.diagnostics().pixelFlyingActive,1);
 assert.equal(bridge.diagnostics().pixelFlyingStarts,1);
 assert.equal(appInstance.view.style.display,'block');
