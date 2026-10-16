@@ -33,6 +33,7 @@ jobs:
           node tests/v138-flying-black-contrast.test.cjs
           node tests/v139-flying-visible.test.cjs
           node tests/v139-pixi-stage.test.cjs
+          node tests/v140-pixi-bridge.test.cjs
       - name: Assert no Canvas 2D for four moves and battle native hit logic
         run: |
           node tests/v136-flying-pixel.test.cjs
