@@ -76,7 +76,8 @@ const registered=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json
 const fissure=registered.moves.find(x=>x.move==='Grande Fissura');
 assert.equal(fissure?.status,'aprovado');
 assert.equal(fissure?.protect,true);
-for(const n of names)assert.ok(!registered.moves.some(x=>x.move===n),'preview-only moves must not claim approval');
+for(const n of names.filter(n=>n!=='Osso'))assert.ok(!registered.moves.some(x=>x.move===n),'unapproved preview move must not claim approval');
+assert.equal(registered.moves.find(x=>x.move==='Osso')?.status,'aprovado','V132 official Osso does not approve the older V130 artwork');
 for(const n of ['Withdraw','Cauda de Água','Pulso de Água'])
  assert.equal(registered.moves.find(x=>x.move===n)?.status,'aprovado');
 console.log('PASS V130: 4 animated gameplay previews, native one-hit timing, untouched energy/HP/cooldowns, approved Grande Fissura, no PNG/Atelier.');

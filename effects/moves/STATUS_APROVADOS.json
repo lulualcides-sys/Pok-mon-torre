@@ -508,12 +508,28 @@
       ],
       "status": "aprovado",
       "protect": true,
-      "version": "V130 (aprovacao declarada)",
+      "version": "V132",
       "accepted_at": "2026-10-16",
       "aprovacao_visual": "aprovado_pelo_usuario",
-      "feedback_usuario": "Grande fissura, pode aprovar",
-      "effect_file": "parts/p008.txt",
-      "notes": "Apenas registro de aprovação para a animação de Grande Fissura existente. Preservar efeito, dano, recarga e aparência. Não pertence ao lote de quatro golpes V130 em teste."
+      "feedback_usuario": "Diminuí um pouco mais o osso e pode salvar os 2",
+      "effect_file": "effects/moves/v131-ground-refinement/grande-fissura/index.js",
+      "notes": "Aprovação expressa da Grande Fissura geológica V131 após descartar estilo cartoon. Preservar estratos, abismo escuro e poeira; sem alterar dano e recarga.",
+      "renderer": "effects/moves/v132-ground-approved/runtime.js",
+      "approval_updated_at": "2026-10-16"
+    },
+    {
+      "move": "Osso",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "version": "V132",
+      "accepted_at": "2026-10-16",
+      "frames": 16,
+      "effect_file": "effects/moves/v132-ground-approved/bone-club/index.js",
+      "renderer": "effects/moves/v132-ground-approved/runtime.js",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "feedback_usuario": "Diminuí um pouco mais o osso e pode salvar os 2",
+      "notes": "V131 Osso (47%) teve redução adicional solicitada para 40% da escala V130; versão final V132 protegida. Bone Club e Bone Boomerang existentes não alterados."
     }
   ]
 }

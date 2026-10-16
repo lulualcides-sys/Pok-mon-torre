@@ -1,5 +1,12 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V132 — Osso 40% + Grande Fissura geológica OFICIAIS (16/10/2026)
+
+**Autorização:** "Diminuí um pouco mais o osso e pode salvar os 2". O usuário aprovou **Osso** e **Grande Fissura** V131, solicitando apenas Osso um pouco menor. Na V132 Osso fica **40%** da escala V130 (antes 47%), incluindo trilha e impacto menores; Grande Fissura geológica V131 permanece **idêntica, sem redesenho**. Ambos são os únicos dois efeitos de Terra V132 ativados na URL normal. Os arquivos da V130 e V131 continuam preservados para comparar: `?ground130=preview` e `?ground131=preview`. Para desativar apenas os dois novos efeitos oficiais: `?ground132=0`; `?safe=1` também desativa.
+
+**Proibição:** não substituir Tapa de Lama, Mud Shot e Poder Terrestre em jogo normal sem autorização posterior. Não modificar Bone Club/Bonemerang previamente aprovados. Não alterar golpe Água V128, hit único, dano, HP, energia, recarga, física, equipe e salvamentos. Nenhum PNG, CSS, Ateliê ou efeito artificial adicional. Fontes oficiais e vistos `✓` Osso/Grande Fissura em `effects/moves/STATUS_APROVADOS.json`, `effects/v127/edited-moves.json`, fichas e `effects/v127/approval-marks.js`. Os renderers aprovados ficam em `effects/moves/v132-ground-approved/` e `effects/moves/v131-ground-refinement/grande-fissura/index.js`. Conferir testes V132 + regressões e GitHub Pages antes de declarar concluído.
+
+
 ## V131 — revisão apenas de Osso e Grande Fissura (16/10/2026)
 
 Usuário analisou V130: Osso "muito grande", Grande Fissura "tá cartoon", os demais golpes "muito bom". Não exigir uploads nem acesso adicional. Nova prévia jogável `?ground131=preview`: substitui **somente Osso** pelo desenho com 47% do tamanho V130 e **Grande Fissura** por rachadura profunda em solo realista, com abismo escuro, bordas rochosas irregulares e poeira terrosa, sem brilho/cartoon/PNG. Mantém as animações originais V130 de Tapa de Lama, Mud Shot e Poder Terrestre byte-a-byte e todos os efeitos protegidos V128, V95–V129. Modificar apenas os novos módulos V131 e a chave da prévia; deixar `?ground130=preview` funcionando para comparar e a URL normal preservada. Grande Fissura estava aprovada no arquivo oficial, mas o usuário **revogou o aceite visual atual ao pedir melhoria**: marca de aprovação antiga não deve ser interpretada como aprovação da V131. Só promover a animação V131 após aprovação. Conserva dano, níveis, energia, recarga e salvamentos V359.

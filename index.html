@@ -931,6 +931,29 @@ if((new URLSearchParams(location.search).get('ground130')==='preview'||
   game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+scripts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V130 ground preview unavailable; previous combat VFX unchanged',error);}
 }
+// V132 — two explicitly approved Ground moves, official in normal battles.
+// Keeps the previous V130 and V131 links for visual comparisons.
+// Never replaces the three other V130 Ground effects without explicit approval.
+if(new URLSearchParams(location.search).get('safe')!=='1'&&
+   new URLSearchParams(location.search).get('ground132')!=='0'&&
+   new URLSearchParams(location.search).get('ground130')!=='preview'&&
+   new URLSearchParams(location.search).get('ground131')!=='preview'){
+ try{
+  const files=[
+   'effects/moves/v132-ground-approved/runtime.js',
+   'effects/moves/v132-ground-approved/bone-club/index.js',
+   'effects/moves/v131-ground-refinement/grande-fissura/index.js'
+  ];
+  const scripts=await Promise.all(files.map(async file=>{
+   const response=await fetch(file+'?build=v132-approved-ground-final',{cache:'no-store'});
+   if(!response.ok)throw Error('V132 '+file+' HTTP '+response.status);
+   return response.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V132 battle anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+scripts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V132 approved ground effects failed to load; native animation preserved',error);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{

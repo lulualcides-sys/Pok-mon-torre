@@ -1,0 +1,11 @@
+{
+  "move": "Osso",
+  "aliases": [],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v132-ground-approved/bone-club/index.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "V132 Osso 40% da escala V130, aprovado. Não alterar Bone Club/Bonemerang antigos nem outros golpes.",
+  "approval_confirmed_at": "2026-10-16",
+  "approval_confirmation": "Diminuí um pouco mais o osso e pode salvar os 2"
+}

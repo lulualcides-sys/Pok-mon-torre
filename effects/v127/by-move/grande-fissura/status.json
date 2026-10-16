@@ -5,9 +5,9 @@
   ],
   "approval_state": "aprovado",
   "protected_effect": true,
-  "source_effect": "parts/p008.txt",
+  "source_effect": "effects/moves/v131-ground-refinement/grande-fissura/index.js",
   "reference": "STATUS_APROVADOS.json",
   "approval_confirmed_at": "2026-10-16",
-  "approval_confirmation": "Grande fissura, pode aprovar",
-  "scope": "Somente aprovação; não modificar efeito já existente."
+  "approval_confirmation": "Diminuí um pouco mais o osso e pode salvar os 2",
+  "scope": "V131 fissura geológica final explicitamente aprovada e protegida na V132. Sem mudanças no cálculo de dano."
 }
