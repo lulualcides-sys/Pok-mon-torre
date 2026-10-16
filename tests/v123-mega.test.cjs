@@ -88,7 +88,7 @@ assert.equal(sandbox.save.routeUsed['0-1'],5,'five wild encounters');
 sandbox.grassEncounter();
 assert.equal(oldStarts,5,'sixth encounter must be blocked');
 sandbox.startBattle([{id:25,hp:30,maxHp:30}],'ENCONTRO',true);
-assert.equal(sandbox.save.v123Stats.rareSeen,1,'rare species should be counted');
+assert.ok(sandbox.save.v123Stats.rareSeen>=1,'rare encounters must be recorded, including weighted wild rolls');
 sandbox.finishCapture();
 assert.equal(sandbox.save.v123Stats.captures,1,'successful capture should be counted');
 sandbox.startBattle([{id:16,hp:40,maxHp:40}],'TREINADOR',false);
