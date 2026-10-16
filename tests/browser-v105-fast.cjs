@@ -52,7 +52,10 @@ async function test(port,safe){
   if(!page)throw Error('Chromium page never opened');
   ws=new WebSocket(page.webSocketDebuggerUrl);
   await new Promise((resolve,reject)=>{ws.onopen=resolve;ws.onerror=reject});
-  ws.onmessage=e=>{const msg=JSON.parse(e.data);if(pending.has(msg.id)){
+  ws.onmessage=e=>{const msg=JSON.parse(e.data);
+   if(msg.method==='Runtime.exceptionThrown') console.log('V105 CHROME JS ERROR',JSON.stringify(msg.params?.exceptionDetails).slice(0,1100));
+   if(msg.method==='Log.entryAdded'&&msg.params?.entry?.level==='error') console.log('V105 CHROME LOG ERROR',msg.params.entry.text);
+   if(pending.has(msg.id)){
     const fn=pending.get(msg.id);pending.delete(msg.id);fn(msg);
   }};
   const send=(method,params={})=>new Promise((resolve,reject)=>{
@@ -86,7 +89,7 @@ async function test(port,safe){
      (fx.draws?.[n]||0)>0&&(ink.perStyle?.[styles[i]]||0)>0&&ink.frames>=8;
    console.log('V105 '+(safe?'SAFE':'NORMAL')+' '+names[i]+' '+JSON.stringify({
     passed:!!ok,damage:before?.hpBefore-after?.hp,inkDraws:ink.perStyle?.[styles[i]],
-    approach:fx.approaches,retreat:fx.retreats,pixelTiles:ink.frames}));
+    approach:fx.approaches,retreat:fx.retreats,pixelTiles:ink.frames,inkDraws:ink.perStyle?.[styles[i]],engineDraws:fx.draws?.[n],inkStyles:ink.unique,inkErrors:ink.errors,engineVisual:fx.visualVersion}));
    if(!ok)throw Error('V105 real contact smoke failed: '+names[i]);
    successes++;
   }
