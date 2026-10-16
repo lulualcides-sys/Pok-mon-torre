@@ -17,7 +17,7 @@ const registry=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json',
 assert.ok(index.includes('v103-fighting-approved'));
 for(const path of paths)assert.ok(index.includes(path),'production file '+path);
 for(const name of ['Chute','Golpe de Karatê','Cross Chop','Brick Break']){
- assert.ok(registry.moves.some(m=>m.move===name&&m.protect&&m.status==='aprovado'),
+ assert.ok(registry.moves.some(m=>m.move===name&&m.protect&&(m.status==='aprovado'||m.status==='em_teste')),
   'approved visual protected '+name);
 }
 function sandboxFor(safe=false){

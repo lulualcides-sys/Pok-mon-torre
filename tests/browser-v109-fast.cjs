@@ -86,7 +86,14 @@ async function test(port,safe){
    for(let attempt=1;attempt<=3;attempt++){
     const before=await evaluate('(()=>window.PokemonTorreLocalCombatTestV47.castFightingV104('+i+',true))()');
     await pause(2000);
-    const after=await evaluate("(()=>({...window.PokemonTorreLocalCombatTestV47.fightingStateV104(),heavy:window.PokemonTorreFightingKineticV106?.diagnostics()||null,real:window.PokemonTorreFightingSpritesV107?.diagnostics()||null,pixels109:window.PokemonTorreFightingPixelsV109?.diagnostics()||null,pixi:window.PokemonTorrePixiFX?.()||null}))()");
+    let after=await evaluate("(()=>({...window.PokemonTorreLocalCombatTestV47.fightingStateV104(),heavy:window.PokemonTorreFightingKineticV106?.diagnostics()||null,real:window.PokemonTorreFightingSpritesV107?.diagnostics()||null,pixels109:window.PokemonTorreFightingPixelsV109?.diagnostics()||null,pixi:window.PokemonTorrePixiFX?.()||null}))()");
+    // In slower Chromium runners the V104 recoil can finish after 2s.
+    // Observe the actual actor retreat; never count a missing recoil as success.
+    for(let wait=0;wait<8 && (after.fx?.retreats||0)<i+1;wait++){
+     await pause(300);
+     after=await evaluate("(()=>({...window.PokemonTorreLocalCombatTestV47.fightingStateV104(),heavy:window.PokemonTorreFightingKineticV106?.diagnostics()||null,real:window.PokemonTorreFightingSpritesV107?.diagnostics()||null,pixels109:window.PokemonTorreFightingPixelsV109?.diagnostics()||null,pixi:window.PokemonTorrePixiFX?.()||null}))()");
+    }
+
     const ink=after?.pixel||{},heavy=after?.heavy||{},real=after?.real||{},pixels109=after?.pixels109||{},fx=after?.fx||{},
      n=names[i].normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
     const newStyle={0:'chute',1:'karate',3:'brick'}[i];
