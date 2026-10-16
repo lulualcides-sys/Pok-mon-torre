@@ -80,8 +80,9 @@ function scenario(search,randoms=[.8]){
   },
   startBattle:(enemies,label,wild)=>{
    starts++;battle.active=true;battle.wild=wild;battle.label=label;
-   battle.foe=enemies[0];battle.enemies=enemies.slice(1);
-   // Simulates the older 1-3% wild shiny reroll; V119 MUST override this.
+   const actual=label==='LÍDER SUBSTITUIÇÃO'?[make(74),make(95)]:enemies;
+   battle.foe=actual[0];battle.enemies=actual.slice(1);
+   // Simulates a gym replacing the roster and the older wild shiny reroll.
    if(wild)enemies[0].shiny=true;
    return 'started';
   },
@@ -129,6 +130,13 @@ S.startBattle([wild],'WILD',true);
 assert.equal(wild.shiny,false,'Original wild reroll overridden, 1% not stacked');
 assert.equal(wild.shinyRoll,.01);
 assert.equal(api.diagnostics().rolls,6);
+const supplied=[run.create(25)];
+S.startBattle(supplied,'LÍDER SUBSTITUIÇÃO',false);
+assert.equal(battle.foe.id,74);
+assert.equal(battle.foe.shinyRoll,.01,'Replacement leader must have exact 1%');
+assert.equal(battle.enemies[0].shinyRoll,.01,'Replacement reserves must have exact 1%');
+assert.equal(api.diagnostics().rolls,9,'One roll supplied plus two actual replacements');
+
 const engine=new run.Engine();
 battle.foe=run.create(74);
 const hp=battle.foe.hp;
