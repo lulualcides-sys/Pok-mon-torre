@@ -1,0 +1,42 @@
+name: V113 authentic Poison sprite battle preview
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/moves/v113-poison-preview/**'
+      - 'tools/build-v113-poison-preview.py'
+      - 'tests/poison-v113-preview.test.cjs'
+      - 'tests/browser-v113-preview.cjs'
+      - 'index.html'
+      - '.github/workflows/poison-v113-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  authentic-poison-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Pillow
+        run: python -m pip install --quiet Pillow
+      - name: Fetch original user-matched sprite sheet and bake 64 actual sprite frames
+        run: |
+          python tools/build-v107-fighting.py
+          python tools/build-v108-fighting.py
+          python tools/build-v109-fighting.py
+          python tools/build-v110-fighting.py
+          python tools/build-v111-poison.py
+          python tools/build-v113-poison-preview.py
+      - name: Verify original artwork, 16 frames per move and V111 protection
+        run: |
+          node tests/poison-v111.test.cjs
+          node tests/poison-v113-preview.test.cjs
+      - name: Real Chromium Android preview in normal and safe modes
+        run: node tests/browser-v113-preview.cjs

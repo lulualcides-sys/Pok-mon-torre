@@ -608,6 +608,27 @@ if(new URLSearchParams(location.search).get('battle_preview')==='poison112'){
   game=game.replace(fireSpriteAnchor,'\n'+v112Code.join('\n')+'\n'+fireSpriteAnchor);
  }catch(e){console.error('V112 poison preview unavailable; official V111 retained',e);}
 }
+// V113: ORIGINAL redblueyellow sprites, rebuilt in 16 unique frames.
+// The V112 preview remains an archived comparison. Never promote V113 to
+// normal battle until the player approves the preview.
+if(new URLSearchParams(location.search).get('battle_preview')==='poison113'){
+ try{
+  const paths=[
+   'effects/moves/v113-poison-preview/runtime.js',
+   'effects/moves/v113-poison-preview/nevoavenenosa/spec.js',
+   'effects/moves/v113-poison-preview/poisonjab/spec.js',
+   'effects/moves/v113-poison-preview/acido/spec.js',
+   'effects/moves/v113-poison-preview/lamacorrosiva/spec.js'
+  ];
+  const parts=await Promise.all(paths.map(async path=>{
+   const r=await fetch(path+'?build=v113-authentic-poison-preview',{cache:'no-store'});
+   if(!r.ok)throw Error('V113 source module '+path+' HTTP '+r.status);
+   return r.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V113 module anchor missing');
+  game=game.replace(fireSpriteAnchor,'\n'+parts.join('\n')+'\n'+fireSpriteAnchor);
+ }catch(error){console.error('V113 authentic preview unavailable; official effects untouched',error);}
+}
 // V100: merge bilingual duplicate DISPLAY entries in the four-move
 // editor without changing underlying move keys, equipped saves or VFX.
 try{

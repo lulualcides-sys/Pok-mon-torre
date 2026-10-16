@@ -40,8 +40,10 @@ jobs:
           python tools/build-v110-fighting.py
           python tools/build-v111-poison.py
           python tools/build-v112-poison-preview.py
+          python tools/build-v113-poison-preview.py
           node tests/poison-v111.test.cjs
           node tests/poison-v112-preview.test.cjs
+          node tests/poison-v113-preview.test.cjs
           node tests/fighting-v110.test.cjs
           node tests/fighting-v109.test.cjs
           node tests/fighting-v108.test.cjs
