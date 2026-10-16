@@ -11,7 +11,7 @@ assert.ok(index.includes('v110-impact-only'));assert.ok(pages.includes('build-v1
 for(const name of ['Chute','Golpe de Karatê','Cross Chop','Brick Break']){
  const row=reg.moves.find(x=>x.move===name);
  assert.equal(row?.version,'V110');
- assert.equal(row?.status,'em_teste');assert.equal(row?.protect,true);
+ assert.equal(row?.status,'aprovado');assert.equal(row?.protect,true);
 }
 const old=fs.readFileSync('effects/moves/v107-fighting/real-sprites.js','utf8');
 assert.ok(old.includes("name==='cross'?.30:1"),'keep Cross visual & original 30% size');

@@ -99,7 +99,13 @@ const perf=get('effects/performance/cast-smooth-v122.js');
 for(const word of ['particlesAt','particleCap','warm','requestIdleCallback','castMsMax','oldUse.apply'])
  assert.ok(perf.includes(word),'FPS stabilizer missing '+word);
 assert.ok(!perf.includes('.hp=')&&!perf.includes('cooldowns['));
-assert.equal(approved.moves.filter(m=>m.status==='em_teste').length,4);
+// V127.1 — user confirmed the four old fighting test statuses as approved.
+assert.equal(approved.moves.filter(m=>m.status==='em_teste').length,0);
+for(const name of ['Chute','Golpe de Karatê','Cross Chop','Brick Break']){
+ const row=approved.moves.find(m=>m.move===name);
+ assert.equal(row?.status,'aprovado',name+' must keep V127.1 acceptance');
+ assert.equal(row?.protect,true);
+}
 assert.equal(approved.moves.filter(m=>m.version==='V122'&&m.status==='aprovado'&&m.protect).length,4);
 assert.equal(approved.moves.find(m=>m.move==='Venoshock')?.previous_approved?.version,'V111');
 assert.ok(approved.moves.some(m=>m.move==='Rain Dance'&&m.protect));
