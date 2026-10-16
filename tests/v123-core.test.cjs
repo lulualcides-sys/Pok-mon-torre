@@ -105,7 +105,7 @@ assert.equal(JSON.parse(localStorage.getItem('pokeTorreV123Lifetime')).resets,1,
 const e=new BattleEngine();
 const len=e.ctx.last?.length||0;
 e.drawMon();
-assert.equal(e.ctx.last.length,8,'Pokemon draw pipeline must remain operational');
+assert.equal(e.ctx.last.length,9,'Pokemon draw pipeline must remain operational (image + 8 coordinates)');
 assert.equal(e.player?.r||0,0,'V123 scaling must not edit hitboxes');
 sandbox.battle={active:true,paused:false,foe:{id:16,hp:20,maxHp:20}};
 e.particles=Array.from({length:200},()=>({}));e.rings=Array.from({length:80},()=>({}));
