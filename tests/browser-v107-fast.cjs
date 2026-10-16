@@ -27,7 +27,10 @@ const getJson=url=>new Promise((resolve,reject)=>{
 async function test(port,safe){
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'poke-v105-'));
  const proc=cp.spawn(chrome,[
-  '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
+  '--headless=new','--no-sandbox',
+  ...(safe?['--disable-gpu','--disable-webgl','--disable-webgl2']:
+    ['--enable-unsafe-swiftshader','--use-gl=angle','--use-angle=swiftshader']),
+  '--disable-dev-shm-usage',
   '--disable-background-networking','--disable-extensions',
   '--no-first-run','--no-default-browser-check','--remote-allow-origins=*',
   '--remote-debugging-port=0','--window-size=440,940',
@@ -84,7 +87,7 @@ async function test(port,safe){
    for(let attempt=1;attempt<=3;attempt++){
     const before=await evaluate('(()=>window.PokemonTorreLocalCombatTestV47.castFightingV104('+i+',true))()');
     await pause(2000);
-    const after=await evaluate("(()=>({...window.PokemonTorreLocalCombatTestV47.fightingStateV104(),heavy:window.PokemonTorreFightingKineticV106?.diagnostics()||null,real:window.PokemonTorreFightingSpritesV107?.diagnostics()||null}))()");
+    const after=await evaluate("(()=>({...window.PokemonTorreLocalCombatTestV47.fightingStateV104(),heavy:window.PokemonTorreFightingKineticV106?.diagnostics()||null,real:window.PokemonTorreFightingSpritesV107?.diagnostics()||null,pixi:window.PokemonTorrePixiFX?.()||null}))()");
     const ink=after?.pixel||{},heavy=after?.heavy||{},real=after?.real||{},fx=after?.fx||{},
      n=names[i].normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
     const artOk=i<4?
@@ -99,7 +102,7 @@ async function test(port,safe){
     ok=physicalOk&&landed;
     report={passed:ok,attempt,damage:before?.hpBefore-after?.hp,
      physicalOk,artOk,approach:fx.approaches,retreat:fx.retreats,
-     pixelTiles:ink.frames,heavyFrames:heavy.frames,illustrated:real.rendered,realCanvas:real.canvasFrames,realPixi:real.pixiFrames,filled:heavy.filled,
+     pixelTiles:ink.frames,heavyFrames:heavy.frames,illustrated:real.rendered,realCanvas:real.canvasFrames,realPixi:real.pixiFrames,gpu:after.pixi?.gpu,pixiError:after.pixi?.error,filled:heavy.filled,
      thickDraws:heavy.draws,inkDraws:ink.perStyle?.[styles[i]],
      engineDraws:fx.draws?.[n],inkErrors:ink.errors,engineVisual:fx.visualVersion};
     if(ok||!physicalOk)break;

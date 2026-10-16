@@ -472,7 +472,13 @@ const pixiFX=(()=>{
    item.sp.blendMode=PIXI.BLEND_MODES.NORMAL;
    if(info.t>=info.hit&&info.t<info.hit+.18){
     if(!item.emitter&&window.PIXI?.particles?.Emitter){
-     item.emitter=particles(item.root,item.textures[Math.floor(info.frames*info.hit)],
+     // A 12×12 piece of the ORIGINAL illuminated atlas becomes the GPU
+     // particle, never a duplicated 256×192 attack filling the entire arena.
+     const impactFrame=Math.min(info.frames-1,Math.floor(info.frames*info.hit));
+     const sparkle=new PIXI.Texture(item.textures[0].baseTexture,
+      new PIXI.Rectangle(impactFrame*info.width+info.width*.5-6,
+       info.height*.5-6,12,12));
+     item.emitter=particles(item.root,sparkle,
       [0xffaa77,0xffe5b2,0x49273b],true);
      if(item.emitter)combatEmitterCount++;
     }
