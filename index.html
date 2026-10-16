@@ -906,9 +906,11 @@ if(new URLSearchParams(location.search).get('water128')!=='0'&&new URLSearchPara
 // V130: four EARTH-type battle-only playable previews, not an illustration.
 // Exact matches: Tapa de Lama, Osso, Mud Shot, Poder Terrestre.
 // The normal URL remains unchanged until the user approves these four.
-if(new URLSearchParams(location.search).get('ground130')==='preview'&&
+if((new URLSearchParams(location.search).get('ground130')==='preview'||
+    new URLSearchParams(location.search).get('ground131')==='preview')&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
+  const review131=new URLSearchParams(location.search).get('ground131')==='preview';
   const files=[
    'effects/moves/v130-ground-preview/runtime.js',
    'effects/moves/v130-ground-preview/mud-slap/index.js',
@@ -916,6 +918,10 @@ if(new URLSearchParams(location.search).get('ground130')==='preview'&&
    'effects/moves/v130-ground-preview/mud-shot/index.js',
    'effects/moves/v130-ground-preview/earth-power/index.js'
   ];
+  if(review131){
+   files[2]='effects/moves/v131-ground-refinement/bone-club/index.js';
+   files.push('effects/moves/v131-ground-refinement/grande-fissura/index.js');
+  }
   const scripts=await Promise.all(files.map(async file=>{
    const response=await fetch(file+'?build=v130-ground-four-'+Date.now(),{cache:'no-store'});
    if(!response.ok)throw Error('V130 '+file+' HTTP '+response.status);

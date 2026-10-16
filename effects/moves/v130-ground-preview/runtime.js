@@ -6,7 +6,7 @@
 (()=>{
 'use strict';
 const query=new URLSearchParams(location.search);
-if(query.get('ground130')!=='preview'||query.get('safe')==='1')return;
+if((query.get('ground130')!=='preview'&&query.get('ground131')!=='preview')||query.get('safe')==='1')return;
 if(window.PokemonTorreGroundV130?.installed)return;
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const ease=v=>{v=clamp(v);return v*v*(3-2*v)};

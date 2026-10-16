@@ -1,5 +1,10 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V131 — revisão apenas de Osso e Grande Fissura (16/10/2026)
+
+Usuário analisou V130: Osso "muito grande", Grande Fissura "tá cartoon", os demais golpes "muito bom". Não exigir uploads nem acesso adicional. Nova prévia jogável `?ground131=preview`: substitui **somente Osso** pelo desenho com 47% do tamanho V130 e **Grande Fissura** por rachadura profunda em solo realista, com abismo escuro, bordas rochosas irregulares e poeira terrosa, sem brilho/cartoon/PNG. Mantém as animações originais V130 de Tapa de Lama, Mud Shot e Poder Terrestre byte-a-byte e todos os efeitos protegidos V128, V95–V129. Modificar apenas os novos módulos V131 e a chave da prévia; deixar `?ground130=preview` funcionando para comparar e a URL normal preservada. Grande Fissura estava aprovada no arquivo oficial, mas o usuário **revogou o aceite visual atual ao pedir melhoria**: marca de aprovação antiga não deve ser interpretada como aprovação da V131. Só promover a animação V131 após aprovação. Conserva dano, níveis, energia, recarga e salvamentos V359.
+
+
 ## V130 — 4 golpes de Terra em PRÉVIA JOGÁVEL (16/10/2026)
 
 Usuário pediu melhorar exatamente os quatro golpes equipados no print de Mewtwo: **Tapa de Lama, Osso, Mud Shot e Poder Terrestre**, pesquisando a mecânica original, sem PNG e sem imagens conceituais. A implementação é uma **prévia funcional dentro da batalha** acessada somente com `?ground130=preview`, no jogo público GitHub Pages. Quatro animações cinemáticas independentes, 12/16 quadros dinâmicos Canvas 2D, com contorno escuro, lama e pedras, impacto ajustado ao hit original V359. Padrões: Tapa de Lama salpica lama no rosto; Osso usa Bone Club em arco de contato (sem virar Bonemerang); Mud Shot dispara um projétil compacto veloz; Poder Terrestre abre rachaduras no chão sob o alvo e levanta pilares. Sem gerar PNG, CSS animado ou Ateliê. Não modificar dano, energia, recarga, progresso ou efeitos aprovados. **Não promover os quatro visuais ao jogo normal sem o usuário aprovar a prévia.** Desativar retirando `ground130` ou usando `?safe=1`.
