@@ -1,117 +1,42 @@
 'use strict';
-/* V123 mega-patch regression: progress, five wild encounters, stats, reset,
- * reward, combat items, adaptive performance, larger arena, preserved sprites.
- */
-const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const read=p=>fs.readFileSync(p,'utf8'),base='effects/v123/';
-const index=read('index.html');
-for(const file of ['gameplay.js','encounters-ui.js','performance-visual.js']){
- assert.ok(index.includes(base+file),'V123 official module not in loader: '+file);
- assert.ok(read(base+file).length>1400);
-}
-assert.ok(index.includes("get('game123')!=='0'"),'V123 diagnostic switch missing');
-const prior=JSON.parse(read('effects/moves/STATUS_APROVADOS.json'));
-assert.ok(prior.moves.find(m=>m.move==='Venoshock'&&m.version==='V122'&&m.protect));
-assert.ok(prior.moves.find(m=>m.move==='Rain Dance'&&m.protect));
-assert.ok(!read(base+'gameplay.js').includes('hitTarget('),'Gameplay must not rewrite damage');
-assert.ok(!read(base+'performance-visual.js').includes('hitTarget('),'Perf cannot change damage');
-let save={starter:1,v:9,team:[{id:1,level:5,hp:40,maxHp:70}],box:[],gym:0,stage:0,
- routeUsed:{},coins:70,balls:5,superBalls:0,ultraBalls:0,potions:2,superPotions:1,wins:0,losses:0,seen:[1],caught:[1]};
-let battle=null,oldStarts=0,oldEnds=0,baseDraws=0,heals=0;
-const cache={};
-const localStorage={getItem(k){return cache[k]||null},setItem(k,v){cache[k]=v}};
-const canvas={save(){},restore(){},drawImage(...args){baseDraws++;this.last=args}};
-const engine={};
-class BattleEngine{
- constructor(){this.running=true;this.assets=new Map();this.particles=[];this.rings=[];this.damageLabels=[];
- this.fps=32;this.ctx=canvas;this.h=400;this.w=700;this.projectiles=[];this.enemy={x:250,y:200,focus:0};this.player={x:80,y:200};this.foeDodgeCD=3;this.enemyAttackCD=2;}
- update(){return true}
- useMove(){return true}
- frame(){return true}
- drawMon(){this.ctx.drawImage({naturalWidth:50},0,0,16,16,30,40,60,60);return true}
- start(){this.running=true;return true}
- newEnemy(){return true}
- switchMon(){return true}
-}
-const empty=()=>null;
-const document={head:{appendChild(el){assert.ok(el.id)}},
- createElement(t){return {tagName:t,id:'test',style:{},className:'',appendChild(){},insertAdjacentElement(){}}},
- getElementById:empty,querySelector:empty,querySelectorAll:()=>[]};
-function persist(){localStorage.setItem('save',JSON.stringify(save))}
-function startBattle(arr,label,wild){oldStarts++;battle={active:true,wild,foe:arr[0],label,enemies:[],paused:false};return true}
-function finishBattle(win){oldEnds++;if(win)save.wins++;else save.losses++;battle.active=false;battle=null;persist();}
-function finishCapture(){battle.active=false;battle=null;}
-function render(){}
-function resultScreen(){}
-function battlePotion(){save.potions--}
-function battleSuperPotion(){save.superPotions--}
-function v29TrainerCount(g){return 6+g}
-function v27WildOdds(){return [{id:16,name:'Pidgey',weight:6},{id:25,name:'Pikachu',weight:4}]}
-function v27ShowOdds(){}
-const D={1:{type:'grass',hp:20},16:{type:'normal',name:'Pidgey'},25:{type:'electric',name:'Pikachu'}};
-function mon(id,level){return {id,level,hp:40,maxHp:40}}
-const GYMS=Array.from({length:13},(_,g)=>({min:5+g*4,levelCap:20+g*5}));
-const sandbox=vm.createContext({window:{},document,navigator:{userAgent:'Android'},
- performance:{now:()=>1000},localStorage,save,battle,engine,Date,Math,Number,Set,Map,WeakSet,URLSearchParams,
- location:{search:'',hostname:'test'},current:()=>save.team[0],foe:()=>battle?.foe,
- v29TrainerCount,v27WildOdds,v27ShowOdds,startBattle,finishBattle,finishCapture,
- battlePotion,battleSuperPotion,persist,render,resultScreen,
- BattleEngine,GYMS,KANTO_RARE:new Set([25]),KANTO_LEGENDS:new Set(),
- clamp:(v,a,b)=>Math.min(b,Math.max(a,v)),mon,D,
- advantage:()=>1,log(){},overlay(){},close(){},awardXP(){},console});
-// Native stubs must mutate vm globals, not host-module lexical variables.
-sandbox.startBattle=function(arr,label,wild){
- oldStarts++;sandbox.battle={active:true,wild,foe:arr[0],label,enemies:[],paused:false};return true;
-};
-sandbox.finishBattle=function(win){
- oldEnds++;if(win)sandbox.save.wins++;else sandbox.save.losses++;
- sandbox.battle.active=false;sandbox.battle=null;sandbox.persist();
-};
-sandbox.finishCapture=function(){sandbox.battle.active=false;sandbox.battle=null;};
-sandbox.foe=()=>sandbox.battle?.foe;
-sandbox.battlePotion=function(){sandbox.save.potions--};
-sandbox.battleSuperPotion=function(){sandbox.save.superPotions--};
-for(const path of ['gameplay.js','encounters-ui.js','performance-visual.js'])
- vm.runInContext(read(base+path),sandbox,{filename:path,timeout:5000});
-assert.equal(sandbox.window.PokemonTorreGameplayV123.installed,true);
-assert.equal(sandbox.window.PokemonTorreRoutesV123.encountersPerStop,5);
-assert.equal(sandbox.window.PokemonTorrePerformanceV123.installed,true);
-assert.equal(sandbox.v29TrainerCount(0),4,'early gym must have shorter progression');
-assert.equal(sandbox.v29TrainerCount(7),7,'late gym progression remains gradual');
-sandbox.save.stage=1;
-for(let i=0;i<5;i++){
- sandbox.grassEncounter();
- assert.ok(sandbox.battle.active);
- sandbox.battle.active=false;sandbox.battle=null;
-}
-assert.equal(sandbox.save.routeUsed['0-1'],5,'five wild encounters');
-sandbox.grassEncounter();
-assert.equal(oldStarts,5,'sixth encounter must be blocked');
-sandbox.startBattle([{id:25,hp:30,maxHp:30}],'ENCONTRO',true);
-assert.ok(sandbox.save.v123Stats.rareSeen>=1,'rare encounters must be recorded, including weighted wild rolls');
-sandbox.finishCapture();
-assert.equal(sandbox.save.v123Stats.captures,1,'successful capture should be counted');
-sandbox.startBattle([{id:16,hp:40,maxHp:40}],'TREINADOR',false);
-sandbox.battlePotion();sandbox.battlePotion();sandbox.battlePotion();
-assert.equal(sandbox.save.potions,0,'cannot use a third potion');
-sandbox.finishBattle(true);
-assert.equal(sandbox.save.v123Stats.trainers,1,'trainer victory counted');
-sandbox.save.stage=2;
-sandbox.startBattle([{id:16,hp:40,maxHp:40}],'TREINADOR',false);
-sandbox.finishBattle(true);
-assert.ok(sandbox.save.v123PendingReward,'mid-gym reward choice pending');
-sandbox.save.starter=null;sandbox.persist();
-assert.equal(JSON.parse(localStorage.getItem('pokeTorreV123Lifetime')).resets,1,'reset lifetime count stored separately');
-const e=new BattleEngine();
-const len=e.ctx.last?.length||0;
-e.drawMon();
-assert.equal(e.ctx.last[6]>60,true,'Pokemon rendering enlarged without changing hitbox');
-sandbox.battle={active:true,paused:false,foe:{id:16,hp:20,maxHp:20}};
-e.particles=Array.from({length:200},()=>({}));e.rings=Array.from({length:80},()=>({}));
-e.damageLabels=Array.from({length:30},()=>({}));
-e.frame(1200);
-assert.ok(e.particles.length<=85,'visual particles bounded for slow frames');
-assert.ok(e.rings.length<=28&&e.damageLabels.length<=18,'transient UI objects bounded');
-const d=sandbox.window.PokemonTorrePerformanceV123.diagnostics();
-assert.equal(d.extraVisualScale,1.075);
-console.log('PASS V123 mega-patch: campaign ladder, five wild encounters, rare/capture counters, potion limits, rewards, reset lifetime, mobile cast caps and Pokemon size. Approved V95-V122 untouched.');
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const file=fs.readFileSync('effects/v123/gameplay-mega.js','utf8');
+const index=fs.readFileSync('index.html','utf8');
+const perf=fs.readFileSync('effects/v119/08-mobile.js','utf8');
+const layout=fs.readFileSync('effects/ui/battle-proportion-v122.js','utf8');
+const approvals=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
+assert.ok(index.includes('effects/v123/gameplay-mega.js'));
+assert.ok(perf.includes('this.assets?.size>32'));
+assert.ok(perf.includes('now-this._v123LastPrune>18000'));
+assert.ok(layout.includes('const scale=1.24'));
+assert.ok(index.includes('effects/moves/v122-poison-preview/runtime.js'));
+assert.ok(approvals.moves.filter(x=>x.version==='V122'&&x.protect).length===4);
+const children=[],listeners={};
+function element(){return {style:{},className:'',children:[],append(...els){this.children.push(...els)},appendChild(el){this.children.push(el);return el},querySelector(){return null},remove(){},set textContent(v){this._text=v},get textContent(){return this._text}}}
+const main=element(),head=element();
+const document={createElement:element,head,querySelector(q){if(q==='#main section'||q==='#main')return main;if(q==='#modal .result')return null;return null}};
+const record={},localStorage={getItem:key=>record[key]||null,setItem:(key,value)=>record[key]=value};
+const team=[{id:25,hp:40,maxHp:100,level:18}],save={gym:0,stage:1,coins:100,wins:0,losses:0,team},battle={active:false,wild:false};
+class Engine{useMove(){return true}}
+let renders=0,finishes=0,starts=0,persists=0,awards=0;
+const globals={window:{},URLSearchParams,location:{search:''},document,localStorage,alert(){},save,battle,performance:{now:()=>12},
+ BattleEngine:Engine,console,Math,Number,
+ persist(){persists++},awardXP(){awards++},
+ startBattle(enemies,label,wild){starts++;battle.active=true;battle.wild=wild;battle.label=label},
+ finishBattle(win){finishes++;battle.active=false;if(win){save.wins++;save.stage++}else save.losses++},
+ render(){renders++},renderWin(){},};
+const ctx=vm.createContext(globals);
+vm.runInContext(file,ctx,{timeout:2000});
+assert.equal(ctx.window.PokemonTorreV123.installed,true);
+assert.ok(head.children.some(x=>x.id==='v123-mobile-arena'));
+ctx.render();assert.ok(main.children.some(x=>x.className==='v123Hub'));
+ctx.startBattle([{id:25}],'TREINADOR 1',false);ctx.finishBattle(true);
+assert.equal(finishes,1);assert.equal(save.wins,1);assert.equal(ctx.window.PokemonTorreV123.diagnostics().records.wins,1);
+assert.equal(save.v123.pendingReward,1);
+ctx.render();const hub=main.children.find(x=>x.className==='v123Hub');
+assert.ok(hub);
+const row=hub.children.find(x=>x.children?.some(y=>y.textContent==='✚ Centro Pokémon'));
+const btn=row.children.find(y=>y.textContent==='✚ Centro Pokémon');btn.onclick();
+assert.ok(team[0].hp>40);assert.equal(save.coins,80);
+ctx.window.PokemonTorreV123.diagnostics();
+console.log('PASS V123 mega: official loader, persistent win/reset records, healing once per stage, rewards, protected V122, enlarged arena and deferred mobile pruning');

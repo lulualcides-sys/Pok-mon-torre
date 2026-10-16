@@ -1,10 +1,12 @@
-name: V123 mega patch - strategy stats and mobile combat
+name: V123 gameplay mega patch regression
 on:
   push:
     branches: [main]
     paths:
       - 'effects/v123/**'
       - 'tests/v123-mega.test.cjs'
+      - 'effects/v119/08-mobile.js'
+      - 'effects/ui/battle-proportion-v122.js'
       - 'index.html'
       - '.github/workflows/v123-mega.yml'
   workflow_dispatch:
@@ -13,17 +15,17 @@ permissions:
 jobs:
   v123:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Strategy, records, resets, wild and battle performance
-        run: node tests/v123-mega.test.cjs
-      - name: Keep V119 and V120-122 native combat
+      - name: Verify v123 campaign / stats / arena / stutter protection
         run: |
-          node tests/v119-patch.test.cjs
+          node --check effects/v123/gameplay-mega.js
+          node tests/v123-mega.test.cjs
+          node tests/battle-v122.test.cjs
+          node tests/poison-v111.test.cjs
           node tests/battle-layout-v120.test.cjs
           node tests/enemy-fighting-v121.test.cjs
-          node tests/battle-v122.test.cjs

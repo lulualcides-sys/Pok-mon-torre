@@ -1,0 +1,26 @@
+{
+  "version": "V123",
+  "status": "implementacao_inicial",
+  "published": false,
+  "features": [
+    "recordes persistentes",
+    "recompensas após vitória",
+    "centro Pokémon",
+    "torre infinita após Liga",
+    "arena mobile maior",
+    "sprites 124%",
+    "limpeza de cache menos agressiva"
+  ],
+  "pending": [
+    "IA tática mais profunda",
+    "progressão dos líderes",
+    "encontros raros calibrados",
+    "limite de itens por combate",
+    "testes extensivos da Torre Infinita"
+  ],
+  "preserve": [
+    "V95-V122",
+    "todos os golpes aprovados",
+    "salvamentos"
+  ]
+}

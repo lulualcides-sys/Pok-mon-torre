@@ -19,13 +19,17 @@ BattleEngine.prototype.frame=function(now){
   if(fps<40)perf.lowFpsSamples++;
  }
  perf.cachedMonsters=this.assets?.size||0;
- if(mobile&&this.assets?.size>16){
+ // Preserve active, recently used and upcoming sprites during attack bursts.
+ // Pruning at 16 used to cause expensive reload/decoding between casts.
+ if(mobile&&this.assets?.size>32&&(!this._v123LastPrune||now-this._v123LastPrune>18000)&&
+    (!Number.isFinite(this._v123CastAt)||now-this._v123CastAt>2500)){
   const keep=new Set([current()?.id,foe()?.id,
    battle?.enemies?.[0]?.id]);
   for(const id of this.assets.keys()){
-   if(this.assets.size<=12)break;
+   if(this.assets.size<=24)break;
    if(!keep.has(id)){this.assets.delete(id);perf.pruned++}
   }
+  this._v123LastPrune=now;
  }
  return result;
 };

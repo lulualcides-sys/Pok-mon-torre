@@ -827,6 +827,14 @@ if(new URLSearchParams(location.search).get('game123')!=='0'){
   }catch(error){console.error('V123 module disabled: '+file,error);}
  }
 }
+// V123: mega campaign + records + healing + rewards + infinite tower + larger mobile arena.
+try{
+ const file='effects/v123/gameplay-mega.js';
+ const res=await fetch(file+'?build=v123-mega-campaign',{cache:'no-store'});
+ if(!res.ok)throw Error('V123 HTTP '+res.status);
+ if(!game.includes(fireSpriteAnchor))throw Error('V123 insertion marker absent');
+ game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
+}catch(error){console.warn('V123 mega game unavailable; V122 remains stable',error);}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{

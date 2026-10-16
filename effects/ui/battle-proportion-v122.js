@@ -35,7 +35,7 @@ BattleEngine.prototype.drawMon=function(actor,id,enemy,now){
   ctx.drawImage=function(img,...a){
    const j=a.length===8?4:a.length===4?0:-1;
    if(j>=0&&a.slice(j,j+4).every(Number.isFinite)){
-    const scale=1.145,w=a[j+2],h=a[j+3];
+    const scale=1.24,w=a[j+2],h=a[j+3];
     a[j]-=(w*scale-w)/2;a[j+1]-=(h*scale-h);
     a[j+2]=w*scale;a[j+3]=h*scale;scaleDraws++;
    }
