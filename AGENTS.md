@@ -1,5 +1,14 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V134 — V133 aprovada, otimização dinâmica de travamentos (16/10/2026)
+
+Usuário: **"Ficou muito bom, pode salvar os 4 e tá travando de novo quando ativa os golpes melhora isso de uma vez."** A V133 é agora **OFICIAL** para Garra de Areia, Soco de Terra, Lança de Areia e Fenda Rasa; aprovadas as formas principais de todos os golpes sem modificar sprite, cores, dano ou duração. Fonte oficial: `effects/moves/STATUS_APROVADOS.json` (42 oficiais protegidos), `effects/v127/edited-moves.json` (74 fichas; 32 legadas), registro individual e ✓ no editor.
+
+Performance: o runtime `effects/moves/v133-ground-preview/runtime.js` foi refinado sem imagens estáticas. Elimina criação de polígonos intermediários para fragmentos, reduz alocações no hot path Canvas, armazena lookup do movimento e monitora a duração REAL dos quadros. Sob carga, `detailStep=2/3` reduz somente partículas secundárias e fragmentos, mantendo 100% da geometria principal dos cortes/punho/lança/fenda e sem alterar dano V359, energia, cooldown ou progressão. Quando recupera fluidez, volta automaticamente à densidade total. O tempo da animação é o mesmo; render já usa motor de batalha existente e não cria novos loops nem captura/canvas extra.
+
+Normal: `/` com estes quatro efeitos oficiais. Comparação com a versão aprovada: `?ground133=preview`. Rollback apenas dos quatro: `?ground133=0`. Links comparativos V130/V131 permanecem intactos e nenhum golpe V132 (Osso, Grande Fissura), Água V128 ou outro aprovado foi alterado. **Não afirmar FPS fixo ou travamento solucionado em todos os celulares sem medir aparelho real**; verificar testes de carga e usuário no Android. Sem PNG, CSS animado, downloads ou Ateliê.
+
+
 ## V133 — 4 novos golpes de Terra em PRÉVIA JOGÁVEL (16/10/2026)
 
 Usuário mostrou a tela com **Garra de Areia, Soco de Terra, Lança de Areia e Fenda Rasa** e solicitou animações fiéis ao estilo Pokémon, cinematográficas, sem PNG ou visual cartonado. Os nomes são próprios do catálogo do projeto, logo não há uma animação oficial de Pokémon homônima para copiar literalmente. Referência: ataques de areia granular, rocha, rachadura e impacto seco. Cada efeito é um módulo isolado, 12 ou 16 quadros dinâmicos no Canvas original da batalha.

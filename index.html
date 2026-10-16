@@ -954,10 +954,13 @@ if(new URLSearchParams(location.search).get('safe')!=='1'&&
    String.fromCharCode(10)+scripts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V132 approved ground effects failed to load; native animation preserved',error);}
 }
-// V133 — four Ground move animations in the REAL battle, opt-in preview.
-// Layer after approved V132 and leave all other move art untouched.
-if(new URLSearchParams(location.search).get('ground133')==='preview'&&
-   new URLSearchParams(location.search).get('safe')!=='1'){
+// V134 — four user-approved V133 Ground moves now official in every battle.
+// Shapes unchanged; only secondary grit density adapts if mobile frames slow.
+// ?ground133=0 restores the older renderers; ?ground133=preview compares them.
+if(new URLSearchParams(location.search).get('ground133')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'&&
+   new URLSearchParams(location.search).get('ground130')!=='preview'&&
+   new URLSearchParams(location.search).get('ground131')!=='preview'){
  try{
   const files=[
    'effects/moves/v133-ground-preview/runtime.js',
@@ -967,13 +970,13 @@ if(new URLSearchParams(location.search).get('ground133')==='preview'&&
    'effects/moves/v133-ground-preview/shallow-fissure/index.js'
   ];
   const parts=await Promise.all(files.map(async path=>{
-   const response=await fetch(path+'?build=v133-ground-art-preview',{cache:'no-store'});
+   const response=await fetch(path+'?build=v134-ground-approved-mobile-adaptive',{cache:'no-store'});
    if(!response.ok)throw Error('V133 '+path+': '+response.status);
    return response.text();
   }));
   if(!game.includes(fireSpriteAnchor))throw Error('V133 battle insertion anchor missing');
   game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+parts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
- }catch(err){console.warn('V133 preview unavailable; official move VFX preserved',err);}
+ }catch(err){console.warn('V134 approved Ground effects unavailable; previous visuals preserved',err);}
 }
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.

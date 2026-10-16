@@ -4,12 +4,12 @@
 window.PokemonTorreGroundV133?.register({
  name:'Lança de Areia',aliases:[],ms:1630,frames:16,
  draw(g,p){
-  const {t,hit,from:A,to:B,scale:s,clamp,ease,mix,poly,grain,shard}=p;
+  const {t,hit,from:A,to:B,scale:s,clamp,ease,mix,poly,grain,shard,detailStep=1}=p;
   const dx=B[0]-A[0],dy=B[1]-A[1],length=Math.hypot(dx,dy)||1,
     ux=dx/length,uy=dy/length,nx=-uy,ny=ux;
   const progress=ease((t-.10)/(hit-.10)),live=ease(t/.12)*(1-ease((t-.83)/.17));
   // Power gathers as layered striations, then consolidates into a sharp point.
-  for(let j=0;j<14;j++){
+  for(let j=0;j<14;j+=detailStep){
    const v=(j*.173+t*.26)%1;
    grain(g,A[0]+ux*(9+24*v)*s+nx*Math.sin(j*1.7+t*13)*10*s,
     A[1]+uy*(9+24*v)*s+ny*Math.sin(j*1.7+t*13)*10*s,
@@ -37,7 +37,7 @@ window.PokemonTorreGroundV133?.register({
    }
    g.restore();
    // Loose sand grains leave the point's tail, not a magic flame trail.
-   for(let j=0;j<18;j++){
+   for(let j=0;j<18;j+=detailStep){
     const behind=clamp(progress-(j+1)*.035);
     if(behind<=0)continue;
     const x=mix(A[0]+ux*12*s,B[0],behind),
@@ -49,7 +49,7 @@ window.PokemonTorreGroundV133?.register({
   }else{
    const u=clamp((t-hit)/(1-hit)),alpha=1-ease(u);
    // The spear shatters on a single synchronized contact.
-   for(let i=0;i<23;i++){
+   for(let i=0;i<23;i+=detailStep){
     const theta=i*2.399,rr=(6+50*ease(u))*(.73+i%5*.08)*s;
     const x=B[0]+Math.cos(theta)*rr,y=B[1]+Math.sin(theta)*rr*.76;
     if(i%3===0)shard(g,x,y,(2+i%4*.9)*s,theta,alpha,'#887155');

@@ -1,0 +1,11 @@
+{
+  "move": "Garra de Areia",
+  "aliases": [],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v133-ground-preview/sand-claw/index.js",
+  "reference": "STATUS_APROVADOS.json",
+  "approval_confirmed_at": "2026-10-16",
+  "approval_confirmation": "Ficou muito bom, pode salvar os 4",
+  "scope": "V133 artwork approved and preserved: V134 adaptive particle density at low FPS; never change main silhouette or V359 native hit."
+}

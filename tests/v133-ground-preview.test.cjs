@@ -16,7 +16,7 @@ for(const code of scripts){
 }
 const index=get('index.html');
 for(const f of filenames)assert.ok(index.includes(root+f),'game does not load '+f);
-assert.ok(index.includes("get('ground133')==='preview'"),'V133 must be opt-in only');
+assert.ok(index.includes("get('ground133')!=='0'"),'V134 must load approved V133 by default');
 assert.ok(index.indexOf('v132-ground-approved/runtime.js')<index.indexOf(root+'runtime.js'),
  'approved V132 must be installed BEFORE V133 preview overlay');
 const approved=JSON.parse(get('effects/moves/STATUS_APROVADOS.json')).moves;
@@ -24,8 +24,12 @@ for(const name of ['Osso','Grande Fissura','Withdraw','Bolhas','Mergulho','Cauda
  const row=approved.find(x=>x.move===name);assert.equal(row?.protect,true,'lost protected move '+name);
 }
 const targets=['Garra de Areia','Soco de Terra','Lança de Areia','Fenda Rasa'];
-targets.forEach(name=>assert.ok(!approved.some(x=>x.move===name),'preview must not claim approval '+name));
-assert.equal(approved.length,38,'previous approval registry untouched');
+targets.forEach(name=>{
+ const row=approved.find(x=>x.move===name);
+ assert.equal(row?.status,'aprovado','approved animation missing '+name);
+ assert.equal(row?.protect,true,'approved art is not protected '+name);
+});
+assert.equal(approved.length,42,'approved count must include exactly four V133 moves');
 
 const actor={id:150,hp:100},victim={id:25,hp:500};
 const battle={active:true,paused:false,energy:300};
@@ -66,7 +70,8 @@ function create(query){
  for(const s of [...oldPair,...scripts])vm.runInNewContext(s,env,{timeout:5000});
  return window;
 }
-assert.equal(create('').PokemonTorreGroundV133,undefined,'normal route must not install preview');
+assert.equal(create('').PokemonTorreGroundV133?.official,true,'normal route must install the approved V133 art');
+assert.equal(create('?ground133=0').PokemonTorreGroundV133,undefined,'explicit rollback must disable the four effects');
 assert.equal(create('?ground133=preview&safe=1').PokemonTorreGroundV133,undefined,'safe fallback must work');
 const window=create('?ground133=preview');
 const v133=window.PokemonTorreGroundV133;
@@ -107,4 +112,4 @@ assert.equal(v133.diagnostics().frames,40);
 assert.equal(v133.diagnostics().hitClockChanges,4);
 assert.equal(v133.diagnostics().errors.length,0,'runtime draw errors');
 assert.ok(gfxStats.fills>30&&gfxStats.strokes>30,'need multi-layer textured visual art');
-console.log('PASS V133: 4 distinct 12/16-frame Ground animation modules, isolated preview, V132 intact, one native hit, no PNG or saving changes.');
+console.log('PASS V134: 4 approved animated 12/16-frame Ground modules, official default and optional preview, V132 intact, native one-hit, no PNG.');

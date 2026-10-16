@@ -1,4 +1,4 @@
-name: V133 Quatro golpes Terra — prévia real na batalha
+name: V134 Quatro golpes Terra — aprovados e otimizados
 on:
   push:
     branches: [main]
@@ -22,6 +22,7 @@ jobs:
       - name: Four animations and native hit timing
         run: |
           node tests/v133-ground-preview.test.cjs
+          node tests/v134-ground-performance.test.cjs
           node tests/v132-ground-approved.test.cjs
           node tests/v131-ground-refinement.test.cjs
           node tests/v130-ground-preview.test.cjs

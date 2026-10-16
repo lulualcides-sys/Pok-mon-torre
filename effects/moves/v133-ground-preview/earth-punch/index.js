@@ -5,7 +5,7 @@
 window.PokemonTorreGroundV133?.register({
  name:'Soco de Terra',aliases:[],ms:1290,frames:16,
  draw(g,p){
-  const {t,hit,from:A,to:B,scale:s,clamp,ease,mix,poly,shard,grain,crack}=p;
+  const {t,hit,from:A,to:B,scale:s,clamp,ease,mix,poly,shard,grain,crack,detailStep=1}=p;
   const dx=B[0]-A[0],dy=B[1]-A[1],L=Math.hypot(dx,dy)||1;
   const ux=dx/L,uy=dy/L,nx=-uy,ny=ux,
         q=ease((t-.12)/(hit-.12)),
@@ -28,7 +28,7 @@ window.PokemonTorreGroundV133?.register({
    }
    g.restore();
    // Low-density gritty drag behind the punch, almost invisible at end.
-   for(let i=0;i<8;i++){
+   for(let i=0;i<8;i+=detailStep){
     const u=clamp(q-i*.095),w=5+i%3*2.5;
     const tx=mix(A[0],B[0],u)+nx*Math.sin(i*2.2)*w*s;
     const ty=mix(A[1],B[1],u)+ny*Math.sin(i*2.2)*w*s;
@@ -38,7 +38,7 @@ window.PokemonTorreGroundV133?.register({
   if(t>=hit){
    const u=clamp((t-hit)/(1-hit)),alpha=1-ease(u);
    // Dry broken stone/soil fragments and a very short surface fracture.
-   for(let j=0;j<17;j++){
+   for(let j=0;j<17;j+=detailStep){
     const a=j*2.399,r=(8+33*ease(u))*(.85+j%3*.13)*s;
     shard(g,B[0]+Math.cos(a)*r,B[1]+Math.sin(a)*r*.7,
      (2+j%4*1.35)*s,a,alpha*(.86-j*.027),j%2?'#897056':'#ad9270');

@@ -1,4 +1,6 @@
-# V133 — quatro golpes Terra para prévia jogável
+# V133 — quatro golpes Terra APROVADOS na V134
+
+**Aprovados pelo usuário em 16/10/2026**: “Ficou muito bom, pode salvar os 4”. Oficiais na URL normal, com render adaptativo para evitar quadros pesados no celular.
 
 Teste **no Pokémon Torre**, na arena real:
 
@@ -19,4 +21,4 @@ As animações procedurais são desenhadas por quadros no Canvas já existente (
 
 **Protegidos e intocados:** Osso e Grande Fissura V132, Tapa de Lama, Mud Shot, Poder Terrestre V130, os seis golpes de Água V128, todos os outros aprovados. A versão normal segue funcionando como estava. `?safe=1` desliga a prévia. Retirar `ground133=preview` volta ao oficial.
 
-**Aguardando aprovação visual do jogador antes de promover os quatro ao jogo normal.** Verificar `tests/v133-ground-preview.test.cjs` e o workflow do GitHub Pages antes de dar link como pronto.
+**Aprovados e protegidos; oficiais V134**. Se o dispositivo perder fluidez, o renderer diminui somente partículas secundárias (nível 2 ou 3) e depois restaura o visual integral, mantendo as formas, dano e duração. Verificar `tests/v133-ground-preview.test.cjs` e o workflow do GitHub Pages antes de dar link como pronto.

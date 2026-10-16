@@ -5,7 +5,7 @@
 window.PokemonTorreGroundV133?.register({
  name:'Fenda Rasa',aliases:[],ms:1430,frames:12,
  draw(g,p){
-  const {t,hit,from:A,to:B,scale:s,engine:e,clamp,ease,mix,poly,shard,grain,crack}=p;
+  const {t,hit,from:A,to:B,scale:s,engine:e,clamp,ease,mix,poly,shard,grain,crack,detailStep=1}=p;
   const feet=e.enemy?.y||B[1]+30*s;
   const targetGround=feet+(e.enemy?.r||34)*.32;
   const startX=A[0],startY=(e.player?.y||A[1]+35*s)+(e.player?.r||34)*.27;
@@ -26,7 +26,7 @@ window.PokemonTorreGroundV133?.register({
    // Dark split in dirt with two chipped mineral banks.
    g.save();g.globalAlpha*=fade;
    crack(g,pts,(1.4+1.25*grow)*s);
-   for(let i=2;i<pts.length-1;i+=2){
+   for(let i=2;i<pts.length-1;i+=2*detailStep){
     const [x,y]=pts[i],up=(i%4?1:-1),
      side=(8+i%3*3)*s;
     crack(g,[[x,y],[x+up*side*.43,y-5*s],
@@ -40,12 +40,12 @@ window.PokemonTorreGroundV133?.register({
   if(t>=hit){
    const u=clamp((t-hit)/(1-hit)),alpha=1-ease(u);
    // A small heave of broken dirt around the target, no deep chasm.
-   for(let i=0;i<17;i++){
+   for(let i=0;i<17;i+=detailStep){
     const theta=i*2.399,r=(5+29*ease(u))*(.8+i%4*.11)*s;
     shard(g,endX+Math.cos(theta)*r,endY-6*s+Math.sin(theta)*r*.43,
       (1.7+i%4*.85)*s,theta,alpha*.79,i%2?'#8a7157':'#a68b6e');
    }
-   for(let i=0;i<14;i++){
+   for(let i=0;i<14;i+=detailStep){
     const d=(i*2.13)%(2*Math.PI),r=(5+30*u)*s;
     grain(g,endX+Math.cos(d)*r,endY-5*s+Math.sin(d)*r*.55,
       (1+i%3*.42)*s,alpha*.61,'#a48e73');

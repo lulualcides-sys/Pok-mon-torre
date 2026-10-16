@@ -530,6 +530,66 @@
       "aprovacao_visual": "aprovado_pelo_usuario",
       "feedback_usuario": "Diminuí um pouco mais o osso e pode salvar os 2",
       "notes": "V131 Osso (47%) teve redução adicional solicitada para 40% da escala V130; versão final V132 protegida. Bone Club e Bone Boomerang existentes não alterados."
+    },
+    {
+      "move": "Garra de Areia",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V134",
+      "frames": 16,
+      "effect_file": "effects/moves/v133-ground-preview/sand-claw/index.js",
+      "renderer": "effects/moves/v133-ground-preview/runtime.js",
+      "approval_text": "Ficou muito bom, pode salvar os 4",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "notes": "Efeito visual aprovado da V133; animação principal idêntica, otimização adaptativa V134 corta somente partículas secundárias em quadros lentos, preservando dano/energia/recarga. Não alterar sem autorização.",
+      "rollback_parameter": "?ground133=0"
+    },
+    {
+      "move": "Soco de Terra",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V134",
+      "frames": 16,
+      "effect_file": "effects/moves/v133-ground-preview/earth-punch/index.js",
+      "renderer": "effects/moves/v133-ground-preview/runtime.js",
+      "approval_text": "Ficou muito bom, pode salvar os 4",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "notes": "Efeito visual aprovado da V133; animação principal idêntica, otimização adaptativa V134 corta somente partículas secundárias em quadros lentos, preservando dano/energia/recarga. Não alterar sem autorização.",
+      "rollback_parameter": "?ground133=0"
+    },
+    {
+      "move": "Lança de Areia",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V134",
+      "frames": 16,
+      "effect_file": "effects/moves/v133-ground-preview/sand-spear/index.js",
+      "renderer": "effects/moves/v133-ground-preview/runtime.js",
+      "approval_text": "Ficou muito bom, pode salvar os 4",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "notes": "Efeito visual aprovado da V133; animação principal idêntica, otimização adaptativa V134 corta somente partículas secundárias em quadros lentos, preservando dano/energia/recarga. Não alterar sem autorização.",
+      "rollback_parameter": "?ground133=0"
+    },
+    {
+      "move": "Fenda Rasa",
+      "aliases": [],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V134",
+      "frames": 12,
+      "effect_file": "effects/moves/v133-ground-preview/shallow-fissure/index.js",
+      "renderer": "effects/moves/v133-ground-preview/runtime.js",
+      "approval_text": "Ficou muito bom, pode salvar os 4",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "notes": "Efeito visual aprovado da V133; animação principal idêntica, otimização adaptativa V134 corta somente partículas secundárias em quadros lentos, preservando dano/energia/recarga. Não alterar sem autorização.",
+      "rollback_parameter": "?ground133=0"
     }
   ]
 }

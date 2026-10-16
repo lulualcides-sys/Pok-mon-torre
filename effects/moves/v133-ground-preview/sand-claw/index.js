@@ -4,12 +4,12 @@
 window.PokemonTorreGroundV133?.register({
  name:'Garra de Areia',aliases:[],ms:1420,frames:16,
  draw(g,p){
-  const {t,hit,from:A,to:B,scale:s,ease,clamp,mix,poly,shard,grain}=p;
+  const {t,hit,from:A,to:B,scale:s,ease,clamp,mix,poly,shard,grain,detailStep=1}=p;
   const tGrow=ease((t-.07)/.29),die=1-ease((t-.89)/.11);
   const x=B[0],y=B[1],dx=B[0]-A[0],dy=B[1]-A[1],L=Math.hypot(dx,dy)||1;
   const dir=dx/L,sidy=-dy/L;
   // Dirt gathers around the attacker's leading claw; earth follows the swing.
-  for(let i=0;i<19;i++){
+  for(let i=0;i<19;i+=detailStep){
    const u=((i*11)%23)/23,angle=i*2.399;
    const px=mix(A[0]+dir*12*s,x-19*s,tGrow*.65)+Math.cos(angle)*u*18*s;
    const py=mix(A[1],y+10*s,tGrow*.65)+Math.sin(angle)*u*12*s;
@@ -30,7 +30,7 @@ window.PokemonTorreGroundV133?.register({
    g.beginPath();g.moveTo(x1-1*s,y1);g.lineTo(endX-1*s,endY);
    g.lineWidth=1.7*s;g.strokeStyle='#dac5a2';g.stroke();
    // Flakes travel tangentially along the gouge, then drop as real grains.
-   for(let j=0;j<8;j++){
+   for(let j=0;j<8;j+=detailStep){
     const u=clamp((j*.137+.07)*q),hx=mix(x1,endX,u),
      hy=mix(y1,endY,u),offset=Math.sin(j*4.2+i*3)*7*s;
     shard(g,hx+offset,hy+(j%3-1)*5*s,(1.7+j%3*.9)*s,j*.61,
@@ -41,7 +41,7 @@ window.PokemonTorreGroundV133?.register({
   if(t>=hit){
    const u=clamp((t-hit)/(1-hit)),alpha=(1-ease(u))*die;
    // Small blunt-edged dust impact, not a cartoon starburst.
-   for(let k=0;k<17;k++){
+   for(let k=0;k<17;k+=detailStep){
     const a=k*2.399,rr=(9+29*ease(u))*(.6+k%4*.13)*s;
     grain(g,x+Math.cos(a)*rr,y+Math.sin(a)*rr*.7,
       (.9+k%4*.6)*s,alpha*.65,k%2?'#70543f':'#aa8c66');
