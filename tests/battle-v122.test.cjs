@@ -1,0 +1,102 @@
+'use strict';
+/* V122 screenshot regression: 4 independent real PMD sprites + approved +,
+ * wider portrait and landscape combat + generic cast FPS cap.
+ */
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const get=p=>fs.readFileSync(p,'utf8');
+const root='effects/moves/v122-poison-preview/';
+const approved=JSON.parse(get('effects/moves/STATUS_APROVADOS.json'));
+const html=get('index.html');
+for(const p of ['effects/performance/cast-smooth-v122.js','effects/ui/battle-proportion-v122.js',
+ 'effects/ui/move-approved-mark-v122.js',...['runtime.js','venoshock/spec.js','toxinapesada/spec.js',
+ 'rajadaacida/spec.js','golpedeveneno/spec.js'].map(x=>root+x)]){
+ assert.ok(html.includes(p),'Module must be loaded '+p);assert.ok(fs.statSync(p).size>80);
+}
+assert.ok(html.includes("get('battle_preview')==='poison122'"),'new effects must be preview only');
+const module=get(root+'runtime.js');
+assert.ok(!module.includes('hitTarget(')&&!module.includes('.hp='),'No direct damage manipulation');
+const supported=['Venoshock','Toxina Pesada','Rajada Ácida','Golpe de Veneno'];
+const ids=['venoshock','toxinapesada','rajadaacida','golpedeveneno'];
+let calls=[];
+class Image{
+ constructor(){this.complete=true;this.naturalWidth=2048;this.naturalHeight=128;}
+ addEventListener(){}
+ decode(){return Promise.resolve();}
+ set src(value){this._src=value;}
+ get src(){return this._src;}
+}
+const battle={active:true,paused:false},mon={id:150,hp:100},enemy={id:25,hp:100};
+let selected=0;
+class BattleEngine{
+ constructor(){this.projectiles=[];this.player={x:100,y:220,r:35};
+ this.enemy={x:320,y:190,r:35};this.h=480;}
+ useMove(){this.projectiles.push({from:'player'});return true;}
+ drawProjectile(){calls.push('old-shot')}
+}
+const ctx={save(){},restore(){},drawImage(...args){calls.push(args)},
+ globalAlpha:1,imageSmoothingEnabled:true};
+const run=query=>{
+ const window={PokemonTorreV360Paint:()=>false};
+ const context=vm.createContext({window,BattleEngine,Image,URLSearchParams,
+  location:{search:query,hostname:'example.test'},battle,current:()=>mon,skillSet:()=>supported.map((name)=>({name})),
+  performance:{now:()=>200},console,Number,Math,Map,Set,WeakMap});
+ vm.runInContext(module,context,{timeout:4000});
+ if(query==='?battle_preview=poison122'){
+  for(const id of ids)vm.runInContext(get(root+id+'/spec.js'),context,{timeout:2000});
+ }
+ return {window,context};
+};
+assert.equal(run('').window.PokemonTorrePoisonV122,undefined,'Official battle MUST stay unchanged');
+const preview=run('?battle_preview=poison122');
+const api=preview.window.PokemonTorrePoisonV122;
+assert.equal(api.previewOnly,true);
+assert.equal(api.diagnostics().ready.length,4);
+const engine=new BattleEngine();
+for(let i=0;i<4;i++){
+ const prior=calls.length;
+ selected=i;
+ const c0=engine.projectiles.length,ret=engine.useMove(i);
+ assert.equal(ret,true);assert.equal(engine.projectiles.length,c0+1);
+ assert.equal(engine.projectiles.at(-1).__v122PoisonPreview,ids[i]);
+ engine.drawProjectile(engine.projectiles.at(-1));
+ assert.equal(calls.length,prior,'native generic orb should be hidden');
+ const fx={move:{name:supported[i]},at:100,duration:1000,from:[100,220],to:[320,190],times:[.66]};
+ const rendered=preview.window.PokemonTorreV360Paint(ctx,fx,820,engine);
+ assert.equal(rendered,true,'real image draw for '+supported[i]);
+ const drawings=calls.slice(prior);
+ assert.ok(drawings.length>=1,'empty animation '+supported[i]);
+ assert.ok(drawings.every(a=>a[0] instanceof Image),'source must be authentic pixel sprite');
+ assert.ok(drawings.every(a=>a[1]>=0&&a[1]<=15*128),'frame index out of 16');
+ assert.equal(api.diagnostics().last.name,supported[i]);
+ assert.equal(api.diagnostics().last.syncNativeDamage,true);
+}
+assert.ok(api.diagnostics().casts===4);
+assert.ok(api.diagnostics().errors.length===0);
+const markCode=get('effects/ui/move-approved-mark-v122.js');
+assert.ok(markCode.includes('title="Golpe salvo ou aprovado"'));
+assert.ok(markCode.includes('>+</i>'));
+assert.ok(!markCode.includes('✅'));
+const markWindow={};
+let originalMarks=0;
+const markDom={head:{appendChild(){}},createElement:()=>({})};
+const htmlSkill=s=>'<button class="skillV8"><span class="skillName"><b>'+s.name+'</b><small>Veneno</small></span></button>';
+const markSandbox=vm.createContext({window:markWindow,document:markDom,
+ location:{search:'',hostname:'localhost'},URLSearchParams,
+ skillMarkup:s=>{originalMarks++;return htmlSkill(s)}});
+vm.runInContext(markCode,markSandbox,{timeout:2500});
+assert.ok(markSandbox.skillMarkup({name:'Rain Dance'},0).includes('>+</i>'));
+assert.ok(markSandbox.skillMarkup({name:'Venoshock'},1).includes('✓'));
+assert.ok(!markSandbox.skillMarkup({name:'Golpe de Veneno'},2).includes('✓'));
+assert.ok(!markSandbox.skillMarkup({name:'Toxina Pesada'},3).includes('✓'));
+assert.equal(originalMarks,4);
+const layout=get('effects/ui/battle-proportion-v122.js');
+for(const word of ['orientation:portrait','orientation:landscape','grid-template-columns','requestFullscreen','screen.orientation','height:clamp(370px,57dvh','drawMon'])
+ assert.ok(layout.includes(word),'UI responsive feature missing '+word);
+assert.ok(!layout.includes('hitTarget('));
+const perf=get('effects/performance/cast-smooth-v122.js');
+for(const word of ['particlesAt','particleCap','warm','requestIdleCallback','castMsMax','oldUse.apply'])
+ assert.ok(perf.includes(word),'FPS stabilizer missing '+word);
+assert.ok(!perf.includes('.hp=')&&!perf.includes('cooldowns['));
+assert.equal(approved.moves.filter(m=>m.status==='em_teste').length,4);
+assert.ok(approved.moves.some(m=>m.move==='Rain Dance'&&m.protect));
+console.log('PASS V122 original Poison: 4 real isolated 16-frame sprites, hit timing preserved, player-approved ticks only, portrait and landscape, cast particle budget; official moves unchanged');

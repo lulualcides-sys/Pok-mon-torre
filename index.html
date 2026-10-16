@@ -772,6 +772,43 @@ try{
 }catch(error){
  console.warn('Move dedup UI unavailable. Original catalogue preserved.',error);
 }
+// V122: mobile battle size + real landscape button; generic cast-spike stabilizer;
+// discreet ✓ only on previously saved/approved moves; no gameplay changes.
+for(const file of [
+ 'effects/performance/cast-smooth-v122.js',
+ 'effects/ui/battle-proportion-v122.js',
+ 'effects/ui/move-approved-mark-v122.js'
+]){
+ try{
+  const res=await fetch(file+'?build=v122-battle',{cache:'no-store'});
+  if(!res.ok)throw Error(file+' HTTP '+res.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V122 game insertion anchor absent');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V122 optional module disabled: '+file,error);}
+}
+// FOUR POISON GBA/PMD sprite previews in LIVE battle, not an Atelier.
+// They NEVER replace saved visuals until explicit approval.
+if(new URLSearchParams(location.search).get('battle_preview')==='poison122'){
+ try{
+  const files=[
+   'effects/moves/v122-poison-preview/runtime.js',
+   'effects/moves/v122-poison-preview/venoshock/spec.js',
+   'effects/moves/v122-poison-preview/toxinapesada/spec.js',
+   'effects/moves/v122-poison-preview/rajadaacida/spec.js',
+   'effects/moves/v122-poison-preview/golpedeveneno/spec.js'
+  ];
+  const chunks=await Promise.all(files.map(async file=>{
+   const res=await fetch(file+'?build=v122-four-original-poison',{cache:'no-store'});
+   if(!res.ok)throw Error(file+' HTTP '+res.status);
+   return res.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V122 poison preview insertion anchor absent');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+chunks.join(String.fromCharCode(10))+
+   String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.error('V122 Poison preview unavailable; prior moves untouched',error);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
