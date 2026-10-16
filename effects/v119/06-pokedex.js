@@ -50,7 +50,7 @@ showPokedex=function(){
    if(!card.hidden)visible++;
   });
   counter.textContent=visible+' de 151 Pokémon exibidos';
-  stats.filters++;stats.last=category;
+  stats.filters++;stats.last=selector.value;
  }
  search.addEventListener('input',filter);selector.addEventListener('change',filter);
  filter();stats.opens++;
