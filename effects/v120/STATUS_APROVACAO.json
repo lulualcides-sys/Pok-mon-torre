@@ -1,0 +1,15 @@
+{
+  "version": "V120",
+  "status": "aprovado",
+  "protected": true,
+  "approved_at": "2026-10-16",
+  "user_feedback": "A 120 pode aprovar tbm",
+  "summary": "Ajustes visuais e de interface na batalha do Blaine em Android: painel de líder duplicado, indicação compacta de fase, painel Salvar/Migrar fora da batalha, sobreposição de HUD e proporções responsivas.",
+  "verified_baseline": "2df9eea09dfe65d2ab7963c890a8eaa783ad83fe",
+  "validation": "O teste GitHub Actions V120 passou no commit 952b233164e404bb168c52b90c8d12f845035709.",
+  "scope": "Aprovação da V120 existente. Nenhuma alteração visual ou de batalha é autorizada para a V121 ou prévia V122; proteger V95-V119 e V120.",
+  "effect_files": [
+    "effects/ui/battle-layout-v120.js"
+  ],
+  "note": "Registrar aprovação do usuário sem modificar os módulos V121/V122 nem promover as prévias de Veneno."
+}
