@@ -1,0 +1,2139 @@
+{
+  "version": "117.0",
+  "created_at": "2026-10-16",
+  "scope": "Kanto 1-151",
+  "registered_species": 151,
+  "statement": "Static code audit only. An action URL is not proof of image availability. A runtime visual audit checks decoded images, metadata and errors per encountered species.",
+  "original_shiny_animated_confirmed_ids": [
+    6,
+    18,
+    62,
+    68,
+    94,
+    105
+  ],
+  "actions_expected": [
+    "Idle",
+    "Walk",
+    "Attack",
+    "Hurt",
+    "Faint"
+  ],
+  "directional_rows_expected": "PMD source may contain 8 directional rows; decoded rows and AnimData.xml must be checked at runtime",
+  "pokemon": [
+    {
+      "id": 1,
+      "name": "Bulbasaur",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 2,
+      "name": "Ivysaur",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 3,
+      "name": "Venusaur",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 4,
+      "name": "Charmander",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 5,
+      "name": "Charmeleon",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 6,
+      "name": "Charizard",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": true,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 7,
+      "name": "Squirtle",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 8,
+      "name": "Wartortle",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 9,
+      "name": "Blastoise",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 10,
+      "name": "Caterpie",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 11,
+      "name": "Metapod",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 12,
+      "name": "Butterfree",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 13,
+      "name": "Weedle",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 14,
+      "name": "Kakuna",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 15,
+      "name": "Beedrill",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 16,
+      "name": "Pidgey",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 17,
+      "name": "Pidgeotto",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 18,
+      "name": "Pidgeot",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": true,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 19,
+      "name": "Rattata",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 20,
+      "name": "Raticate",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 21,
+      "name": "Spearow",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 22,
+      "name": "Fearow",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 23,
+      "name": "Ekans",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 24,
+      "name": "Arbok",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 25,
+      "name": "Pikachu",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 26,
+      "name": "Raichu",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 27,
+      "name": "Sandshrew",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 28,
+      "name": "Sandslash",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 29,
+      "name": "Nidoran♀",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 30,
+      "name": "Nidorina",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 31,
+      "name": "Nidoqueen",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 32,
+      "name": "Nidoran♂",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 33,
+      "name": "Nidorino",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 34,
+      "name": "Nidoking",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 35,
+      "name": "Clefairy",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 36,
+      "name": "Clefable",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 37,
+      "name": "Vulpix",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 38,
+      "name": "Ninetales",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 39,
+      "name": "Jigglypuff",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 40,
+      "name": "Wigglytuff",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 41,
+      "name": "Zubat",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 42,
+      "name": "Golbat",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 43,
+      "name": "Oddish",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 44,
+      "name": "Gloom",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 45,
+      "name": "Vileplume",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 46,
+      "name": "Paras",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 47,
+      "name": "Parasect",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 48,
+      "name": "Venonat",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 49,
+      "name": "Venomoth",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 50,
+      "name": "Diglett",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 51,
+      "name": "Dugtrio",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 52,
+      "name": "Meowth",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 53,
+      "name": "Persian",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 54,
+      "name": "Psyduck",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 55,
+      "name": "Golduck",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 56,
+      "name": "Mankey",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 57,
+      "name": "Primeape",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 58,
+      "name": "Growlithe",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 59,
+      "name": "Arcanine",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 60,
+      "name": "Poliwag",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 61,
+      "name": "Poliwhirl",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 62,
+      "name": "Poliwrath",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": true,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 63,
+      "name": "Abra",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 64,
+      "name": "Kadabra",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 65,
+      "name": "Alakazam",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 66,
+      "name": "Machop",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 67,
+      "name": "Machoke",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 68,
+      "name": "Machamp",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": true,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 69,
+      "name": "Bellsprout",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 70,
+      "name": "Weepinbell",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 71,
+      "name": "Victreebel",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 72,
+      "name": "Tentacool",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 73,
+      "name": "Tentacruel",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 74,
+      "name": "Geodude",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 75,
+      "name": "Graveler",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 76,
+      "name": "Golem",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 77,
+      "name": "Ponyta",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 78,
+      "name": "Rapidash",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 79,
+      "name": "Slowpoke",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 80,
+      "name": "Slowbro",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 81,
+      "name": "Magnemite",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 82,
+      "name": "Magneton",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 83,
+      "name": "Farfetch\\",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 84,
+      "name": "Doduo",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 85,
+      "name": "Dodrio",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 86,
+      "name": "Seel",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 87,
+      "name": "Dewgong",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 88,
+      "name": "Grimer",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 89,
+      "name": "Muk",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 90,
+      "name": "Shellder",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 91,
+      "name": "Cloyster",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 92,
+      "name": "Gastly",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 93,
+      "name": "Haunter",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 94,
+      "name": "Gengar",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": true,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 95,
+      "name": "Onix",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 96,
+      "name": "Drowzee",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 97,
+      "name": "Hypno",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 98,
+      "name": "Krabby",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 99,
+      "name": "Kingler",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 100,
+      "name": "Voltorb",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 101,
+      "name": "Electrode",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 102,
+      "name": "Exeggcute",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 103,
+      "name": "Exeggutor",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 104,
+      "name": "Cubone",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 105,
+      "name": "Marowak",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": true,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 106,
+      "name": "Hitmonlee",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 107,
+      "name": "Hitmonchan",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 108,
+      "name": "Lickitung",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 109,
+      "name": "Koffing",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 110,
+      "name": "Weezing",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 111,
+      "name": "Rhyhorn",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 112,
+      "name": "Rhydon",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 113,
+      "name": "Chansey",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 114,
+      "name": "Tangela",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 115,
+      "name": "Kangaskhan",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 116,
+      "name": "Horsea",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 117,
+      "name": "Seadra",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 118,
+      "name": "Goldeen",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 119,
+      "name": "Seaking",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 120,
+      "name": "Staryu",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 121,
+      "name": "Starmie",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 122,
+      "name": "Mr. Mime",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 123,
+      "name": "Scyther",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 124,
+      "name": "Jynx",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 125,
+      "name": "Electabuzz",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 126,
+      "name": "Magmar",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 127,
+      "name": "Pinsir",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 128,
+      "name": "Tauros",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 129,
+      "name": "Magikarp",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 130,
+      "name": "Gyarados",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 131,
+      "name": "Lapras",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 132,
+      "name": "Ditto",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 133,
+      "name": "Eevee",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 134,
+      "name": "Vaporeon",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 135,
+      "name": "Jolteon",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 136,
+      "name": "Flareon",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 137,
+      "name": "Porygon",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 138,
+      "name": "Omanyte",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 139,
+      "name": "Omastar",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 140,
+      "name": "Kabuto",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 141,
+      "name": "Kabutops",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 142,
+      "name": "Aerodactyl",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 143,
+      "name": "Snorlax",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 144,
+      "name": "Articuno",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 145,
+      "name": "Zapdos",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 146,
+      "name": "Moltres",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 147,
+      "name": "Dratini",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 148,
+      "name": "Dragonair",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 149,
+      "name": "Dragonite",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 150,
+      "name": "Mewtwo",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    },
+    {
+      "id": 151,
+      "name": "Mew",
+      "pm_dungeon_provider": "configured_unverified",
+      "actions": {
+        "Idle": "unverified",
+        "Walk": "unverified",
+        "Attack": "unverified",
+        "Hurt": "unverified",
+        "Faint": "unverified"
+      },
+      "original_shiny_animated": false,
+      "shiny_static_fallback": "official_pokeapi_unverified"
+    }
+  ]
+}
