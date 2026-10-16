@@ -848,6 +848,18 @@ if(new URLSearchParams(location.search).get('swap124')!=='0'){
    String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.error('V124 fallback to native swaps',error);}
 }
+// V125 - original PokeAPI gen5 PokéMart item sprites and type-coloured TM discs.
+// Visual-only: never rewrites purchases, items, team saves or any move VFX.
+if(new URLSearchParams(location.search).get('mart125')!=='0'){
+ try{
+  const file='effects/v125/pokemart-sprites.js';
+  const response=await fetch(file+'?build=v125-original-items-tms',{cache:'no-store'});
+  if(!response.ok)throw Error('V125 sprite UI HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V125 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V125 sprite UI unavailable; native shop retained',error);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{

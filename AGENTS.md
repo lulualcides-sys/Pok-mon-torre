@@ -1,5 +1,11 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V125 — itens e TMs (16/10/2026)
+
+- Nova solicitação: PokéMart mostra sprites pixelados **originais dos itens e discos TM por tipo**. Módulo `effects/v125/pokemart-sprites.js` sobreposta SOMENTE à apresentação da loja. Fonte PokéAPI Gen5, verificar nomes, manter fallback no celular e não alterar compras ou preços. URL oficial; `?mart125=0` para diagnóstico.
+- **V123 e V124.2 aprovadas e protegidas**; não modificar efeitos de troca, golpes, salvos nem desempenho na V125. V125 só deve ser declarada aprovada após confirmação do usuário.
+
+
 ## Status V123–V124 (16/10/2026)
 
 - **V123 aprovada expressamente** em 16/10/2026, salva/protegida em `effects/v123/STATUS.json`. Preservar IA, progressão, centro, cinco encontros por etapa, carreira/Elite Four/Blue/reset, recompensas, Torre Infinita, medidas contra travamentos, arena ampliada e sprites. Aprovada pelo usuário após jogar no celular.

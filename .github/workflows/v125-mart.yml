@@ -1,0 +1,27 @@
+name: V125 PokéMart original item and TM sprites
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/v125/**'
+      - 'tests/v125-pokemart-sprites.test.cjs'
+      - 'index.html'
+      - '.github/workflows/v125-mart.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mart:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Original Gen5 item/TM sprites and no store regressions
+        run: |
+          node --check effects/v125/pokemart-sprites.js
+          node tests/v125-pokemart-sprites.test.cjs
+          node tests/v124-recall-ai.test.cjs
+          node tests/v123-core.test.cjs
