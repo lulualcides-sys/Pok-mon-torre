@@ -93,7 +93,7 @@ async function test(port,safe,preview){
     report={ok,attempt,name:names[i],damage:before.hpBefore-after.hp,
      rendered,frame:fx.last?.frame,frames:fx.last?.total,painter:fx.last?.painter,approaches:fx.approaches,retreats:fx.retreats,
      ready:fx.ready?.length,ground:fx.last?.ground,x:fx.last?.x,y:fx.last?.y,height:fx.last?.height,width:fx.last?.width,errors:fx.errors,dpr:after.dpr,fps:after.fps};
-    if(ok&&i===3)ok=fx.last?.ground===true&&fx.last.height<fx.last.width*.48&&Math.abs(fx.last.y-143)<25;
+    if(ok&&i===3)ok=fx.last?.ground===true&&fx.last.height<fx.last.width*.48&&Number.isFinite(after.groundY)&&Math.abs(fx.last.y-after.groundY)<25;
     if(ok)break;
    }
    console.log('V114 POISON PREVIEW '+(safe?'SAFE':'NORMAL')+' '+JSON.stringify(report));
