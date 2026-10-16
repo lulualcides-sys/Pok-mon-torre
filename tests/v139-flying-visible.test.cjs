@@ -45,7 +45,7 @@ class BattleEngine{
  constructor(){this.player={x:100,y:250};this.enemy={x:310,y:200};
   this.h=480;this.canvas={isConnected:true};this.v359Attacks=[];}
  useMove(slot){
-  if(cooldowns[slot]>2000)return undefined; // blocked native status/attack
+  if(cooldowns[slot]>=2000)return undefined; // blocked native status/attack
   cooldowns[slot]=2000+slot;
   Battle.energy-=12;
   if(slot===0){owner.hp+=10;return undefined;} // native Roost heals itself
