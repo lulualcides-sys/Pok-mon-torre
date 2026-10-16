@@ -19,10 +19,15 @@ function assign(mon,kind){
 function shown(){
  if(!battle?.active||!battle.foe)return;
  const enemy=battle.foe;
- if(enemy.shiny){
+ const title=document.getElementById('enemyTitle');
+ if(!enemy.shiny){
+  // Old V30 wild setup might have drawn a temporary shiny flag before V119
+  // restored the single 1% roll. Never leave the wrong visual flag behind.
+  const stale=title?.querySelector('.v301ShinyFlag');
+  if(stale&&typeof stale.remove==='function')stale.remove();
+ }else{
   if(!Array.isArray(save.v119ShinySeen))save.v119ShinySeen=[];
   if(!save.v119ShinySeen.includes(enemy.id)){save.v119ShinySeen.push(enemy.id);persist();}
-  const title=document.getElementById('enemyTitle');
   if(title&&!title.querySelector('.v301ShinyFlag')){
    const tag=document.createElement('span');tag.className='v301ShinyFlag';tag.textContent='✦ SHINY';
    title.append(tag);
@@ -35,7 +40,14 @@ startBattle=function(enemies,label,wild){
  const all=Array.isArray(enemies)?enemies:[];
  for(const e of all)assign(e,wild?'wild':'trainer');
  const result=originalStart.apply(this,arguments);
- // Legacy wild V30.1 can re-roll the same first monster: restore exact 1% result.
+ // Some older gym/League handlers replace the supplied roster with a faithful
+ // leader roster inside startBattle. Those ACTUAL enemies also need exactly
+ // one 1% roll; do not leave replacements as unsorted normal enemies.
+ if(battle?.active){
+  for(const e of [battle.foe,...(battle.enemies||[])])
+   if(e)assign(e,battle.wild?'wild':'trainer');
+ }
+ // Legacy wild V30.1 can reroll the first monster; our one roll takes priority.
  for(const e of all)if(rolls.has(e))e.shiny=rolls.get(e);
  if(battle?.active)shown();
  return result;
