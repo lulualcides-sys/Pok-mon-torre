@@ -15,7 +15,7 @@
   im.src=originalFrames['weather_rain_'+String(i).padStart(2,'0')];
   return im;
  });
- const state={activations:0,blocked:0,recoveredCasts:0,originalRendererFrames:0,
+ const state={activations:0,blocked:0,recoveredCasts:0,lastGate:null,originalRendererFrames:0,
   fallbackFrames:0,failures:0,lastName:null,lastTime:null,frameCount:frames.length};
  const useMove=BattleEngine.prototype.useMove;
  BattleEngine.prototype.useMove=function(slot){
@@ -29,6 +29,8 @@
   const cost=Math.max(0,Number(move.cost)||0);
   const allowed=!!b.active&&!b.paused&&mon?.hp>0&&
     Number.isFinite(energy)&&energy>=cost&&Number(cooldowns[slot]||0)<=now;
+  state.lastGate={active:!!b.active,paused:!!b.paused,hp:mon?.hp,
+    energy,cost,cooldown:cooldowns[slot],now,allowed};
   const outcome=useMove.apply(this,arguments);
   let accepted=!!b?.active&&b===battle&&
     (outcome===true||(Number.isFinite(energy)&&Number(b.energy)<energy-.001)||
@@ -95,6 +97,8 @@
     const beforeEnergy=battle.energy;
     const previousCooldown=cooldowns[0];
     cooldowns[0]=0; // Fresh test battle, no carry-over timing from previous QA casts.
+    battle.paused=false;
+    if(current()?.hp<=0)current().hp=Math.max(1,current().maxHp||1);
     try{
      skillSet=function(mon){
       const list=oldSkillSet(mon);
