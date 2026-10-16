@@ -4,52 +4,26 @@ Only original cropped pixels; no ImageDraw geometry, CSS, gradients, fake video.
 """
 from pathlib import Path
 from PIL import Image
-from urllib.request import Request,urlopen
 from hashlib import sha256
-import math,json,time
+import math,json
 
 BASE=Path(__file__).resolve().parents[1]
 DEST=BASE/'effects/moves/v113-poison-preview'
-SRC=DEST/'source/poison-attack-effects-original.png'
-URL='https://www.spriters-resource.com/media/assets/14/14793.png?updated=1755472482'
-CHECKSUM='edc356640969383f7fa1cfe19beda3051184c0bbe1fc77bb211de5846923d659'
-SRC.parent.mkdir(parents=True,exist_ok=True)
-if not SRC.is_file():
- for attempt in range(3):
-  try:
-   request=Request(URL,headers={'User-Agent':'Mozilla/5.0','Accept':'image/png,image/*',
-    'Referer':'https://www.spriters-resource.com/'})
-   with urlopen(request,timeout=30) as r:blob=r.read(400000)
-   assert sha256(blob).hexdigest()==CHECKSUM,'Original artwork does not match user library'
-   SRC.write_bytes(blob);break
-  except Exception as exc:
-   if attempt==2:raise RuntimeError('Original Poison sprites unreachable: never produce generic substitute') from exc
-   time.sleep(2*(attempt+1))
-assert sha256(SRC.read_bytes()).hexdigest()==CHECKSUM
-raw=Image.open(SRC).convert('RGB')
-assert raw.size==(800,1221),'Wrong original sprite sheet'
-boxes={
-'acid':[(10,25,35,52),(35,25,65,52),(61,25,94,52),(91,25,120,52)],
-'fog':[(14,824,41,875),(68,824,109,875),(151,824,212,875),(206,824,267,875),
- (252,824,317,875),(306,824,371,875),(368,824,435,875),(460,824,543,875)],
-'jab':[(42,913,85,976),(86,913,125,976),(167,913,203,976),(254,913,300,976),
- (323,913,376,976),(404,913,457,976),(531,913,584,976),(581,913,637,976)],
-'sludge':[(24,265,53,309),(49,265,80,309),(75,265,112,309),(108,265,149,309),
- (145,265,191,309),(182,265,231,309),(262,265,322,309),(359,265,431,309)]}
-BG=(0,128,128)
-def extract(box):
- crop=raw.crop(box);w,h=crop.size
- pix=crop.load();cut=Image.new('RGBA',(w,h));out=cut.load()
- for y in range(h):
-  for x in range(w):
-   rgb=pix[x,y]
-   out[x,y]=(*rgb,255 if max(abs(rgb[j]-BG[j]) for j in range(3))>24 else 0)
- bounds=cut.getchannel('A').getbbox()
- return cut.crop(bounds) if bounds else Image.new('RGBA',(1,1))
-A=[extract(b) for b in boxes['acid']]
-F=[extract(b) for b in boxes['fog']]
-J=[extract(b) for b in boxes['jab']]
-S=[extract(b) for b in boxes['sludge']]
+SRC=DEST/'source/poison-original-crops.webp'
+CHECKSUM='041f779f700d71a475de78aa1b92342a040ff4e52d62314835bc0d67d836c964'
+assert SRC.is_file(), 'Original user-supplied Poison sprite crops must be versioned in GitHub'
+assert sha256(SRC.read_bytes()).hexdigest()==CHECKSUM, 'Source sprite corruption'
+raw=Image.open(SRC).convert('RGBA')
+assert raw.size==(688,272), 'Wrong original pixel sprite source'
+TILE_W,TILE_H=86,68
+def extract(row,col):
+ crop=raw.crop((col*TILE_W,row*TILE_H,(col+1)*TILE_W,(row+1)*TILE_H))
+ bounds=crop.getchannel('A').getbbox()
+ return crop.crop(bounds) if bounds else Image.new('RGBA',(1,1))
+A=[extract(0,i) for i in range(4)]
+F=[extract(1,i) for i in range(8)]
+J=[extract(2,i) for i in range(8)]
+S=[extract(3,i) for i in range(8)]
 W=128
 def put(dst,img,x,y,size=1,alpha=1,flip=False):
  if alpha<=0:return
@@ -106,7 +80,7 @@ def mud(i):
   put(f,S[(k+1)%8],98,72,1,max(.12,1-(i-9)/9))
  return f
 spec={'nevoavenenosa':fog,'poisonjab':jab,'acido':acid,'lamacorrosiva':mud}
-report={'version':'113.0-preview','source':'Original Poison Attack Effects, Pokémon Mystery Dungeon: Explorers of Time / Darkness, sprites ripped by redblueyellow','source_sha256':CHECKSUM,'frame_size':W,'moves':{}}
+report={'version':'113.0-preview','source':'Original cropped Poison Attack Effects from user library; original sprite rip by redblueyellow','source_sha256':CHECKSUM,'frame_size':W,'moves':{}}
 for name,fn in spec.items():
  atlas=Image.new('RGBA',(W*16,W));frames=set();visible=0
  for i in range(16):

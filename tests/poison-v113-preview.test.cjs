@@ -22,10 +22,10 @@ for(let i=0;i<4;i++){
  assert.ok(spec.includes('frames:'+n[i]));assert.ok(spec.includes('preview'));
 }
 const crypto=require('node:crypto');
-const pathOriginal=base+'source/poison-attack-effects-original.png';
+const pathOriginal=base+'source/poison-original-crops.webp';
 const bytes=fs.readFileSync(pathOriginal);
 assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),
- 'edc356640969383f7fa1cfe19beda3051184c0bbe1fc77bb211de5846923d659',
+ '041f779f700d71a475de78aa1b92342a040ff4e52d62314835bc0d67d836c964',
  'SOURCE MUST equal the original from user gallery');
 const sprites=JSON.parse(fs.readFileSync(base+'manifest.json','utf8'));
 for(let i=0;i<4;i++){
