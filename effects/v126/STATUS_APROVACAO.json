@@ -1,0 +1,29 @@
+{
+  "version": "V126",
+  "status": "aprovado",
+  "protected": true,
+  "published": true,
+  "approved_by_user": true,
+  "approved_at": "2026-10-16",
+  "approval_text": "Aprovado",
+  "approved_commit": "448db0e38a14a93130fb9c3a4f3c98e49b1c7a76",
+  "protected_module": "effects/v126/gameplay-ui.js",
+  "features": [
+    "13,15,17,19,21,23,25 e 27 treinadores antes dos respectivos líderes de Kanto",
+    "Toque no cartão do Pokémon abre editor de quatro golpes da espécie selecionada",
+    "Ocultar emojis de placeholder atrás dos sprites",
+    "Otimização leve dos menus Android e catálogo extenso"
+  ],
+  "preserve": [
+    "V125 sprites de itens e TMs",
+    "V124.2 raio vermelho e IA inimiga",
+    "V123 restante da campanha",
+    "Golpes aprovados V95–V122",
+    "Salvamentos existentes"
+  ],
+  "validation": [
+    "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/38955741413",
+    "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/38955741228"
+  ],
+  "note": "Versão aprovada pelo usuário; não modificar código ou aparência V126 sem solicitação posterior. Aprovação não é garantia técnica de 60 FPS em todos os aparelhos."
+}

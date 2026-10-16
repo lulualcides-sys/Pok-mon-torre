@@ -3,7 +3,7 @@
 ## V126 — ginásios longos, equipe clicável e Android (16/10/2026)
 
 - **V125 APROVADA** expressamente pelo usuário no pedido seguinte (“Aprovado…”). Preservar sprites Gen5 da PokéMart, TMs, compras e preços; arquivo `effects/v125/STATUS_APROVACAO.json`.
-- **V126 em implementação, ainda não aprovada visualmente:** 13 treinadores antes de Brock e +2 por líder seguinte (13,15,17,19,21,23,25,27). Não resetar o estágio salvo, não criar outro líder nem mexer na Elite Four. Clique nos cartões dos Pokémon da equipe deve abrir seu editor de quatro golpes (V33.1), preservando TMs, desbloqueio e salvamento. Ocultar apenas o emoji de placeholder por trás de sprite real; corrigir pressão de renderização Android sem tocar em spritesheets, dano, movimentos e V124.2.
+- **V126 APROVADA E PROTEGIDA (16/10/2026):** usuário disse “Aprovado”. Preservar a progressão de **13, 15, 17, 19, 21, 23, 25 e 27 treinadores** antes dos líderes, os cartões de Pokémon que abrem seu editor de quatro golpes V33.1, remoção dos emojis atrás dos sprites reais e otimizações mobile sem mexer nos efeitos aprovados. Versão jogável aprovada no commit `448db0e38a14a93130fb9c3a4f3c98e49b1c7a76`. Registro em `effects/v126/STATUS_APROVACAO.json`; não alterar sem nova solicitação.
 - V126 é um módulo isolado `effects/v126/gameplay-ui.js`, rollback `?ui126=0`, testes `tests/v126-gameplay-ui.test.cjs`; não declarar travamentos físicos inteiramente resolvidos sem usuário testar.
 
 ## V125 — itens e TMs (16/10/2026)

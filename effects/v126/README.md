@@ -14,4 +14,4 @@ Pedido em 16/10/2026 (duas capturas Android): após aprovar V125, aumentar os tr
 
 **Verificação:** `tests/v126-gameplay-ui.test.cjs` valida escada de 13–27, não regredir saves, clique na espécie e editor certo, esconder apenas emoji com sprite, custos de composição no celular, sem alterações no motor de golpes. GitHub Actions e GitHub Pages devem passar antes de declarar publicação.
 
-**Status:** implementada para avaliação do usuário; aguarda aceite visual da V126.
+**Status: APROVADA E PROTEGIDA pelo usuário em 16/10/2026** — confirmação expressa “Aprovado”. Congelar os 13–27 treinadores progressivos, clique no cartão abrindo editor do Pokémon, remoção de emojis atrás do sprite real e otimizações leves Android. Não editar estes recursos sem pedido posterior. Commit jogável aprovado `448db0e38a14a93130fb9c3a4f3c98e49b1c7a76` (testes CI e Pages confirmados). Registro em `effects/v126/STATUS_APROVACAO.json`.
