@@ -748,6 +748,17 @@ try{
  game=game.replace(fireSpriteAnchor,
   String.fromCharCode(10)+code+String.fromCharCode(10)+fireSpriteAnchor);
 }catch(error){console.warn('V120 layout cleanup unavailable; battle gameplay preserved',error);}
+// V121: opponent Fighting Pokemon MUST close distance before physical hits.
+// Fixes Bruno Machamp/Hitmonlee/Hitmonchan/Poliwrath in normal and safe modes.
+// Loaded after V117/V119 AI wrappers and V120 UI; moves approved remain intact.
+try{
+ const file='effects/combat/enemy-fighting-contact-v121.js';
+ const res=await fetch(file+'?build=v121-fighting-enemy-contact',{cache:'no-store'});
+ if(!res.ok)throw Error('V121 enemy contact module HTTP '+res.status);
+ if(!game.includes(fireSpriteAnchor))throw Error('V121 runtime marker absent');
+ game=game.replace(fireSpriteAnchor,
+  String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
+}catch(error){console.error('V121 enemy Fighting melee unavailable',error);}
 // V100: merge bilingual duplicate DISPLAY entries in the four-move
 // editor without changing underlying move keys, equipped saves or VFX.
 try{
