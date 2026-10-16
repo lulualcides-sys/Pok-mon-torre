@@ -159,10 +159,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V104",
+      "version": "V105",
       "frames": 8,
-      "effect_file": "effects/moves/catalog/chute/v104/render.js",
-      "notes": "Usuário rejeitou V103 por parecer projétil; V104 substitui por avanço corporal, impacto LOCAL no alvo e recuo sem sobreposição. Efeito protegido; dano/cooldowns originais."
+      "effect_file": "effects/moves/catalog/chute/v105/render.js",
+      "notes": "Refeito a pedido do usuário: rejeitou visual cartoon V104. Animação pixel-ink de 8/12/16/16 quadros com contorno preto e impacto local; movimentação corporal/HP/recua V104 preservada. Não substituir sem autorização."
     },
     {
       "move": "Golpe de Karatê",
@@ -172,10 +172,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V104",
+      "version": "V105",
       "frames": 12,
-      "effect_file": "effects/moves/catalog/golpedekarate/v104/render.js",
-      "notes": "Usuário rejeitou V103 por parecer projétil; V104 substitui por avanço corporal, impacto LOCAL no alvo e recuo sem sobreposição. Efeito protegido; dano/cooldowns originais."
+      "effect_file": "effects/moves/catalog/golpedekarate/v105/render.js",
+      "notes": "Refeito a pedido do usuário: rejeitou visual cartoon V104. Animação pixel-ink de 8/12/16/16 quadros com contorno preto e impacto local; movimentação corporal/HP/recua V104 preservada. Não substituir sem autorização."
     },
     {
       "move": "Cross Chop",
@@ -185,10 +185,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V104",
+      "version": "V105",
       "frames": 16,
-      "effect_file": "effects/moves/catalog/crosschop/v104/render.js",
-      "notes": "Usuário rejeitou V103 por parecer projétil; V104 substitui por avanço corporal, impacto LOCAL no alvo e recuo sem sobreposição. Efeito protegido; dano/cooldowns originais."
+      "effect_file": "effects/moves/catalog/crosschop/v105/render.js",
+      "notes": "Refeito a pedido do usuário: rejeitou visual cartoon V104. Animação pixel-ink de 8/12/16/16 quadros com contorno preto e impacto local; movimentação corporal/HP/recua V104 preservada. Não substituir sem autorização."
     },
     {
       "move": "Brick Break",
@@ -198,10 +198,10 @@
       "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V104",
+      "version": "V105",
       "frames": 16,
-      "effect_file": "effects/moves/catalog/brickbreak/v104/render.js",
-      "notes": "Usuário rejeitou V103 por parecer projétil; V104 substitui por avanço corporal, impacto LOCAL no alvo e recuo sem sobreposição. Efeito protegido; dano/cooldowns originais."
+      "effect_file": "effects/moves/catalog/brickbreak/v105/render.js",
+      "notes": "Refeito a pedido do usuário: rejeitou visual cartoon V104. Animação pixel-ink de 8/12/16/16 quadros com contorno preto e impacto local; movimentação corporal/HP/recua V104 preservada. Não substituir sem autorização."
     }
   ]
 }

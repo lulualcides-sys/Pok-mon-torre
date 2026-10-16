@@ -365,7 +365,7 @@ window.PokemonTorreFightingV104=fightingV104;
   distance:Math.hypot(engine.enemy.x-engine.player.x,engine.enemy.y-engine.player.y),
   h:engine.h,enemyInv:engine.enemy.inv,
   nativeHits:window.PokemonTorreCombatV47?.().realHits||0,
-  fx:fightingV104.diagnostics(),canvasReady:!!engine.canvas?.isConnected,
+  fx:fightingV104.diagnostics(),pixel:window.PokemonTorreFightingInkV105?.diagnostics()||null,canvasReady:!!engine.canvas?.isConnected,
   running:!!engine.running,safe:new URLSearchParams(location.search).get('safe')==='1'
  });
 })();
