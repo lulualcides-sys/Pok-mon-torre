@@ -8,6 +8,10 @@ on:
       - "effects/moves/v136-flying-pixel/**"
       - "effects/moves/_runtime/pixi-layer.js"
       - "tests/v136-flying-pixel.test.cjs"
+      - "tests/v138-flying-black-contrast.test.cjs"
+      - "tests/v139-flying-visible.test.cjs"
+      - "tests/v139-pixi-stage.test.cjs"
+      - "tests/v140-pixi-bridge.test.cjs"
       - "index.html"
       - ".github/workflows/v136-flying-pixel.yml"
   workflow_dispatch:
