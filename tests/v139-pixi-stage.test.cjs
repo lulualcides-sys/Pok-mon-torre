@@ -57,6 +57,7 @@ const world={window,PIXI,battle,document,performance:{now:()=>now},
  TriAttackVFX:null,Math,console};
 const bridge=vm.runInNewContext(src+'\npixiFX;',world,{timeout:5000});
 assert.ok(bridge);
+assert.equal(typeof window.PokemonTorrePixelFlyingBridge?.mountPixelFlying,'function','shared bridge must be exported outside V35 closure');
 assert.equal(bridge.diagnostics().gpu,false,'legacy helper can be absent before the pixel renderer initializes');
 const spec={name:'Air Slash',frames:16,ms:1510,scale:1.32,particles:false,
  image:{naturalWidth:512,naturalHeight:128}};

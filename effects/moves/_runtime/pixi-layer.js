@@ -640,3 +640,7 @@ const pixiFX=(()=>{
   v86Swaps,
   clearedV84,rendered:{...drawn},error})};
 })();
+window.PokemonTorrePixelFlyingBridge=Object.freeze({
+ mountPixelFlying:pixiFX.mountPixelFlying,
+ diagnostics:pixiFX.diagnostics
+});

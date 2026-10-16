@@ -1,4 +1,4 @@
-/* V137 PIXEL-ART FLYING MOVES — WebGL-only PixiJS + Particle Emitter.
+/* V140 PIXEL-ART FLYING MOVES — WebGL-only PixiJS + Particle Emitter.
  * Activates all four real pixel spritesheets in normal battles; V135 rejected.
  * Sprite atlases: real 12/16-frame nearest-neighbour pixel animation generated
  * by tools/build-v136-flying-pixel.py. No CanvasRenderingContext2D drawing,
@@ -34,7 +34,7 @@ function warning(message){
  if(!note){note=document.createElement('div');note.id='pixelFlyingGpuNotice';
   note.style.cssText='position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);z-index:10000;color:#fff;background:#111c27f0;border:1px solid #f6d88b;border-radius:8px;padding:6px 10px;font:600 11px system-ui;max-width:80%;text-align:center;pointer-events:none';
   arena.appendChild(note);}
- note.textContent='Pixel V139: '+message;
+ note.textContent='Pixel V140: '+message;
 }
 function clearWarning(){
  lastWarning='';
@@ -100,19 +100,22 @@ function mount(engine,fx,spec){
   state.lastMountFailure=spec.name+': spritesheet ainda carregando';
   return false;
  }
- if(typeof pixiFX==='undefined'||typeof pixiFX.mountPixelFlying!=='function'){
-  state.lastMountFailure=spec.name+': PixiJS bridge indisponível';
+ // The shared PixiJS renderer lives inside the V35 IIFE. Access its explicit
+ // battle-scoped window bridge; lexical 'pixiFX' is NOT visible here.
+ const bridge=window.PokemonTorrePixelFlyingBridge;
+ if(!bridge||typeof bridge.mountPixelFlying!=='function'){
+  state.lastMountFailure=spec.name+': ponte PixiJS não instalada';
   loadGpuFallback();
-  warning('carregando motor gráfico PixiJS para '+spec.name);
+  warning('ponte PixiJS indisponível para '+spec.name);
   return false;
  }
- const ok=pixiFX.mountPixelFlying(engine,fx,spec);
+ const ok=bridge.mountPixelFlying(engine,fx,spec);
  if(ok){
   if(!cast.get(fx)){cast.set(fx,true);state.mounted++;}
   state.lastMountFailure=null;
   clearWarning();
  }else{
-  const diagnosis=typeof pixiFX.diagnostics==='function'?pixiFX.diagnostics():null;
+  const diagnosis=typeof bridge.diagnostics==='function'?bridge.diagnostics():null;
   state.lastMountFailure=spec.name+': '+(diagnosis?.error||'GPU stage not ready');
   if(!window.PIXI?.Application)loadGpuFallback();
   if(diagnosis?.error||!window.PIXI?.Application)
