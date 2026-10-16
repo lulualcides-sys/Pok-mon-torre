@@ -15,7 +15,7 @@
 - Arquivada a V124.1 aprovada em `effects/v124/approved/recall-ai-v124-1.js`, **sem alterar seu código**. O jogo normal utiliza V124.2 após a aprovação do usuário para corrigir apenas a sincronia; `?swap124=0` segue como rollback.
 - Regressão `tests/v124-recall-ai.test.cjs`: verifica origem geométrica exata do laser nas duas fases e nos dois lados, treinador único, HP/status/shiny e IA; validar publicação em GitHub Actions antes de declarar concluído.
 
-**Status:** implementada para avaliação visual do usuário; **ainda não aprovada**.
+**Status: APROVADA pelo usuário em 16/10/2026** — “Pode salvar, ficou melhor”. Congelar o visual/tempo/posição da Pokébola e o raio vermelho da V124.2, preservando a troca estratégica do adversário, V124.1 e todas as versões anteriores. Commit de referência `1a095c595fa016f6ef3f8bc4b17237ed190ca305`; testes e GitHub Pages aprovados. Registro `effects/v124/STATUS_V124_2.json`.
 
 
 ## V124.1 — Ajuste visual do treinador (16/10/2026)

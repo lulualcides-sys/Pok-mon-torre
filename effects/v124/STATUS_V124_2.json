@@ -1,8 +1,8 @@
 {
   "version": "V124.2",
-  "status": "pendente_aprovacao_visual",
-  "published": false,
-  "protected": false,
+  "status": "aprovado",
+  "published": true,
+  "protected": true,
   "date": "2026-10-16",
   "reason": "Sincronizar laser vermelho com centro real da Pokébola no recolhimento e envio",
   "changes": [
@@ -15,11 +15,17 @@
     "V124.1 aprovada com ressalvas",
     "V123 aprovada",
     "IA estratégica V124 e HP/status/shiny",
-    "Golpes e efeitos V95–V122"
+    "Golpes e efeitos V95–V122",
+    "V124.2 sincronização da Pokébola e do laser aprovada, não alterar sem novo pedido"
   ],
   "verification": [
     "tests/v124-recall-ai.test.cjs",
     "Github Actions + GitHub Pages"
   ],
-  "approved_by_user": false
+  "approved_by_user": true,
+  "approved_at": "2026-10-16",
+  "approval_text": "Pode salvar, ficou melhor",
+  "approved_commit": "1a095c595fa016f6ef3f8bc4b17237ed190ca305",
+  "last_verified_ci": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/38951593859",
+  "last_verified_deploy": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/38951593865"
 }
