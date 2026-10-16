@@ -5,6 +5,7 @@ on:
     paths:
       - 'effects/v123/**'
       - 'tests/v123-mega.test.cjs'
+      - 'tests/v123-core.test.cjs'
       - 'effects/v119/08-mobile.js'
       - 'effects/ui/battle-proportion-v122.js'
       - 'index.html'
