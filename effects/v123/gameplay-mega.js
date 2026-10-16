@@ -32,7 +32,7 @@ function panel(){
  summary.textContent='Vitórias totais: '+(Number(save.wins)||0)+' (histórico: '+lifetime.wins+') · Derrotas: '+(Number(save.losses)||0)+
  ' · Resets: '+lifetime.resets+' · Elite Four vencida: '+lifetime.eliteVictories+
  ' · Blue derrotado: '+lifetime.championWins+' · Títulos salvos: '+(save.v119LeagueHistory?.championships||0)+
- ' · Maior sequência: '+lifetime.bestStreak+' · Recorde Torre Infinita: '+lifetime.towerRecord+
+ ' · Maior sequência: '+lifetime.bestStreak+' · Recorde Torre Infinita: '+Math.max(lifetime.towerRecord,save.v32?.tower?.best||0)+
  ' · Centro Pokémon: '+lifetime.centers+' · Recompensas: '+lifetime.rewards;
  };
  update();wrap.append(title,summary);
@@ -61,12 +61,9 @@ function panel(){
  });
  if(save.gym>=13)add('tower',row,'♾️ Torre Infinita',()=>{
   if(battle?.active)return;
-  const state=sync(),floor=(state.towerFloor||0)+1;
-  const pool=[3,6,9,18,25,34,59,65,68,94,112,121,130,143,149,150];
-  const ids=[0,1,2].map(n=>pool[(floor*5+n*7)%pool.length]);
-  // Native battle respects normal stats, IV, cooldown and HP. No teleport or instant damage.
-  const enemies=ids.map((id,i)=>({id,level:Math.min(85,32+floor*2+i*2),hp:Math.min(700,90+floor*12+i*10),maxHp:Math.min(700,90+floor*12+i*10)}));
-  state.towerPending=floor;persist();startBattle(enemies,'♾️ TORRE INFINITA · ANDAR '+floor,false);
+  // V32 already implements the full challenge, boss floors and old save.
+  if(typeof v32TowerMenu==='function')v32TowerMenu();
+  else alert('A Torre Infinita existente não está disponível neste modo.');
  });
  host.appendChild(wrap);
 }
@@ -98,18 +95,19 @@ const originalFinish=finishBattle;
 finishBattle=function(win){
  if(!battle?.active)return originalFinish.apply(this,arguments);
  const mode=battle.v123Mode,label=battle.v123Label||'',gym=battle.v123BeforeGym;
+ const wild=!!battle.wild,legacyTower=battle.v32Mode==='tower'||/♾️ TORRE · ANDAR/.test(label);
  const special=battle.v33Type==='lab'||battle.v33Type==='legendary';
- const state=sync(),tower=mode==='tower',before=Number(save.wins)||0;
+ const state=sync(),tower=mode==='tower'||legacyTower,before=Number(save.wins)||0;
  const result=originalFinish.apply(this,arguments);
  if(special)return result;
  if(win){lifetime.wins++;lifetime.streak++;lifetime.bestStreak=Math.max(lifetime.bestStreak,lifetime.streak);
-  if(!tower&&!battle.wild&&gym>=8&&gym<=11){lifetime.eliteVictories++;lifetime.leaders[leaders[gym]]=(lifetime.leaders[leaders[gym]]||0)+1;}
-  if(!tower&&!battle.wild&&gym===12){lifetime.championWins++;lifetime.leaders.Blue=(lifetime.leaders.Blue||0)+1;}
-  if(tower){state.towerFloor=state.towerPending||1;lifetime.towerRecord=Math.max(lifetime.towerRecord,state.towerFloor);delete state.towerPending;}
-  else if(!/LABORATÓRIO|LENDÁRIO/.test(label)&&!battle.wild&&save.gym<=13&&Number(save.wins)>before){
+  if(!tower&&!wild&&gym>=8&&gym<=11){lifetime.eliteVictories++;lifetime.leaders[leaders[gym]]=(lifetime.leaders[leaders[gym]]||0)+1;}
+  if(!tower&&!wild&&gym===12){lifetime.championWins++;lifetime.leaders.Blue=(lifetime.leaders.Blue||0)+1;}
+  if(tower){lifetime.towerRecord=Math.max(lifetime.towerRecord,save.v32?.tower?.best||0);}
+  else if(!/LABORATÓRIO|LENDÁRIO/.test(label)&&!wild&&save.gym<=13&&Number(save.wins)>before){
    state.pendingReward=(state.pendingReward||0)+1;
   }
- }else{lifetime.losses++;lifetime.streak=0;if(tower)delete state.towerPending;}
+ }else{lifetime.losses++;lifetime.streak=0;}
  store();persist();rewards();return result;
 };
 const origRender=render;
