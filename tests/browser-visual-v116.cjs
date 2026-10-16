@@ -22,7 +22,7 @@ const getJson=url=>new Promise((resolve,reject)=>{
   try{resolve(JSON.parse(txt))}catch(e){reject(e)}
  })}).on('error',reject);
 });
-async function test(port,safe){
+async function test(port,safe,preview){
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'poke-pokemon-v116-'));
  const proc=cp.spawn(chrome,[
   '--headless=new','--no-sandbox',
@@ -33,7 +33,7 @@ async function test(port,safe){
   '--remote-debugging-port=0','--window-size=440,940',
   '--user-agent=Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
   '--user-data-dir='+tmp,
-  'http://127.0.0.1:'+port+'/?build=pokemon-v116-preview&pokemon_visual_preview=v116'+(safe?'&safe=1':'')
+  'http://127.0.0.1:'+port+'/?build=pokemon-v116-official'+(preview?'&pokemon_visual_preview=v116':'')+(safe?'&safe=1':'')
  ],{stdio:'ignore'});
  let ws=null,seq=0,pending=new Map();
  try{
@@ -99,7 +99,7 @@ async function test(port,safe){
    results.push(result);
    if(!good)throw Error('V116 real battle visual failed: '+JSON.stringify(result));
   }
-  console.log('PASS V116 '+(safe?'SAFE':'NORMAL')+' original sprite preview: '+JSON.stringify(results));
+  console.log('PASS V116 '+(safe?'SAFE':'NORMAL')+(preview?' PREVIEW-ALIAS':' OFFICIAL')+' original sprite approval: '+JSON.stringify(results));
  }finally{
   ws?.close();proc.kill('SIGKILL');
   await pause(120);
@@ -108,6 +108,7 @@ async function test(port,safe){
 }
 (async()=>{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
- try{const port=server.address().port;await test(port,false);await test(port,true)}
+ try{const port=server.address().port;await test(port,false,false);await test(port,true,false);
+  await test(port,false,true);await test(port,true,true)}
  finally{server.close()}
 })().catch(e=>{console.error('FAIL V116 global Pokemon Chromium',e.stack||e);process.exitCode=1;server.close()});

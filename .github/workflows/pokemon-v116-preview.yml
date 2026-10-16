@@ -1,4 +1,4 @@
-name: V116 Pokemon size shiny and recoil - opt-in battle preview
+name: V116 Pokemon size shiny and recoil - official approval
 on:
   push:
     branches: [main]
@@ -39,5 +39,5 @@ jobs:
           python tools/build-v112-poison-preview.py
           python tools/build-v113-poison-preview.py
           python tools/build-v114-ground.py
-      - name: Run actual Android-sized battle - normal and safe
+      - name: Test official clean URL and historical preview on Android Chromium, normal and safe
         run: node tests/browser-visual-v116.cjs

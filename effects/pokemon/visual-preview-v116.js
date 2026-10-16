@@ -1,12 +1,14 @@
-/* Pokémon Torre V116 — OPT-IN preview only (?pokemon_visual_preview=v116)
+/* Pokémon Torre V116 — OFFICIAL after user approved the battle preview
  * Existing source sprites unchanged. Size balance, authentic shiny entrance
  * timing, and short damage recoil applied to sprite draw calls ONLY.
  * V95 Mewtwo and V115 global approved finish are left intact.
  */
 (()=>{
  'use strict';
- const preview=new URLSearchParams(location.search).get('pokemon_visual_preview')==='v116';
- if(!preview||typeof BattleEngine!=='function'||!BattleEngine.prototype.drawMon||
+ const qs=new URLSearchParams(location.search);
+ const selected=qs.get('pokemon_visual_preview');
+ const approved=qs.get('pokemon_polish')!=='off'&&(selected===null||selected==='v116');
+ if(!approved||typeof BattleEngine!=='function'||!BattleEngine.prototype.drawMon||
     window.PokemonTorreVisualPreviewV116?.installed)return;
  const small=new Set([1,4,7,10,11,13,14,16,19,21,23,25,27,29,32,35,39,43,46,48,50,52,56,60,63,66,69,72,74,79,81,84,90,92,96,98,100,102,104,109,116,118,120,129,132,133,138,140,147,151]);
  const large=new Set([3,6,9,18,24,28,31,34,36,38,40,45,49,55,57,59,62,65,67,68,71,73,76,78,80,82,85,87,89,91,94,97,99,101,103,105,106,107,110,112,115,117,119,121,123,124,125,126,127,128,130,131,134,135,136,137,139,141,142,143,144,145,146,148,149]);
@@ -94,7 +96,7 @@
   });
  }
  window.PokemonTorreVisualPreviewV116=Object.freeze({
-  installed:true,previewOnly:true,version:'116.0-preview',
+  installed:true,previewOnly:false,approved:true,version:'116.0-official',
   scaleFor,
   diagnostics:()=>({...metrics,species:[...metrics.species].slice(0,60),
    sizeClasses:[...metrics.sizeClasses],errors:metrics.errors.slice(-4)})

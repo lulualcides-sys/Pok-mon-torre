@@ -49,8 +49,8 @@
     "commit_confirmed": "a961cc8fa89dd956e9f96d8a0c039b89325d9084"
   },
   "v116_preview": {
-    "version": "V116-preview",
-    "status": "não aprovado; demonstração somente na batalha com ?pokemon_visual_preview=v116",
+    "version": "V116",
+    "status": "aprovado e promovido à batalha oficial; ?pokemon_visual_preview=off permite desligar só V116",
     "request": "Tamanho proporcional entre espécies, melhorar shinies e reação física ao receber dano; reutilizar sprites existentes",
     "implementation": "effects/pokemon/visual-preview-v116.js",
     "rules": [
@@ -60,6 +60,20 @@
       "Recuo estritamente visual, sem mudança de hitboxes ou HP",
       "Estrelas nativas aproximadamente 1.5 segundos",
       "Teste em batalha antes de promoção"
+    ],
+    "approval": "aprovado",
+    "approved_at": "2026-10-16",
+    "user_feedback": "Pode salvar ficou bom",
+    "protect": true,
+    "official": true,
+    "preview_comparison_url": "?pokemon_visual_preview=v116",
+    "disable_for_comparison": "?pokemon_visual_preview=off",
+    "unchanged": [
+      "Mewtwo V95",
+      "Acabamento V115",
+      "Arena V98",
+      "Golpes STATUS_APROVADOS.json",
+      "Colisões, HP, dano, cooldown, frames dos sprites originais"
     ]
   }
 }

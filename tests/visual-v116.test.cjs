@@ -1,5 +1,5 @@
 'use strict';
-/* V116 is opt-in; confirm official V115 is untouched and sprite-only effects. */
+/* V116 approved official: normal URLs ON, comparison OFF, V95 and V115 unchanged. */
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const source=fs.readFileSync('effects/pokemon/visual-preview-v116.js','utf8');
 const index=fs.readFileSync('index.html','utf8');
@@ -7,7 +7,9 @@ const standard=JSON.parse(fs.readFileSync('effects/pokemon/VISUAL_STANDARD.json'
 assert.equal(standard.global_rollout.approval,'aprovado');
 assert.equal(standard.global_rollout.protect,true);
 assert.equal(standard.pilot.approval,'aprovado');
-assert.ok(index.includes("get('pokemon_visual_preview')==='v116'"));
+assert.ok(index.includes("get('pokemon_visual_preview')===null"));
+assert.equal(standard.v116_preview.approval,'aprovado');
+assert.equal(standard.v116_preview.protect,true);
 assert.ok(source.includes('V95 Mewtwo'));
 assert.ok(!source.includes('BattleEngine.prototype.useMove'));
 assert.ok(!source.includes('hitTarget('));
@@ -32,13 +34,17 @@ function setup(query){
  vm.runInNewContext(source,sandbox,{filename:'visual-preview-v116.js'});
  return {window,ctx,native,calls,engine:new BattleEngine(),data,battle};
 }
-let off=setup('');
-assert.equal(off.window.PokemonTorreVisualPreviewV116,undefined,'V116 must not run in official game');
+let off=setup('?pokemon_visual_preview=off');
+assert.equal(off.window.PokemonTorreVisualPreviewV116,undefined,'V116 disabled only when explicitly requested');
 off.engine.drawMon(off.engine.player,25,false,1000);
 assert.equal(off.calls.at(-1).args[4],140-12,'baseline original untouched');
-let p=setup('?pokemon_visual_preview=v116');
+let p=setup('');
 const api=p.window.PokemonTorreVisualPreviewV116;
-assert.equal(api.previewOnly,true);
+assert.equal(api.previewOnly,false);
+assert.equal(api.approved,true);
+assert.equal(api.version,'116.0-official');
+assert.equal(setup('?pokemon_visual_preview=v116').window.PokemonTorreVisualPreviewV116?.approved,true);
+assert.equal(setup('?pokemon_polish=off').window.PokemonTorreVisualPreviewV116,undefined);
 assert.equal(api.scaleFor(25),.865);assert.equal(api.scaleFor(95),1.27);
 assert.equal(api.scaleFor(150),1);
 const pik=p.engine.player;
@@ -74,4 +80,4 @@ assert.equal(api.diagnostics().shinyEntranceCorrections,1);
 assert.ok(api.diagnostics().species.includes(25)&&api.diagnostics().species.includes(95));
 assert.ok(api.diagnostics().sizeClasses.length>=2);
 assert.equal(api.diagnostics().errors.length,0);
-console.log('PASS V116 preview: official V115 protected, scales preserve feet, shiny palette untouched and 1.5s star duration, damage recoil sprite only; Mewtwo original preserved');
+console.log('PASS V116 OFFICIAL: V115 protected, scales preserve feet, shiny palette untouched and 1.5s star duration, damage recoil sprite only; Mewtwo original preserved');
