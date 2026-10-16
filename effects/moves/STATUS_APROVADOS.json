@@ -428,6 +428,78 @@
       "version": "V45 (arte prévia aprovada)",
       "accepted_at": "2026-10-16",
       "notes": "Usuário confirmou aprovação em 16/10/2026; preservar animação existente, não alterar durante a prévia de Withdraw, Pistola d'Água, Bolhas e Mergulho."
+    },
+    {
+      "move": "Withdraw",
+      "aliases": [
+        "Retrair",
+        "Retração"
+      ],
+      "status": "aprovado",
+      "protect": true,
+      "version": "V128",
+      "accepted_at": "2026-10-16",
+      "frames": 12,
+      "effect_file": "effects/moves/v128-water-preview/withdraw/index.js",
+      "renderer": "effects/moves/v128-water-preview/runtime.js",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "feedback_usuario": "Ficou muito bom",
+      "rollback_parameter": "?water128=0",
+      "notes": "V128 mesmo visual da prévia aprovada; preservar animação e regras originais de combate."
+    },
+    {
+      "move": "Pistola d’Água",
+      "aliases": [
+        "Pistola d'Água",
+        "Water Gun",
+        "Jato de Água"
+      ],
+      "status": "aprovado",
+      "protect": true,
+      "version": "V128",
+      "accepted_at": "2026-10-16",
+      "frames": 16,
+      "effect_file": "effects/moves/v128-water-preview/water-gun/index.js",
+      "renderer": "effects/moves/v128-water-preview/runtime.js",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "feedback_usuario": "Ficou muito bom",
+      "rollback_parameter": "?water128=0",
+      "notes": "V128 mesmo visual da prévia aprovada; preservar animação e regras originais de combate."
+    },
+    {
+      "move": "Bolhas",
+      "aliases": [
+        "Bubble",
+        "Bubbles"
+      ],
+      "status": "aprovado",
+      "protect": true,
+      "version": "V128",
+      "accepted_at": "2026-10-16",
+      "frames": 16,
+      "effect_file": "effects/moves/v128-water-preview/bubbles/index.js",
+      "renderer": "effects/moves/v128-water-preview/runtime.js",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "feedback_usuario": "Ficou muito bom",
+      "rollback_parameter": "?water128=0",
+      "notes": "V128 mesmo visual da prévia aprovada; preservar animação e regras originais de combate."
+    },
+    {
+      "move": "Mergulho",
+      "aliases": [
+        "Dive"
+      ],
+      "status": "aprovado",
+      "protect": true,
+      "version": "V128",
+      "accepted_at": "2026-10-16",
+      "frames": 16,
+      "effect_file": "effects/moves/v128-water-preview/dive/index.js",
+      "renderer": "effects/moves/v128-water-preview/runtime.js",
+      "aprovacao_visual": "aprovado_pelo_usuario",
+      "feedback_usuario": "Ficou muito bom",
+      "rollback_parameter": "?water128=0",
+      "notes": "V128 mesmo visual da prévia aprovada; preservar animação e regras originais de combate."
     }
   ]
 }

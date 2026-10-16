@@ -1,5 +1,11 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V128 APROVADA E PROTEGIDA (16/10/2026)
+
+O usuário testou a prévia e respondeu: **“Ficou muito bom”**. Promover exatamente as animações sem alterar os arquivos de arte de **Withdraw, Pistola d’Água, Bolhas e Mergulho**. Ativar na URL normal e manter `?water128=0` para visuais antigos e `?safe=1` para fallback seguro. Cauda de Água e Pulso de Água seguem previamente aprovados, protegidos e intactos. Registro `effects/moves/STATUS_APROVADOS.json` (36 protegidos) e `effects/v127/edited-moves.json` (68 fichas; 32 históricos) sincronizados com vistos ✓. Não editar outros golpes aprovados, combate, HP, energia, recarga, menus, arena ou salvos. Só afirmar publicação após CI/deploy.
+
+
+
 ## V127 — conferência dos golpes editados e vistos (16/10/2026)
 
 - Usuário: “Já separou os golpes que editei e colocou o visto? Por que tinha alguns que não tinha”. Auditoria encontrou que V122 mostrava "+" apenas no botão de batalha; V33.1 não mostrava marca de aprovação. Corrigir em **ambos os menus** via V127.

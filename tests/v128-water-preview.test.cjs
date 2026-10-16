@@ -23,13 +23,13 @@ class Engine {
  }
  draw(now){}
 }
-const location={search:'?battle_preview=water128'};
+const location={search:''};
 const window={PokemonTorreV360Paint:()=>false};
 const context={window,location,battle,BattleEngine:Engine,URLSearchParams,
  current:()=>({}),skillSet:()=>skills,performance:{now:()=>1000},console};
 for(const code of text)vm.runInNewContext(code,context);
 const preview=window.PokemonTorreWaterV128;
-assert.ok(preview?.installed&&preview.previewOnly);
+assert.ok(preview?.installed&&preview.official&&!preview.previewOnly);
 assert.equal(preview.diagnostics().registered.length,4);
 const engine=new Engine();
 for(let i=0;i<4;i++){
@@ -46,11 +46,14 @@ assert.equal(st.casts,4);assert.ok(st.frames>=21);
 assert.deepEqual([...st.approvedUnchanged],['Cauda de Água','Pulso de Água']);
 assert.ok(!text.join('\n').includes('.png')&&!text.join('\n').includes('document.createElement'),'no PNG images or new Atelier');
 const original=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-for(const name of ['Cauda de Água','Pulso de Água']){
+for(const name of ['Cauda de Água','Pulso de Água','Withdraw','Pistola d’Água','Bolhas','Mergulho']){
  const row=original.moves.find(x=>x.move===name);
  assert.equal(row?.status,'aprovado');assert.equal(row?.protect,true);
 }
 const index=fs.readFileSync('index.html','utf8');
-assert.ok(index.includes("get('battle_preview')==='water128'"));
+assert.ok(index.includes("get('water128')!=='0'"));
 assert.ok(index.includes('effects/moves/v128-water-preview/runtime.js'));
-console.log('PASS V128: 4 separate animated painters, 12/16 phases, no PNG, protected approved water effects, isolated game preview.');
+const rollback={window:{},location:{search:'?water128=0'},battle,BattleEngine:Engine,URLSearchParams,current:()=>({}),skillSet:()=>skills,performance:{now:()=>1000},console};
+vm.runInNewContext(text[0],rollback);
+assert.equal(rollback.window.PokemonTorreWaterV128,undefined,'rollback disables official V128');
+console.log('PASS V128: four official 12/16-frame approved moves, old water attacks protected, original fallback available.');

@@ -1,0 +1,14 @@
+{
+  "move": "Bolhas",
+  "aliases": [
+    "Bubble",
+    "Bubbles"
+  ],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v128-water-preview/bubbles/index.js",
+  "reference": "STATUS_APROVADOS.json",
+  "scope": "Mesmo efeito animado da prévia aprovada, sem mudanças visuais",
+  "approval_confirmed_at": "2026-10-16",
+  "approval_confirmation": "Ficou muito bom"
+}

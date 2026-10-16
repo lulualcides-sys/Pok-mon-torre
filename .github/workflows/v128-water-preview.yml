@@ -1,4 +1,4 @@
-name: V128 Water Preview — four original moves
+name: V128 Approved Water — four original moves
 on:
   push:
     paths:
@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify visual preview + native protections
+      - name: Verify approved water moves + native protections
         run: |
           node tests/v128-water-preview.test.cjs
           node tests/v127-move-marks.test.cjs

@@ -1,8 +1,8 @@
-/* V128: opt-in water preview; entirely animated vector strokes in battle Canvas.
+/* V128 APPROVED: exact user-approved water animations made official in normal battle.
    No static PNG, no CSS animation, no external editor. Never alters approved moves. */
 (()=>{
 'use strict';
-if(new URLSearchParams(location.search).get('battle_preview')!=='water128')return;
+if(new URLSearchParams(location.search).get('water128')==='0'||new URLSearchParams(location.search).get('safe')==='1')return;
 if(window.PokemonTorreWaterV128?.installed)return;
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
@@ -38,7 +38,7 @@ function register(spec){
  byKey.set(clean.key,clean);
  for(const alias of [clean.key,...(clean.aliases||[])]){const k=norm(alias);if(paints.has(k)&&paints.get(k)!==clean)throw Error('V128 duplicate name '+k);paints.set(k,clean);}
 }
-window.PokemonTorreWaterV128=Object.freeze({installed:true,previewOnly:true,register,
+window.PokemonTorreWaterV128=Object.freeze({installed:true,official:true,previewOnly:false,register,
  diagnostics:()=>({...stats,registered:[...byKey.keys()],approvedUnchanged:['Cauda de Água','Pulso de Água']})});
 if(typeof BattleEngine!=='function')return;
 const prior=window.PokemonTorreV360Paint;
@@ -57,7 +57,7 @@ window.PokemonTorreV360Paint=function(ctx,fx,now,e){
  ctx.save();
  try{
   spec.draw(ctx,{...brush,t,hit,world,from,to,frame,now,e,fx,frameCount:spec.frames});
-  stats.frames++;stats.last={name:spec.key,frame:frame+1,total:spec.frames,hitAt:hit,previewOnly:true};
+  stats.frames++;stats.last={name:spec.key,frame:frame+1,total:spec.frames,hitAt:hit,previewOnly:false};
  }catch(error){stats.errors.push(String(error));return typeof prior==='function'?prior.apply(this,arguments):false;}
  finally{ctx.restore();}
  return true;
@@ -77,7 +77,7 @@ BattleEngine.prototype.useMove=function(slot){
   const fx=(this.v359Attacks||[]).find(f=>!before.has(f)&&norm(f?.move?.name)===norm(m.name));
   if(fx){
    // Native V359 still schedules the damage once at fx.times[0].
-   // Stretch only the opt-in artwork and this hit clock; leave amount/cost/CD intact.
+   // Preserve approved artwork and this hit clock; leave amount/cost/CD intact.
    fx.duration=spec.ms;fx.end=fx.at+spec.ms;
   }
  }
@@ -96,7 +96,7 @@ BattleEngine.prototype.draw=function(now){
  try{spec.draw(g,{...brush,t,now,e:this,world:clamp((this.player?.r||34)/35,.72,1.25),
   from:[this.player.x,this.player.y-this.h*.13],to:[this.player.x,this.player.y-this.h*.13],
   frame:Math.min(spec.frames-1,Math.floor(t*spec.frames)),frameCount:spec.frames});
-  stats.frames++;stats.last={name:spec.key,frame:Math.floor(t*spec.frames)+1,total:spec.frames,previewOnly:true};
+  stats.frames++;stats.last={name:spec.key,frame:Math.floor(t*spec.frames)+1,total:spec.frames,previewOnly:false};
  }catch(error){stats.errors.push(String(error));}finally{g.restore();}
 };
 })();

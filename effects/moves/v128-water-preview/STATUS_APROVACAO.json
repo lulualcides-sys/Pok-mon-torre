@@ -1,0 +1,37 @@
+{
+  "version": "V128",
+  "status": "aprovado",
+  "protected": true,
+  "approved_at": "2026-10-16",
+  "approval_text": "Ficou muito bom",
+  "official_default": true,
+  "rollback_parameter": "?water128=0",
+  "safe_mode": "?safe=1",
+  "visual_files_changed": false,
+  "moves": [
+    {
+      "move": "Withdraw",
+      "frames": 12,
+      "visual_file": "effects/moves/v128-water-preview/withdraw/index.js"
+    },
+    {
+      "move": "Pistola d’Água",
+      "frames": 16,
+      "visual_file": "effects/moves/v128-water-preview/water-gun/index.js"
+    },
+    {
+      "move": "Bolhas",
+      "frames": 16,
+      "visual_file": "effects/moves/v128-water-preview/bubbles/index.js"
+    },
+    {
+      "move": "Mergulho",
+      "frames": 16,
+      "visual_file": "effects/moves/v128-water-preview/dive/index.js"
+    }
+  ],
+  "previous_approved_preserved": [
+    "Cauda de Água",
+    "Pulso de Água"
+  ]
+}

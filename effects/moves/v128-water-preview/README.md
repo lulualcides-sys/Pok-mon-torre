@@ -1,11 +1,14 @@
-# V128 — prévia isolada dos quatro golpes de Água (16/10/2026)
+# V128 — APROVADA E OFICIAL (16/10/2026)
 
-Link: https://lulualcides-sys.github.io/Pok-mon-torre/?battle_preview=water128
+Usuário aprovou os 4 golpes da prévia jogável respondendo **“Ficou muito bom”**.
 
-Quatro equipados na imagem do usuário: **Withdraw, Pistola d'Água, Bolhas, Mergulho**. Módulos separados `withdraw/`, `water-gun/`, `bubbles/` e `dive/`, além de `runtime.js`.
+**Withdraw** (12 quadros), **Pistola d’Água**, **Bolhas** e **Mergulho** (16 quadros) estão oficiais na URL sem parâmetros, com **os mesmos arquivos de animação da prévia, sem redesenho**.
 
-Apenas a rota `?battle_preview=water128` ativa estas novas animações; o jogo normal preserva as versões anteriores. Efeitos desenhados frame a frame no Canvas de batalha existente com contornos escuros, cores e transparência: **nenhuma PNG estática nem animação CSS**. O motor atual continua utilizando PixiJS para outros efeitos. A animação de água utiliza 12/16 fases dinâmicas; os quatro são visualmente distintos e o Mergulho mostra submersão/retorno, mas não modifica a lógica antiga para dois turnos. Dano nativo único V359, energia, cooldown, salvamentos e demais animações oficiais preservados. Para ataques V359 a prévia alarga apenas o tempo visual e reposiciona junto o evento nativo de impacto para sincronismo.
+- Normal: https://lulualcides-sys.github.io/Pok-mon-torre/
+- Visual anterior (rollback): https://lulualcides-sys.github.io/Pok-mon-torre/?water128=0
+- Modo seguro sem V128: `?safe=1`
+- `?battle_preview=water128` mantém a compatibilidade; a arte agora é a oficial.
 
-**Ainda não aprovado:** aguardar avaliação visual antes de promover os quatro à URL normal. Cauda de Água e Pulso de Água já aprovados devem permanecer intocados. Nenhum Ateliê e nenhuma foto.
+A animação usa Canvas 2D dinâmico com traço escuro, sem PNG estático nem CSS, com dano V359 sincronizado ao impacto. Withdraw é defesa; Mergulho tem o visual da submersão, sem mudar a mecânica atual para dois turnos. Não mudar dano, energia, recarga, status, save, arena, campanha ou outras animações.
 
-Desativar a prévia removendo o parâmetro. Uma falha no módulo deixa as animações anteriores intactas.
+**Cauda de Água e Pulso de Água seguem aprovados e protegidos**, sem alterar suas artes. Não alterar nenhum dos seis golpes sem nova autorização.
