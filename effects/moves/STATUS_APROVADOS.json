@@ -159,12 +159,12 @@
       "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V108",
+      "version": "V109",
       "frames": 8,
-      "effect_file": "effects/moves/v108-fighting/real-pixel-sprites.js",
-      "notes": "V108 novo pixel art a partir do sprite original da galeria, animado com Pillow + PixiJS/Canvas drawImage, sem vídeo, traço CSS ou projétil; mantendo V104 corpo a corpo.",
+      "effect_file": "effects/moves/v109-fighting/real-pixel-sprites.js",
+      "notes": "Impacto V109 original GBA em pixel, sem braços/pés flutuantes e sem vídeo; alcance, dano, recuo V104 mantidos.",
       "v107_review": "V107 mantido somente no Cross Chop",
-      "visual_source": "GBA Ruby/Sapphire original do usuário: recortes de mãos, impacto e rocha; sapato/pé criado em pixel art; 8/12/16 quadros"
+      "visual_source": "Sprite de impacto/fragmentos originais da galeria GBA do usuário, quadros Pillow."
     },
     {
       "move": "Golpe de Karatê",
@@ -174,12 +174,12 @@
       "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V108",
+      "version": "V109",
       "frames": 12,
-      "effect_file": "effects/moves/v108-fighting/real-pixel-sprites.js",
-      "notes": "V108 novo pixel art a partir do sprite original da galeria, animado com Pillow + PixiJS/Canvas drawImage, sem vídeo, traço CSS ou projétil; mantendo V104 corpo a corpo.",
+      "effect_file": "effects/moves/v109-fighting/real-pixel-sprites.js",
+      "notes": "Impacto V109 original GBA em pixel, sem braços/pés flutuantes e sem vídeo; alcance, dano, recuo V104 mantidos.",
       "v107_review": "V107 mantido somente no Cross Chop",
-      "visual_source": "GBA Ruby/Sapphire original do usuário: recortes de mãos, impacto e rocha; sapato/pé criado em pixel art; 8/12/16 quadros"
+      "visual_source": "Sprite de impacto/fragmentos originais da galeria GBA do usuário, quadros Pillow."
     },
     {
       "move": "Cross Chop",
@@ -189,10 +189,10 @@
       "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V108",
+      "version": "V109",
       "frames": 16,
       "effect_file": "effects/moves/v107-fighting/real-sprites.js",
-      "notes": "Usuário aprovou visual vermelho V107; preservado totalmente, só escala a 48% perto do tamanho do Pokémon. Aproximação/dano/recuo V104 preservados.",
+      "notes": "Preservar X vermelho V107; só reduzir 70% do tamanho original (fator 0.30).",
       "v107_review": "V107 mantido somente no Cross Chop",
       "visual_source": "V107 sprite x-scissor vermelho existente, dimensão reduzida"
     },
@@ -204,12 +204,12 @@
       "status": "em_teste",
       "protect": true,
       "accepted_at": "2026-10-15",
-      "version": "V108",
+      "version": "V109",
       "frames": 16,
-      "effect_file": "effects/moves/v108-fighting/real-pixel-sprites.js",
-      "notes": "V108 novo pixel art a partir do sprite original da galeria, animado com Pillow + PixiJS/Canvas drawImage, sem vídeo, traço CSS ou projétil; mantendo V104 corpo a corpo.",
+      "effect_file": "effects/moves/v109-fighting/real-pixel-sprites.js",
+      "notes": "Impacto V109 original GBA em pixel, sem braços/pés flutuantes e sem vídeo; alcance, dano, recuo V104 mantidos.",
       "v107_review": "V107 mantido somente no Cross Chop",
-      "visual_source": "GBA Ruby/Sapphire original do usuário: recortes de mãos, impacto e rocha; sapato/pé criado em pixel art; 8/12/16 quadros"
+      "visual_source": "Sprite de impacto/fragmentos originais da galeria GBA do usuário, quadros Pillow."
     }
   ]
 }

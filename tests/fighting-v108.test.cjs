@@ -12,10 +12,10 @@ assert.equal(src.toString('ascii',1,4),'PNG');assert.ok(src.length>400);
 const reg=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
 for(const name of ['Chute','Golpe de Karatê','Cross Chop','Brick Break']){
  const r=reg.moves.find(m=>m.move===name);
- assert.equal(r.version,'V108');assert.equal(r.status,'em_teste');assert.equal(r.protect,true);
+ assert.ok(['V108','V109'].includes(r.version));assert.equal(r.status,'em_teste');assert.equal(r.protect,true);
 }
 const v107=fs.readFileSync('effects/moves/v107-fighting/real-sprites.js','utf8');
-assert.ok(v107.includes("name==='cross'?.48:1"),'Cross only scale adjusted, same authored V107 red X');
+assert.ok(v107.includes("name==='cross'?.30:1"),'Cross only scale adjusted, same authored V107 red X');
 const specs={chute:8,karate:12,brick:16};
 for(const [name,n] of Object.entries(specs)){
  const file=root+'sheets/'+name+'.webp';

@@ -1,0 +1,39 @@
+name: V109 Fighting — sprite impacts & 70% smaller Cross Chop
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/build-v109-fighting.py'
+      - 'effects/moves/v109-fighting/**'
+      - 'effects/moves/v107-fighting/real-sprites.js'
+      - 'tests/fighting-v109.test.cjs'
+      - 'tests/browser-v109-fast.cjs'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --quiet Pillow
+      - name: Bake lossless GBA impact sprites
+        run: |
+          python tools/build-v107-fighting.py
+          python tools/build-v108-fighting.py
+          python tools/build-v109-fighting.py
+      - run: node tests/fighting-v109.test.cjs
+      - run: node tests/fighting-v108.test.cjs
+      - run: node tests/fighting-v104.test.cjs
+      - run: node tests/stadium-arena-v97.test.cjs
+      - run: node tests/wide-stadium-v98.test.cjs
+      - name: Verify six melee attacks on Chromium mobile normal and safe
+        run: node tests/browser-v109-fast.cjs

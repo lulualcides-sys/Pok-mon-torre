@@ -11,7 +11,7 @@ assert.ok(index.includes('v104-real-contact'));
 for(const [name,n] of Object.entries(spec)){
  const row=approved.moves.find(x=>x.move.toLowerCase()==={
   chute:'chute',karate:'golpe de karatê',cross:'cross chop',brick:'brick break'}[name]);
- assert.ok(['V107','V108'].includes(row?.version));assert.equal(row?.status,'em_teste');
+ assert.ok(['V107','V108','V109'].includes(row?.version));assert.equal(row?.status,'em_teste');
  const webp=root+'sheets/'+name+'.webp';
  assert.ok(fs.existsSync(webp),'missing REAL generated illustrated spritesheet '+webp);
  const raw=fs.readFileSync(webp);

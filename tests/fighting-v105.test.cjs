@@ -19,7 +19,7 @@ const skills=['Chute','Golpe de Karatê','Cross Chop','Brick Break'];
 for(const name of skills){
  const row=approved.moves.find(x=>x.move===name);
  assert.ok(['aprovado','em_teste'].includes(row?.status));assert.equal(row?.protect,true);
- assert.ok(['V105','V106','V107','V108'].includes(row?.version));
+ assert.ok(['V105','V106','V107','V108','V109'].includes(row?.version));
 }
 const decorators=new Map(),counters={tiles:0,images:0,opaque:0,dark:0,unsmoothed:0};
 const document={createElement(name){
