@@ -83,8 +83,12 @@ async function test(port,safe,preview){
   const results=[];
   for(const id of pokemon){
    const setup=await evaluate("(()=>window.PokemonTorreLocalCombatTestV47.prepareVisualV116("+id+","+(id===6)+",false))()");
-   await pause(420);
-   const state=await evaluate("(()=>({global:window.PokemonTorrePokemonPolishV115?.diagnostics(),mewtwo:window.PokemonTorrePokemonPolishV95?.diagnostics(),sprite:window.PokemonTorreSpriteAuditV117?.diagnostics(),shiny:window.PokemonTorreShinyV117?.diagnostics(),mobile:window.PokemonTorreMobileV117?.diagnostics(),arena:!!window.PokemonTorreArenaWideV98?.enabled}))()");
+   let state=null;
+   for(let tries=0;tries<50;tries++){
+    await pause(130);
+    state=await evaluate("(()=>({global:window.PokemonTorrePokemonPolishV115?.diagnostics(),mewtwo:window.PokemonTorrePokemonPolishV95?.diagnostics(),sprite:window.PokemonTorreSpriteAuditV117?.diagnostics(),shiny:window.PokemonTorreShinyV117?.diagnostics(),mobile:window.PokemonTorreMobileV117?.diagnostics(),arena:!!window.PokemonTorreArenaWideV98?.enabled}))()");
+    if(id===150?(state?.mewtwo?.polished>0):(state?.global?.polishedIds?.includes(String(id))))break;
+   }
    const seen=id===150?(state.mewtwo?.polished>0):state.global?.polishedIds?.includes(String(id));
    const sprite=state.sprite;
    const okay=setup?.active&&seen&&state.arena&&sprite?.registeredSpecies===151&&sprite?.observedSpecies>=1;
