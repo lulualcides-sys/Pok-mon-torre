@@ -1,0 +1,26 @@
+name: V105 fast real Android fighting smoke
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/moves/v105-fighting/**'
+      - 'effects/moves/catalog/*/v105/**'
+      - 'effects/moves/v104-fighting/**'
+      - 'tests/browser-v105-fast.cjs'
+      - 'index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  chromium:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm installed Chromium
+        run: which google-chrome || which google-chrome-stable || which chromium
+      - name: Six physical fighting moves in normal and safe mobile Chrome
+        run: node tests/browser-v105-fast.cjs
