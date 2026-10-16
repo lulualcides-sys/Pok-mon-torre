@@ -84,13 +84,13 @@ async function test(port,safe){
    for(let attempt=0;attempt<25;attempt++){
     await pause(105);
     state=await evaluate("(()=>({v115:window.PokemonTorrePokemonPolishV115?.diagnostics(),v95:window.PokemonTorrePokemonPolishV95?.diagnostics(),active:!!document.querySelector('canvas'),safe:new URLSearchParams(location.search).get('safe')==='1'}))()");
-    if(id===150?(state?.v95?.polished>0):(state?.v115?.seenIds?.includes(String(id))))break;
+    if(id===150?(state?.v95?.polished>0):(state?.v115?.polishedIds?.includes(String(id))))break;
    }
-   const seen=id===150?(state?.v95?.polished>0):(state?.v115?.seenIds?.includes(String(id)));
+   const seen=id===150?(state?.v95?.polished>0):(state?.v115?.polishedIds?.includes(String(id)));
    const passed=!!start?.started&&seen&&state?.active&&state?.safe===safe
       &&state?.v115?.cacheBytes<=24*1024*1024&&state?.v115?.failed===0;
    results.push({id,ok:passed,visible:state?.active,processed:seen,mewtwoV95:state?.v95?.polished,
-     visualFrames:state?.v115?.framesGenerated,cacheBytes:state?.v115?.cacheBytes,
+     visualFrames:state?.v115?.framesGenerated,polished:state?.v115?.polished,skipped:state?.v115?.skipped,draws:state?.v115?.draws,seen:state?.v115?.seenIds,polishedIds:state?.v115?.polishedIds,cacheBytes:state?.v115?.cacheBytes,
      cacheHit:state?.v115?.cacheHits,safe:state?.safe,error:state?.v115?.lastError});
    if(!passed)throw Error('V115 global pokemon visual in combat failed: '+JSON.stringify(results.at(-1)));
   }

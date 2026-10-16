@@ -15,7 +15,7 @@
  });
  const stats={draws:0,polished:0,framesGenerated:0,cacheHits:0,
   skipped:0,failed:0,evictions:0,lastPokemonId:null,lastAssetSource:null,lastError:null};
- const seen=new Set();
+ const seen=new Set(), polishedSeen=new Set();
  const caches=new WeakMap(), lru=new Map(); // bounded across all species/images
  let cacheBytes=0;
  function remember(cache,key,result){
@@ -125,7 +125,10 @@
   try{
    const value=native.call(ctx,art.canvas,dx-mx,dy-my,
     dw+2*mx,dh+2*my);
-   stats.polished++;stats.lastAssetSource=String(image?.src||'embedded-frame').slice(0,160);
+   stats.polished++;
+   if(polishedSeen.size<2000)polishedSeen.add(stats.lastPokemonId);
+   stats.lastPolishedId=stats.lastPokemonId;
+   stats.lastAssetSource=String(image?.src||'embedded-frame').slice(0,160);
    return value;
   }finally{ctx.imageSmoothingEnabled=old;}
  }
@@ -159,7 +162,7 @@
  };
  window.PokemonTorrePokemonPolishV115=Object.freeze({
   installed:true,version:'115.0',config:setting,
-  diagnostics:()=>({...stats,cacheBytes,cachedFrames:lru.size,speciesSeen:seen.size,seenIds:[...seen].slice(0,48)}),
+  diagnostics:()=>({...stats,cacheBytes,cachedFrames:lru.size,speciesSeen:seen.size,seenIds:[...seen].slice(0,48),polishedSpecies:polishedSeen.size,polishedIds:[...polishedSeen].slice(0,48)}),
   scopeDescription:'Acabamento V95 para todos os IDs válidos, exceto Mewtwo (V95 original protegido)'
  });
 })();
