@@ -1,0 +1,40 @@
+name: V136 Pixel Flying — GPU spritesheets, no Canvas2D
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tools/build-v136-flying-pixel.py"
+      - "tools/test-v136-flying-art.py"
+      - "effects/moves/v136-flying-pixel/**"
+      - "effects/moves/_runtime/pixi-layer.js"
+      - "tests/v136-flying-pixel.test.cjs"
+      - "index.html"
+      - ".github/workflows/v136-flying-pixel.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pixel-gpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Produce true pixel-art spritesheets
+        run: |
+          python -m pip install --quiet Pillow
+          python tools/build-v136-flying-pixel.py
+          python tools/test-v136-flying-art.py
+      - name: Assert no Canvas 2D for four moves and battle native hit logic
+        run: |
+          node tests/v136-flying-pixel.test.cjs
+          node tests/v135-flying-preview.test.cjs
+          node tests/v134-ground-performance.test.cjs
+          node tests/v132-ground-approved.test.cjs
+          node tests/v128-water-preview.test.cjs
+          node tests/v127-move-marks.test.cjs

@@ -1,0 +1,19 @@
+{
+  "name": "Roost",
+  "technology": [
+    "LibreSprite-compatible frame editing",
+    "PixiJS/WebGL",
+    "PixiJS Particle Emitter"
+  ],
+  "pixelArt": true,
+  "animation": "spritesheet",
+  "frameWidth": 64,
+  "frameHeight": 64,
+  "columns": 8,
+  "frames": 12,
+  "milliseconds": 1580,
+  "textureFiltering": "nearest",
+  "background": "transparent",
+  "antiAlias": false,
+  "format": "pixel-art PNG spritesheet (animated frames, not single still)"
+}

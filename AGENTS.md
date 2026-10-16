@@ -1,5 +1,12 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V136 — substituição da prévia Voadores por pixel art real (16/10/2026)
+
+Usuário rejeitou os quatro efeitos V135 de Canvas2D e proibiu Canvas2D para novos/retrabalhados golpes. A V136 usa animação **pixel-art por spritesheets de 12/16 quadros** (atlas PNG animado por quadros, não imagem estática) e renderização exclusivamente em **PixiJS WebGL** pelo mesmo `pixiFX` da arena, com `@pixi/particle-emitter` integrado na GPU; nenhum efeito dos 4 é desenhado no contexto Canvas2D. Pixel-art criada como frames indexados gerados por `tools/build-v136-flying-pixel.py`, arquivos prontos para importação e refinamento no **LibreSprite** (binário LibreSprite não está instalado neste ambiente, não alegar execução dele). Ativos `effects/moves/v136-flying-pixel/{roost,gust,air-slash,peck}/spritesheet.png` produzidos no deploy; fonte de arte reproduzível no Git, meta.json por golpe, texturas com nearest-neighbour, contorno escuro. Roost 12 quadros, Rajada 16, Air Slash 16, Bicada 12. Não criar segundo Canvas WebGL; usar `pixiFX.mountPixelFlying`, atualizar e destruir no ticker Pixi existente, limitar partículas e desligar fora da batalha.
+
+**Prévia opt-in:** `?flying136=pixel`. Não ativar V135 `?flying135=preview` para isto. Os quatro só recebem esses efeitos quando parâmetro V136 está presente; normal e todo legado aprovado permanecem iguais. Roost cura somente via motor nativo, não render; ataques acertam só pelo V359 no relógio original sincronizado. Não alterar outros golpes, slots, HP, energia, cooldown, salvos, estatísticas, arena ou menus. Testes CI de sprite pixel, Pixi bridge e regressões; aguardar aprovação visual para promoção ao jogo normal.
+
+
 ## V135 — PRÉVIA JOGÁVEL dos quatro golpes Voadores (16/10/2026)
 
 O usuário selecionou no editor de Mewtwo **Roost, Rajada, Air Slash e Bicada**, solicitando o mesmo padrão de animação cinematográfica usada na V133/V134 Terra. Os quatro módulos novos ficam em `effects/moves/v135-flying-preview/` separados. Link: `?flying135=preview`. Ainda **não aprovados**: esperar teste em batalha pelo usuário antes de promover à URL normal. Versões anteriores de Rajada (marcada EDITADO) e Air Slash previamente editado continuam preservadas na URL normal.

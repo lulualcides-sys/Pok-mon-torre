@@ -42,6 +42,8 @@ jobs:
           python tools/build-v112-poison-preview.py
           python tools/build-v113-poison-preview.py
           python tools/build-v114-ground.py
+          python tools/build-v136-flying-pixel.py
+          python tools/test-v136-flying-art.py
           node tests/poison-v111.test.cjs
           node tests/poison-v112-preview.test.cjs
           node tests/poison-v113-preview.test.cjs
@@ -60,6 +62,7 @@ jobs:
           node tests/v133-ground-preview.test.cjs
           node tests/v134-ground-performance.test.cjs
           node tests/v135-flying-preview.test.cjs
+          node tests/v136-flying-pixel.test.cjs
           node tests/rain-v118.test.cjs
           node tests/patch-v117.test.cjs
           node tests/battle-layout-v120.test.cjs

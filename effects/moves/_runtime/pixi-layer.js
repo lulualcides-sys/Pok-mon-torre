@@ -3,6 +3,9 @@
 const pixiFX=(()=>{
  const themes={normal:[0xf9d997,0xffffff,0xa1886b],fire:[0xff602b,0xfff2b0,0xdf3725],water:[0x36aef9,0xffffff,0x386de1],grass:[0x8be566,0xffffff,0x3b9c67],ice:[0x80e7ff,0xffffff,0x528de4],electric:[0xffe75d,0xffffff,0xe59e2b],psychic:[0xd68cff,0xffffff,0x8354da],ghost:[0x8f7ddc,0xdecaff,0x30346e],dark:[0x8c75a8,0xd6c8f2,0x302247],fighting:[0xe9a17c,0xffe9c2,0xb64e39],rock:[0xbda27d,0xffecd0,0x796044],ground:[0xcfa970,0xffead6,0x81613e],steel:[0x9ac5df,0xffffff,0x607e99],bug:[0x9cce64,0xf7ffd5,0x557f38],flying:[0xa7dfff,0xffffff,0x5b83bd],dragon:[0x9884e9,0xffe2fa,0x4f49ba],poison:[0xb875d9,0xffd7ff,0x813f91],fairy:[0xf79ed8,0xffffff,0xc16b9d]};
  const effects=new Map(),drawn=Object.create(null);
+ // V136: GPU-only pixel-art spritesheet battle casts; reuse the SAME WebGL Pixi application.
+ const pixelFlying=new Map(),pixelAtlasCache=new WeakMap();
+ let pixelFlyingFrames=0,pixelFlyingStarts=0,pixelFlyingFailures=0;
  // V89: missing old V72/V78 WebP must fall back to existing catalog art.
  const missingLegacyAtlasesV89=new Set();
  let app=null,owner=null,atlas=null,cache=new Map(),frames=0,emitterCount=0,error='',lastRect='';
@@ -88,7 +91,98 @@ const pixiFX=(()=>{
   if(!battleViewReady()&&(app||activeV84||activeV86||hazeActiveV85||effects.size))
    reset();
  }
+
+ // V136 PIXEL ONLY. Texture frames are authored 64x64 indexed sprite-pixels
+ // from real transparent 12/16-frame PNG atlases, not drawn with Canvas2D.
+ // Existing pixiFX app owns the GPU ticker and battle-scoped WebGL overlay.
+ function destroyPixelFlying(fx){
+  const o=pixelFlying.get(fx);if(!o)return;
+  pixelFlying.delete(fx);
+  try{if(o.emitter){o.emitter.emit=false;o.emitter.cleanup();o.emitter.destroy();}}catch(e){}
+  try{o.root?.destroy({children:true});}catch(e){}
+ }
+ function mountPixelFlying(engine,fx,spec){
+  if(!fx||!spec?.image?.naturalWidth||!window.PIXI)return false;
+  if(pixelFlying.has(fx))return true;
+  if(!ensure(engine))return false;
+  // Suppress any previous Pixi semantic effect attached to this same cast.
+  if(effects.has(fx)){dispose(effects.get(fx));effects.delete(fx);}
+  try{
+   let entry=pixelAtlasCache.get(spec.image);
+   if(!entry){
+    const base=PIXI.BaseTexture.from(spec.image);
+    base.scaleMode=PIXI.SCALE_MODES.NEAREST;
+    if(!base.valid)return false;
+    const frames=[];
+    for(let i=0;i<spec.frames;i++){
+     const rect=new PIXI.Rectangle((i%8)*64,Math.floor(i/8)*64,64,64);
+     frames.push(new PIXI.Texture(base,rect));
+    }
+    entry={base,frames};pixelAtlasCache.set(spec.image,entry);
+   }
+   const root=new PIXI.Container(),sprite=new PIXI.Sprite(entry.frames[0]);
+   sprite.anchor.set(.5);sprite.roundPixels=true;
+   sprite.scale.set(spec.scale||1.18);
+   root.addChild(sprite);app.stage.addChild(root);
+   // The emitter uses a 1x1 nearest-neighbour PIXI pixel, never Canvas.
+   // Low density, no second ticker/RAF, same Particle Emitter V5 already used.
+   let emitter=null;
+   if(spec.particles&&window.PIXI?.particles?.Emitter){
+    try{
+     emitter=new PIXI.particles.Emitter(root,{
+      lifetime:{min:.13,max:.31},frequency:.075,spawnChance:1,
+      particlesPerWave:1,emitterLifetime:-1,maxParticles:12,
+      pos:{x:0,y:0},addAtBack:true,
+      behaviors:[
+       {type:'alpha',config:{alpha:{list:[{value:.68,time:0},{value:0,time:1}]}}},
+       {type:'scale',config:{scale:{list:[{value:2.4,time:0},{value:.4,time:1}]}}},
+       {type:'moveSpeed',config:{speed:{list:[{value:48,time:0},{value:10,time:1}],isStepped:false}}},
+       {type:'rotationStatic',config:{min:0,max:360}},
+       {type:'spawnShape',config:{type:'point',data:{x:0,y:0}}},
+       {type:'textureSingle',config:{texture:PIXI.Texture.WHITE}}
+      ]
+     });
+     emitter.emit=false;
+    }catch(e){emitter=null;}
+   }
+   pixelFlying.set(fx,{fx,spec,root,sprite,frames:entry.frames,emitter,engine,battle});
+   pixelFlyingStarts++;
+   if(!app.ticker.started)app.ticker.start();
+   app.view.style.display='block';
+   return true;
+  }catch(e){pixelFlyingFailures++;error='Pixel Flying V136: '+String(e?.message||e);return false;}
+ }
+ function updatePixelFlying(now,dt){
+  if(!pixelFlying.size)return;
+  for(const [fx,o] of pixelFlying){
+   if(!battle?.active||o.battle!==battle||!o.engine?.canvas?.isConnected||
+       now>=fx.end||now<fx.at-40){destroyPixelFlying(fx);continue;}
+   const t=Math.min(1,Math.max(0,(now-fx.at)/Math.max(1,fx.duration||o.spec.ms)));
+   const frame=Math.min(o.frames.length-1,Math.floor(t*o.frames.length));
+   o.sprite.texture=o.frames[frame];
+   const A=fx.from||[o.engine.player.x,o.engine.player.y],
+         B=fx.to||[o.engine.enemy.x,o.engine.enemy.y];
+   // All motion uses the existing GPU stage. No path/stroke/arc/Canvas2D.
+   const u=Math.min(1,Math.max(0,(t-.10)/.57));
+   const smooth=u*u*(3-2*u);
+   const key=o.spec.name;
+   let x=A[0]+(B[0]-A[0])*smooth,y=A[1]+(B[1]-A[1])*smooth;
+   if(key==='Roost'){x=A[0];y=A[1]+4-7*Math.sin(Math.PI*t);}
+   if(key==='Bicada'){const v=Math.min(1,Math.max(0,(t-.17)/.47));x=A[0]+(B[0]-A[0])*v;y=A[1]+(B[1]-A[1])*v;}
+   o.root.position.set(Math.round(x),Math.round(y));
+   o.sprite.alpha=Math.min(1,t*10,Math.max(0,(1-t)*7));
+   o.sprite.rotation=key==='Roost'?0:Math.atan2(B[1]-A[1],B[0]-A[0])*.16;
+   if(o.emitter){
+    // Following its parent root; no particle resources survive after the cast.
+    o.emitter.emit=t>.26&&t<.70;
+    o.emitter.update(dt);
+   }
+   pixelFlyingFrames++;
+  }
+ }
+
  function reset(){
+  for(const fx of [...pixelFlying.keys()])destroyPixelFlying(fx);
   if(combatSheet){
    try{combatSheet.emitter?.destroy();combatSheet.root.destroy({children:true})}catch(e){}
    combatSheet=null;
@@ -268,6 +362,7 @@ const pixiFX=(()=>{
  function tick(){
   if(!battleViewReady()){reset();return;}
   const now=performance.now(),dt=Math.min(.05,Math.max(.001,app.ticker.deltaMS/1000));position(owner);
+  updatePixelFlying(now,dt);
   for(const [f,e] of effects){
    if(e.v72&&e.failed){
     missingLegacyAtlasesV89.add(e.key||'');
@@ -288,9 +383,11 @@ const pixiFX=(()=>{
    try{combatSheet.emitter?.destroy();combatSheet.root.destroy({children:true})}catch(e){}
    combatSheet=null;
   }
-  if(!effects.size&&!combatSheet&&!activeV84&&!activeV86&&!hazeActiveV85){app.ticker.stop();app.view.style.display='none';}
+  if(!effects.size&&!pixelFlying.size&&!combatSheet&&!activeV84&&!activeV86&&!hazeActiveV85){app.ticker.stop();app.view.style.display='none';}
  }
  function paint(f,engine,key){
+  // V136 pixel textures own these casts; do not overlay generic Pixi scenes.
+  if(pixelFlying.has(f))return true;
   // The named V86 cast already renders a single authored WebGL layer.
   // Never create a legacy ice/grassy bolt underneath, even from stale queues.
   if(typeof referenceFourV86!=='undefined'&&
@@ -490,10 +587,11 @@ const pixiFX=(()=>{
   }catch(e){error='V107 Pixi illustrated sprite '+String(e?.message||e);return false;}
  }
  return {ensure,paint,paintFightingSheet,clearAll:reset,onBattleUiChange,isBattleViewReady:battleViewReady,
+  mountPixelFlying,
   beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,
   beginV86,frameV86,diagnostics:()=>({version:'35.85',gpu:hasGPU(),ready:!!app,
   sprites:!!atlas,active:effects.size,registered:registry.size,
-  emitterInstances:emitterCount,frames,combatSprites:combatFrames,combatEmitterInstances:combatEmitterCount,combatSpriteActive:!!combatSheet,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:typeof grassFourV84?.source==='function'?grassFourV84.source(activeV84.key):'gpu-generated'}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
+  emitterInstances:emitterCount,frames,pixelFlyingActive:pixelFlying.size,pixelFlyingFrames,pixelFlyingStarts,pixelFlyingFailures,combatSprites:combatFrames,combatEmitterInstances:combatEmitterCount,combatSpriteActive:!!combatSheet,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:typeof grassFourV84?.source==='function'?grassFourV84.source(activeV84.key):'gpu-generated'}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
   hazeActive:!!hazeActiveV85,hazeReady:!!hazeActiveV85?.ready,
   v86Active:!!activeV86,v86Name:activeV86?.spec?.name||null,
   v86Ready:!!activeV86?.ready,

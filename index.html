@@ -999,6 +999,20 @@ if(new URLSearchParams(location.search).get('flying135')==='preview'&&
   game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+flyCode.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V135 preview not loaded; approved effects preserved',error);}
 }
+// V136 — ALL-PIXEL WebGL preview. Rejected V135 Canvas2D remains disabled.
+// Loads 12/16-frame nearest-neighbour spritesheets and renders with the
+// EXISTING PixiJS overlay + @pixi/particle-emitter, never Canvas2D for these moves.
+if(new URLSearchParams(location.search).get('flying136')==='pixel'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const script='effects/moves/v136-flying-pixel/runtime.js';
+  const response=await fetch(script+'?build=v136-flying-pixel-art',{cache:'no-store'});
+  if(!response.ok)throw Error('V136 '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V136 existing battle anchor absent');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(err){console.warn('V136 pixel spritesheets unavailable, old approved effects preserved',err);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
