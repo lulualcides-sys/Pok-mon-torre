@@ -89,7 +89,7 @@ window.PokemonTorrePoisonV111=(()=>{
    return oldProjectile.apply(this,arguments);
   };
  return {known,diagnostics:()=>({
-  version:'111.0',loaded,ready:Object.keys(specs).filter(ready),
+  version:'111.0',loaded:loads,ready:Object.keys(specs).filter(ready),
   draws:{...draws},last:{...last},impacts,coveredShots,
   source:'original Pokemon GBA gallery (Pillow WebP)',errors:errors.slice(-8)
  })};
