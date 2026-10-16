@@ -737,6 +737,17 @@ if(new URLSearchParams(location.search).get('kanto119')==='1'){
    String.fromCharCode(10)+code.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.error('V119 preview disabled; V117 official preserved',error)}
 }
+// V120: photographed mobile battle layout repair (UI ONLY).
+// Keep native leader roster and all approved attack / Pokemon sprites untouched.
+try{
+ const file='effects/ui/battle-layout-v120.js';
+ const response=await fetch(file+'?build=v120-mobile-blaine-fix',{cache:'no-store'});
+ if(!response.ok)throw Error('V120 layout HTTP '+response.status);
+ const code=await response.text();
+ if(!game.includes(fireSpriteAnchor))throw Error('V120 injection anchor missing');
+ game=game.replace(fireSpriteAnchor,
+  String.fromCharCode(10)+code+String.fromCharCode(10)+fireSpriteAnchor);
+}catch(error){console.warn('V120 layout cleanup unavailable; battle gameplay preserved',error);}
 // V100: merge bilingual duplicate DISPLAY entries in the four-move
 // editor without changing underlying move keys, equipped saves or VFX.
 try{
