@@ -629,8 +629,8 @@ if(new URLSearchParams(location.search).get('battle_preview')==='poison113'){
   game=game.replace(fireSpriteAnchor,'\n'+parts.join('\n')+'\n'+fireSpriteAnchor);
  }catch(error){console.error('V113 authentic preview unavailable; official effects untouched',error);}
 }
-// V114: THREE approved Poison original animations (small scale reduction)
-// go to NORMAL battle. Ground-only sludge is opt-in until user approves.
+// V114: FOUR approved original Poison sprites go to NORMAL battle.
+// Three minimal scale changes + the exact ground-only mud approved by player.
 // Historical V112/V113 preview links remain untouched and fully archived.
 const v114mode=new URLSearchParams(location.search).get('battle_preview');
 if(v114mode===null||v114mode==='poison114'){
@@ -643,7 +643,7 @@ if(v114mode===null||v114mode==='poison114'){
    'effects/moves/v114-poison/lamacorrosiva/spec.js'
   ];
   const code=await Promise.all(files.map(async path=>{
-   const r=await fetch(path+'?build=v114-approved-three-ground-preview',{cache:'no-store'});
+   const r=await fetch(path+'?build=v114-four-official-poison',{cache:'no-store'});
    if(!r.ok)throw Error('V114 missing: '+path+' HTTP '+r.status);
    return r.text();
   }));

@@ -1,10 +1,10 @@
-/* V114 official: three user-approved original Mystery Dungeon Poison effects
- * with small scale-only reductions. Ground-only sludge is opt-in preview.
+/* V114 official: four approved original Mystery Dungeon Poison effects.
+ * Three slight scale reductions; original ground-only sludge is now approved.
  * V111 approved sprites, damage, energy, cooldown and V98 arena untouched.
  */
-/* Pokémon Torre V114 — four EQUIPPED Poison attacks, opt-in battle preview.
+/* Pokémon Torre V114 — four EQUIPPED Poison attacks, officially approved.
  * Built from sixteen-frame pixel-art WebP sheets taken from the user's
- * original Pokémon Mystery Dungeon Poison Attack Effects gallery. Native V359 owns real HP timing. No official move is replaced.
+ * original Pokémon Mystery Dungeon Poison Attack Effects gallery. Native V359 owns real HP timing. No other move is replaced.
  * The PixiJS GPU sheet renderer is preferred; Canvas drawImage is the safe
  * pixel-perfect fallback only, never hand-drawn runtime Canvas shapes.
  */
@@ -13,13 +13,13 @@ window.PokemonTorrePoisonPreviewV114=(()=>{
  const QUERY='poison114';
  const previewMode=new URLSearchParams(location.search).get('battle_preview');
  const preview=previewMode===QUERY;
- const enabled=preview||previewMode===null; // Normal battles get only the THREE user-approved moves.
- const official=new Set(['nevoavenenosa','poisonjab','acido']);
+ const enabled=preview||previewMode===null; // All four user-approved moves are official; other preview modes stay isolated.
+ const official=new Set(['nevoavenenosa','poisonjab','acido','lamacorrosiva']);
  const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
   .toLowerCase().replace(/[^a-z0-9]/g,'');
  const allowed=new Set(['nevoavenenosa','poisonjab','acido','lamacorrosiva']);
  const registered=new Map(),images=new Map(),contact=new WeakMap(),stats={casts:0,draws:0,pixi:0,fallback:0,
-  hiddenGeneric:0,approaches:0,retreats:0,minContactDistance:null,previewOnly:enabled,damageModified:false,last:null,errors:[]};
+  hiddenGeneric:0,approaches:0,retreats:0,minContactDistance:null,previewOnly:preview,damageModified:false,last:null,errors:[]};
  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
  const ease=v=>{v=clamp(v);return v*v*(3-2*v);};
  const lerp=(a,b,t)=>a+(b-a)*t;

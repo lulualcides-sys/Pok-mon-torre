@@ -1,6 +1,6 @@
 'use strict';
-/* V114: official three Poison sprites are minimally smaller; mud is under
- * the opponent and only in the battle preview. No V111/V98 regression.
+/* V114: all four original Poison sprites are approved; flat mud is official.
+ * No V111/V98 regression.
  */
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const names=['Névoa Venenosa','Poison Jab','Ácido','Lama Corrosiva'];
@@ -10,13 +10,13 @@ const index=fs.readFileSync('index.html','utf8');
 assert.match(index,/v114mode===null\|\|v114mode==='poison114'/);
 const approvals=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
 assert.equal(approvals.moves.filter(x=>x.version==='V111'&&x.protect&&x.aprovacao_visual==='salvo_com_ressalvas').length,4);
-for(const name of names.slice(0,3)){
+for(const name of names){
  const entry=approvals.moves.find(x=>x.move===name);
  assert.ok(entry,'Missing approved move '+name);
  assert.equal(entry.status,'aprovado');assert.equal(entry.protect,true);
  assert.equal(entry.version,'V114');
 }
-assert.ok(!approvals.moves.some(x=>x.move==='Lama Corrosiva'&&x.status==='aprovado'),'Mud must NOT be approved');
+assert.ok(approvals.moves.some(x=>x.move==='Lama Corrosiva'&&x.status==='aprovado'&&x.protect===true),'Mud must be saved and protected');
 for(let i=0;i<4;i++){
  assert.ok(fs.readFileSync(path+ids[i]+'/spec.js','utf8').includes('frames:16'));
  const source=i<3?'effects/moves/v113-poison-preview/':'effects/moves/v114-poison/';
@@ -76,18 +76,12 @@ function smoke(query,readyCount,numberOfMoves){
    assert.ok(last.height<last.width*.48,'Mud is a FLAT ground puddle');
   }
  }
- if(numberOfMoves===3){
-  const old=fallback.length;eng.useMove(3);
-  assert.equal(eng.projectiles.at(-1).__v114PreviewHidden,undefined,'Ground preview never activates on official');
-  window.PokemonTorreV360Paint(g,{move:skills[3],at:100,duration:1000},450,eng);
-  assert.equal(fallback.length,old+1,'Mud official visual preserved');
- }
  const fx=api.diagnostics();
  assert.equal(fx.draws,6*numberOfMoves);
  assert.equal(fx.damageModified,false);
- console.log('PASS V114 '+(query||'NORMAL')+' '+numberOfMoves+' independent original-sprite moves, mud ground preview isolated, HP untouched');
+ console.log('PASS V114 '+(query||'NORMAL')+' '+numberOfMoves+' independent original-sprite moves, ground-level mud official, HP untouched');
 }
-smoke('',3,3);
-smoke('?safe=1',3,3);
+smoke('',4,4);
+smoke('?safe=1',4,4);
 smoke('?battle_preview=poison114',4,4);
 smoke('?battle_preview=poison114&safe=1',4,4);

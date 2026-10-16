@@ -73,13 +73,13 @@ async function test(port,safe,preview){
   let ready=null;
   for(let n=0;n<150;n++){
    ready=await evaluate("(()=>({boot:!!document.getElementById('main'),preview:window.PokemonTorrePoisonPreviewV114?.diagnostics()?.version,ready:window.PokemonTorrePoisonPreviewV114?.diagnostics()?.ready?.length,qa:typeof window.PokemonTorreLocalCombatTestV47?.castPoisonPreviewV114==='function',arena:!!window.PokemonTorreArenaWideV98?.enabled}))()");
-   if(ready?.boot&&ready.preview==='114.0'&&ready.ready===(preview?4:3)&&ready.qa&&ready.arena)break;
+   if(ready?.boot&&ready.preview==='114.0'&&ready.ready===4&&ready.qa&&ready.arena)break;
    await pause(170);
   }
-  if(!ready?.qa||ready?.ready!==(preview?4:3)||!ready?.arena)
+  if(!ready?.qa||ready?.ready!==4||!ready?.arena)
    throw Error('V114 pixel sprite preview not ready: '+JSON.stringify(ready));
   const names=['Névoa Venenosa','Poison Jab','Ácido','Lama Corrosiva'];
-  for(let i=0;i<(preview?4:3);i++){
+  for(let i=0;i<4;i++){
    let ok=false,report=null;
    for(let attempt=1;attempt<=3;attempt++){
     const before=await evaluate("(()=>window.PokemonTorreLocalCombatTestV47.castPoisonPreviewV114("+i+"))()");
@@ -99,7 +99,7 @@ async function test(port,safe,preview){
    console.log('V114 POISON PREVIEW '+(safe?'SAFE':'NORMAL')+' '+JSON.stringify(report));
    if(!ok)throw Error('V114 Poison preview battle failed: '+names[i]);
   }
-  console.log('PASS V114 preview: four Poison sprites in actual battle, native HP, normal/safe, V98');
+  console.log('PASS V114 official: four Poison sprites in actual battle, native HP, normal/safe, V98');
  }finally{
   ws?.close();proc.kill('SIGKILL');
   await pause(120);
