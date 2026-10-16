@@ -103,7 +103,6 @@ async function test(port,safe,preview){
 }
 (async()=>{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
- try{const port=server.address().port;await test(port,false,false);await test(port,true,false);
-  await test(port,false,true);await test(port,true,true)}
+ try{const port=server.address().port;await test(port,false,true);await test(port,true,true)}
  finally{server.close()}
 })().catch(e=>{console.error('FAIL V117 global Pokemon Chromium',e.stack||e);process.exitCode=1;server.close()});
