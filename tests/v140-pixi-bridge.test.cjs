@@ -10,7 +10,7 @@ const html=fs.readFileSync('index.html','utf8');
 assert.doesNotThrow(()=>new vm.Script(pixi));
 assert.doesNotThrow(()=>new vm.Script(flying));
 assert.ok(html.indexOf('effects/moves/_runtime/pixi-layer.js')<html.indexOf("effects/moves/v136-flying-pixel/runtime.js"));
-assert.match(html,/build=v140-pixi-bridge/);
+assert.match(html,/build=v141-flying-color/);
 const window={PokemonTorreV360Paint:()=>false};
 const stageScope={window,Map,WeakMap,console};
 vm.runInNewContext('(function(){\n'+pixi+'\n})();',stageScope,{timeout:3000});

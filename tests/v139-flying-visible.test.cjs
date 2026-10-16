@@ -20,7 +20,7 @@ assert.match(runtime,/pixelFlyingLastIssue|diagnosis\?\.error/);
 assert.match(pixi,/WebGL não está disponível/,'Pixi stage must use WebGL not Canvas renderer');
 assert.match(pixi,/requirePixelWebGL&&window\.PIXI\?\.Application/,'legacy WebGL helper bypass must be Flying-only');
 assert.match(pixi,/pixelFlyingLastIssue/);
-assert.match(index,/build=v140-pixi-bridge/,'browser must fetch the corrected runtime');
+assert.match(index,/build=v141-flying-color/,'browser must fetch the corrected runtime');
 assert.doesNotMatch(runtime,/getContext\(|drawImage\(|requestAnimationFrame\(|\.fillRect\(/,'four effects can never use Canvas2D');
 const names=['Roost','Rajada','Air Slash','Bicada'];
 const skills=names.map(name=>({name,cost:12,power:name==='Roost'?0:20,cd:1600}));
