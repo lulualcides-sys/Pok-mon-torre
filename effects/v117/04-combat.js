@@ -23,7 +23,7 @@ const prevDraw=BattleEngine.prototype.drawMon;
 BattleEngine.prototype.drawMon=function(actor,id,enemy,now){
  const recent=actor?._v117Hit;
  const elapsed=(this.time||0)-(recent?.at??-9999);
- if(!recent||elapsed<0||elapsed>.24||!this.ctx)return prevDraw.apply(this,arguments);
+ if(+id===150||!recent||elapsed<0||elapsed>.24||!this.ctx)return prevDraw.apply(this,arguments);
  // Use the preexisting hurt sprite, adding only an extra few pixel steps:
  // physical hits recoil horizontally; special energy hits lift subtly.
  // Original actor x/y, HP and invincibility never change.
@@ -74,6 +74,22 @@ BattleEngine.prototype.draw=function(now){
  paint(this.enemy,typeof foe==='function'?foe():null);
  return result;
 };
+// Localhost-only test hook: obtains the game's actual engine in its own scope.
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname||'')&&
+   window.PokemonTorreLocalCombatTestV47){
+ const local=window.PokemonTorreLocalCombatTestV47;
+ local.verifyHitV117=()=>{
+  try{
+   local.prepareVisualV116(25,false,false);
+   const runtime=typeof engine!=='undefined'?engine:null;
+   if(!runtime?.enemy)return {error:'game engine unavailable inside QA scope'};
+   runtime.enemy.inv=0;
+   const before=foe().hp;
+   runtime.hitTarget('enemy','fighting',5);
+   return {hpBefore:before,hpAfter:foe().hp,diagnostics:{...hits}};
+  }catch(error){return {error:String(error),stack:String(error?.stack||'')}}
+ };
+}
 window.PokemonTorreCombatV117=Object.freeze({
  installed:true,previewOnly:true,diagnostics:()=>({...hits,originalHitOwner:true,hpUnmodified:true})
 });
