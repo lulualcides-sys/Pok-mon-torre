@@ -860,6 +860,20 @@ if(new URLSearchParams(location.search).get('mart125')!=='0'){
    String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V125 sprite UI unavailable; native shop retained',error);}
 }
+// V126: 13–27 trainers before each Kanto leader, tap Pokemon for 4 moves,
+// remove emojis behind loaded sprites, reduce Android modal/catalogue paint cost.
+// Protected V125 items, V124.2 red recall and all V95–V123 moves untouched.
+// ?ui126=0 disables only this patch for comparison.
+if(new URLSearchParams(location.search).get('ui126')!=='0'){
+ try{
+  const file='effects/v126/gameplay-ui.js';
+  const response=await fetch(file+'?build=v126-kanto-team-performance',{cache:'no-store'});
+  if(!response.ok)throw Error('V126 HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V126 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.error('V126 unavailable; V125 and original campaign preserved',error);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{

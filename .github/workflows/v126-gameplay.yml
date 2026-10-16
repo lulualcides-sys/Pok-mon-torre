@@ -1,0 +1,30 @@
+name: V126 Gym ladder, direct move summary and mobile UI
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'effects/v126/**'
+      - 'tests/v126-gameplay-ui.test.cjs'
+      - 'index.html'
+      - '.github/workflows/v126-gameplay.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v126:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate gym counts, Pokemon click/summary and Android UI
+        run: |
+          node --check effects/v126/gameplay-ui.js
+          node tests/v126-gameplay-ui.test.cjs
+      - name: Regression of V125 Pokemart, V124 recall and V123 campaign
+        run: |
+          node tests/v125-pokemart-sprites.test.cjs
+          node tests/v124-recall-ai.test.cjs
+          node tests/v123-core.test.cjs

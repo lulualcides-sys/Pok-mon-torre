@@ -1,5 +1,11 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V126 — ginásios longos, equipe clicável e Android (16/10/2026)
+
+- **V125 APROVADA** expressamente pelo usuário no pedido seguinte (“Aprovado…”). Preservar sprites Gen5 da PokéMart, TMs, compras e preços; arquivo `effects/v125/STATUS_APROVACAO.json`.
+- **V126 em implementação, ainda não aprovada visualmente:** 13 treinadores antes de Brock e +2 por líder seguinte (13,15,17,19,21,23,25,27). Não resetar o estágio salvo, não criar outro líder nem mexer na Elite Four. Clique nos cartões dos Pokémon da equipe deve abrir seu editor de quatro golpes (V33.1), preservando TMs, desbloqueio e salvamento. Ocultar apenas o emoji de placeholder por trás de sprite real; corrigir pressão de renderização Android sem tocar em spritesheets, dano, movimentos e V124.2.
+- V126 é um módulo isolado `effects/v126/gameplay-ui.js`, rollback `?ui126=0`, testes `tests/v126-gameplay-ui.test.cjs`; não declarar travamentos físicos inteiramente resolvidos sem usuário testar.
+
 ## V125 — itens e TMs (16/10/2026)
 
 - Nova solicitação: PokéMart mostra sprites pixelados **originais dos itens e discos TM por tipo**. Módulo `effects/v125/pokemart-sprites.js` sobreposta SOMENTE à apresentação da loja. Fonte PokéAPI Gen5, verificar nomes, manter fallback no celular e não alterar compras ou preços. URL oficial; `?mart125=0` para diagnóstico.

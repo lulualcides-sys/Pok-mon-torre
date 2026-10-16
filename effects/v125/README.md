@@ -16,3 +16,7 @@ Solicitação: substituir emojis da PokéMart (imagem enviada em 16/10/2026) por
 Teste automatizado: `tests/v125-pokemart-sprites.test.cjs` verifica 20 IDs, mapeamento de TMs, renderização sem duplicações, itens equipados, fallback, loja e V124/V123 preservados.
 
 A V125 aguarda aprovação visual do usuário no celular após CI+GitHub Pages.
+
+## Aprovação do usuário (16/10/2026)
+
+**V125 aprovada:** “Aprovado, quero aumentar a quantidade de treinador…”. Registrar a aprovação da PokéMart/itens/TMs em `effects/v125/STATUS_APROVACAO.json` e preservar os sprites, preços, funcionamento e fallback. A V126 tratará somente da progressão de treinadores, abertura do editor pelos cartões, emojis atrás dos Pokémon e performance. Não modificar esta implementação sem novo pedido.

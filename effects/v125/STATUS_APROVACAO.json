@@ -1,0 +1,17 @@
+{
+  "version": "V125",
+  "status": "aprovado",
+  "protected": true,
+  "published": true,
+  "approved_at": "2026-10-16",
+  "approval_text": "Aprovado, quero aumentar a quantidade de treinador...",
+  "approved_commit": "8d8d886b67df457128cb68fec7f132c69512a629",
+  "preserves": [
+    "10 ícones originais de itens PokéMart",
+    "10 tipos de TMs com discos Gen5",
+    "miniaturas de itens equipados",
+    "preços, compras, salvamentos e golpes aprovados"
+  ],
+  "original_sprite_source": "https://github.com/PokeAPI/sprites/tree/master/sprites/items/gen5",
+  "user_note": "V125 aprovada antes do novo pedido de campanha/V126; a V126 não deve alterar itens nem TMs."
+}
