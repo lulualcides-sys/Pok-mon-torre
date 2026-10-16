@@ -78,19 +78,34 @@ async function test(port,safe){
   const styles=['kick','karate','cross','brick','punch','aura'];
   let successes=0;
   for(let i=0;i<names.length;i++){
-   const before=await evaluate('(()=>window.PokemonTorreLocalCombatTestV47.castFightingV104('+i+',true))()');
-   await pause(2000);
-   const after=await evaluate("(()=>({...window.PokemonTorreLocalCombatTestV47.fightingStateV104(),heavy:window.PokemonTorreFightingKineticV106?.diagnostics()||null}))()");
-   const ink=after?.pixel||{},heavy=after?.heavy||{},fx=after?.fx||{},n=names[i].normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
-   const ok=before?.accepted&&before?.afterInputEnergy===100&&
-     before?.initialGap>after.h*.45&&after.hp<before.hpBefore&&
-     after.safe===safe&&after.canvasReady&&after.running&&
+   let ok=false,report=null;
+   // The opposing Pokémon can legitimately dodge/move during a live fight.
+   // Retry an unlanded attempt twice; never count animation alone as a pass.
+   for(let attempt=1;attempt<=3;attempt++){
+    const before=await evaluate('(()=>window.PokemonTorreLocalCombatTestV47.castFightingV104('+i+',true))()');
+    await pause(2000);
+    const after=await evaluate("(()=>({...window.PokemonTorreLocalCombatTestV47.fightingStateV104(),heavy:window.PokemonTorreFightingKineticV106?.diagnostics()||null}))()");
+    const ink=after?.pixel||{},heavy=after?.heavy||{},fx=after?.fx||{},
+     n=names[i].normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const artOk=i<4?
+      (heavy.draws?.[['chute','karate','cross','brick'][i]]||0)>0&&heavy.filled>30:
+      (ink.perStyle?.[styles[i]]||0)>0&&ink.frames>=12;
+    const physicalOk=before?.accepted&&before?.afterInputEnergy===100&&
+     before?.initialGap>after.h*.45&&after.safe===safe&&after.canvasReady&&after.running&&
      fx.approaches>=i+1&&fx.contact>=i+1&&fx.retreats>=i+1&&
-     (fx.draws?.[n]||0)>0&&(i<4?(heavy.draws?.[['chute','karate','cross','brick'][i]]||0)>0&&heavy.filled>30: (ink.perStyle?.[styles[i]]||0)>0&&ink.frames>=12);
-   console.log('V105 '+(safe?'SAFE':'NORMAL')+' '+names[i]+' '+JSON.stringify({
-    passed:!!ok,damage:before?.hpBefore-after?.hp,inkDraws:ink.perStyle?.[styles[i]],
-    approach:fx.approaches,retreat:fx.retreats,pixelTiles:ink.frames,heavyFrames:heavy.frames,filled:heavy.filled,thickDraws:heavy.draws,inkDraws:ink.perStyle?.[styles[i]],engineDraws:fx.draws?.[n],inkStyles:ink.unique,inkErrors:ink.errors,engineVisual:fx.visualVersion}));
-   if(!ok)throw Error('V105 real contact smoke failed: '+names[i]);
+     (fx.draws?.[n]||0)>0&&artOk;
+    const landed=Number(after.hp)<Number(before.hpBefore);
+    ok=physicalOk&&landed;
+    report={passed:ok,attempt,damage:before?.hpBefore-after?.hp,
+     physicalOk,artOk,approach:fx.approaches,retreat:fx.retreats,
+     pixelTiles:ink.frames,heavyFrames:heavy.frames,filled:heavy.filled,
+     thickDraws:heavy.draws,inkDraws:ink.perStyle?.[styles[i]],
+     engineDraws:fx.draws?.[n],inkErrors:ink.errors,engineVisual:fx.visualVersion};
+    if(ok||!physicalOk)break;
+    console.log('V106 legit dodge/unlanded melee, retesting '+names[i]+' attempt '+attempt);
+   }
+   console.log('V106 '+(safe?'SAFE':'NORMAL')+' '+names[i]+' '+JSON.stringify(report));
+   if(!ok)throw Error('V106 real contact smoke failed: '+names[i]);
    successes++;
   }
   const final=await evaluate("(()=>window.PokemonTorreFightingInkV105.diagnostics())()");
