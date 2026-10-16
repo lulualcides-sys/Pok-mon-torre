@@ -38,6 +38,8 @@ jobs:
           python tools/build-v108-fighting.py
           python tools/build-v109-fighting.py
           python tools/build-v110-fighting.py
+          python tools/build-v111-poison.py
+          node tests/poison-v111.test.cjs
           node tests/fighting-v110.test.cjs
           node tests/fighting-v109.test.cjs
           node tests/fighting-v108.test.cjs

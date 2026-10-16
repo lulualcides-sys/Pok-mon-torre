@@ -210,6 +210,46 @@
       "notes": "Apenas spark curto no instante do contato físico, sem mãos/pés, projéteis ou pré-animação. GBA sprite original, HP/recuo V104 intactos.",
       "v107_review": "V107 mantido somente no Cross Chop",
       "visual_source": "Sprite de impacto/fragmentos originais da galeria GBA do usuário, quadros Pillow."
+    },
+    {
+      "move": "Picada Tóxica",
+      "aliases": [],
+      "status": "em_teste",
+      "protect": true,
+      "version": "V111",
+      "frames": 12,
+      "effect_file": "effects/moves/v111-poison/renderer.js",
+      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. Aprovação visual pendente; sem alterar dano, energia e recarga."
+    },
+    {
+      "move": "Picada Venenosa",
+      "aliases": [],
+      "status": "em_teste",
+      "protect": true,
+      "version": "V111",
+      "frames": 12,
+      "effect_file": "effects/moves/v111-poison/renderer.js",
+      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. Aprovação visual pendente; sem alterar dano, energia e recarga."
+    },
+    {
+      "move": "Venoshock",
+      "aliases": [],
+      "status": "em_teste",
+      "protect": true,
+      "version": "V111",
+      "frames": 16,
+      "effect_file": "effects/moves/v111-poison/renderer.js",
+      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. Aprovação visual pendente; sem alterar dano, energia e recarga."
+    },
+    {
+      "move": "Ferrão Venenoso",
+      "aliases": [],
+      "status": "em_teste",
+      "protect": true,
+      "version": "V111",
+      "frames": 12,
+      "effect_file": "effects/moves/v111-poison/renderer.js",
+      "notes": "V111 sprite de veneno individual da galeria GBA, animação por quadros e impacto sincronizado ao evento V359. Aprovação visual pendente; sem alterar dano, energia e recarga."
     }
   ]
 }
