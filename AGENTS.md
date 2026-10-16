@@ -12,6 +12,21 @@
 8. **Testes antes de publicar:** abrir no Chromium/navegador; executar quatro ataques históricos em batalha e os três tipos canônicos sem duplicações; confirmar impacto e HP, regressões dos aprovados, Android/celular, modo seguro e publicação efetiva de GitHub Pages.
 9. **Autonomia:** implementar e revisar com ferramentas conectadas; explicar brevemente o que mudou e fornecer link do jogo. Se algo ainda não foi validado, informar o estado real em vez de declarar sucesso.
 
+
+## Continuidade operacional — V111 (15/10/2026)
+
+Esta seção registra o último estado **verificado no GitHub**, sem alterar arte, código de batalha ou salvar versões não confirmadas. A última versão funcional identificada é **V111** (não renomear por mera atualização de documentação).
+
+- **Registro oficial:** `effects/moves/STATUS_APROVADOS.json`. Os quatro golpes `Picada Tóxica`, `Picada Venenosa`, `Venoshock` e `Ferrão Venenoso` estão com `version: "V111"`, `status: "aprovado"`, `aprovacao_visual: "salvo_com_ressalvas"` e `protect: true`. O feedback foi **"Pode salvar, ficou ruim mas tá bom."** Trata-se de autorização para manter a versão atual, **não** de elogio ou autorização para refazer. Não modificar esses quatro visuais sem novo pedido explícito.
+- **Isolamento V111:** `effects/moves/v111-poison/renderer.js` e spritesheets individuais (12, 12, 16 e 12 quadros). Não substituir por efeitos genéricos; não mexer no dano e recarga do motor V359.
+- **Referências anteriores:** Cross Chop preserva o X vermelho V107 a **30%** do tamanho original e centralizado no corpo do adversário. Chute, Golpe de Karatê e Brick Break mantêm impactos curtos V110 sem mãos/pés flutuantes; estes quatro constam **em_teste**, não presumir aprovação final. Preservar Mewtwo V95, estádio tecnológico azul V98, e os efeitos de gelo V99/V100/V101 com o nome exibido **Raio de Gelo** e deduplicação PT/EN.
+- **Próximos pedidos:** selecionar exatamente os quatro golpes indicados, pesquisar primeiro a galeria interna, gerar 8/12/16 quadros conforme complexidade, demonstrar prévia **funcional na batalha online**, e só promover para jogo normal após aprovação se o efeito substituído já estiver protegido. Nada de ateliê, imagens de conceito no lugar de código ou links para baixar patch.
+- **Critérios de regressão:** testar inicialização, quatro golpes, dano no impacto, aproximação/recuo nos físicos, modo normal/seguro, histórico de efeitos, arena, sprites e desempenho mobile. `tests/poison-v111.test.cjs`, `tests/browser-v111-fast.cjs`, `tests/wide-stadium-v98.test.cjs` e `tests/ice-v101-official.test.cjs` são verificações importantes.
+- **Limitação do teste mobile:** a automação existente usa Chromium headless com user-agent Android e resolução mobile, **não** um aparelho Android físico. Os logs de CI mostram FPS variável inclusive no primeiro ataque; objetivo de 60 FPS não significa meta comprovadamente atingida.
+- **Publicação:** confirmar commit `main`, testes e `actions/deploy-pages@v4` com sucesso e a URL final `https://lulualcides-sys.github.io/Pok-mon-torre/` antes de declarar uma alteração publicada; diferenciar deploy bem-sucedido de teste manual em aparelho real.
+
+Esta orientação prevalece sobre quaisquer instruções históricas conflitantes abaixo.
+
 ---
 
 ## Histórico (regras antigas subordinadas ao Script Mestre acima)
