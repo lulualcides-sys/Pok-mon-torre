@@ -9,7 +9,16 @@ const path='effects/moves/v114-poison/';
 const index=fs.readFileSync('index.html','utf8');
 assert.match(index,/v114mode===null\|\|v114mode==='poison114'/);
 const approvals=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(approvals.moves.filter(x=>x.version==='V111'&&x.protect&&x.aprovacao_visual==='salvo_com_ressalvas').length,4);
+const oldNames=['Picada Tóxica','Picada Venenosa','Venoshock','Ferrão Venenoso'];
+assert.equal(oldNames.filter(name=>{
+ const entry=approvals.moves.find(x=>x.move===name);
+ return entry?.protect===true&&(
+  (entry.version==='V111'&&entry.aprovacao_visual==='salvo_com_ressalvas')||
+  (entry.previous_approved?.version==='V111'&&
+   entry.previous_approved?.aprovacao_visual==='salvo_com_ressalvas'&&
+   entry.fallback_file==='effects/moves/v111-poison/renderer.js')
+ );
+}).length,4,'Keep all four V111 artworks, including V122 Venoshock rollback');
 for(const name of names){
  const entry=approvals.moves.find(x=>x.move===name);
  assert.ok(entry,'Missing approved move '+name);
