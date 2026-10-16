@@ -3,8 +3,8 @@
 ## V127 — conferência dos golpes editados e vistos (16/10/2026)
 
 - Usuário: “Já separou os golpes que editei e colocou o visto? Por que tinha alguns que não tinha”. Auditoria encontrou que V122 mostrava "+" apenas no botão de batalha; V33.1 não mostrava marca de aprovação. Corrigir em **ambos os menus** via V127.
-- 62 fichas de **registro isolado** em `effects/v127/by-move/<slug>/status.json`; 30 status da fonte oficial de golpes e 32 com edição histórica sem aprovação individual confirmada. Não confundir metadados separados com renderers necessariamente separados. Não afirmar que golpes em teste são aprovados.
-- Insígnias: `✓` aceito, `✓ EDITADO` histórico e `TESTE` não aprovado; marcas discretas não emoji na batalha e no editor de 4 golpes. Preservar animações aprovadas, V123–V126, V124.2 Pokébola, V125 item sprites e performance de menus.
+- 62 fichas de **registro isolado** em `effects/v127/by-move/<slug>/status.json`; 30 status da fonte oficial de golpes e 32 com edição histórica sem aprovação individual confirmada. Não confundir metadados separados com renderers necessariamente separados. Não inventar aprovação dos outros 32 golpes com histórico ainda não reconciliado; os quatro Lutador estão expressamente aprovados agora.
+- **V127.1 RETIFICAÇÃO CONFIRMADA:** os quatro Lutador (Chute, Golpe de Karatê, Cross Chop e Brick Break) estão **APROVADOS**, assim como os quatro Veneno V122 (Venoshock, Toxina Pesada, Rajada Ácida e Golpe de Veneno). Usuário reafirmou a aprovação em 16/10/2026, corrigindo o rótulo TESTE indevido. Não alterar arte, escala, impacto, sincronização, dano ou recarga; atualizar fonte oficial, inventário e fichas. Especialmente manter Cross Chop vermelho V107 30%. Insígnias: `✓` aceito, `✓ EDITADO` histórico ainda não conciliado; `TESTE` reservado a possíveis futuros golpes não aprovados, nenhum entre os 30 oficiais. Preservar também V123–V126, V124.2 Pokébola e V125 itens.
 - `?marks127=0` reverte só o visto. Não publicar/aprovar sem CI+deploy; V127 ainda depende de aceite visual do usuário.
 
 

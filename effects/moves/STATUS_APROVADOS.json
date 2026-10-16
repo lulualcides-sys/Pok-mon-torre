@@ -156,7 +156,7 @@
     {
       "move": "Chute",
       "aliases": [],
-      "status": "em_teste",
+      "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
       "version": "V110",
@@ -164,14 +164,16 @@
       "effect_file": "effects/moves/v110-fighting/impact-only.js",
       "notes": "Apenas spark curto no instante do contato físico, sem mãos/pés, projéteis ou pré-animação. GBA sprite original, HP/recuo V104 intactos.",
       "v107_review": "V107 mantido somente no Cross Chop",
-      "visual_source": "Sprite de impacto/fragmentos originais da galeria GBA do usuário, quadros Pillow."
+      "visual_source": "Sprite de impacto/fragmentos originais da galeria GBA do usuário, quadros Pillow.",
+      "approval_confirmed_at": "2026-10-16",
+      "approval_note": "Usuário confirmou: 'Então mas se está aprovado' após listar os quatro golpes Lutador; alteração só do status, não da animação."
     },
     {
       "move": "Golpe de Karatê",
       "aliases": [
         "Karate Chop"
       ],
-      "status": "em_teste",
+      "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
       "version": "V110",
@@ -179,14 +181,16 @@
       "effect_file": "effects/moves/v110-fighting/impact-only.js",
       "notes": "Apenas spark curto no instante do contato físico, sem mãos/pés, projéteis ou pré-animação. GBA sprite original, HP/recuo V104 intactos.",
       "v107_review": "V107 mantido somente no Cross Chop",
-      "visual_source": "Sprite de impacto/fragmentos originais da galeria GBA do usuário, quadros Pillow."
+      "visual_source": "Sprite de impacto/fragmentos originais da galeria GBA do usuário, quadros Pillow.",
+      "approval_confirmed_at": "2026-10-16",
+      "approval_note": "Usuário confirmou: 'Então mas se está aprovado' após listar os quatro golpes Lutador; alteração só do status, não da animação."
     },
     {
       "move": "Cross Chop",
       "aliases": [
         "Soco Cruzado"
       ],
-      "status": "em_teste",
+      "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
       "version": "V110",
@@ -194,14 +198,16 @@
       "effect_file": "effects/moves/v107-fighting/real-sprites.js",
       "notes": "Preservar X vermelho aprovado, 30% da escala original; baixar +38px relativos até o centro do Pokémon, sem alterar trajetória/dano/recuo.",
       "v107_review": "V107 mantido somente no Cross Chop",
-      "visual_source": "V107 sprite x-scissor vermelho existente, dimensão reduzida"
+      "visual_source": "V107 sprite x-scissor vermelho existente, dimensão reduzida",
+      "approval_confirmed_at": "2026-10-16",
+      "approval_note": "Usuário confirmou: 'Então mas se está aprovado' após listar os quatro golpes Lutador; alteração só do status, não da animação."
     },
     {
       "move": "Brick Break",
       "aliases": [
         "Quebra-Tijolo"
       ],
-      "status": "em_teste",
+      "status": "aprovado",
       "protect": true,
       "accepted_at": "2026-10-15",
       "version": "V110",
@@ -209,7 +215,9 @@
       "effect_file": "effects/moves/v110-fighting/impact-only.js",
       "notes": "Apenas spark curto no instante do contato físico, sem mãos/pés, projéteis ou pré-animação. GBA sprite original, HP/recuo V104 intactos.",
       "v107_review": "V107 mantido somente no Cross Chop",
-      "visual_source": "Sprite de impacto/fragmentos originais da galeria GBA do usuário, quadros Pillow."
+      "visual_source": "Sprite de impacto/fragmentos originais da galeria GBA do usuário, quadros Pillow.",
+      "approval_confirmed_at": "2026-10-16",
+      "approval_note": "Usuário confirmou: 'Então mas se está aprovado' após listar os quatro golpes Lutador; alteração só do status, não da animação."
     },
     {
       "move": "Picada Tóxica",
@@ -255,7 +263,9 @@
         "feedback_usuario": "Aceito para salvar em 2026-10-15, apesar de o usuário considerar os efeitos visualmente ruins. Não modificar sem novo pedido explícito."
       },
       "fallback_file": "effects/moves/v111-poison/renderer.js",
-      "rollback_parameter": "?poison122=0"
+      "rollback_parameter": "?poison122=0",
+      "approval_reconfirmed_at": "2026-10-16",
+      "reconfirmation_note": "Usuário reiterou a aprovação dos últimos golpes Veneno; versão visual original protegida."
     },
     {
       "move": "Ferrão Venenoso",
@@ -355,7 +365,9 @@
       "visual_source": "Galeria original Pokémon Mystery Dungeon V113",
       "aprovacao_visual": "aprovado_pelo_usuario",
       "feedback_usuario": "Usuário aprovou a V122 em 2026-10-16.",
-      "notes": "Animação isolada 16 quadros PMD. Dano, recarga e energia continuam nativos V359; não substituir sem pedido explícito."
+      "notes": "Animação isolada 16 quadros PMD. Dano, recarga e energia continuam nativos V359; não substituir sem pedido explícito.",
+      "approval_reconfirmed_at": "2026-10-16",
+      "reconfirmation_note": "Usuário reiterou a aprovação dos últimos golpes Veneno; versão visual original protegida."
     },
     {
       "move": "Rajada Ácida",
@@ -370,7 +382,9 @@
       "visual_source": "Galeria original Pokémon Mystery Dungeon V113",
       "aprovacao_visual": "aprovado_pelo_usuario",
       "feedback_usuario": "Usuário aprovou a V122 em 2026-10-16.",
-      "notes": "Animação isolada 16 quadros PMD. Dano, recarga e energia continuam nativos V359; não substituir sem pedido explícito."
+      "notes": "Animação isolada 16 quadros PMD. Dano, recarga e energia continuam nativos V359; não substituir sem pedido explícito.",
+      "approval_reconfirmed_at": "2026-10-16",
+      "reconfirmation_note": "Usuário reiterou a aprovação dos últimos golpes Veneno; versão visual original protegida."
     },
     {
       "move": "Golpe de Veneno",
@@ -385,7 +399,9 @@
       "visual_source": "Galeria original Pokémon Mystery Dungeon V113",
       "aprovacao_visual": "aprovado_pelo_usuario",
       "feedback_usuario": "Usuário aprovou a V122 em 2026-10-16.",
-      "notes": "Animação isolada 16 quadros PMD. Dano, recarga e energia continuam nativos V359; não substituir sem pedido explícito."
+      "notes": "Animação isolada 16 quadros PMD. Dano, recarga e energia continuam nativos V359; não substituir sem pedido explícito.",
+      "approval_reconfirmed_at": "2026-10-16",
+      "reconfirmation_note": "Usuário reiterou a aprovação dos últimos golpes Veneno; versão visual original protegida."
     }
   ]
 }

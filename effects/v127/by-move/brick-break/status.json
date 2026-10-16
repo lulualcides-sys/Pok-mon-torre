@@ -3,9 +3,11 @@
   "aliases": [
     "Quebra-Tijolo"
   ],
-  "approval_state": "em_teste",
+  "approval_state": "aprovado",
   "protected_effect": true,
   "source_effect": "effects/moves/v110-fighting/impact-only.js",
   "reference": "STATUS_APROVADOS.json",
-  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados.",
+  "approval_confirmed_at": "2026-10-16",
+  "approval_confirmation": "Usuário confirmou aprovação de quatro golpes Lutador; manter efeito visual atual."
 }

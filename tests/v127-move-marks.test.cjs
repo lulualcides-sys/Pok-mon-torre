@@ -9,6 +9,18 @@ assert.equal(old.moves.length,30,'the original registry must remain unchanged');
 assert.equal(manifest.records.length,62,'every edited legacy/official move must have its own status record');
 assert.equal(manifest.records.filter(x=>x.source==='STATUS_APROVADOS.json').length,30);
 assert.equal(manifest.records.filter(x=>x.status==='editado_legado').length,32);
+assert.equal(old.moves.filter(x=>x.status==='em_teste').length,0,'approved fighting moves must not revert to test status');
+const fighting=['Chute','Golpe de Karatê','Cross Chop','Brick Break'];
+const poison=['Venoshock','Toxina Pesada','Rajada Ácida','Golpe de Veneno'];
+for(const name of [...fighting,...poison]){
+ const reg=old.moves.find(x=>x.move===name);
+ const listed=manifest.records.find(x=>x.name===name);
+ assert.ok(reg&&listed,'approved move missing from one registry: '+name);
+ assert.equal(reg.status,'aprovado',name+' must be approved in source registry');
+ assert.equal(listed.status,'aprovado',name+' must be approved in V127 list');
+ assert.equal(reg.protect,true,name+' must remain visually protected');
+}
+
 assert.ok(index.includes('effects/v127/approval-marks.js'),'new marker script loaded in game');
 assert.ok(index.includes("get('marks127')!=='0'"),'isolated rollback exists');
 assert.ok(part.includes("window.PokemonTorreMoveMarksV127?.badge?.(x?.move.name)"),'equipped slots marked');
@@ -51,9 +63,15 @@ assert.ok(mark.badge('Shadow Ball').includes('EDITADO'));
 assert.ok(mark.badge('Chamas de Moltres').includes('EDITADO'),'missing legacy approved animation marker');
 assert.ok(mark.badge('Solar Beam').includes('EDITADO'));
 assert.ok(mark.badge('Thunder').includes('EDITADO'));
-assert.ok(mark.badge('Cross Chop').includes('TESTE'),'test-only move not falsely labeled approved');
+for(const name of [...fighting,...poison]){
+ assert.ok(mark.badge(name).includes('✓'),name+' must show approval checkmark');
+ assert.ok(!mark.badge(name).includes('TESTE'),name+' must not show testing badge');
+}
+assert.ok(mark.badge('Soco Cruzado').includes('✓'),'V107 Cross Chop alias keeps approval');
+assert.ok(mark.badge('Karate Chop').includes('✓'),'Karate Chop English alias approved');
+assert.ok(mark.badge('Quebra-Tijolo').includes('✓'),'Brick Break Portuguese alias approved');
 assert.equal(mark.badge('Inventado Fantasma'),'', 'unregistered move must not receive fake approval');
 assert.ok(mark.badge('Dança da Chuva').includes('✓'),'accent aliases matched');
 const css=html.find(e=>e.id==='v127-approved-move-checks')?.textContent||'';
 assert.ok(css.includes('.v127MoveCheck'),'small non-emoji badge styled');
-console.log('PASS V127: 62 per-move status files, 30 authoritative official, 32 historical edited; battle, equipped slots, catalogue, aliases, tests vs approved, no attack/saving changes.');
+console.log('PASS V127: 62 per-move status files, 30 authoritative official, 32 historical edited; battle, equipped slots, catalogue, aliases, fighting and V122 poison approved, no attack/saving changes.');

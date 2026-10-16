@@ -1,12 +1,12 @@
 {
   "version": "V127",
   "as_of": "2026-10-16",
-  "description": "Auditoria dos golpes alterados: aprovados/salvos via STATUS_APROVADOS e histórico de edições V122, com status distinguíveis. Metadados por golpe não implicam motor de efeito individual. Complementado com golpes previamente editados mencionados no histórico do usuário, sem elevar automaticamente seu estado a 'aprovado'.",
+  "description": "Auditoria dos golpes alterados: aprovados/salvos via STATUS_APROVADOS e histórico de edições V122, com status distinguíveis. Metadados por golpe não implicam motor de efeito individual. Complementado com golpes previamente editados mencionados no histórico do usuário, sem elevar automaticamente seu estado a 'aprovado'. Em 16/10/2026 o usuário confirmou aprovação dos quatro Lutador que constavam erroneamente em teste e reiterou aprovação dos quatro Veneno V122. Nenhuma animação foi substituída.",
   "states": {
     "aprovado": "Golpe aprovado, preservar",
     "salvo": "Efeito aceito para salvar",
     "salvo_provisorio": "Aceito provisoriamente",
-    "em_teste": "Efeito ainda em teste",
+    "em_teste": "Em teste (nenhum dos 30 golpes oficiais permanece nesta situação após confirmação do usuário)",
     "editado_legado": "Marcado como editado no histórico V122; confirmação individual ainda não consta no registro oficial"
   },
   "records": [
@@ -149,44 +149,48 @@
     {
       "name": "Chute",
       "aliases": [],
-      "status": "em_teste",
+      "status": "aprovado",
       "effect_file": "effects/moves/v110-fighting/impact-only.js",
       "version": "V110",
       "source": "STATUS_APROVADOS.json",
-      "protect": true
+      "protect": true,
+      "approval_confirmed_at": "2026-10-16"
     },
     {
       "name": "Golpe de Karatê",
       "aliases": [
         "Karate Chop"
       ],
-      "status": "em_teste",
+      "status": "aprovado",
       "effect_file": "effects/moves/v110-fighting/impact-only.js",
       "version": "V110",
       "source": "STATUS_APROVADOS.json",
-      "protect": true
+      "protect": true,
+      "approval_confirmed_at": "2026-10-16"
     },
     {
       "name": "Cross Chop",
       "aliases": [
         "Soco Cruzado"
       ],
-      "status": "em_teste",
+      "status": "aprovado",
       "effect_file": "effects/moves/v107-fighting/real-sprites.js",
       "version": "V110",
       "source": "STATUS_APROVADOS.json",
-      "protect": true
+      "protect": true,
+      "approval_confirmed_at": "2026-10-16"
     },
     {
       "name": "Brick Break",
       "aliases": [
         "Quebra-Tijolo"
       ],
-      "status": "em_teste",
+      "status": "aprovado",
       "effect_file": "effects/moves/v110-fighting/impact-only.js",
       "version": "V110",
       "source": "STATUS_APROVADOS.json",
-      "protect": true
+      "protect": true,
+      "approval_confirmed_at": "2026-10-16"
     },
     {
       "name": "Picada Tóxica",
@@ -213,7 +217,8 @@
       "effect_file": "effects/moves/v122-poison-preview/runtime.js",
       "version": "V122",
       "source": "STATUS_APROVADOS.json",
-      "protect": true
+      "protect": true,
+      "approval_reconfirmed_at": "2026-10-16"
     },
     {
       "name": "Ferrão Venenoso",
@@ -279,7 +284,8 @@
       "effect_file": "effects/moves/v122-poison-preview/runtime.js",
       "version": "V122",
       "source": "STATUS_APROVADOS.json",
-      "protect": true
+      "protect": true,
+      "approval_reconfirmed_at": "2026-10-16"
     },
     {
       "name": "Rajada Ácida",
@@ -288,7 +294,8 @@
       "effect_file": "effects/moves/v122-poison-preview/runtime.js",
       "version": "V122",
       "source": "STATUS_APROVADOS.json",
-      "protect": true
+      "protect": true,
+      "approval_reconfirmed_at": "2026-10-16"
     },
     {
       "name": "Golpe de Veneno",
@@ -297,7 +304,8 @@
       "effect_file": "effects/moves/v122-poison-preview/runtime.js",
       "version": "V122",
       "source": "STATUS_APROVADOS.json",
-      "protect": true
+      "protect": true,
+      "approval_reconfirmed_at": "2026-10-16"
     },
     {
       "name": "Abalo Terrestre",

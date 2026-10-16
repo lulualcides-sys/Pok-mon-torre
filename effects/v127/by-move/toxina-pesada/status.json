@@ -5,5 +5,7 @@
   "protected_effect": true,
   "source_effect": "effects/moves/v122-poison-preview/runtime.js",
   "reference": "STATUS_APROVADOS.json",
-  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados.",
+  "approval_reconfirmed_at": "2026-10-16",
+  "approval_confirmation": "Usuário reiterou aprovação dos últimos Veneno da V122; preservar animação."
 }
