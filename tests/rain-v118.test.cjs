@@ -20,7 +20,7 @@ assert.ok(!script.includes('hue-rotate')&&!script.includes('ImageDraw'));
 assert.ok(!script.includes('.hp=')&&!script.includes('hitTarget('));
 const html=fs.readFileSync('index.html','utf8');
 assert.ok(html.includes('effects/moves/raindance-original-v118.js'));
-function simulation(nativePaint){
+function simulation(nativePaint,rejectNative=false){
  const weather={framesDrawn:0},drawCalls=[],battle={active:true,energy:50,v32Weather:'clear'};
  const cooldowns=[0,0,0,0],stats={casts:0,others:0};
  const current=()=>({id:25,hp:100});
@@ -35,7 +35,7 @@ function simulation(nativePaint){
    this.w=480;this.h=380;}
   useMove(slot){
    if(selected.name!=='Rain Dance'&&selected.name!=='Dança da Chuva'){stats.others++;return 'other';}
-   if(!battle.active||battle.energy<selected.cost||cooldowns[slot]>1000)return false;
+   if(!battle.active||battle.energy<selected.cost||cooldowns[slot]>1000||rejectNative)return false;
    battle.energy-=selected.cost;cooldowns[slot]=3000;
    stats.casts++;return true;
   }
@@ -57,11 +57,12 @@ function simulation(nativePaint){
  assert.equal(api.matches('Danca da Chuva'),true);
  assert.equal(api.matches('Raiva Dance'),false);
  assert.equal(api.matches('Sunny Day'),false);
- assert.equal(engine.useMove(0),true);
+ assert.equal(engine.useMove(0),rejectNative?false:true);
  assert.equal(battle.v32Weather,'rain');
- assert.equal(stats.casts,1);
+ assert.equal(stats.casts,rejectNative?0:1);
  assert.equal(battle.energy,44);
- assert.equal(cooldowns[0],3000);
+ assert.ok(cooldowns[0]>=3000);
+ assert.equal(api.diagnostics().recoveredCasts,rejectNative?1:0);
  assert.equal(engine.draw(1333),'native-draw');
  const state=api.diagnostics();
  assert.equal(state.activations,1);
@@ -93,4 +94,5 @@ function simulation(nativePaint){
 }
 simulation(true);
 simulation(false);
-console.log('PASS V118 Rain Dance: 10 EXACT original PMD weather sprites, native renderer no double rain, fallback original PNG sequence, safe cooldown/energy, Sun/Surf unaffected');
+simulation(true,true); // legacy move wrapper returned false; V118 valid-cast recovery
+console.log('PASS V118 Rain Dance: 10 EXACT original PMD weather sprites, native renderer no double rain, fallback original PNG sequence, safe cooldown/energy, legitimate legacy fallback, Sun/Surf unaffected');
