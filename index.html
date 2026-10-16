@@ -588,6 +588,26 @@ try{
  if(!game.includes(fireSpriteAnchor))throw Error('V111 insertion point missing');
  game=game.replace(fireSpriteAnchor,'\n'+parts.join('\n')+'\n'+fireSpriteAnchor);
 }catch(e){console.error('V111 Poison/Performance module failed',e);}
+// V112: these FOUR equipped Poison moves exist as isolated real-battle
+// PREVIEWS ONLY; approved V111 moves and normal gameplay are UNCHANGED.
+if(new URLSearchParams(location.search).get('battle_preview')==='poison112'){
+ try{
+  const v112Files=[
+   'effects/moves/v112-poison-preview/runtime.js',
+   'effects/moves/v112-poison-preview/nevoavenenosa/spec.js',
+   'effects/moves/v112-poison-preview/poisonjab/spec.js',
+   'effects/moves/v112-poison-preview/acido/spec.js',
+   'effects/moves/v112-poison-preview/lamacorrosiva/spec.js'
+  ];
+  const v112Code=await Promise.all(v112Files.map(async path=>{
+   const r=await fetch(path+'?build=v112-preview-five',{cache:'no-store'});
+   if(!r.ok)throw Error('V112 preview module '+path+' HTTP '+r.status);
+   return r.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V112 insertion point unavailable');
+  game=game.replace(fireSpriteAnchor,'\n'+v112Code.join('\n')+'\n'+fireSpriteAnchor);
+ }catch(e){console.error('V112 poison preview unavailable; official V111 retained',e);}
+}
 // V100: merge bilingual duplicate DISPLAY entries in the four-move
 // editor without changing underlying move keys, equipped saves or VFX.
 try{
