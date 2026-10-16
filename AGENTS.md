@@ -1,5 +1,16 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V135 — PRÉVIA JOGÁVEL dos quatro golpes Voadores (16/10/2026)
+
+O usuário selecionou no editor de Mewtwo **Roost, Rajada, Air Slash e Bicada**, solicitando o mesmo padrão de animação cinematográfica usada na V133/V134 Terra. Os quatro módulos novos ficam em `effects/moves/v135-flying-preview/` separados. Link: `?flying135=preview`. Ainda **não aprovados**: esperar teste em batalha pelo usuário antes de promover à URL normal. Versões anteriores de Rajada (marcada EDITADO) e Air Slash previamente editado continuam preservadas na URL normal.
+
+- Roost: recuperação nativa, asas recolhendo, corrente calma descendente e penas sem explosão; 12 quadros.
+- Rajada (Gust): correntes espiraladas em direção ao inimigo e turbulência; 16 quadros.
+- Air Slash: lâminas de ar crescentes, trilha cortante e impacto; 16 quadros.
+- Bicada (Peck): bico pontudo em movimento curto de contato, impacto seco; 12 quadros.
+- Sem PNG, CSS animado ou Ateliê, sprites aprovados não alterados, contorno escuro obrigatório. Otimização de partículas `detailStep` com monitoramento de lentidão, sem segundo loop de render. Ataques preservam hit único V359 e Roost mantém a recuperação nativa, sem cálculo adicional de HP. Preservar energia, cooldown, save, interface, golpes Terra V134 e todos os outros aprovados. `?safe=1` restaura versão segura.
+
+
 ## V134 — V133 aprovada, otimização dinâmica de travamentos (16/10/2026)
 
 Usuário: **"Ficou muito bom, pode salvar os 4 e tá travando de novo quando ativa os golpes melhora isso de uma vez."** A V133 é agora **OFICIAL** para Garra de Areia, Soco de Terra, Lança de Areia e Fenda Rasa; aprovadas as formas principais de todos os golpes sem modificar sprite, cores, dano ou duração. Fonte oficial: `effects/moves/STATUS_APROVADOS.json` (42 oficiais protegidos), `effects/v127/edited-moves.json` (74 fichas; 32 legadas), registro individual e ✓ no editor.

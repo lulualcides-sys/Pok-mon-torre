@@ -59,6 +59,7 @@ jobs:
           node tests/v132-ground-approved.test.cjs
           node tests/v133-ground-preview.test.cjs
           node tests/v134-ground-performance.test.cjs
+          node tests/v135-flying-preview.test.cjs
           node tests/rain-v118.test.cjs
           node tests/patch-v117.test.cjs
           node tests/battle-layout-v120.test.cjs

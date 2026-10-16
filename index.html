@@ -978,6 +978,27 @@ if(new URLSearchParams(location.search).get('ground133')!=='0'&&
   game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+parts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(err){console.warn('V134 approved Ground effects unavailable; previous visuals preserved',err);}
 }
+// V135 — flying moves playable in actual battle only via opt-in preview.
+// Leave every approved effect and V134 Android optimization intact.
+if(new URLSearchParams(location.search).get('flying135')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const flyFiles=[
+   'effects/moves/v135-flying-preview/runtime.js',
+   'effects/moves/v135-flying-preview/roost/index.js',
+   'effects/moves/v135-flying-preview/gust/index.js',
+   'effects/moves/v135-flying-preview/air-slash/index.js',
+   'effects/moves/v135-flying-preview/peck/index.js'
+  ];
+  const flyCode=await Promise.all(flyFiles.map(async path=>{
+   const result=await fetch(path+'?build=v135-four-flying-preview',{cache:'no-store'});
+   if(!result.ok)throw Error('V135 '+path+' HTTP '+result.status);
+   return result.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V135 battle insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+flyCode.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V135 preview not loaded; approved effects preserved',error);}
+}
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
