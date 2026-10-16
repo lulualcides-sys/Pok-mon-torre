@@ -133,8 +133,8 @@ const pixiFX=(()=>{
    }
    const root=new PIXI.Container(),sprite=new PIXI.Sprite(entry.frames[0]);
    sprite.anchor.set(.5);sprite.roundPixels=true;
-   // V138: the ATLAS pixels are real near-black art with a crisp silver rim.
-   // Never tint to solid black: multiplication would erase the 1px contrast rim.
+   // V141: colored crisp pixel atlases with warm gold/healing and pearlescent wind.
+   // White tint preserves the authored palette and the one-pixel dark outline.
    sprite.tint=0xffffff;
    sprite.alpha=1;
    sprite.scale.set((spec.scale||1.18)*1.12);
@@ -144,16 +144,18 @@ const pixiFX=(()=>{
    let emitter=null;
    if(spec.particles&&window.PIXI?.particles?.Emitter){
     try{
+     const healing=spec.name==='Roost';
      emitter=new PIXI.particles.Emitter(root,{
-      lifetime:{min:.13,max:.31},frequency:.075,spawnChance:1,
-      particlesPerWave:1,emitterLifetime:-1,maxParticles:12,
+      lifetime:{min:.13,max:.31},frequency:.085,spawnChance:1,
+      particlesPerWave:1,emitterLifetime:-1,maxParticles:10,
       pos:{x:0,y:0},addAtBack:true,
       behaviors:[
-       {type:'alpha',config:{alpha:{list:[{value:.68,time:0},{value:0,time:1}]}}},
-       {type:'scale',config:{scale:{list:[{value:3.1,time:0},{value:1.0,time:1}]}}},
-       // Near-black V138 pixel particles, not cyan/white default emitter.
+       {type:'alpha',config:{alpha:{list:[{value:.75,time:0},{value:0,time:1}]}}},
+       {type:'scale',config:{scale:{list:[{value:2.3,time:0},{value:.8,time:1}]}}},
+       // Pixel points inherit the attack's palette: golden cure or ivory air.
        {type:'color',config:{color:{list:[
-        {value:'101318',time:0},{value:'050608',time:1}
+        {value:healing?'f9da83':'f4fcf9',time:0},
+        {value:healing?'d9eeb9':'75bbce',time:1}
        ],isStepped:false}}},
        {type:'moveSpeed',config:{speed:{list:[{value:48,time:0},{value:10,time:1}],isStepped:false}}},
        {type:'rotationStatic',config:{min:0,max:360}},
@@ -195,8 +197,8 @@ const pixiFX=(()=>{
    if(key==='Roost'){x=A[0];y=A[1]+4-7*Math.sin(Math.PI*t);}
    if(key==='Bicada'){const v=Math.min(1,Math.max(0,(t-.17)/.47));x=A[0]+(B[0]-A[0])*v;y=A[1]+(B[1]-A[1])*v;}
    o.root.position.set(Math.round(x),Math.round(y));
-   // Dark pixel shapes with bright one-pixel border must not fade out too
-   // early against the blue arena. Only the first/final 50ms transition fades.
+   // V141: illuminated real sprite pixels, retaining sharp 1px navy outline.
+   // Fade only the first and final 50ms, no glow/blur filter.
    o.sprite.alpha=Math.min(1,t*20,Math.max(0,(1-t)*20));
    o.sprite.rotation=key==='Roost'?0:Math.atan2(B[1]-A[1],B[0]-A[0])*.16;
    if(o.emitter){

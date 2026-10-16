@@ -1,4 +1,4 @@
-/* V140 PIXEL-ART FLYING MOVES — WebGL-only PixiJS + Particle Emitter.
+/* V141 PIXEL-ART FLYING MOVES — WebGL-only PixiJS + Particle Emitter.
  * Activates all four real pixel spritesheets in normal battles; V135 rejected.
  * Sprite atlases: real 12/16-frame nearest-neighbour pixel animation generated
  * by tools/build-v136-flying-pixel.py. No CanvasRenderingContext2D drawing,
@@ -13,10 +13,10 @@ const previewOnly=query.get('flying136')==='pixel';
 if(window.PokemonTorreFlyingPixelV136?.installed)return;
 const base='effects/moves/v136-flying-pixel/';
 const specs=[
- {name:'Roost',aliases:['Pousar'],dir:'roost',frames:12,ms:1580,scale:1.15,particles:true},
- {name:'Rajada',aliases:['Gust'],dir:'gust',frames:16,ms:1390,scale:1.35,particles:true},
- {name:'Air Slash',aliases:['Airslash','Corte Aéreo'],dir:'air-slash',frames:16,ms:1510,scale:1.32,particles:true},
- {name:'Bicada',aliases:['Peck'],dir:'peck',frames:12,ms:1150,scale:1.07,particles:false}
+ {name:'Roost',aliases:['Pousar'],dir:'roost',frames:12,ms:1580,scale:1.25,particles:true},
+ {name:'Rajada',aliases:['Gust'],dir:'gust',frames:16,ms:1390,scale:1.60,particles:true},
+ {name:'Air Slash',aliases:['Airslash','Corte Aéreo'],dir:'air-slash',frames:16,ms:1510,scale:1.48,particles:true},
+ {name:'Bicada',aliases:['Peck'],dir:'peck',frames:12,ms:1150,scale:1.20,particles:false}
 ];
 const norm=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
  .toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -34,7 +34,7 @@ function warning(message){
  if(!note){note=document.createElement('div');note.id='pixelFlyingGpuNotice';
   note.style.cssText='position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);z-index:10000;color:#fff;background:#111c27f0;border:1px solid #f6d88b;border-radius:8px;padding:6px 10px;font:600 11px system-ui;max-width:80%;text-align:center;pointer-events:none';
   arena.appendChild(note);}
- note.textContent='Pixel V140: '+message;
+ note.textContent='Pixel V141: '+message;
 }
 function clearWarning(){
  lastWarning='';
@@ -66,7 +66,7 @@ function loadGpuFallback(){
 }
 const state={installed:true,previewOnly,officialLoad:!previewOnly,renderer:'PixiJS WebGL',particleSystem:'@pixi/particle-emitter',
  ready:0,failures:[],casts:0,queued:0,mounted:0,suppressed2D:0,frames:0,visualStatusCasts:0,loadRetries:0,lastMountFailure:null,
- pixelPalette:'near-black with one-pixel silver contrast rim',particlePalette:'black'};
+ pixelPalette:'pearlescent sky-and-white pixel art with one-pixel deep-blue contour',particlePalette:'ice/white or golden recovery'};
 for(const spec of specs){
  for(const alias of [spec.name,...spec.aliases]){
   const key=norm(alias),other=lookup.get(key);
@@ -85,7 +85,7 @@ for(const spec of specs){
   state.failures.push(spec.name+': spritesheet not served');
   warning(spec.name+': spritesheet não encontrado (verifique conexão)');
  };
- spec.image.src=base+spec.dir+'/spritesheet.png?v=139-visible-gpu';
+ spec.image.src=base+spec.dir+'/spritesheet.png?v=141-flying-color';
 }
 window.PokemonTorreFlyingPixelV136=Object.freeze({
  installed:true,previewOnly,officialLoad:!previewOnly,moves:specs.map(s=>s.name),

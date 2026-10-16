@@ -6,7 +6,7 @@
     "PixiJS Particle Emitter"
   ],
   "pixelArt": true,
-  "animation": "spritesheet",
+  "animation": "individual original-style pixel spritesheet frames",
   "frameWidth": 64,
   "frameHeight": 64,
   "columns": 8,
@@ -15,5 +15,7 @@
   "textureFiltering": "nearest",
   "background": "transparent",
   "antiAlias": false,
-  "format": "pixel-art PNG spritesheet (animated frames, not single still)"
+  "format": "pixel-art PNG spritesheet (animated frames, not single still)",
+  "visualRevision": "V141",
+  "palette": "pearlescent white/sky blue, navy 1px contour; warm-gold Roost/Bicada"
 }

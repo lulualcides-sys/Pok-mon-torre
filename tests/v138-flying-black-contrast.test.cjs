@@ -1,7 +1,6 @@
 'use strict';
-/* V138: user asked Roost, Rajada, Air Slash and Bicada to be BLACK because
- * pale flying textures blended into the blue V98 arena. Check the actual
- * generator, GPU texture and Particle Emitter, not just display labels.
+/* V141 replaces a rejected BLACK-only palette with real colorful pixel-art.
+ * Retain the historical test filename for existing GitHub Actions workflows.
  */
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const get=f=>fs.readFileSync(f,'utf8');
@@ -10,27 +9,31 @@ const validator=get('tools/test-v136-flying-art.py');
 const pixi=get('effects/moves/_runtime/pixi-layer.js');
 const runtime=get('effects/moves/v136-flying-pixel/runtime.js');
 const html=get('index.html');
-assert.match(art,/def black_with_pixel_outline\(frame\)/);
-assert.match(art,/DARK_V138=/);
-assert.match(art,/SILVER_PIXEL_RIM=\(217,225,232,255\)/);
-assert.match(art,/im=black_with_pixel_outline\(im\)/);
-assert.match(validator,/black=sum\(/);
-assert.match(validator,/rim=sum\(/);
-assert.match(validator,/old pale-blue arena-matching palette/);
-assert.match(pixi,/sprite\.tint=0xffffff;/,'do not tint the black pixel outline away');
-assert.match(pixi,/type:'color',config:\{color:/,'particle emitter needs black tint');
-assert.match(pixi,/value:'101318'/,'particles should start near-black');
-assert.match(pixi,/value:'050608'/,'particles should finish black');
+for(const name of ['roost','gust','airslash','peck'])assert.match(art,new RegExp('def '+name+'\\(frame,total,d\\):'));
+assert.match(art,/INK=\(28,69,89,255\)/);
+assert.match(art,/WHITE=\(244,252,249,255\)/);
+assert.match(art,/GOLD=\(249,218,131,255\)/);
+assert.doesNotMatch(art,/DARK_V138|black_with_pixel_outline|SILVER_PIXEL_RIM/);
+assert.match(validator,/bright=sum/);
+assert.match(validator,/dark=sum/);
+assert.match(validator,/black silhouette regression/);
+assert.match(pixi,/sprite\.tint=0xffffff;/);
+assert.match(pixi,/type:'color',config:\{color:/);
+assert.match(pixi,/healing\?'f9da83':'f4fcf9'/);
+assert.match(pixi,/healing\?'d9eeb9':'75bbce'/);
+assert.doesNotMatch(pixi,/value:'101318'|value:'050608'/);
 assert.match(pixi,/PIXI\.SCALE_MODES\.NEAREST/);
 assert.match(pixi,/updatePixelFlying\(now,dt\)/);
-assert.match(runtime,/spritesheet\.png\?v=(?:138-black-pixel|139-visible-gpu)/,'sprite URL must bust browser cache');
-assert.match(runtime,/pixelPalette:'near-black with one-pixel silver contrast rim'/);
-assert.ok(!/(getContext\(|requestAnimationFrame\(|drawImage\()/.test(runtime),'never return to Canvas 2D');
-assert.ok(html.includes("get('flying136')!=='0'"),'the normal game must load pixel Flying effects');
-assert.match(html,/build=v(?:138-flying-black-contrast|139-flying-visible|140-pixi-bridge)/,'cache bust for the loader');
-const oldProtected=JSON.parse(get('effects/moves/STATUS_APROVADOS.json')).moves;
-assert.equal(oldProtected.length,42,'not yet visually approved: do not mark new Flying effects');
+assert.match(runtime,/spritesheet\.png\?v=141-flying-color/);
+assert.match(runtime,/pixelPalette:'pearlescent sky-and-white pixel art/);
+assert.ok(!/(getContext\(|requestAnimationFrame\(|drawImage\()/.test(runtime),'never use Canvas 2D');
+assert.ok(html.includes("get('flying136')!=='0'"));
+assert.match(html,/build=v141-flying-color/);
+const approved=JSON.parse(get('effects/moves/STATUS_APROVADOS.json')).moves;
+assert.equal(approved.length,42);
 for(const name of ['Osso','Grande Fissura','Garra de Areia','Soco de Terra','Lança de Areia','Fenda Rasa']){
- assert.equal(oldProtected.find(m=>m.move===name)?.protect,true,'protected effect changed: '+name);
+ assert.equal(approved.find(m=>m.move===name)?.protect,true,'approved changed: '+name);
 }
-console.log('PASS V138: four near-black sprite atlases with pixel-light rim, black GPU particles, no Canvas, protected moves, normal-game cache-bust.');
+for(const name of ['Roost','Rajada','Air Slash','Bicada'])
+ assert.ok(!approved.some(m=>m.move===name),'do not mark a new preview approved');
+console.log('PASS V141: colorful pixel Flying sprites, soft navy edge, correct WebGL particles, protected moves untouched.');
