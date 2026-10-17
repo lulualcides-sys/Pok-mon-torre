@@ -41,7 +41,7 @@ def main():
                 if not out.is_file():
                     out.parent.mkdir(parents=True,exist_ok=True)
                     payload=fetch(url)
-                    if filename.endswith(".png") and not payload.startswith(b"\\x89PNG\\r\\n\\x1a\\n"):
+                    if filename.endswith(".png") and not payload.startswith(bytes.fromhex("89504e470d0a1a0a")):
                         raise ValueError("invalid PNG")
                     if filename.endswith(".xml") and b"<" not in payload[:128]:
                         raise ValueError("invalid AnimData")
