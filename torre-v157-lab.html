@@ -1189,19 +1189,8 @@ if(!labRes.ok)throw Error('V157 combat lab unavailable '+labRes.status);
 if(!game.includes(fireSpriteAnchor))throw Error('V157 insertion anchor missing');
 game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+(await labRes.text())+
  String.fromCharCode(10)+fireSpriteAnchor);
-// Save copy-on-write: reads existing progress but ALL writes are redirected to LAB keys.
-if(!window.__torreLabSandboxed){
- const storage=Storage.prototype, get=storage.getItem,set=storage.setItem,rm=storage.removeItem,clear=storage.clear;
- const prefix='__torre_lab_v157__',official=window.localStorage;
- storage.getItem=function(k){if(this!==official)return get.call(this,k);
-  const fromLab=get.call(this,prefix+String(k));return fromLab===null?get.call(this,k):fromLab;};
- storage.setItem=function(k,v){return set.call(this,this===official?prefix+String(k):k,v);};
- storage.removeItem=function(k){return rm.call(this,this===official?prefix+String(k):k);};
- storage.clear=function(){if(this!==official)return clear.call(this);
-  const keys=[];for(let i=0;i<this.length;i++){const key=this.key(i);if(key?.startsWith(prefix))keys.push(key);}
-  keys.forEach(k=>rm.call(this,k));};
- window.__torreLabSandboxed=true;
-}
+// V157 sandbox must run in the newly written game document, BEFORE saving starts.
+game=game.replace('<script>','<script>'+ "window.__V157_LAB=true;\n(function(){\n if(window.__torreLabSandboxed)return;\n const storage=Storage.prototype,get=storage.getItem,set=storage.setItem,rm=storage.removeItem,clear=storage.clear;\n const prefix='__torre_lab_v157__',official=window.localStorage;\n storage.getItem=function(k){if(this!==official)return get.call(this,k);\n   const value=get.call(this,prefix+String(k));return value===null?get.call(this,k):value;};\n storage.setItem=function(k,v){return set.call(this,this===official?prefix+String(k):k,v);};\n storage.removeItem=function(k){return rm.call(this,this===official?prefix+String(k):k);};\n storage.clear=function(){if(this!==official)return clear.call(this);\n   const keys=[];for(let n=0;n<this.length;n++){const name=this.key(n);if(name?.startsWith(prefix))keys.push(name);}\n   keys.forEach(name=>rm.call(this,name));};\n window.__torreLabSandboxed=true;\n})();\n");
 game=game.replace('</head>','<meta name="torre-lab" content="v157-isolated"></head>');
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
  if(new URLSearchParams(location.search).get('safe')!=='1'){
