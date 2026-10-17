@@ -96,7 +96,7 @@ jobs:
         run: node tests/v146-arena-lighting.test.cjs
       - name: Testar lightmap V147 com relevo, reflexos e compatibilidade
         run: node tests/v147-cinematic-lightmap.test.cjs
-      - name: Testar V148: geometria 2.5D, perspectiva, temas gelo/lava e rollback
+      - name: "Testar V148 - geometria 2.5D, perspectiva, temas gelo/lava e rollback"
         run: node tests/v148-perspective-chamber.test.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
