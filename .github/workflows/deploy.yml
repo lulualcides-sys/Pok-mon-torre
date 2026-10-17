@@ -88,6 +88,10 @@ jobs:
           node tests/test-v84-2-distinct-art.cjs
           node tests/test-v83-four-grass.cjs
           node tests/test-v84-real-grass.cjs
+      - name: Exportar quatro spritesheets editaveis no LibreSprite V145
+        run: bash tools/libresprite/build-v145-flying.sh
+      - name: Testar quatro golpes V145 montados no PixiJS
+        run: node tests/v145-libresprite-flying.test.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .

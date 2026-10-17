@@ -65,7 +65,7 @@ if(new URLSearchParams(location.search).get('safe')!=='1'){
  if(previewModeV88===null||previewModeV88==='v86'||previewModeV88==='v92'){
   fxFiles.splice(i+1,0,"effects/moves/v86-preview/render.js");
  }
-}let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build='+(path.endsWith('/pixi-layer.js')?'v144-user-sprites':path.includes('v89-four/render')||path.includes('v91-four/canvas-fallback')||path.includes('v92-four/')||path.includes('v86-preview/render')||path.endsWith('/end.js')||path.endsWith('/pixi-layer.js')?'v94-stable-battle-fx':path.includes('move-type-filter')?'v129-ground-filter':path.includes('move-library-v61')||path.includes('real-drain-v65')||path.includes('v63-plant/render')||path.includes('v60-four/render')||path.includes('library16-v59')||path.includes('elemental-eight-v58')||path.includes('electric-four-v56')||path.includes('catalog/bundle')||path.endsWith('/end.js')?'original-drain-v65':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.error('Falha nos módulos V89; não substituir por animações antigas',error);throw error;}if(new URLSearchParams(location.search).get('safe')!=='1'&&(!plugin||!plugin.includes('catalogElectricFourV56')||!plugin.includes('elementalEightV58')||!plugin.includes('library16V59')||!plugin.includes('cinematicFourV60')||!plugin.includes('plantFourV63')||!plugin.includes('PokemonTorreDrainV65')))throw Error('Módulos dos golpes V64 incompletos');
+}let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build='+(path.endsWith('/pixi-layer.js')?'v145-libresprite-source':path.includes('v89-four/render')||path.includes('v91-four/canvas-fallback')||path.includes('v92-four/')||path.includes('v86-preview/render')||path.endsWith('/end.js')||path.endsWith('/pixi-layer.js')?'v94-stable-battle-fx':path.includes('move-type-filter')?'v129-ground-filter':path.includes('move-library-v61')||path.includes('real-drain-v65')||path.includes('v63-plant/render')||path.includes('v60-four/render')||path.includes('library16-v59')||path.includes('elemental-eight-v58')||path.includes('electric-four-v56')||path.includes('catalog/bundle')||path.endsWith('/end.js')?'original-drain-v65':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.error('Falha nos módulos V89; não substituir por animações antigas',error);throw error;}if(new URLSearchParams(location.search).get('safe')!=='1'&&(!plugin||!plugin.includes('catalogElectricFourV56')||!plugin.includes('elementalEightV58')||!plugin.includes('library16V59')||!plugin.includes('cinematicFourV60')||!plugin.includes('plantFourV63')||!plugin.includes('PokemonTorreDrainV65')))throw Error('Módulos dos golpes V64 incompletos');
 // V63: all four approved Grass/status atlases loaded before a battle starts.
 // Replaces old visuals, never overlays them; keeps the status mechanics intact.
 if(new URLSearchParams(location.search).get('safe')!=='1'){
@@ -1019,7 +1019,8 @@ if(new URLSearchParams(location.search).get('flying136')!=='0'&&
 }
 // V144: four user-supplied actual pixel sequences PREVIEWED in normal battles.
 // ?flying144=0 disables this preview; the saved V143 graphics remain unchanged.
-if(new URLSearchParams(location.search).get('flying144')!=='0'&&
+if(new URLSearchParams(location.search).get('flying145')==='0'&&
+   new URLSearchParams(location.search).get('flying144')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const script='effects/moves/v144-flying-original/runtime.js';
@@ -1029,6 +1030,19 @@ if(new URLSearchParams(location.search).get('flying144')!=='0'&&
   game=game.replace(fireSpriteAnchor,
    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(err){console.warn('V144 preview unavailable; prior battle effects preserved',err);}
+}
+// V145 previews four REAL LibreSprite editable .aseprite animations in the battle.
+// No Python art. ?flying145=0 reverts only these four to the earlier V144 preview.
+if(new URLSearchParams(location.search).get('flying145')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const script='effects/moves/v145-flying-libresprite/runtime.js';
+  const response=await fetch(script+'?build=v145-libresprite-source',{cache:'no-store'});
+  if(!response.ok)throw Error('V145 preview HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V145 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(err){console.warn('V145 LibreSprite preview unavailable; saved attacks preserved',err);}
 }
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
