@@ -1,0 +1,1205 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#09111e"><title>Pokémon Torre V158+V159 · Laboratório das 5 etapas</title><style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100dvh;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,#16324f 0%,#0b182b 46%,#060e1a 100%);color:#f4fbff;font:500 14px/1.5 system-ui,-apple-system,sans-serif}
+body:before{content:"";position:fixed;inset:0;background:repeating-linear-gradient(90deg,transparent 0 47px,#86dcff07 48px 49px,transparent 50px 96px),repeating-linear-gradient(0deg,transparent 0 47px,#86dcff05 48px 49px,transparent 50px 96px);pointer-events:none}
+#pt-loader{position:relative;width:min(430px,calc(100vw - 36px));padding:35px 24px 29px;text-align:center;border:1px solid #5ca9cf59;border-radius:23px;background:linear-gradient(154deg,#172d44e8,#071324ed);box-shadow:0 30px 100px #0009,0 0 60px #32aafe11;isolation:isolate}
+#pt-loader:before{content:"";position:absolute;inset:0;border-radius:23px;border-top:1px solid #e1fbff57;pointer-events:none}
+.pt-emblem{display:grid;place-items:center;margin:0 auto 15px;width:85px;height:85px;border:1px solid #ffe68b88;border-radius:24px;background:radial-gradient(circle at 40% 35%,#41506b,#152437 72%);box-shadow:0 0 27px #fac45c33;font-size:45px}
+.pt-kicker{margin:0;color:#83d9f2;font-weight:800;letter-spacing:.26em;font-size:10px}
+#pt-loader h1{font-size:26px;letter-spacing:.06em;margin:8px 0 5px;font-weight:900}
+.pt-desc{margin:0 0 24px;color:#a6b9d0;font-size:12px}
+.pt-bar-track{height:14px;overflow:hidden;padding:2px;border:1px solid #69b5d36c;border-radius:100px;background:#05121d;box-shadow:inset 0 3px 9px #0008}
+#pt-bar-fill{height:100%;width:0%;border-radius:100px;background:linear-gradient(90deg,#218cc9,#4bd5ef 54%,#eafcff);box-shadow:0 0 15px #74eaff9c;transition:width .26s ease}
+.pt-numbers{display:flex;justify-content:space-between;gap:8px;margin:12px 0 0;align-items:center}
+#pt-status{color:#b7d6e5;font-size:12px;text-align:left;min-width:0}
+#pt-percent{font-size:16px;font-weight:900;color:#ccf7ff;font-variant-numeric:tabular-nums}
+.pt-foot{margin:24px 0 0;display:flex;justify-content:center;gap:15px;flex-wrap:wrap}
+.pt-foot a{color:#83cbe8;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+.pt-error{color:#ffc6bd!important}
+.pt-retry{background:#214b68;border:1px solid #54b7e5;padding:9px 14px;border-radius:9px;color:#fff;margin-top:12px;cursor:pointer}
+@media(prefers-reduced-motion:reduce){#pt-bar-fill{transition:none}}
+</style></head><body><main id="pt-loader" role="status" aria-live="polite" aria-label="Carregando Pokémon Torre">
+<div class="pt-emblem" aria-hidden="true">⚡</div>
+<p class="pt-kicker">POKÉMON • TORRE DE BATALHAS</p>
+<h1>POKÉMON TORRE</h1>
+<p class="pt-desc">Versão 62 · Tipos redesenhados · golpes em ordem de força</p>
+<div class="pt-bar-track" role="progressbar" aria-label="Progresso do carregamento" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pt-progress">
+<div id="pt-bar-fill"></div></div>
+<div class="pt-numbers"><span id="pt-status">Iniciando jogo…</span><span id="pt-percent">0%</span></div>
+<div class="pt-foot"><a href="?safe=1" id="pt-safe-link">Abrir modo seguro</a><a href="https://github.com/lulualcides-sys/Pok-mon-torre/issues" target="_blank" rel="noopener">Relatar problema</a></div>
+</main><script>
+const ptProgress=(value,phase)=>{const pct=Math.max(0,Math.min(100,Math.round(value)));const fill=document.getElementById('pt-bar-fill'),label=document.getElementById('pt-status'),number=document.getElementById('pt-percent'),bar=document.getElementById('pt-progress');if(fill)fill.style.width=pct+'%';if(label&&phase)label.textContent=phase;if(number)number.textContent=pct+'%';if(bar)bar.setAttribute('aria-valuenow',String(pct));};
+(async()=>{ptProgress(2,'Iniciando laboratório V158+V159 · animações e golpes…');const total=25;const paths=Array.from({length:total},(_,i)=>'parts/p'+String(i).padStart(3,'0')+'.txt');let completed=0;const pieces=await Promise.all(paths.map(async path=>{const response=await fetch(path+'?build='+(path==='effects/moves/catalog/electric-four-v56.js'||path==='effects/moves/catalog/bundle.js'||path==='effects/moves/_runtime/end.js'?'electric-four-v56':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!response.ok)throw Error('Falha '+response.status+' ao carregar '+path);const txt=await response.text();completed++;ptProgress(5+completed/total*46,'Carregando recursos do jogo…');return txt}));ptProgress(52,'Montando o campo de batalha…');let game=pieces.join('');if(!game.startsWith('<!doctype html>')&&!game.startsWith('<!DOCTYPE html>'))throw Error('Conteúdo do jogo não encontrado');if(!game.includes('PokemonTorreV3579Diagnostics'))throw Error('Versão do jogo incompleta');ptProgress(60,'Preparando efeitos e animações…');const fxFiles=["effects/moves/_runtime/begin.js","effects/moves/psychic/index.js","effects/moves/confusion/index.js","effects/moves/flamethrower/index.js","effects/moves/telekinesis/index.js","effects/moves/_runtime/beam-kit.js","effects/moves/hyper-beam/index.js","effects/moves/aurora-beam/index.js","effects/moves/ice-beam/index.js","effects/moves/solar-beam/index.js","effects/moves/catalog/painter.js","effects/moves/catalog/elemental-eight-v58.js","effects/moves/catalog/library16-v59.js","effects/moves/v60-four/render.js","effects/moves/v63-plant/render.js","effects/moves/catalog/electric-four-v56.js","effects/moves/catalog/bundle.js","effects/moves/_runtime/semantic-vfx.js","effects/moves/_runtime/cinematic-vfx.js","effects/moves/tri-attack/index.js","effects/moves/v72-battle/render.js","effects/moves/_runtime/frame-policy-v87.js","effects/moves/_runtime/pixi-layer.js","effects/ui/move-type-filter.js","effects/ui/move-library-v61.js","effects/moves/_runtime/original-gba-vfx.js","effects/moves/_runtime/fire-original-vfx.js","effects/moves/_runtime/legendary-fire-vfx.js","effects/moves/_runtime/heritage-37-v66.js","effects/moves/v91-four/canvas-fallback.js","effects/moves/v92-four/canvas-fallback.js","effects/moves/_runtime/end.js","effects/moves/_runtime/real-drain-v65.js"];// V81: user's four approved moves are the normal-game renderer.
+// The archived V80 preview remains available as a regression comparison.
+const previewModeV88=new URLSearchParams(location.search).get('battle_preview');
+const approvedGrassV88=previewModeV88===null||['v84','v86','v88','haze85'].includes(previewModeV88);
+if(new URLSearchParams(location.search).get('safe')!=='1'){
+ const i=fxFiles.indexOf("effects/moves/v72-battle/render.js");
+ if(i<0)throw Error('V81: base move module missing');
+ if(new URLSearchParams(location.search).get('battle_preview')==='v80'){
+  fxFiles[i]="effects/moves/v80-preview/render.js";
+ }else{
+  fxFiles[i]="effects/moves/v81-approved/render.js";
+ }
+ // FOUR equipped grass moves are opt-in and stay separate from approved V81.
+ if(new URLSearchParams(location.search).get('battle_preview')==='v82'){
+  fxFiles.splice(i+1,0,"effects/moves/v82-preview/render.js");
+ }
+ // V83 is a historical comparison; V88 default keeps approved V84 Grass.
+ if(new URLSearchParams(location.search).get('battle_preview')==='v83'){
+  fxFiles.splice(i+1,0,"effects/moves/v83-preview/render.js");
+ }
+ // Four previously saved Grass animations now load on NORMAL URLs.
+ // v82 and v83 remain isolated regression comparisons.
+ if(approvedGrassV88){
+  fxFiles.splice(i+1,0,"effects/moves/v89-four/render.js");
+ }
+ // Haze V85 is an opt-in Pixi status preview; all protected normal moves stay intact.
+ if(new URLSearchParams(location.search).get('battle_preview')==='haze85'){
+  fxFiles.splice(i+1,0,"effects/moves/haze/v85-preview/render.js");
+ }
+ // V92: THESE ARE the four equipped moves visible in the user's lab.
+ // They now use original V86 authored Pixi sprites in the NORMAL game.
+ // Keep v86 route for backward-compatible comparisons.
+ if(previewModeV88===null||previewModeV88==='v86'||previewModeV88==='v92'){
+  fxFiles.splice(i+1,0,"effects/moves/v86-preview/render.js");
+ }
+}let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build='+(path.endsWith('/pixi-layer.js')?'v151-video-arena-pixi':path.includes('v89-four/render')||path.includes('v91-four/canvas-fallback')||path.includes('v92-four/')||path.includes('v86-preview/render')||path.endsWith('/end.js')||path.endsWith('/pixi-layer.js')?'v94-stable-battle-fx':path.includes('move-type-filter')?'v129-ground-filter':path.includes('move-library-v61')||path.includes('real-drain-v65')||path.includes('v63-plant/render')||path.includes('v60-four/render')||path.includes('library16-v59')||path.includes('elemental-eight-v58')||path.includes('electric-four-v56')||path.includes('catalog/bundle')||path.endsWith('/end.js')?'original-drain-v65':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.error('Falha nos módulos V89; não substituir por animações antigas',error);throw error;}if(new URLSearchParams(location.search).get('safe')!=='1'&&(!plugin||!plugin.includes('catalogElectricFourV56')||!plugin.includes('elementalEightV58')||!plugin.includes('library16V59')||!plugin.includes('cinematicFourV60')||!plugin.includes('plantFourV63')||!plugin.includes('PokemonTorreDrainV65')))throw Error('Módulos dos golpes V64 incompletos');
+// V63: all four approved Grass/status atlases loaded before a battle starts.
+// Replaces old visuals, never overlays them; keeps the status mechanics intact.
+if(new URLSearchParams(location.search).get('safe')!=='1'){
+ const plants=['stun-spore','po-do-sono','leech-seed','esporos'];
+ await Promise.all(plants.map(id=>new Promise((resolve,reject)=>{
+  const img=new Image();img.decoding='async';
+  img.onload=()=>img.naturalWidth===1536&&img.naturalHeight===192?
+   resolve():reject(Error('Invalid V63 Grass atlas '+id));
+  img.onerror=()=>reject(Error('Missing V63 Grass atlas '+id));
+  img.src='effects/moves/v63-plant/'+id+'/atlas.png?v=63.0';
+ })));
+}
+// V60 targeted sprite sequences; require all four atlases before starting battle
+// to avoid silent fallback to old effects on mobile and browser cache.
+if(new URLSearchParams(location.search).get('safe')!=='1'){
+ const ids=['tempestade-de-neve','nevasca','faisca-do-pikachu','volt-tackle'];
+ await Promise.all(ids.map(id=>new Promise((resolve,reject)=>{
+  const im=new Image(),url='effects/moves/v60-four/'+id+'/atlas.png?v=61.2';
+  im.onload=()=>im.naturalWidth===2048&&im.naturalHeight===256?resolve():reject(Error('Invalid V60 sprite: '+id));
+  im.onerror=()=>reject(Error('Missing V60 sprite: '+id));im.src=url;
+ })));
+}
+// V89 resilience: old V72/V78 WebP atlases are absent from this repository.
+// They are optional legacy graphics, and must never redirect the entire
+// game to safe mode (which restores the generic projectile renderer).
+// Existing V81 move logic remains loaded; its own diagnostics report missing art.
+// V82 preview: make sure the four distinct sprite sequences exist before battle.
+if(new URLSearchParams(location.search).get('battle_preview')==='v82'&&
+ new URLSearchParams(location.search).get('safe')!=='1'){
+ await Promise.all(['chicote-de-vinha','folha-navalha','chicotes-em-area','vine-whip']
+   .map(id=>new Promise((resolve,reject)=>{
+    const image=new Image();image.decoding='async';
+    image.onload=()=>image.naturalWidth===3840&&image.naturalHeight===240?
+      resolve():reject(Error('V82 spritesheet inválido '+id));
+    image.onerror=()=>reject(Error('V82 spritesheet ausente '+id));
+    image.src='effects/moves/v82-preview/sprites/'+id+'.webp?v=82.0';
+   })));
+}
+// V83: require all FOUR unique transparent 8-frame sheets before enabling combat.
+if(new URLSearchParams(location.search).get('battle_preview')==='v83'&&
+ new URLSearchParams(location.search).get('safe')!=='1'){
+ await Promise.all(['chicote-de-vinha','folha-navalha','chicotes-em-area','vine-whip']
+   .map(id=>new Promise((resolve,reject)=>{
+    const image=new Image();image.decoding='async';
+    image.onload=()=>image.naturalWidth===3840&&image.naturalHeight===240?
+      resolve():reject(Error('V83 spritesheet inválido '+id));
+    image.onerror=()=>reject(Error('V83 spritesheet indisponível '+id));
+    image.src='effects/moves/'+id+'/v83-preview/sprites/'+id+'.webp?v=83.1';
+   })));
+}
+// V86 four authentic move-inspired independent RGBA sprite atlases.
+if(previewModeV88==='v86'&&
+ new URLSearchParams(location.search).get('safe')!=='1'){
+ await Promise.all(['raizes-violentas','geada-persistente','sopro-congelante','chicote-duplo']
+  .map(id=>new Promise((resolve,reject)=>{
+   const img=new Image();img.decoding='async';
+   img.onload=()=>[3840,5760,7680].includes(img.naturalWidth)&&img.naturalHeight===240?
+     resolve():reject(Error('V86: dimensões incorretas '+id));
+   img.onerror=()=>reject(Error('V86: spritesheet ausente '+id));
+   img.src='effects/moves/'+id+'/v86-preview/sprites/'+id+'.webp?v=88.0';
+  })));
+}
+// Haze V85: a real animated 6-wisp transparent sheet, not a full-screen video.
+if(new URLSearchParams(location.search).get('battle_preview')==='haze85'&&
+ new URLSearchParams(location.search).get('safe')!=='1'){
+ await new Promise((resolve,reject)=>{
+  const image=new Image();image.decoding='async';
+  image.onload=()=>image.naturalWidth===960&&image.naturalHeight===112?
+    resolve():reject(Error('Haze V85: textura inválida'));
+  image.onerror=()=>reject(Error('Haze V85: textura indisponível'));
+  image.src='effects/moves/haze/v85-preview/sprites/haze-wisps.webp?v=85.0';
+ });
+}
+// V89: no external 4-Grass WebP files are required. PixiJS generates
+// each 12/16-frame spritesheet once for its active renderer.
+if(approvedGrassV88&&new URLSearchParams(location.search).get('safe')!=='1'&&
+ !plugin.includes("PixiJS GPU-generated 12/16 frame sprites"))
+ throw Error('Renderizador dos quatro golpes V89 ausente');
+// V59: preload authored sprite sheets without stopping the game if an optional
+// reference-based effect is missing; the existing move painter remains available.
+if(new URLSearchParams(location.search).get('safe')!=='1'){
+ const ids=['fire_attack','firewall','explosion','sun_strike','lightning','lightning_ball','tornado','water_attack','spikes','shield','black_hole','hypnosis','magic_arrow','midas_touch','cloud','time'];
+ const checked=await Promise.allSettled(ids.map(id=>new Promise((resolve,reject)=>{
+  const frame=new Image();frame.onload=()=>frame.naturalWidth===1280&&frame.naturalHeight===160?resolve(id):reject(Error('Invalid V59 atlas '+id));
+  frame.onerror=()=>reject(Error('Missing V59 atlas '+id));
+  frame.src='effects/elements/v59/'+id+'/atlas.png?v=59.0';
+ })));
+ const missing=checked.filter(p=>p.status==='rejected');
+ if(missing.length)console.warn('V59: original fallback will draw missing sprites',missing.length);
+}
+// Eight original animated water/ice atlases, each with eight sprite frames.
+if(new URLSearchParams(location.search).get('safe')!=='1'){
+ const effects=[['ice','ice-crystal'],['ice','ice-spike'],['ice','snowflake'],['water','waterball'],['water','water-drop'],['water','water-hurricane'],['water','geyser'],['water','kraken']];
+ await Promise.all(effects.map(([element,kind])=>new Promise((resolve,reject)=>{
+  const url='effects/elements/'+element+'/'+kind+'/atlas.png?v=58.0';
+  const image=new Image();image.onload=()=>image.naturalWidth===1152&&image.naturalHeight===144?resolve():reject(Error('Atlas incompleto: '+kind));
+  image.onerror=()=>reject(Error('Atlas ausente: '+url));image.src=url;
+ })));
+}
+if(plugin&&plugin.includes('catalogElectricFourV56')){
+// V56 catalog electric attacks are preloaded separately from the approved V55 group.
+const fourElectric=['faiscadejolteon','thunderbolt','choquedotrovao','choque'];
+const electricCatalogAssets=[];
+for(const id of fourElectric){
+ for(let i=1;i<=8;i++)electricCatalogAssets.push('effects/moves/catalog/'+id+'/sprites/frame_'+String(i).padStart(2,'0')+'.png?v=57.1');
+ for(let i=1;i<=4;i++)electricCatalogAssets.push('effects/moves/catalog/'+id+'/impact/hit_'+String(i).padStart(2,'0')+'.png?v=57.1');
+}
+await Promise.all(electricCatalogAssets.map(src=>new Promise((resolve,reject)=>{
+ const frame=new Image();
+ frame.onload=()=>frame.naturalWidth>32?resolve():reject(Error('Frame V56 inválido '+src));
+ frame.onerror=()=>reject(Error('Frame V56 ausente '+src));
+ frame.src=src;
+})));
+}
+// V158+V159 LAB: reuses the existing Pixi FX renderer, no second actor WebGL context.
+if(plugin){
+ const point='return {ensure,paint,paintFightingSheet';
+ if(!plugin.includes(point))throw Error('V158+V159 PixiJS shared renderer hook not found');
+ plugin=plugin.replace(point,
+  'return {ensure,labStage:(e)=>{if(!ensure(e,true))return null;position(e);return {app,position:()=>position(e)};},paint,paintFightingSheet');
+ const api='frameLighting146:pixiFX.frameLighting146,';
+ if(!plugin.includes(api))throw Error('V158+V159 export bridge absent');
+ plugin=plugin.replace(api,api+'labStage:pixiFX.labStage,');
+}
+if(plugin){const anchor='\nrender();\n})();\n</scr'+'ipt>';if(game.includes(anchor)&&plugin.includes('PokemonTorreMewtwo4FX'))game=game.replace(anchor,'\n'+plugin+'\n'+anchor);else if(new URLSearchParams(location.search).get('safe')!=='1')throw Error('Falha na integração dos golpes V58 no jogo principal');else console.warn('Modo seguro: carregando o jogo original.');}// Sprite-only fire effects V41 + V42.5: 8 isolated original-GIF animations.
+ptProgress(68,'Carregando sprites de fogo…');const fireSpriteFiles=[
+ "effects/moves/_runtime/fire-sprite-kit.js",
+ "effects/moves/chamas-de-moltres/index.js",
+ "effects/moves/rajada-flamejante/index.js",
+ "effects/moves/chama-circular/index.js",
+ "effects/moves/garra-de-fogo/index.js",
+ "effects/moves/_runtime/fire-sprite-integrate.js"
+];
+const fireSpriteSections=await Promise.all(fireSpriteFiles.map(async path=>{
+ const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-8-melee-range-alignment',{cache:'no-store'});
+ if(!response.ok)throw Error('Falha ao carregar sprite '+path+' ('+response.status+')');
+ return response.text();
+}));
+const nextFourFireMoves=[
+ "effects/moves/fire-blast/index.js",
+ "effects/moves/will-o-wisp/index.js",
+ "effects/moves/sunny-day/index.js",
+ "effects/moves/brasa/index.js"
+];
+const extraFireSections=await Promise.all(nextFourFireMoves.map(async path=>{
+ const response=await fetch(path+'?build=sprite-fire-v42-5-water45-v47-8-melee-range-alignment',{cache:'no-store'});
+ if(!response.ok)throw Error('Novo golpe não carregou: '+path+' ('+response.status+')');
+ return response.text();
+}));
+// Keep V41 animations intact; register the new four before loading the single combat bridge.
+const fireSpritePlugin=[
+ ...fireSpriteSections.slice(0,-1),
+ ...extraFireSections,
+ fireSpriteSections[fireSpriteSections.length-1]
+].join('\n');
+
+if(!fireSpritePlugin.includes('PokemonTorreFireSpriteV41'))throw Error('Sprite pack V41 incompleto');
+const fireSpriteAnchor='\nrender();\n})();\n</scr'+'ipt>';
+if(!game.includes(fireSpriteAnchor))throw Error('Ponto de inserção dos sprites não encontrado');
+game=game.replace(fireSpriteAnchor,'\n'+fireSpritePlugin+'\n'+fireSpriteAnchor);
+ptProgress(76,'Carregando golpes de água…');const waterSpriteFiles=[
+ "effects/moves/_runtime/water-sprite-kit.js",
+ "effects/moves/skull-bash/index.js",
+ "effects/moves/tsunami/index.js",
+ "effects/moves/amnesia/index.js",
+ "effects/moves/hydro-pump/index.js",
+ "effects/moves/aqua-jet/index.js",
+ "effects/moves/water-pulse/index.js",
+ "effects/moves/aqua-tail/index.js",
+ "effects/moves/water-gun/index.js",
+ "effects/moves/_runtime/water-sprite-integrate.js"
+];
+const waterSpriteSections=await Promise.all(waterSpriteFiles.map(async path=>{
+ const response=await fetch(path+'?build=water-sprites-v45-v47-8-melee-range-alignment',{cache:'no-store'});
+ if(!response.ok)throw Error('Falha ao carregar ataque de água '+path+' ('+response.status+')');
+ return response.text();
+}));
+const waterSpritePlugin=waterSpriteSections.join('\n');
+if(!waterSpritePlugin.includes('PokemonTorreWaterV43'))
+ throw Error('Sprite engine de água incompleto');
+game=game.replace(fireSpriteAnchor,'\n'+waterSpritePlugin+'\n'+fireSpriteAnchor);
+
+// Electric V46: four independent attacks + canonical game-wide move typing.
+// Keep approved fire V42.5 and water V45 modules untouched.
+ptProgress(84,'Preparando efeitos elétricos…');const electricV46Files=[
+ "effects/moves/_runtime/electric-sprite-kit.js",
+ "effects/moves/faisca/index.js",
+ "effects/moves/discharge/index.js",
+ "effects/moves/tempestade-de-raios/index.js",
+ "effects/moves/trovao/index.js",
+ "effects/moves/_runtime/electric-sprite-integrate.js",
+ "effects/moves/_runtime/move-type-canon-v46.js"
+];
+const enableElectricPreview=new URLSearchParams(location.search).get('safe')!=='1';
+const electricV46Parts=enableElectricPreview?await Promise.all(electricV46Files.map(async path=>{
+ const response=await fetch(path+'?build=electric-v57-thicker-lightning',{cache:'no-store'});
+ if(!response.ok)throw Error('Golpe eletrico V46 nao carregou: '+path+' ('+response.status+')');
+ return response.text();
+})):[];
+// Wait for every authored animation frame (and impact) before the battle starts.
+ // Older V50 vectors never render as a silent fallback.
+if(enableElectricPreview){
+ const dirs=['faisca','discharge','tempestade-de-raios','trovao'];
+ const paths=[];
+ for(const dir of dirs){
+  for(let i=1;i<=8;i++)paths.push('effects/moves/'+dir+'/sprites/frame_'+String(i).padStart(2,'0')+'.png?v=57.1');
+  for(let i=1;i<=4;i++)paths.push('effects/moves/'+dir+'/impact/hit_'+String(i).padStart(2,'0')+'.png?v=57.1');
+  if(dir==='discharge')for(let i=1;i<=8;i++)paths.push('effects/moves/discharge/arcs/arc_'+String(i).padStart(2,'0')+'.png?v=57.1');
+ }
+ let loaded=0;
+ await Promise.all(paths.map(path=>new Promise((resolve,reject)=>{
+  const image=new Image();
+  image.onload=()=>{
+   if(image.naturalWidth<64||image.naturalHeight<64){reject(Error('Sprite inválido '+path));return;}
+   loaded++;ptProgress(85+loaded/paths.length*9,'Carregando sprites elétricos finais…');resolve();
+  };
+  image.onerror=()=>reject(Error('Sprite ausente '+path));
+  image.src=path;
+ })));
+}
+const electricV46Plugin=electricV46Parts.join('\n');
+if(enableElectricPreview&&(!electricV46Plugin.includes('PokemonTorreElectricV46')||
+   !electricV46Plugin.includes('PokemonTorreMoveTypesV46')))
+ throw Error('Modulo eletrico / tipagem V46 incompleto');
+if(enableElectricPreview){
+ // Attach the move catalogue installer INSIDE the original V32 scope.
+ // V46's global plugin cannot access that private v32Catalogue binding.
+ const v32Closing='\n})();\n/* FIM POKEMON TORRE V32 */';
+ const hookResponse=await fetch('effects/moves/_runtime/move-type-hook-v46.js?build=v47-8-melee-range-alignment',{cache:'no-store'});
+ if(!hookResponse.ok)throw Error('V46: instalador interno não carregou '+hookResponse.status);
+ if(!game.includes(v32Closing))throw Error('V46: fechamento do catálogo V32 não encontrado');
+ game=game.replace(v32Closing,'\n'+await hookResponse.text()+v32Closing);
+}
+if(enableElectricPreview)game=game.replace(fireSpriteAnchor,'\n'+electricV46Plugin+'\n'+fireSpriteAnchor);
+ // V47.1: Actual hit registration remains separate from the cinematic effects.
+ // Register LAST, after all previous BattleEngine/useMove wrappers, so hits
+ // are calculated from the final accepted moves, not from a fake VFX overlay.
+const combatHitResponse=await fetch(
+ 'effects/moves/_runtime/combat-hit-reliability-v47.js?build=47-8-melee-range-alignment',
+ {cache:'no-store'});
+if(combatHitResponse.ok){
+ const combatHitPlugin=await combatHitResponse.text();
+ if(combatHitPlugin.includes('PokemonTorreCombatV47'))
+  game=game.replace(fireSpriteAnchor,'\n'+combatHitPlugin+'\n'+fireSpriteAnchor);
+ else console.error('Módulo de colisão V47.1 não foi reconhecido');
+}else console.warn('Fallback da colisão V47.1: '+combatHitResponse.status);
+
+// V81 production: run after V47, using the single native damage queue and the
+// approved PixiJS visual contact frame. Other move mechanics remain untouched.
+if(new URLSearchParams(location.search).get('safe')!=='1'){
+ const moduleResponse=await fetch('effects/moves/_runtime/impact-sync-v80.js?build=v81-approved-impact',
+   {cache:'no-store'});
+ if(!moduleResponse.ok)throw Error('V80: sincronizador de impacto indisponível '+moduleResponse.status);
+ const syncSource=await moduleResponse.text();
+ if(!syncSource.includes('PokemonTorreHitSyncV80'))throw Error('V80: sincronizador incompleto');
+ game=game.replace(fireSpriteAnchor,'\n'+syncSource+'\n'+fireSpriteAnchor);
+}
+
+// V90: V84 preview URL now uses the production V89/V90 GPU renderer.
+// Do NOT load the archived V84 impact-sync module; its old 5x timing would
+// delay damage after the 1.2s authored animation. Native physics owns hits.
+// The archive remains in GitHub history for comparison.
+// V83: synchronize ONLY the four new opt-in Grass animations via native v359 hit queue.
+if(new URLSearchParams(location.search).get('battle_preview')==='v83'&&
+ new URLSearchParams(location.search).get('safe')!=='1'){
+ const response=await fetch('effects/moves/v83-preview/impact-sync.js?v=83.1',{cache:'no-store'});
+ if(!response.ok)throw Error('V83 hit synchronizer unavailable: '+response.status);
+ const body=await response.text();
+ if(!body.includes('PokemonTorreGrassImpactV83'))throw Error('V83 synchronizer invalid');
+ game=game.replace(fireSpriteAnchor,'\n'+body+'\n'+fireSpriteAnchor);
+}
+// V82 is opt-in: the original V81 damage logic remains unchanged by default.
+if(new URLSearchParams(location.search).get('battle_preview')==='v82'&&
+ new URLSearchParams(location.search).get('safe')!=='1'){
+ const syncResp=await fetch('effects/moves/v82-preview/impact-sync.js?v=82.0',{cache:'no-store'});
+ if(!syncResp.ok)throw Error('V82 hit sync ausente');
+ const syncBody=await syncResp.text();
+ if(!syncBody.includes('PokemonTorreGrassImpactV82'))throw Error('V82 sync incompleto');
+ game=game.replace(fireSpriteAnchor,'\n'+syncBody+'\n'+fireSpriteAnchor);
+}
+ptProgress(95,'Inicializando a arena…');const libraries='<scr'+'ipt src="https://cdn.jsdelivr.net/npm/pixi.js@7.4.3/dist/pixi.min.js"></scr'+'ipt>'+'<scr'+'ipt src="https://cdn.jsdelivr.net/npm/@pixi/particle-emitter@5.0.10/dist/particle-emitter.min.js"></scr'+'ipt>';game=game.replace('<script>',libraries+'<script>');// If game startup throws after document.write(), load the preserved V45 mode.
+if(enableElectricPreview){
+ const startedAt=Date.now();
+ window.addEventListener('error',function startupRecovery(event){
+  if(Date.now()-startedAt>22000)return;
+  const text=String(document.getElementById('resources')?.textContent||'').trim();
+  if(text.length>10)return; // Game already booted: do not interrupt gameplay.
+  const safeUrl=new URL(location.href);safeUrl.searchParams.set('safe','1');
+  location.replace(safeUrl.toString());
+ },{once:true});
+}
+if(!enableElectricPreview){const warning='<div role="alert" style="position:fixed;top:6px;left:6px;right:6px;z-index:999999;background:#3b2531;color:#fff3d8;border:1px solid #ffbe66;border-radius:9px;padding:7px 10px;text-align:center;font:600 12px system-ui,sans-serif">MODO SEGURO: efeitos especiais novos desativados. <a href="?build=v58.0" style="color:#fff;text-decoration:underline">Abrir V58</a></div>';game=game.replace('</body>',warning+'</body>');}
+// V91: safe=1 is sometimes selected automatically after a mobile resource
+// failure. Keep the native four Grass sprites even in that recovery path.
+if(!enableElectricPreview){
+ try{
+  const parts=await Promise.all([
+   'effects/moves/v91-four/canvas-fallback.js',
+   'effects/moves/v91-four/safe-mode.js',
+   'effects/moves/v92-four/canvas-fallback.js',
+   'effects/moves/v92-four/safe-mode.js'
+  ].map(async path=>{
+   const resp=await fetch(path+'?build=v94-balanced-mobile-fx',{cache:'no-store'});
+   if(!resp.ok)throw Error('V91 safety module unavailable: '+path);
+   return resp.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V91 recovery hook missing');
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+parts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V91 safety animation unavailable',error);}
+}
+// V95 Pokemon visual finish: Mewtwo (ID 150) only, no attacks or redraw.
+// Shared visual standard lives in effects/pokemon, scalable after approval.
+if(new URLSearchParams(location.search).get('pokemon_polish')!=='off'){
+ try{
+  const file='effects/pokemon/visual-polish-v95.js';
+  const response=await fetch(file+'?build=v95-mewtwo-pilot',{cache:'no-store'});
+  if(!response.ok)throw Error('Mewtwo polish module '+response.status);
+  const source=await response.text();
+  if(!game.includes(fireSpriteAnchor))throw Error('Mewtwo visual integration anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+source+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){
+  // Purely cosmetic: an unavailable file must NEVER force the whole game
+  // into safe mode or remove previously approved attack animations.
+  console.warn('Mewtwo polish unavailable; leaving existing sprite intact',error);
+ }
+}
+// V102 official arena: the V97 blue technological stadium is now the DEFAULT
+// in every battle, including safe mode. ?arena_preview=off is diagnostic only.
+// The V96 forest remains archived and MUST NOT replace approved V98.
+if(new URLSearchParams(location.search).get('arena_preview')!=='off'){
+ try{
+  const path='effects/arena/stadium-arena-v97.js';
+  const response=await fetch(path+'?build=v102-official-stadium',{cache:'no-store'});
+  if(!response.ok)throw Error('Arena preview file '+response.status);
+  const code=await response.text();
+  if(!game.includes(fireSpriteAnchor))throw Error('Arena integration anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+code+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){
+  // Never redirect to safe mode or lose previously approved attacks
+  // simply because a cosmetic arena failed to load.
+  console.warn('Arena preview unavailable. Original background preserved.',error);
+ }
+}
+// V98 approved camera is standard since V102: 55% wider world and follow
+// camera, without moving fixed HUD, combat logic or Pixi FX.
+if(new URLSearchParams(location.search).get('arena_preview')!=='off'){
+ try{
+  const path='effects/arena/wide-camera-v98.js';
+  const response=await fetch(path+'?build=v102-official-wide-camera',{cache:'no-store'});
+  if(!response.ok)throw Error('Wide stadium module '+response.status);
+  const code=await response.text();
+  if(!game.includes(fireSpriteAnchor))throw Error('Wide stadium anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+code+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){
+  console.warn('Wide-stadium movement unavailable. Normal stage retained.',error);
+ }
+}
+// V147: ambient shading and physical lightmap baked once into V97 stadium.
+// Uses identical floor textures and cameras; ?lightmap147=0 restores V146.
+if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue154'&&
+   new URLSearchParams(location.search).get('lightmap147')!=='0'&&
+   new URLSearchParams(location.search).get('lighting146')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'&&
+   new URLSearchParams(location.search).get('arena_preview')!=='off'){
+ try{
+  const path='effects/arena/lightmap-v147.js';
+  const response=await fetch(path+'?build=v147-physical-lightmap',{cache:'no-store'});
+  if(!response.ok)throw Error('V147 lightmap HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V147 arena anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V147 unavailable; official V97 stage preserved',error);}
+}
+// V146: cinematic 2.5D WebGL lighting in normal battles, V97/V98 arena preserved.
+// ?lighting146=0 disables only lighting. Safe mode and arena-preview off bypass it.
+if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue154'&&
+   new URLSearchParams(location.search).get('lighting146')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'&&
+   new URLSearchParams(location.search).get('arena_preview')!=='off'){
+ try{
+  const path='effects/arena/lighting-v146.js';
+  const response=await fetch(path+'?build=v146-cinematic-lighting',{cache:'no-store'});
+  if(!response.ok)throw Error('V146 lighting HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V146 engine anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V146 lighting disabled; original stadium preserved',error);}
+}
+// V150: textured crystal / volcanic dungeon with cached material, active Pixi lanterns.
+// ?arena148=0 restores V147; ?arena148=lava previews the volcanic arena.
+if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue154'&&
+   new URLSearchParams(location.search).get('arena151')!=='1'&&
+   new URLSearchParams(location.search).get('arena148')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'&&
+   new URLSearchParams(location.search).get('arena_preview')!=='off'&&
+   new URLSearchParams(location.search).get('lighting146')!=='0'){
+ try{
+  const path='effects/arena/chamber-v148.js';
+  const response=await fetch(path+'?build=v150-material-stone-crystal-flame',{cache:'no-store'});
+  if(!response.ok)throw Error('V148 chamber HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V148 battle anchor missing');
+  game=game.replace(fireSpriteAnchor, String.fromCharCode(10)+(await response.text())+
+   String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V148 room unavailable; V147 original remains active',error);}
+}
+// V151 is archived opt-in ONLY; native battle camera and approved gameplay remain unchanged.
+// V150 restored as default after user rejected V151; ?arena151=1 opts into archived V151; ?arena148=0 still restores V147.
+if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue154'&&
+   new URLSearchParams(location.search).get('arena151')==='1'&&
+   new URLSearchParams(location.search).get('arena148')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'&&
+   new URLSearchParams(location.search).get('arena_preview')!=='off'&&
+   new URLSearchParams(location.search).get('lighting146')!=='0'){
+ try{
+  const path='effects/arena/video-v151.js';
+  const response=await fetch(path+'?build=v151-1-video-textured-stone',{cache:'no-store'});
+  if(!response.ok)throw Error('V151 arena HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V151 original battle hook missing');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(e){console.error('V151 no vídeo unavailable; existing battle safe',e);}
+}
+
+// V152: isolated blue dungeon PILOT inside normal, live Pokémon battles.
+// This mode alone changes the native actor canvas to transparent alpha;
+// PixiJS draws NEW original GPU pixel sprites BEHIND Pokémon at battle world
+// coordinates. Public V150, V151 archived mode and all attacks are unchanged.
+// ?arena_lab=blue152 => preview; otherwise this patch does not run.
+if(new URLSearchParams(location.search).get('arena_lab')==='blue152'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const constructorAlpha="canvas.getContext('2d',{alpha:false})";
+  if(!game.includes(constructorAlpha))throw Error('V152 alpha context anchor missing');
+  game=game.replace(constructorAlpha,"canvas.getContext('2d',{alpha:true})");
+  const response=await fetch('effects/arena/blue-v152-pixi.js?build=v152-original-tileset-webgl',{cache:'no-store'});
+  if(!response.ok)throw Error('V152 GPU sprite arena HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V152 game anchor unavailable');
+  game=game.replace(fireSpriteAnchor,'\n'+(await response.text())+'\n'+fireSpriteAnchor);
+ }catch(e){console.error('V152 preview failed; original game still available',e);}
+}
+
+// V153 isolated PIXEL-ART arena experiment. The official game (V150),
+// approved attacks and campaign are NOT replaced. 7+ distinct tilesets and
+// props made by Python/Pillow are composed as GPU sprites, not a painted PNG.
+if(new URLSearchParams(location.search).get('arena_lab')==='blue153'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const before="canvas.getContext('2d',{alpha:false})";
+  if(!game.includes(before))throw Error('V153 actor canvas alpha context unavailable');
+  game=game.replace(before,"canvas.getContext('2d',{alpha:true})");
+  const response=await fetch('effects/arena/blue-v153-pixi.js?build=v153-pillow-authored-materials',{cache:'no-store'});
+  if(!response.ok)throw Error('V153 GPU stage HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V153 game integration hook unavailable');
+  game=game.replace(fireSpriteAnchor,'\n'+(await response.text())+'\n'+fireSpriteAnchor);
+ }catch(err){console.warn('V153 optional GPU pilot failed; official game unchanged',err);}
+}
+
+// V154 - video-comparison, authored Python pixel-art environment.
+// Only this opt-in uses the new textures. V150 stays the official game.
+// Input, camera, saved attacks, campaign, Pokemon sprites all remain native.
+if(new URLSearchParams(location.search).get('arena_lab')==='blue154'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const before="canvas.getContext('2d',{alpha:false})";
+  if(!game.includes(before))throw Error('V154 battle alpha hook unavailable');
+  game=game.replace(before,"canvas.getContext('2d',{alpha:true})");
+  const path='effects/arena/blue-v154-pixi.js';
+  const res=await fetch(path+'?build=v154-perspective-video-tiles',{cache:'no-store'});
+  if(!res.ok)throw Error('V154 arena source '+res.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V154 battle insertion anchor unavailable');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await res.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(e){console.warn('V154 optional arena failed, previous game preserved',e);}
+}
+
+// V148 HUD: keep combat data readable but uncover the back-wall depth on mobile.
+if(new URLSearchParams(location.search).get('arena148')!=='0'&&
+   game.includes('</head>'))game=game.replace('</head>',"<style id=\"pokemon-torre-v148-responsive\">\n@media(max-width:700px){\n .modal.combatModal .hudPro{top:4px;padding:4px 6px;max-width:43%;background:#111f38cc;box-shadow:0 3px 14px #02091b38;backdrop-filter:blur(2px)}\n .modal.combatModal .hudName{font-size:10px}\n .modal.combatModal .hudTrack{height:6px;margin-top:3px}\n .modal.combatModal .hudNumbers{font-size:9px;margin-top:2px}\n .modal.combatModal .arenaChip{top:58px}\n}\n</style>"+'</head>');
+// V99 isolated ice move lab PREVIEW — never replace approved/current moves
+// unless explicitly requested by ?battle_preview=ice99.
+if(new URLSearchParams(location.search).get('battle_preview')==='ice99'){
+ try{
+  const iceFiles=[
+   'effects/moves/v99-ice-preview/runtime.js',
+   'effects/moves/aurora-beam/v99-preview/render.js',
+   'effects/moves/ice-beam/v99-preview/render.js',
+   'effects/moves/catalog/impactoglacial/v99-preview/render.js',
+   'effects/moves/raio-de-gelo/v99-preview/render.js'
+  ];
+  const iceParts=await Promise.all(iceFiles.map(async path=>{
+   const res=await fetch(path+'?build=v99-four-ice-preview',{cache:'no-store'});
+   if(!res.ok)throw Error('Prévia V99 indisponível: '+path+' '+res.status);
+   return res.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('Ponto de integração V99 ausente');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+iceParts.join(String.fromCharCode(10))+
+   String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){
+  // An incomplete PREVIEW must not break official approved effects/game.
+  console.error('Prévia de gelo V99 não carregada',error);
+ }
+}
+// V101: official ice visuals and legacy V100 bilingual cleanup consolidated.
+if(new URLSearchParams(location.search).get('battle_preview')!=='ice99'){
+ try{
+  const paths=['effects/moves/v101-ice-official/runtime.js',
+   'effects/moves/aurora-beam/v101-approved/render.js',
+   'effects/moves/catalog/impactoglacial/v101-approved/render.js',
+   'effects/moves/raio-de-gelo/v101-approved/render.js'];
+  const parts=await Promise.all(paths.map(async path=>{
+   const response=await fetch(path+'?build=v101-approved-ice',{cache:'no-store'});
+   if(!response.ok)throw Error('Ice V101 module unavailable: '+path);
+   return response.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V101 integration anchor missing');
+  game=game.replace(fireSpriteAnchor,'\n'+parts.join('\n')+'\n'+fireSpriteAnchor);
+ }catch(error){console.warn('V101 ice art unavailable, preserving native mechanics',error);}
+}
+// V103: four user-approved Fighting contact FX, each in its OWN isolated folder.
+// Native Canvas2D frames run in the existing battle at 60FPS, even in safe=1.
+// Native V359/V47 single-hit collision remains the only owner of HP/damage.
+try{
+ const files=[
+  'effects/moves/v103-fighting/runtime.js',
+  'effects/moves/catalog/chute/v103/render.js',
+  'effects/moves/catalog/golpedekarate/v103/render.js',
+  'effects/moves/catalog/crosschop/v103/render.js',
+  'effects/moves/catalog/brickbreak/v103/render.js'
+ ];
+ const scripts=await Promise.all(files.map(async path=>{
+  const res=await fetch(path+'?build=v103-fighting-approved',{cache:'no-store'});
+  if(!res.ok)throw Error('V103 Fighting module '+path+' HTTP '+res.status);
+  return res.text();
+ }));
+ if(!game.includes(fireSpriteAnchor))throw Error('V103 Fighting anchor missing');
+ game=game.replace(fireSpriteAnchor,'\n'+scripts.join('\n')+'\n'+fireSpriteAnchor);
+}catch(error){
+ console.error('V103 Fighting not loaded; prior battle mechanics preserved',error);
+}
+// V104 — all offensive Fighting moves are physical CONTACT with approach,
+// compact locally authored impact and real retreat; even safe/mobile.
+try{
+ const paths=[
+  'effects/moves/v104-fighting/runtime.js',
+  'effects/moves/catalog/chute/v104/render.js',
+  'effects/moves/catalog/golpedekarate/v104/render.js',
+  'effects/moves/catalog/crosschop/v104/render.js',
+  'effects/moves/catalog/brickbreak/v104/render.js'
+ ];
+ const parts=await Promise.all(paths.map(async path=>{
+  const res=await fetch(path+'?build=v104-real-contact',{cache:'no-store'});
+  if(!res.ok)throw Error('V104 module '+path+' HTTP '+res.status);
+  return res.text();
+ }));
+ if(!game.includes(fireSpriteAnchor))throw Error('V104 anchor missing');
+ game=game.replace(fireSpriteAnchor,'\n'+parts.join('\n')+'\n'+fireSpriteAnchor);
+}catch(error){console.error('V104 physical Fighting unavailable',error);}
+// V105: sprite-sheet frames generated from pixel-ink at runtime, replacing
+// V104 cartoon geometry ONLY. V104 physical approach/hit/recoil stays intact.
+try{
+ const files=[
+  'effects/moves/v105-fighting/pixel-ink.js',
+  'effects/moves/catalog/chute/v105/render.js',
+  'effects/moves/catalog/golpedekarate/v105/render.js',
+  'effects/moves/catalog/crosschop/v105/render.js',
+  'effects/moves/catalog/brickbreak/v105/render.js'
+ ];
+ const patches=await Promise.all(files.map(async path=>{
+  const res=await fetch(path+'?build=v105-pixel-ink',{cache:'no-store'});
+  if(!res.ok)throw Error('V105 Fighting sprites '+path+' HTTP '+res.status);
+  return res.text();
+ }));
+ if(!game.includes(fireSpriteAnchor))throw Error('V105 anchor missing');
+ game=game.replace(fireSpriteAnchor,'\n'+patches.join('\n')+'\n'+fireSpriteAnchor);
+}catch(e){console.error('V105 combat sprite ink failed; V104 melee intact',e);}
+// V106: the four rejected "thin-line" impacts are now MASSIVE filled
+// cinematic melee silhouettes, not a cartoon line or projectile.
+// X Scissor V68 is a design reference for the scarlet Cross Chop crossing.
+// Same exact V104 movement, native HP, recoil, distance and save mechanics.
+try{
+ const files=[
+  'effects/moves/v106-fighting/kinetic-impact.js',
+  'effects/moves/catalog/chute/v106/render.js',
+  'effects/moves/catalog/golpedekarate/v106/render.js',
+  'effects/moves/catalog/crosschop/v106/render.js',
+  'effects/moves/catalog/brickbreak/v106/render.js'
+ ];
+ const parts=await Promise.all(files.map(async path=>{
+  const res=await fetch(path+'?build=v106-heavy-contact',{cache:'no-store'});
+  if(!res.ok)throw Error('V106 module '+path+' HTTP '+res.status);
+  return res.text();
+ }));
+ if(!game.includes(fireSpriteAnchor))throw Error('V106 anchor missing');
+ game=game.replace(fireSpriteAnchor,'\n'+parts.join('\n')+'\n'+fireSpriteAnchor);
+}catch(err){console.error('V106 heavy contact visuals unavailable; V105 remains safe',err);}
+// V107 — real illustrated translucent WEBP sprite atlases (Pillow build).
+// Replaces ALL V106 geometric attack shapes, preserving the V104 native hit,
+// travel/contact/recoil and every other previously approved attack.
+try{
+ const path='effects/moves/v107-fighting/real-sprites.js';
+ const response=await fetch(path+'?build=v107-illustrated-sprites',{cache:'no-store'});
+ if(!response.ok)throw Error('V107 illustrated renderer HTTP '+response.status);
+ const source=await response.text();
+ if(!game.includes(fireSpriteAnchor))throw Error('V107 anchor missing');
+ game=game.replace(fireSpriteAnchor,'\n'+source+'\n'+fireSpriteAnchor);
+}catch(err){console.error('V107 real Fighting sprites unavailable',err);}
+// V108 — hand-edited GBA-style pixel sprites for KICK, KARATE, BRICK.
+// Cross Chop V107 red X remains unchanged except to 48% proportional scale.
+try{
+ const path='effects/moves/v108-fighting/real-pixel-sprites.js';
+ const res=await fetch(path+'?build=v108-gba-pixels',{cache:'no-store'});
+ if(!res.ok)throw Error('V108 sprite renderer '+res.status);
+ const src=await res.text();
+ if(!game.includes(fireSpriteAnchor))throw Error('V108 sprite injection anchor missing');
+ game=game.replace(fireSpriteAnchor,'\n'+src+'\n'+fireSpriteAnchor);
+}catch(error){console.error('V108 sprite initialization error',error);}
+// V109: approved Cross Chop X retained, scaled to 30% original size.
+// Chute, Karate Chop and Brick Break are real gallery pixel sprite hits,
+// not floating foot/hand icons. Physical motor V104 unaffected.
+try{
+ const path='effects/moves/v109-fighting/real-pixel-sprites.js';
+ const resp=await fetch(path+'?build=v109-pixel-hits',{cache:'no-store'});
+ if(!resp.ok)throw Error('V109 module HTTP '+resp.status);
+ if(!game.includes(fireSpriteAnchor))throw Error('V109 injection marker missing');
+ game=game.replace(fireSpriteAnchor,'\n'+await resp.text()+'\n'+fireSpriteAnchor);
+}catch(e){console.error('V109 Fighting sprite load failed',e);}
+// V110 — ONLY contact frames for Chute, Karate, Brick Break.
+ // Cross Chop red X retained at same size, lowered to middle of opponent.
+try{
+ const path='effects/moves/v110-fighting/impact-only.js';
+ const res=await fetch(path+'?build=v110-impact-only',{cache:'no-store'});
+ if(!res.ok)throw Error('V110 sprites HTTP '+res.status);
+ if(!game.includes(fireSpriteAnchor))throw Error('V110 anchor absent');
+ game=game.replace(fireSpriteAnchor,'\n'+await res.text()+'\n'+fireSpriteAnchor);
+}catch(e){console.error('V110 contact-only FX unavailable',e);}
+// V111 - four poison moves from equipped Mewtwo screen + low-cost 60FPS mobile.
+ // Pre-rendered GBA gallery pixel atlases, physical hits/energy/cooldown native.
+try{
+ const parts=await Promise.all([
+  'effects/moves/v111-performance/mobile-fps.js',
+  'effects/moves/v111-poison/renderer.js'
+ ].map(async path=>{
+  const res=await fetch(path+'?build=v111-poison-fps',{cache:'no-store'});
+  if(!res.ok)throw Error('V111 module '+path+' HTTP '+res.status);
+  return res.text();
+ }));
+ if(!game.includes(fireSpriteAnchor))throw Error('V111 insertion point missing');
+ game=game.replace(fireSpriteAnchor,'\n'+parts.join('\n')+'\n'+fireSpriteAnchor);
+}catch(e){console.error('V111 Poison/Performance module failed',e);}
+// V112: these FOUR equipped Poison moves exist as isolated real-battle
+// PREVIEWS ONLY; approved V111 moves and normal gameplay are UNCHANGED.
+if(new URLSearchParams(location.search).get('battle_preview')==='poison112'){
+ try{
+  const v112Files=[
+   'effects/moves/v112-poison-preview/runtime.js',
+   'effects/moves/v112-poison-preview/nevoavenenosa/spec.js',
+   'effects/moves/v112-poison-preview/poisonjab/spec.js',
+   'effects/moves/v112-poison-preview/acido/spec.js',
+   'effects/moves/v112-poison-preview/lamacorrosiva/spec.js'
+  ];
+  const v112Code=await Promise.all(v112Files.map(async path=>{
+   const r=await fetch(path+'?build=v112-preview-five',{cache:'no-store'});
+   if(!r.ok)throw Error('V112 preview module '+path+' HTTP '+r.status);
+   return r.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V112 insertion point unavailable');
+  game=game.replace(fireSpriteAnchor,'\n'+v112Code.join('\n')+'\n'+fireSpriteAnchor);
+ }catch(e){console.error('V112 poison preview unavailable; official V111 retained',e);}
+}
+// V113: ORIGINAL redblueyellow sprites, rebuilt in 16 unique frames.
+// The V112 preview remains an archived comparison. Never promote V113 to
+// normal battle until the player approves the preview.
+if(new URLSearchParams(location.search).get('battle_preview')==='poison113'){
+ try{
+  const paths=[
+   'effects/moves/v113-poison-preview/runtime.js',
+   'effects/moves/v113-poison-preview/nevoavenenosa/spec.js',
+   'effects/moves/v113-poison-preview/poisonjab/spec.js',
+   'effects/moves/v113-poison-preview/acido/spec.js',
+   'effects/moves/v113-poison-preview/lamacorrosiva/spec.js'
+  ];
+  const parts=await Promise.all(paths.map(async path=>{
+   const r=await fetch(path+'?build=v113-authentic-poison-preview',{cache:'no-store'});
+   if(!r.ok)throw Error('V113 source module '+path+' HTTP '+r.status);
+   return r.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V113 module anchor missing');
+  game=game.replace(fireSpriteAnchor,'\n'+parts.join('\n')+'\n'+fireSpriteAnchor);
+ }catch(error){console.error('V113 authentic preview unavailable; official effects untouched',error);}
+}
+// V114: FOUR approved original Poison sprites go to NORMAL battle.
+// Three minimal scale changes + the exact ground-only mud approved by player.
+// Historical V112/V113 preview links remain untouched and fully archived.
+const v114mode=new URLSearchParams(location.search).get('battle_preview');
+if(v114mode===null||v114mode==='poison114'){
+ try{
+  const files=[
+   'effects/moves/v114-poison/runtime.js',
+   'effects/moves/v114-poison/nevoavenenosa/spec.js',
+   'effects/moves/v114-poison/poisonjab/spec.js',
+   'effects/moves/v114-poison/acido/spec.js',
+   'effects/moves/v114-poison/lamacorrosiva/spec.js'
+  ];
+  const code=await Promise.all(files.map(async path=>{
+   const r=await fetch(path+'?build=v114-four-official-poison',{cache:'no-store'});
+   if(!r.ok)throw Error('V114 missing: '+path+' HTTP '+r.status);
+   return r.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V114 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,'\n'+code.join('\n')+'\n'+fireSpriteAnchor);
+ }catch(e){console.error('V114 unavailable; preserving prior move logic',e);}
+}
+// V115: approved Mewtwo V95 pixels are IMMUTABLE; reuse exact V95 finish
+// for every other Pokemon by ID. No changes to moves, size, poses or facing.
+if(new URLSearchParams(location.search).get('pokemon_polish')!=='off'){
+ try{
+  const path='effects/pokemon/visual-polish-v115.js';
+  const response=await fetch(path+'?build=v115-all-pokemon-visual',{cache:'no-store'});
+  if(!response.ok)throw Error('V115 global polish unavailable HTTP '+response.status);
+  const code=await response.text();
+  if(!game.includes(fireSpriteAnchor))throw Error('V115 game renderer anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+code+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(e){console.warn('V115 global appearance skipped; original sprites preserved',e);}
+}
+// V116 OFFICIAL approved on 16/10: species size, existing shiny stars, short recoil.
+// Old sprites can still be compared with ?pokemon_visual_preview=off.
+// The protected V115 global finish and Mewtwo V95 are unchanged.
+const v116Params=new URLSearchParams(location.search);
+if(v116Params.get('pokemon_polish')!=='off'&&
+   (v116Params.get('pokemon_visual_preview')===null||
+    v116Params.get('pokemon_visual_preview')==='v116')){
+ try{
+  const file='effects/pokemon/visual-preview-v116.js';
+  const response=await fetch(file+'?build=v116-approved-sprites',{cache:'no-store'});
+  if(!response.ok)throw Error('V116 preview not available HTTP '+response.status);
+  const code=await response.text();
+  if(!game.includes(fireSpriteAnchor))throw Error('V116 game insertion point missing');
+  game=game.replace(fireSpriteAnchor,'\n'+code+'\n'+fireSpriteAnchor);
+ }catch(e){console.warn('V116 approved sprite effect unavailable; V115 preserved',e);}
+}
+// V117 OFFICIAL: all five modules approved and saved by the user.
+// Use ?kanto117=off for regression comparison; protected visuals untouched.
+const q117=new URLSearchParams(location.search).get('kanto117');
+if(q117===null||q117==='1'){
+ try{
+  const modules=[
+   'effects/v117/01-sprite-audit.js',
+   'effects/v117/02-shiny.js',
+   'effects/v117/03-gym-kanto.js',
+   'effects/v117/04-combat.js',
+   'effects/v117/05-mobile.js'
+  ];
+  const code=await Promise.all(modules.map(async file=>{
+   const resp=await fetch(file+'?build=v117-kanto-five',{cache:'no-store'});
+   if(!resp.ok)throw Error('V117 file missing '+file+' HTTP '+resp.status);
+   return await resp.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V117 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+code.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(err){console.warn('V117 official unavailable; preserving approved V116',err);}
+}
+// V118: restore the original 10-frame PMD rainfall for Rain Dance.
+// Existing V35.64 painter remains primary; fallback draws only if it did not render.
+try{
+ const file='effects/moves/raindance-original-v118.js';
+ const response=await fetch(file+'?build=v118-pmd-original-rain',{cache:'no-store'});
+ if(!response.ok)throw Error('Rain Dance restoration HTTP '+response.status);
+ const code=await response.text();
+ if(!game.includes(fireSpriteAnchor))throw Error('Rain Dance insertion anchor missing');
+ game=game.replace(fireSpriteAnchor,
+  String.fromCharCode(10)+code+String.fromCharCode(10)+fireSpriteAnchor);
+}catch(error){console.warn('Keeping native PMD rain animation as fallback',error);}
+// V119 KANTO TOTAL: ONE PATCH, 8 features (requested 2–8 + exact enemy shiny 1%).
+// V119 approved 16/10/2026: official on all routes; ?kanto119=0 for rollback diagnostics.
+if(new URLSearchParams(location.search).get('kanto119')!=='0'){
+ try{
+  const files=[
+   'effects/v119/01-enemy-shiny.js',
+   'effects/v119/02-cinematic-combat.js',
+   'effects/v119/03-leader-ai.js',
+   'effects/v119/04-weather-depth.js',
+   'effects/v119/05-capture-evolution.js',
+   'effects/v119/06-pokedex.js',
+   'effects/v119/07-league.js',
+   'effects/v119/08-mobile.js'
+  ];
+  const code=await Promise.all(files.map(async file=>{
+   const r=await fetch(file+'?build=v119-eight-kanto',{cache:'no-store'});
+   if(!r.ok)throw Error('V119 missing '+file+' HTTP '+r.status);
+   return r.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V119 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+code.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.error('V119 official modules unavailable; existing gameplay preserved',error)}
+}
+// V120: photographed mobile battle layout repair (UI ONLY).
+// Keep native leader roster and all approved attack / Pokemon sprites untouched.
+try{
+ const file='effects/ui/battle-layout-v120.js';
+ const response=await fetch(file+'?build=v120-mobile-blaine-fix',{cache:'no-store'});
+ if(!response.ok)throw Error('V120 layout HTTP '+response.status);
+ const code=await response.text();
+ if(!game.includes(fireSpriteAnchor))throw Error('V120 injection anchor missing');
+ game=game.replace(fireSpriteAnchor,
+  String.fromCharCode(10)+code+String.fromCharCode(10)+fireSpriteAnchor);
+}catch(error){console.warn('V120 layout cleanup unavailable; battle gameplay preserved',error);}
+// V121: opponent Fighting Pokemon MUST close distance before physical hits.
+// Fixes Bruno Machamp/Hitmonlee/Hitmonchan/Poliwrath in normal and safe modes.
+// Loaded after V117/V119 AI wrappers and V120 UI; moves approved remain intact.
+try{
+ const file='effects/combat/enemy-fighting-contact-v121.js';
+ const res=await fetch(file+'?build=v121-fighting-enemy-contact',{cache:'no-store'});
+ if(!res.ok)throw Error('V121 enemy contact module HTTP '+res.status);
+ if(!game.includes(fireSpriteAnchor))throw Error('V121 runtime marker absent');
+ game=game.replace(fireSpriteAnchor,
+  String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
+}catch(error){console.error('V121 enemy Fighting melee unavailable',error);}
+// V100: merge bilingual duplicate DISPLAY entries in the four-move
+// editor without changing underlying move keys, equipped saves or VFX.
+try{
+ const path='effects/ui/move-dedup-v100.js';
+ const response=await fetch(path+'?build=v100-bilingual-cleanup',{cache:'no-store'});
+ if(!response.ok)throw Error('Dedup module HTTP '+response.status);
+ const text=await response.text();
+ if(!game.includes(fireSpriteAnchor))throw Error('Dedup runtime anchor missing');
+ game=game.replace(fireSpriteAnchor,
+  String.fromCharCode(10)+text+String.fromCharCode(10)+fireSpriteAnchor);
+}catch(error){
+ console.warn('Move dedup UI unavailable. Original catalogue preserved.',error);
+}
+// V122: mobile battle size + real landscape button; generic cast-spike stabilizer;
+// discreet ✓ only on previously saved/approved moves; no gameplay changes.
+for(const file of [
+ 'effects/performance/cast-smooth-v122.js',
+ 'effects/ui/battle-proportion-v122.js',
+ 'effects/ui/move-approved-mark-v122.js'
+]){
+ try{
+  const res=await fetch(file+'?build=v122-battle',{cache:'no-store'});
+  if(!res.ok)throw Error(file+' HTTP '+res.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V122 game insertion anchor absent');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V122 optional module disabled: '+file,error);}
+}
+// V122 approved: FOUR POISON sprites now active in official LIVE battles.
+// Previous V111 version remains intact; ?poison122=0 is diagnostics rollback.
+if(new URLSearchParams(location.search).get('poison122')!=='0'){
+ try{
+  const files=[
+   'effects/moves/v122-poison-preview/runtime.js',
+   'effects/moves/v122-poison-preview/venoshock/spec.js',
+   'effects/moves/v122-poison-preview/toxinapesada/spec.js',
+   'effects/moves/v122-poison-preview/rajadaacida/spec.js',
+   'effects/moves/v122-poison-preview/golpedeveneno/spec.js'
+  ];
+  const chunks=await Promise.all(files.map(async file=>{
+   const res=await fetch(file+'?build=v122-four-original-poison',{cache:'no-store'});
+   if(!res.ok)throw Error(file+' HTTP '+res.status);
+   return res.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V122 poison preview insertion anchor absent');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+chunks.join(String.fromCharCode(10))+
+   String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.error('V122 approved Poison renderer unavailable; V111 fallback preserved',error);}
+}
+// V123 integrated official mega patch: strategy, career statistics, five encounters,
+// Pokemon Centre, Infinite Tower record, bounded cast effects and larger visible sprites.
+// Protected move renderers V95-V122 are loaded first and never replaced here.
+if(new URLSearchParams(location.search).get('game123')!=='0'&&new URLSearchParams(location.search).get('game123legacy')!=='1'){
+ for(const file of [
+  'effects/v123/gameplay.js',
+  'effects/v123/encounters-ui.js',
+  'effects/v123/performance-visual.js'
+ ]){
+  try{
+   const response=await fetch(file+'?build=v123-kanto-mega',{cache:'no-store'});
+   if(!response.ok)throw Error(file+' HTTP '+response.status);
+   if(!game.includes(fireSpriteAnchor))throw Error('V123 game anchor absent');
+   game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
+  }catch(error){console.error('V123 module disabled: '+file,error);}
+ }
+}
+// V123 legacy alternative kept in repository for regression comparison only.
+// Enabling both gameplay engines by default duplicates rewards, Centre and Tower.
+if(new URLSearchParams(location.search).get('game123legacy')==='1')try{
+ const file='effects/v123/gameplay-mega.js';
+ const res=await fetch(file+'?build=v123-mega-campaign',{cache:'no-store'});
+ if(!res.ok)throw Error('V123 HTTP '+res.status);
+ if(!game.includes(fireSpriteAnchor))throw Error('V123 insertion marker absent');
+ game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
+}catch(error){console.warn('V123 mega game unavailable; V122 remains stable',error);}
+// V124: official cinematic trainer Pokeball recall/send and tactical enemy swaps.
+// Loaded after all V123 systems. ?swap124=0 disables just this patch for comparison.
+if(new URLSearchParams(location.search).get('swap124')!=='0'){
+ try{
+  const file='effects/v124/recall-ai.js';
+  const res=await fetch(file+'?build=v124-trainer-red-recall',{cache:'no-store'});
+  if(!res.ok)throw Error('V124 HTTP '+res.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V124 insertion marker absent');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+await res.text()+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.error('V124 fallback to native swaps',error);}
+}
+// V125 - original PokeAPI gen5 PokéMart item sprites and type-coloured TM discs.
+// Visual-only: never rewrites purchases, items, team saves or any move VFX.
+if(new URLSearchParams(location.search).get('mart125')!=='0'){
+ try{
+  const file='effects/v125/pokemart-sprites.js';
+  const response=await fetch(file+'?build=v125-original-items-tms',{cache:'no-store'});
+  if(!response.ok)throw Error('V125 sprite UI HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V125 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V125 sprite UI unavailable; native shop retained',error);}
+}
+// V137: FIX Brock victory advancing to Misty (stable gym trainer threshold)
+// and recover formerly stranded save.stage=14+ in V126's module.
+// V126: 13–27 trainers before each Kanto leader, tap Pokemon for 4 moves,
+// remove emojis behind loaded sprites, reduce Android modal/catalogue paint cost.
+// Protected V125 items, V124.2 red recall and all V95–V123 moves untouched.
+// ?ui126=0 disables only this patch for comparison.
+if(new URLSearchParams(location.search).get('ui126')!=='0'){
+ try{
+  const file='effects/v126/gameplay-ui.js';
+  const response=await fetch(file+'?build=v137-brock-badge-stage-fix',{cache:'no-store'});
+  if(!response.ok)throw Error('V126 HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V126 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.error('V126 unavailable; V125 and original campaign preserved',error);}
+}
+// V127: single approval registry marks both battle buttons and V33.1
+// equipped/catalogue lists, preserving move renderers and V126 performance.
+// ?marks127=0 restores the prior V122 + marker for diagnosis.
+if(new URLSearchParams(location.search).get('marks127')!=='0'){
+ try{
+  const file='effects/v127/approval-marks.js';
+  const response=await fetch(file+'?build=v143-four-flying-saved',{cache:'no-store'});
+  if(!response.ok)throw Error('V127 HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V127 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V127 status badges unavailable; existing move animations retained',error);}
+}
+// V128 approved: four water moves official, original visuals unchanged. ?water128=0 rollback.
+if(new URLSearchParams(location.search).get('water128')!=='0'&&new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const files=['effects/moves/v128-water-preview/runtime.js',
+   'effects/moves/v128-water-preview/withdraw/index.js',
+   'effects/moves/v128-water-preview/water-gun/index.js',
+   'effects/moves/v128-water-preview/bubbles/index.js',
+   'effects/moves/v128-water-preview/dive/index.js'];
+  const parts=await Promise.all(files.map(async file=>{
+   const response=await fetch(file+'?build=v128-approved-water',{cache:'no-store'});
+   if(!response.ok)throw Error('V128 '+file+' HTTP '+response.status);
+   return response.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V128 battle anchor missing');
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+parts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V128 official water visuals unavailable; old effects preserved',error);}
+}
+// V130: four EARTH-type battle-only playable previews, not an illustration.
+// Exact matches: Tapa de Lama, Osso, Mud Shot, Poder Terrestre.
+// The normal URL remains unchanged until the user approves these four.
+if((new URLSearchParams(location.search).get('ground130')==='preview'||
+    new URLSearchParams(location.search).get('ground131')==='preview')&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const review131=new URLSearchParams(location.search).get('ground131')==='preview';
+  const files=[
+   'effects/moves/v130-ground-preview/runtime.js',
+   'effects/moves/v130-ground-preview/mud-slap/index.js',
+   'effects/moves/v130-ground-preview/bone-club/index.js',
+   'effects/moves/v130-ground-preview/mud-shot/index.js',
+   'effects/moves/v130-ground-preview/earth-power/index.js'
+  ];
+  if(review131){
+   files[2]='effects/moves/v131-ground-refinement/bone-club/index.js';
+   files.push('effects/moves/v131-ground-refinement/grande-fissura/index.js');
+  }
+  const scripts=await Promise.all(files.map(async file=>{
+   const response=await fetch(file+'?build=v130-ground-four-'+Date.now(),{cache:'no-store'});
+   if(!response.ok)throw Error('V130 '+file+' HTTP '+response.status);
+   return response.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V130 original battle anchor missing');
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+scripts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V130 ground preview unavailable; previous combat VFX unchanged',error);}
+}
+// V132 — two explicitly approved Ground moves, official in normal battles.
+// Keeps the previous V130 and V131 links for visual comparisons.
+// Never replaces the three other V130 Ground effects without explicit approval.
+if(new URLSearchParams(location.search).get('safe')!=='1'&&
+   new URLSearchParams(location.search).get('ground132')!=='0'&&
+   new URLSearchParams(location.search).get('ground130')!=='preview'&&
+   new URLSearchParams(location.search).get('ground131')!=='preview'){
+ try{
+  const files=[
+   'effects/moves/v132-ground-approved/runtime.js',
+   'effects/moves/v132-ground-approved/bone-club/index.js',
+   'effects/moves/v131-ground-refinement/grande-fissura/index.js'
+  ];
+  const scripts=await Promise.all(files.map(async file=>{
+   const response=await fetch(file+'?build=v132-approved-ground-final',{cache:'no-store'});
+   if(!response.ok)throw Error('V132 '+file+' HTTP '+response.status);
+   return response.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V132 battle anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+scripts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V132 approved ground effects failed to load; native animation preserved',error);}
+}
+// V134 — four user-approved V133 Ground moves now official in every battle.
+// Shapes unchanged; only secondary grit density adapts if mobile frames slow.
+// ?ground133=0 restores the older renderers; ?ground133=preview compares them.
+if(new URLSearchParams(location.search).get('ground133')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'&&
+   new URLSearchParams(location.search).get('ground130')!=='preview'&&
+   new URLSearchParams(location.search).get('ground131')!=='preview'){
+ try{
+  const files=[
+   'effects/moves/v133-ground-preview/runtime.js',
+   'effects/moves/v133-ground-preview/sand-claw/index.js',
+   'effects/moves/v133-ground-preview/earth-punch/index.js',
+   'effects/moves/v133-ground-preview/sand-spear/index.js',
+   'effects/moves/v133-ground-preview/shallow-fissure/index.js'
+  ];
+  const parts=await Promise.all(files.map(async path=>{
+   const response=await fetch(path+'?build=v134-ground-approved-mobile-adaptive',{cache:'no-store'});
+   if(!response.ok)throw Error('V133 '+path+': '+response.status);
+   return response.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V133 battle insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+parts.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(err){console.warn('V134 approved Ground effects unavailable; previous visuals preserved',err);}
+}
+// V135 — flying moves playable in actual battle only via opt-in preview.
+// Leave every approved effect and V134 Android optimization intact.
+if(new URLSearchParams(location.search).get('flying135')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const flyFiles=[
+   'effects/moves/v135-flying-preview/runtime.js',
+   'effects/moves/v135-flying-preview/roost/index.js',
+   'effects/moves/v135-flying-preview/gust/index.js',
+   'effects/moves/v135-flying-preview/air-slash/index.js',
+   'effects/moves/v135-flying-preview/peck/index.js'
+  ];
+  const flyCode=await Promise.all(flyFiles.map(async path=>{
+   const result=await fetch(path+'?build=v135-four-flying-preview',{cache:'no-store'});
+   if(!result.ok)throw Error('V135 '+path+' HTTP '+result.status);
+   return result.text();
+  }));
+  if(!game.includes(fireSpriteAnchor))throw Error('V135 battle insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+flyCode.join(String.fromCharCode(10))+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V135 preview not loaded; approved effects preserved',error);}
+}
+// V142 — high-resolution Flying sprite animations in the NORMAL GAME.
+// The old ?flying136=pixel link was only a preview, hence users saw no change
+// at the canonical URL. Do NOT install the rejected V135 Canvas renderer.
+// ?flying136=0 rolls back only these 4 GPU effects for diagnosis.
+if(new URLSearchParams(location.search).get('flying136')!=='0'&&
+   new URLSearchParams(location.search).get('flying135')!=='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const script='effects/moves/v136-flying-pixel/runtime.js';
+  const response=await fetch(script+'?build=v142-hd-alpha',{cache:'no-store'});
+  if(!response.ok)throw Error('V136 '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V136 existing battle anchor absent');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(err){console.warn('V136 pixel spritesheets unavailable, old approved effects preserved',err);}
+}
+// V144: four user-supplied actual pixel sequences PREVIEWED in normal battles.
+// ?flying144=0 disables this preview; the saved V143 graphics remain unchanged.
+if(new URLSearchParams(location.search).get('flying145')==='0'&&
+   new URLSearchParams(location.search).get('flying144')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const script='effects/moves/v144-flying-original/runtime.js';
+  const response=await fetch(script+'?build=v144-user-sprites',{cache:'no-store'});
+  if(!response.ok)throw Error('V144 runtime HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V144 battle insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(err){console.warn('V144 preview unavailable; prior battle effects preserved',err);}
+}
+// V145 previews four REAL LibreSprite editable .aseprite animations in the battle.
+// No Python art. ?flying145=0 reverts only these four to the earlier V144 preview.
+if(new URLSearchParams(location.search).get('flying145')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const script='effects/moves/v145-flying-libresprite/runtime.js';
+  const response=await fetch(script+'?build=v145-libresprite-source',{cache:'no-store'});
+  if(!response.ok)throw Error('V145 preview HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V145 insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(err){console.warn('V145 LibreSprite preview unavailable; saved attacks preserved',err);}
+}
+// The retired Atelier stays in GitHub history; it is not inside the game.
+// V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
+// V158+V159: isolated copy of the ORIGINAL campaign. Import all five upgrades only here.
+window.__V158_159_LAB=true;
+const labRes=await fetch('effects/labs/v158-v159-combined.js?build=158-159-unified-v1',{cache:'no-store'});
+if(!labRes.ok)throw Error('V158+V159 combat lab unavailable '+labRes.status);
+if(!game.includes(fireSpriteAnchor))throw Error('V158+V159 insertion anchor missing');
+game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+(await labRes.text())+
+ String.fromCharCode(10)+fireSpriteAnchor);
+// V158+V159 sandbox must run in the newly written game document, BEFORE saving starts.
+game=game.replace('<script>','<script>'+ "window.__V158_159_LAB=true;\n(function(){\n if(window.__torreLabSandboxed)return;\n const storage=Storage.prototype,get=storage.getItem,set=storage.setItem,rm=storage.removeItem,clear=storage.clear;\n const prefix='__torre_lab_v158_159__',official=window.localStorage;\n storage.getItem=function(k){if(this!==official)return get.call(this,k);\n   const value=get.call(this,prefix+String(k));return value===null?get.call(this,k):value;};\n storage.setItem=function(k,v){return set.call(this,this===official?prefix+String(k):k,v);};\n storage.removeItem=function(k){return rm.call(this,this===official?prefix+String(k):k);};\n storage.clear=function(){if(this!==official)return clear.call(this);\n   const keys=[];for(let n=0;n<this.length;n++){const name=this.key(n);if(name?.startsWith(prefix))keys.push(name);}\n   keys.forEach(name=>rm.call(this,name));};\n window.__torreLabSandboxed=true;\n})();\n");
+game=game.replace('</head>','<meta name="torre-lab" content="v158-159-unified-isolated"></head>');
+ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
+ if(new URLSearchParams(location.search).get('safe')!=='1'){
+  const safeUrl=new URL(location.href);safeUrl.searchParams.set('safe','1');
+  console.error('Falha na V46, restaurando V45:',e);
+  location.replace(safeUrl.toString());return;
+ }
+ ptProgress(0,'Falha ao carregar. Use o modo seguro ou tente novamente.');const label=document.getElementById('pt-status');if(label){label.classList.add('pt-error');label.title=String(e.message||e)}const retry=document.createElement('button');retry.className='pt-retry';retry.textContent='Tentar novamente';retry.onclick=()=>location.reload();document.getElementById('pt-loader')?.appendChild(retry);console.error(e)})
+</script></body></html>
