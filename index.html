@@ -445,7 +445,7 @@ if(new URLSearchParams(location.search).get('lighting146')!=='0'&&
    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V146 lighting disabled; original stadium preserved',error);}
 }
-// V148: angled 2.5D stone chamber using the same native battle canvas.
+// V149: richer crystal / volcanic pixel chamber, integrated in actual battles.
 // ?arena148=0 restores V147; ?arena148=lava previews the volcanic arena.
 if(new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
@@ -453,7 +453,7 @@ if(new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('lighting146')!=='0'){
  try{
   const path='effects/arena/chamber-v148.js';
-  const response=await fetch(path+'?build=v148-perspective-stone',{cache:'no-store'});
+  const response=await fetch(path+'?build=v149-dungeon-detail-blue-lava',{cache:'no-store'});
   if(!response.ok)throw Error('V148 chamber HTTP '+response.status);
   if(!game.includes(fireSpriteAnchor))throw Error('V148 battle anchor missing');
   game=game.replace(fireSpriteAnchor, String.fromCharCode(10)+(await response.text())+
