@@ -23,7 +23,7 @@ for(const name of ['Bico Broca','Vendaval','Aerocorte','Pique'])
  assert.ok(!approvals.some(x=>x.move===name),'no fake approval for a V144 preview');
 assert.doesNotThrow(()=>new vm.Script(runtime));
 assert.doesNotMatch(runtime,/getContext\s*\(|drawImage\s*\(|requestAnimationFrame\s*\(|drawCatalogMove\s*\(|fillRect\s*\(/);
-assert.match(pixi,/root\.scale\.set\(spec\.flying144\?1:\.20\)/);
+assert.match(pixi,/root\.scale\.set\(\(spec\.flying144\|\|spec\.flying145\)\?1:\.20\)/);
 assert.match(pixi,/atlasFrame=\(spec\.frameStart\|\|0\)\+i/);
 assert.match(pixi,/PIXI\.SCALE_MODES\.NEAREST:PIXI\.SCALE_MODES\.LINEAR/);
 assert.match(pixi,/PokemonTorreFlyingOriginalV144/);
