@@ -10,7 +10,9 @@ for name,(w,h,n) in expected.items():
     im=Image.open(fx/name).convert('RGBA')
     assert im.size==(w,h),(name,im.size)
     frames=[im.crop(((i%4)*128,(i//4)*128,((i%4)+1)*128,((i//4)+1)*128)) for i in range(n)]
-    assert all(f.getbbox() for f in frames),name+' contains blank frames'
+    # The final impact frame intentionally fades to transparent, unlike attack frames.
+    active=frames[:-1] if name=='impact-12.png' else frames
+    assert all(f.getbbox() for f in active),name+' contains unexpectedly blank frames'
     changes=sum(ImageChops.difference(frames[i],frames[i+1]).getbbox() is not None for i in range(n-1))
     assert changes>=n-3,(name,changes)
     print('V165 FX PASS',name,'animated changes',changes)
