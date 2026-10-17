@@ -108,6 +108,10 @@ jobs:
         run: python tools/build-v153-blue-arena.py
       - name: Verificar arte V153 e integracao WebGL
         run: node tests/v153-blue-python-pixi.test.cjs
+      - name: V154 gerar arte pixel original usando Python
+        run: python tools/build-v154-video-arena.py
+      - name: V154 validar arena azul, perspectiva e regressao de golpes
+        run: node tests/v154-video-blue-arena.test.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
