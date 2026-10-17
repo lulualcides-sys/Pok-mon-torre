@@ -19,7 +19,7 @@ for(let i=0;i<dirs.length;i++){
  assert.equal(ase.readUInt16LE(8),128);assert.equal(ase.readUInt16LE(10),128);
  assert.equal(ase.readUInt16LE(12),32);
  assert.equal(crypto.createHash('sha256').update(ase).digest('hex'),hashes[i],
-  'do not replace user's saved sprites with procedural artwork: '+name);
+  "do not replace the saved sprites with procedural artwork: "+name);
  let offset=128,n=0,distinct=new Set();
  while(offset+16<=ase.length){
   const size=ase.readUInt32LE(offset),magic=ase.readUInt16LE(offset+4);
