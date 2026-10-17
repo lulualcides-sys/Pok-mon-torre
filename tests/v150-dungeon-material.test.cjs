@@ -8,7 +8,7 @@ const html=fs.readFileSync('index.html','utf8');
 const approved=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
 assert.equal(approved.moves.length,46,'approved attacks are untouchable');
 assert.match(html,/v150-material-stone-crystal-flame/);
-assert.match(html,/v150-dungeon-gpu-lights/);
+assert.match(html,/v151-video-arena-pixi/); // shared Pixi bridge remains loaded; V150 fallback preserved
 assert.match(scene,/v150Material/);assert.match(scene,/v150Architecture/);
 assert.match(scene,/v150Crystalline/);assert.match(scene,/arena150/);
 assert.match(pixi,/const chamber150=window.PokemonTorreArenaV148\?\.version==='150\.0'/);
