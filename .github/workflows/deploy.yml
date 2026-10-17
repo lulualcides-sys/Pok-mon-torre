@@ -19,6 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # V145: LibreSprite instalado em toda publicacao, com cache e teste real.
+      # Nao altera golpes antigos; novos sprites devem ser editados via LibreSprite.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: ./.github/actions/setup-libresprite
+      - name: Validar importacao/exportacao de sprites no LibreSprite
+        run: bash tools/libresprite/smoke-test.sh
       - uses: actions/configure-pages@v5
       - uses: actions/setup-python@v5
         with:
