@@ -104,6 +104,10 @@ jobs:
         run: node tests/v151-video-matched-arena.test.cjs
       - name: Arena azul V152 PixiJS WebGL pixels e batalha real
         run: node tests/v152-blue-pixi-lab.test.cjs
+      - name: Gerar tilesets pixelados V153 em Python/Pillow
+        run: python tools/build-v153-blue-arena.py
+      - name: Verificar arte V153 e integracao WebGL
+        run: node tests/v153-blue-python-pixi.test.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
