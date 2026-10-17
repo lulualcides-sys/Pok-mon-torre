@@ -65,7 +65,7 @@ if(new URLSearchParams(location.search).get('safe')!=='1'){
  if(previewModeV88===null||previewModeV88==='v86'||previewModeV88==='v92'){
   fxFiles.splice(i+1,0,"effects/moves/v86-preview/render.js");
  }
-}let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build='+(path.endsWith('/pixi-layer.js')?'v150-dungeon-gpu-lights':path.includes('v89-four/render')||path.includes('v91-four/canvas-fallback')||path.includes('v92-four/')||path.includes('v86-preview/render')||path.endsWith('/end.js')||path.endsWith('/pixi-layer.js')?'v94-stable-battle-fx':path.includes('move-type-filter')?'v129-ground-filter':path.includes('move-library-v61')||path.includes('real-drain-v65')||path.includes('v63-plant/render')||path.includes('v60-four/render')||path.includes('library16-v59')||path.includes('elemental-eight-v58')||path.includes('electric-four-v56')||path.includes('catalog/bundle')||path.endsWith('/end.js')?'original-drain-v65':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.error('Falha nos módulos V89; não substituir por animações antigas',error);throw error;}if(new URLSearchParams(location.search).get('safe')!=='1'&&(!plugin||!plugin.includes('catalogElectricFourV56')||!plugin.includes('elementalEightV58')||!plugin.includes('library16V59')||!plugin.includes('cinematicFourV60')||!plugin.includes('plantFourV63')||!plugin.includes('PokemonTorreDrainV65')))throw Error('Módulos dos golpes V64 incompletos');
+}let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build='+(path.endsWith('/pixi-layer.js')?'v151-video-arena-pixi':path.includes('v89-four/render')||path.includes('v91-four/canvas-fallback')||path.includes('v92-four/')||path.includes('v86-preview/render')||path.endsWith('/end.js')||path.endsWith('/pixi-layer.js')?'v94-stable-battle-fx':path.includes('move-type-filter')?'v129-ground-filter':path.includes('move-library-v61')||path.includes('real-drain-v65')||path.includes('v63-plant/render')||path.includes('v60-four/render')||path.includes('library16-v59')||path.includes('elemental-eight-v58')||path.includes('electric-four-v56')||path.includes('catalog/bundle')||path.endsWith('/end.js')?'original-drain-v65':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.error('Falha nos módulos V89; não substituir por animações antigas',error);throw error;}if(new URLSearchParams(location.search).get('safe')!=='1'&&(!plugin||!plugin.includes('catalogElectricFourV56')||!plugin.includes('elementalEightV58')||!plugin.includes('library16V59')||!plugin.includes('cinematicFourV60')||!plugin.includes('plantFourV63')||!plugin.includes('PokemonTorreDrainV65')))throw Error('Módulos dos golpes V64 incompletos');
 // V63: all four approved Grass/status atlases loaded before a battle starts.
 // Replaces old visuals, never overlays them; keeps the status mechanics intact.
 if(new URLSearchParams(location.search).get('safe')!=='1'){
@@ -447,7 +447,8 @@ if(new URLSearchParams(location.search).get('lighting146')!=='0'&&
 }
 // V150: textured crystal / volcanic dungeon with cached material, active Pixi lanterns.
 // ?arena148=0 restores V147; ?arena148=lava previews the volcanic arena.
-if(new URLSearchParams(location.search).get('arena148')!=='0'&&
+if(new URLSearchParams(location.search).get('arena151')==='0'&&
+   new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
    new URLSearchParams(location.search).get('arena_preview')!=='off'&&
    new URLSearchParams(location.search).get('lighting146')!=='0'){
@@ -460,6 +461,24 @@ if(new URLSearchParams(location.search).get('arena148')!=='0'&&
    String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V148 room unavailable; V147 original remains active',error);}
 }
+// V151: native battle camera and UI stay unchanged, but the flat V150 room is
+// replaced by a layout measured from the user's actual PokéSouls video.
+// ?arena151=0 restores V150; ?arena148=0 still restores V147.
+if(new URLSearchParams(location.search).get('arena151')!=='0'&&
+   new URLSearchParams(location.search).get('arena148')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'&&
+   new URLSearchParams(location.search).get('arena_preview')!=='off'&&
+   new URLSearchParams(location.search).get('lighting146')!=='0'){
+ try{
+  const path='effects/arena/video-v151.js';
+  const response=await fetch(path+'?build=v151-user-video-blue-lava',{cache:'no-store'});
+  if(!response.ok)throw Error('V151 arena HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V151 original battle hook missing');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(e){console.error('V151 no vídeo unavailable; existing battle safe',e);}
+}
+
 // V148 HUD: keep combat data readable but uncover the back-wall depth on mobile.
 if(new URLSearchParams(location.search).get('arena148')!=='0'&&
    game.includes('</head>'))game=game.replace('</head>',"<style id=\"pokemon-torre-v148-responsive\">\n@media(max-width:700px){\n .modal.combatModal .hudPro{top:4px;padding:4px 6px;max-width:43%;background:#111f38cc;box-shadow:0 3px 14px #02091b38;backdrop-filter:blur(2px)}\n .modal.combatModal .hudName{font-size:10px}\n .modal.combatModal .hudTrack{height:6px;margin-top:3px}\n .modal.combatModal .hudNumbers{font-size:9px;margin-top:2px}\n .modal.combatModal .arenaChip{top:58px}\n}\n</style>"+'</head>');
