@@ -76,7 +76,11 @@ async function pmdTexture(id,action){
  const possible=[LOCAL+id+'/'+action+'-Anim.png',SRC+id+'/'+action+'-Anim.png'];
  let error;
  for(const uri of possible){
-  try{return await image(uri);}catch(e){error=e;}
+  try{
+   const t=await image(uri);
+   if(uri.startsWith(LOCAL))state.pmdLocal=(state.pmdLocal||0)+1;
+   return t;
+  }catch(e){error=e;}
  }
  throw error||Error('PMD '+id+' '+action+' não disponível');
 }
@@ -126,7 +130,7 @@ async function sheet(id,action){
  const details=specs[action]||fallbackSpecs()[id][action]||fallbackSpecs()[id].Idle;
  if(!details||!details[0]||!details[1])throw Error('Sem metadados para '+key);
  const texture=await pmdTexture(id,action);
- if(texture.baseTexture?.resource?.url?.includes('/assets/pmd-spritecollab/'))state.pmdLocal=(state.pmdLocal||0)+1;
+ // Local import count is recorded at pmdTexture, independent of Pixi resource internals.
  const w=details[0],h=details[1],durations=details[2];
  const columns=Math.floor(texture.width/w),rows=Math.floor(texture.height/h);
  const count=Math.min(columns,durations.length);
@@ -370,7 +374,7 @@ async function init(){
   updateParticles(sec);selectActions(hero,foe);cameraFrame();
   state.frames++;state.fps=Math.round(app.ticker.FPS);
   monitorPerformance(Math.min(200,Math.max(0,dt*1000/60)));
-  el('fps').textContent='WebGL · '+state.fps+' FPS · '+perf.level.toUpperCase();
+  if(state.frames%10===0)el('fps').textContent='WebGL · '+state.fps+' FPS · '+perf.level.toUpperCase();
   for(const [i,type] of ['shadow','psychic'].entries()){
    const left=Math.max(0,state.nextPlayer[i]-state.seconds);
    const b=el(type);b.disabled=!state.playing||left>0;
