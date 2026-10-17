@@ -1,0 +1,33 @@
+name: V145 LibreSprite - sprites originais
+on:
+  push:
+    branches: [main]
+    paths:
+      - "effects/moves/v145-flying-libresprite/**"
+      - "tools/libresprite/build-v145-flying.sh"
+      - "tests/v145-libresprite-flying.test.cjs"
+      - ".github/workflows/v145-libresprite.yml"
+      - "effects/moves/_runtime/pixi-layer.js"
+      - "parts/p013.txt"
+      - "index.html"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: ./.github/actions/setup-libresprite
+      - name: Exportar as quatro animacoes com LibreSprite
+        run: bash tools/libresprite/build-v145-flying.sh
+      - name: Testar o atlas real e a batalha
+        run: node tests/v145-libresprite-flying.test.cjs
+      - name: Proteger as previas antigas
+        run: |
+          node tests/v144-user-sprite-flying.test.cjs
+          node tests/v140-pixi-bridge.test.cjs
