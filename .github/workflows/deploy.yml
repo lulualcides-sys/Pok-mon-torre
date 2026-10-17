@@ -98,6 +98,8 @@ jobs:
         run: node tests/v147-cinematic-lightmap.test.cjs
       - name: "Testar V148 - geometria 2.5D, perspectiva, temas gelo/lava e rollback"
         run: node tests/v148-perspective-chamber.test.cjs
+      - name: Validar V150 terreno detalhado e luz sem quebrar combate
+        run: node tests/v150-dungeon-material.test.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
