@@ -30,7 +30,8 @@ assert.match(html,/effects\/arena\/chamber-v148\.js/);
 assert.match(src,/PIXI\.Texture\.from\(images\.get\(name\)\)/);
 assert.match(src,/PIXI\.BLEND_MODES\.ADD/);
 assert.match(src,/transparent\.naturalWidth=w/);
-assert.doesNotMatch(src,/new PIXI\.Application|drawAttack|useMove\(|setInterval|requestAnimationFrame/);
+assert.equal((src.match(/new PIXI\.Application/g)||[]).length,1,'one optional GPU environment');
+assert.doesNotMatch(src,/drawAttack|useMove\(|setInterval|requestAnimationFrame/);
 function run(query){
  const m={images:0,app:0,render:0,clear:0,destroy:0};
  class Img{constructor(){this.naturalWidth=96;this.naturalHeight=96;this.onload=null;this.onerror=null;}
