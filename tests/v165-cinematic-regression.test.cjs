@@ -3,7 +3,7 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const official=fs.readFileSync('index.html','utf8');
 const previous=fs.readFileSync('torre-v157-lab.html','utf8');
-const copy=fs.readFileSync('torre-v165-lab.html','utf8');
+const copy=fs.readFileSync('torre-v165-cinematic-lab.html','utf8');
 const engine=fs.readFileSync('effects/labs/v165-cinematic-patch.js','utf8');
 new vm.Script(engine,{filename:'v165-cinematic-patch.js'});
 const inner=copy.slice(copy.indexOf('<script>')+8,copy.lastIndexOf('</script>'));
