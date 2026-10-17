@@ -18,7 +18,18 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   await page.goto('http://127.0.0.1:'+port+'/previews/v156-mew-mewtwo.html',{waitUntil:'domcontentloaded',timeout:40000});
-  await page.waitForFunction(()=>window.PokemonTorreMewPilot?.diagnostics().ready===true,null,{timeout:45000});
+  try{
+   await page.waitForFunction(()=>window.PokemonTorreMewPilot?.diagnostics().ready===true,null,{timeout:45000});
+  }catch(e){
+   const debug=await page.evaluate(()=>({
+    message:document.getElementById('message')?.textContent,
+    loading:document.getElementById('loading')?.hidden,
+    diagnostics:window.PokemonTorreMewPilot?.diagnostics?.(),
+    resources:performance.getEntriesByType('resource').slice(-16).map(x=>x.name)
+   }));
+   console.error('V156 readiness diagnostics',JSON.stringify({debug,errors}));
+   throw e;
+  }
   const initial=await page.evaluate(()=>{
    const d=window.PokemonTorreMewPilot.diagnostics();
    const can=document.querySelector('#stage canvas');
