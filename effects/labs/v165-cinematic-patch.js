@@ -4,7 +4,7 @@
  */
 (() => {
 'use strict';
-window.PokemonTorreV165Boot={pixi:!!window.PIXI,labFlag:!!window.__V157_LAB,engine:typeof BattleEngine,bridge:!!window.PokemonTorrePixelFlyingBridge,stageAPI:typeof window.PokemonTorrePixelFlyingBridge?.labStage};
+window.PokemonTorreV165Boot={pixi:!!window.PIXI,labFlag:!!window.__V165_LAB,engine:typeof BattleEngine,bridge:!!window.PokemonTorrePixelFlyingBridge,stageAPI:typeof window.PokemonTorrePixelFlyingBridge?.labStage};
 if(!window.PIXI||typeof BattleEngine!=='function'||typeof window.PokemonTorrePixelFlyingBridge?.labStage!=='function')return;
 const P=window.PIXI, now=()=>performance.now(), clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const lab={version:'165-cinematic-fidelity',stages:[true,true,true,true,true],active:false,artRevision:'v165-authored-frame-sequences',
