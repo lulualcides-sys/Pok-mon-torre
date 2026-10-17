@@ -1,5 +1,5 @@
 'use strict';
-/* V158 + V159: combined Kanto actor animation and cinematic move patch. */
+/* V163-V165: one cinematic copy, new generated frame atlases and 2.5D arena. */
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const official=fs.readFileSync('index.html','utf8');
 const previous=fs.readFileSync('torre-v157-lab.html','utf8');
