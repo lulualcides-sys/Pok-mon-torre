@@ -205,7 +205,7 @@ function updateParticles(dt){
 }
 function face(a,b){
  const d=Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;
- const v=Math.round((d+90)/45);a.facing=((v%8)+8)%8;
+ const v=Math.round((90-d)/45);a.facing=((v%8)+8)%8;
 }
 function controls(dt){
  const hero=state.hero,foe=state.foe;
@@ -268,7 +268,7 @@ async function init(){
  app.ticker.add(dt=>{
   const sec=Math.min(.034,dt/60);
   if(!state.ready)return;
-  state.seconds+=state.playing?sec:0;
+  state.seconds+=sec;
   if(state.playing){controls(sec);updateSpells(sec);}
   updateParticles(sec);selectActions(hero,foe);cameraFrame();
   state.frames++;state.fps=Math.round(app.ticker.FPS);
