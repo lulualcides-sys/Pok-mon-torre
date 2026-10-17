@@ -133,7 +133,7 @@ function mount(e){
   const rail=add('horizon-rail',0,horizon-15,960,49,{alpha:.96,role:'glow'});
   const wallHeight=H-horizon+18;
   const edgeL=add('side-rail',0,horizon+12,23,wallHeight,{alpha:.84,role:'glow'});
-  const edgeR=add('side-rail',960,horizon+12,23,wallHeight,{alpha:.84,flip:true,role:'glow'});
+  const edgeR=add('side-rail',937,horizon+12,23,wallHeight,{alpha:.84,flip:true,role:'glow'});
   // Authored tall pixel crystals + cool spill light on the floor.
   const nodes=[
    {x:938,y:horizon+98,s:.84},
