@@ -47,7 +47,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   await page.waitForTimeout(600);
   const final=await page.evaluate(()=>({
     lab:window.PokemonTorreV160162Lab.diagnostics(),
-    overlays:document.querySelectorAll('#v158-159-lab-controls').length,
+    overlays:document.querySelectorAll('#v160-v162-lab-controls').length,
     arena:window.PokemonTorreBlue153?.diagnostics?.(),
   }));
   assert.equal(final.overlays,1);
