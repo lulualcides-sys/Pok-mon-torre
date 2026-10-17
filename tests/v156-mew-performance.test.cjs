@@ -22,7 +22,7 @@ const official=fs.readFileSync('index.html','utf8');
 const moves=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
 assert.equal(moves.moves.length,46);
 assert.ok(moves.moves.every(x=>x.protect));
-assert.match(h,/v156-mew-mewtwo\.js\?build=156-1/);
+assert.match(h,/v156-mew-mewtwo\.js\?build=156-2/);
 assert.match(h,/id="quality"/);assert.match(h,/CC BY-NC 4\.0/);
 assert.match(j,/new PIXI\.Application/);
 assert.equal((j.match(/new PIXI\.Application/g)||[]).length,1,
