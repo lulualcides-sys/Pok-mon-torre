@@ -39,7 +39,7 @@ const arena=fs.readFileSync('effects/arena/v165-cinematic-pixi.js','utf8');
 new vm.Script(arena,{filename:'v165-cinematic-pixi.js'});
 assert.match(arena,/arena_lab'\)==='blue165'/);
 assert.match(arena,/setTheme:value/);
-assert.match(arena,/if\(now-inst\.frameAt<66\)return/,'limit ambient FPS');
+assert.match(arena,/if\(now-inst\.frameAt<70\)return/,'limit ambient FPS');
 assert.match(engine,/BattleEngine\.prototype\.drawMon/);
 assert.match(engine,/BattleEngine\.prototype\.hitTarget/);
 assert.match(engine,/BattleEngine\.prototype\.useMove/);
