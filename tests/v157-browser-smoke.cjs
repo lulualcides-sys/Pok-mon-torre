@@ -40,7 +40,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const battle=await page.evaluate(()=>window.PokemonTorreLocalCombatTestV47.start(150,151));
   assert(battle,'real Pokemon Torre battle starter must be available');
   await page.waitForFunction(()=>window.PokemonTorreV157Lab?.diagnostics().active,null,{timeout:25000});
-  await page.waitForTimeout(2200);
+  await page.waitForFunction(()=>window.PokemonTorreV157Lab?.diagnostics().actors>0,null,{timeout:30000});
   let frames=await page.evaluate(()=>window.PokemonTorreV157Lab.diagnostics());
   assert(frames.webgl,'existing shared PixiJS renderer must work in full game');
   assert(frames.actors>0,'at least one PMD actor must be animated by PixiJS');
