@@ -311,7 +311,7 @@ function polishDepth(g,W,H,top,floor){
     [x-size*.27,y],[x+size*.18,y+4]],hot?'#ffbb65':'#a0eeff');
   polygon(g,[[x,y-size*2],[x+size*.36,y-size*.95],
     [x+size*.27,y],[x+size*.18,y+4]],shade);
-  stroke(g,[[x,y-size*1.85],[x+1,y-size*.47]],rgba(hi,.84),1.4);
+  stroke(g,[[x,y-size*1.85],[x+1,y-size*.47]],rgba(cyan,.84),1.4);
  }
  shard(105,top+122,17);shard(842,top+142,20);
  shard(180,Math.min(H-220,top+(H-top)*.58)-2,15);
@@ -404,8 +404,8 @@ BattleEngine.prototype.generateBackdrop=function(){
  }catch(e){stats.failures++;stats.lastError=String(e?.message||e);}
  return result;
 };
-window.PokemonTorreArenaV148=Object.freeze({installed:true,enabled,theme:lava?'lava':'ice',
- mode:'2.5D perspective-projected static stone arena; native physics/camera unchanged',
+window.PokemonTorreArenaV148=Object.freeze({installed:true,enabled,version:'149.0',theme:lava?'lava':'ice',
+ mode:'V149 enhanced pixel-stone dungeon; native physics/camera unchanged',
  baseline:'V97 tiles and V147 fallback preserved behind ?arena148=0',
  diagnostics:()=>({...stats})});
 })();
