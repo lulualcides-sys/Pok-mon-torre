@@ -10,7 +10,7 @@ permissions:
   id-token: write
 concurrency:
   group: github-pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   deploy:
     environment:
@@ -131,6 +131,10 @@ jobs:
       # V156: cinema pixel art (16+16+12 frames) and one PixiJS scene.
       # Phase 4 tests load local SpriteCollab assets on mobile viewport.
       # Phase 5 checks performance controls; main V150 remains unchanged.
+      - name: V165 gerar os tres efeitos animados e alvenaria cinematografica isolada
+        run: |
+          python tools/build-v165-cinematic-assets.py
+          python tools/test-v165-cinematic-assets.py
       - name: V156 gerar spritesheets cinematograficos em Python
         run: python tools/build-v156-cinematic-fx.py
       - name: V156 validar 5 etapas, SpriteCollab, WebGL e qualidade adaptativa
@@ -163,6 +167,13 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v160-v162-browser.cjs
+      # V163+V164+V165: one sandbox-only pixel-art patch, gate publication on real Chrome.
+      - name: V165 conferir codigo e separacao de arquivos aprovados
+        run: node tests/v165-cinematic-regression.test.cjs
+      - name: V165 testar golpe e arena no Chrome Android
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v165-cinematic-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
