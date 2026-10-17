@@ -471,7 +471,7 @@ if(new URLSearchParams(location.search).get('arena151')!=='0'&&
    new URLSearchParams(location.search).get('lighting146')!=='0'){
  try{
   const path='effects/arena/video-v151.js';
-  const response=await fetch(path+'?build=v151-user-video-blue-lava',{cache:'no-store'});
+  const response=await fetch(path+'?build=v151-1-video-textured-stone',{cache:'no-store'});
   if(!response.ok)throw Error('V151 arena HTTP '+response.status);
   if(!game.includes(fireSpriteAnchor))throw Error('V151 original battle hook missing');
   game=game.replace(fireSpriteAnchor,
