@@ -420,6 +420,7 @@ if(new URLSearchParams(location.search).get('arena_preview')!=='off'){
 // Uses identical floor textures and cameras; ?lightmap147=0 restores V146.
 if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
    new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue154'&&
    new URLSearchParams(location.search).get('lightmap147')!=='0'&&
    new URLSearchParams(location.search).get('lighting146')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
@@ -437,6 +438,7 @@ if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
 // ?lighting146=0 disables only lighting. Safe mode and arena-preview off bypass it.
 if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
    new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue154'&&
    new URLSearchParams(location.search).get('lighting146')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
    new URLSearchParams(location.search).get('arena_preview')!=='off'){
@@ -453,6 +455,7 @@ if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
 // ?arena148=0 restores V147; ?arena148=lava previews the volcanic arena.
 if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
    new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue154'&&
    new URLSearchParams(location.search).get('arena151')!=='1'&&
    new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
@@ -471,6 +474,7 @@ if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
 // V150 restored as default after user rejected V151; ?arena151=1 opts into archived V151; ?arena148=0 still restores V147.
 if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
    new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue154'&&
    new URLSearchParams(location.search).get('arena151')==='1'&&
    new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
@@ -518,6 +522,24 @@ if(new URLSearchParams(location.search).get('arena_lab')==='blue153'&&
   if(!game.includes(fireSpriteAnchor))throw Error('V153 game integration hook unavailable');
   game=game.replace(fireSpriteAnchor,'\n'+(await response.text())+'\n'+fireSpriteAnchor);
  }catch(err){console.warn('V153 optional GPU pilot failed; official game unchanged',err);}
+}
+
+// V154 - video-comparison, authored Python pixel-art environment.
+// Only this opt-in uses the new textures. V150 stays the official game.
+// Input, camera, saved attacks, campaign, Pokemon sprites all remain native.
+if(new URLSearchParams(location.search).get('arena_lab')==='blue154'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const before="canvas.getContext('2d',{alpha:false})";
+  if(!game.includes(before))throw Error('V154 battle alpha hook unavailable');
+  game=game.replace(before,"canvas.getContext('2d',{alpha:true})");
+  const path='effects/arena/blue-v154-pixi.js';
+  const res=await fetch(path+'?build=v154-perspective-video-tiles',{cache:'no-store'});
+  if(!res.ok)throw Error('V154 arena source '+res.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V154 battle insertion anchor unavailable');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await res.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(e){console.warn('V154 optional arena failed, previous game preserved',e);}
 }
 
 // V148 HUD: keep combat data readable but uncover the back-wall depth on mobile.
