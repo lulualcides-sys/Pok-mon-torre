@@ -272,6 +272,23 @@ const pixiFX=(()=>{
    glow146(root,tex,480*u,105*u,350*u,280*u,0xff727c,.25)
   ];
   if(baked147)for(const lamp of lamps)lamp.alpha*=window.PokemonTorreArenaV148?.enabled?.035:.16;
+  // V150: reuse these exact FIVE GPU lights for crystal and torch flicker.
+  // Different palettes and positions; zero additional sprites or frame loops.
+  const chamber150=window.PokemonTorreArenaV148?.version==='150.0';
+  if(chamber150){
+   const hot=window.PokemonTorreArenaV148.theme==='lava';
+   const logicalTop=Math.min(193,Math.max(138,h/u*.21));
+   lamps[0].position.set(106*u,(logicalTop+(hot?2:127))*u);
+   lamps[1].position.set(843*u,(logicalTop+(hot?2:153))*u);
+   lamps[2].position.set(180*u,h*.58);
+   lamps[3].position.set(790*u,h*.78);
+   lamps[4].position.set(480*u,(logicalTop-55)*u);
+   for(const light of lamps){
+    light.tint=hot?0xff8938:0x8ce7ff;
+    light.alpha=hot?.105:.074;
+   }
+   lamps[4].alpha=hot?.05:.07;
+  }
   const seams=new PIXI.Graphics();
   seams.lineStyle(Math.max(1,2.1*u),0x9dddff,.42);
   seams.moveTo(0,150*u);seams.lineTo(w,150*u);
@@ -294,6 +311,15 @@ const pixiFX=(()=>{
   const baked147=!!(window.PokemonTorreArenaV148?.enabled||window.PokemonTorreLightmapV147?.enabled);
   a.lamps[0].alpha=(window.PokemonTorreArenaV148?.enabled?.025:(baked147?.09:.45))+.015*Math.sin(now*.0018);
   a.lamps[1].alpha=(window.PokemonTorreArenaV148?.enabled?.025:(baked147?.09:.43))+.015*Math.cos(now*.0014);
+  if(window.PokemonTorreArenaV148?.version==='150.0'){
+   const hot=window.PokemonTorreArenaV148.theme==='lava';
+   // Gentle stone bounce and flame flicker, calibrated not to wash out sprites.
+   a.lamps[0].alpha=(hot?.115:.073)+.017*Math.sin(now*.0029);
+   a.lamps[1].alpha=(hot?.113:.073)+.014*Math.sin(now*.0023+1.4);
+   a.lamps[2].alpha=(hot?.068:.054)+.009*Math.sin(now*.0017);
+   a.lamps[3].alpha=(hot?.067:.053)+.008*Math.cos(now*.0019);
+   a.lamps[4].alpha=(hot?.044:.065)+.011*Math.sin(now*.0011);
+  }
   const actors=[owner.player,owner.enemy];
   for(let i=0;i<2;i++){
    const shadow=a.shadow[i],actor=actors[i];
