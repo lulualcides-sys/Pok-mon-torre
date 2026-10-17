@@ -253,7 +253,7 @@ const pixiFX=(()=>{
   const w=engine.w,h=engine.h,u=w/960,root=new PIXI.Container();
   root.interactiveChildren=false;
   const dim=new PIXI.Graphics();
-  const baked147=!!(window.PokemonTorreArenaV148?.enabled||window.PokemonTorreLightmapV147?.enabled);
+  const baked147=!!(window.PokemonTorreArenaV151?.enabled||window.PokemonTorreArenaV148?.enabled||window.PokemonTorreLightmapV147?.enabled);
   // Navy environment: the V98 tiled stadium remains recognizable and sharp.
   dim.beginFill(0x08162c,baked147?.045:.28);dim.drawRect(0,0,w,h);dim.endFill();
   // Contact occlusion under existing North/South walls and side columns.
@@ -275,6 +275,20 @@ const pixiFX=(()=>{
   // V150: reuse these exact FIVE GPU lights for crystal and torch flicker.
   // Different palettes and positions; zero additional sprites or frame loops.
   const chamber150=window.PokemonTorreArenaV148?.version==='150.0';
+  const chamber151=window.PokemonTorreArenaV151?.enabled===true;
+  if(chamber151){
+   const hot=window.PokemonTorreArenaV151.theme==='lava';
+   const logicalH=h/u,back=Math.max(143,Math.min(196,logicalH*.235));
+   const layout=hot?[[295,back+80],[745,back+22],[120,logicalH*.54],[843,logicalH*.56],[480,back+15]]:
+                     [[115,back+110],[852,back+100],[166,logicalH*.74],[830,logicalH*.72],[480,back+24]];
+   lamps.forEach((a,i)=>{
+    a.position.set(layout[i][0]*u,layout[i][1]*u);
+    a.tint=hot?0xff7b30:0x90dfff;
+    a.width=(i===4?290:175)*u;
+    a.height=(i===4?175:240)*u;
+    a.alpha=hot?(i<2?.15:.04):(i<2?.10:.07);
+   });
+  }
   if(chamber150){
    const hot=window.PokemonTorreArenaV148.theme==='lava';
    const logicalTop=Math.min(193,Math.max(138,h/u*.21));
@@ -308,9 +322,18 @@ const pixiFX=(()=>{
   if(owner.w!==a.w||owner.h!==a.h){createLighting146(owner);return;}
   if(now-a.last<33)return; // Light position/tint costs capped at 30 Hz.
   a.last=now;
-  const baked147=!!(window.PokemonTorreArenaV148?.enabled||window.PokemonTorreLightmapV147?.enabled);
+  const baked147=!!(window.PokemonTorreArenaV151?.enabled||window.PokemonTorreArenaV148?.enabled||window.PokemonTorreLightmapV147?.enabled);
   a.lamps[0].alpha=(window.PokemonTorreArenaV148?.enabled?.025:(baked147?.09:.45))+.015*Math.sin(now*.0018);
   a.lamps[1].alpha=(window.PokemonTorreArenaV148?.enabled?.025:(baked147?.09:.43))+.015*Math.cos(now*.0014);
+  if(window.PokemonTorreArenaV151?.enabled){
+   const hot=window.PokemonTorreArenaV151.theme==='lava';
+   // Ambient light flickers in the already-existing Pixi stage; no new canvas.
+   a.lamps[0].alpha=(hot?.14:.10)+.025*Math.sin(now*.0034);
+   a.lamps[1].alpha=(hot?.14:.10)+.021*Math.sin(now*.0029+1.3);
+   a.lamps[2].alpha=(hot?.042:.072)+.009*Math.sin(now*.0023);
+   a.lamps[3].alpha=(hot?.042:.071)+.009*Math.cos(now*.0027);
+   a.lamps[4].alpha=(hot?.025:.055)+.007*Math.sin(now*.0014);
+  }
   if(window.PokemonTorreArenaV148?.version==='150.0'){
    const hot=window.PokemonTorreArenaV148.theme==='lava';
    // Gentle stone bounce and flame flicker, calibrated not to wash out sprites.
