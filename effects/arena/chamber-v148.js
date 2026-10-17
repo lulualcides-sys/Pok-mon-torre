@@ -195,6 +195,155 @@ function chest(g,x,y){
  g.fillStyle='#f7c967';g.fillRect(-4,-h*.70,8,8);g.fillRect(-16,-h*.60,11,4);
  g.restore();
 }
+
+// V149: second pass of hand-authored pixel-dungeon details, baked ONCE into
+// the scene texture. Attack animation, collision, positions and Pixi GPU effects
+// never use this 2D drawing context. Blue and lava compositions share geometry.
+function polishDepth(g,W,H,top,floor){
+ const r=rng(149079),hot=lava,cyan=hot?'255,136,56':'104,217,255';
+ const hi=hot?'#ffcc7c':'#cef8ff',face=hot?'#49302a':'#294061';
+ const ink=hot?'#160e18':'#09152e';
+ const floorEnd=H-54;
+ const block=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(x,y,w,h);};
+ // Reinforce the recessed architecture; paired niches frame the central gate.
+ for(const s of [-1,1]){
+  const x=W/2+s*180-32;
+  polygon(g,[[x-34,top-145],[x+34,top-145],[x+28,top-13],[x-28,top-13]],
+   hot?'#27131a':'#101e3d',rgba(cyan,.13),2.5);
+  polygon(g,[[x-28,top-146],[x+26,top-146],[x+17,top-133],[x-17,top-133]],
+   hot?'#77503d':'#3c5580');
+  for(let k=0;k<4;k++){
+   const y=top-125+k*25;
+   stroke(g,[[x-29,y],[x+28,y]],rgba(cyan,.10+k*.01),1.4);
+  }
+  // A warm/cool inset lantern, not a detached bright disk.
+  glow(g,x,top-85,43,77,cyan,.16);
+  block(x-11,top-104,22,32,hot?'#391718':'#163351');
+  block(x-8,top-100,16,23,hot?'#e68a42':'#63c4ed');
+  block(x-3,top-98,6,20,hi);
+  block(x-15,top-107,30,5,hot?'#71503a':'#4a6688');
+ }
+ // Door arch: dark aperture, stone lintel and one focal crystal.
+ polygon(g,[[399,top-10],[399,top-106],[411,top-132],[549,top-132],
+            [561,top-106],[561,top-10]],hot?'#2a1720':'#1d3053',
+            rgba(cyan,.2),3);
+ polygon(g,[[415,top-8],[415,top-101],[427,top-119],[533,top-119],
+            [545,top-101],[545,top-8]],hot?'#100c14':'#08162f');
+ for(let y=top-88;y<top-12;y+=20)
+  stroke(g,[[420,y],[540,y]],rgba(cyan,.13),1.8);
+ // Center niche jewel behind the stairs: strongly faceted, small and precise.
+ const cx=480,cy=top-31,ht=69;
+ glow(g,cx,cy-ht*.46,73,91,cyan,.32);
+ polygon(g,[[cx,cy-ht],[cx-20,cy-ht*.51],[cx-18,cy],
+            [cx+6,cy+8]],hot?'#ffba5d':'#6fe1ff');
+ polygon(g,[[cx,cy-ht],[cx+20,cy-ht*.48],[cx+18,cy],
+            [cx+6,cy+8]],hot?'#ac391e':'#338bc0');
+ polygon(g,[[cx-4,cy-ht*.85],[cx-7,cy-ht*.27],[cx+4,cy+3]],hi);
+ stroke(g,[[cx,cy-ht],[cx+3,cy-ht*.52],[cx+8,cy-2]],rgba(cyan,.95),1.6);
+ // Depth over the risers: horizontal highlight + front-face undershadow.
+ for(let i=0;i<4;i++){
+  const y=top-2+i*17,w=410+i*74,x=(960-w)/2;
+  polygon(g,[[x,y],[x+w,y],[x+w-12,y+10],[x+12,y+10]],
+   hot?'rgba(25,12,15,.41)':'rgba(7,16,38,.35)');
+  stroke(g,[[x+17,y],[x+w-17,y]],rgba(cyan,i===3?.23:.13),1.5);
+  stroke(g,[[x+9,y+10],[x+w-9,y+10]],rgba('2,8,23',.52),2.2);
+ }
+ // Three-dimensional masonry on left/right walls. All blocks face inwards.
+ for(const s of [-1,1]){
+  for(let i=0;i<8;i++){
+   const y=top+12+i*Math.max(24,(H-top)*.080);
+   if(y>floorEnd-135)break;
+   const x=s<0?22:W-22,dx=s<0?1:-1,w=22+i*1.6;
+   polygon(g,[[x,y],[x+dx*w,y-9],[x+dx*w,y+17],[x,y+23]],
+    hot?'rgba(89,46,38,.51)':'rgba(49,74,106,.49)');
+   stroke(g,[[x,y],[x+dx*w,y-9]],rgba(cyan,.23),1.5);
+   stroke(g,[[x+dx*w,y-9],[x+dx*w,y+17]],rgba('3,11,31',.5),2);
+  }
+ }
+ // Dense yet subtle wear: sharp pixel chips, bevels, wet tile glints.
+ for(let k=0;k<630;k++){
+  const t=.055+r()*.88;
+  const yy=floor.row(t),xx=floor.lx(30+r()*900,t);
+  if(yy<top+70||yy>floorEnd-22)continue;
+  const w=.7+r()*2.6,h=.5+r()*1.6;
+  block(Math.round(xx),Math.round(yy),w,h,r()<.57?
+    (hot?'rgba(224,130,80,.18)':'rgba(157,204,238,.19)'):
+    'rgba(1,8,23,.15)');
+ }
+ // Emissive stone seams. Short, branching fragments with a hot core.
+ const cracks=hot?49:24;
+ for(let k=0;k<cracks;k++){
+  const t=.22+r()*.72,yy=floor.row(t);
+  if(yy>floorEnd-14)continue;
+  const xx=floor.lx(50+r()*860,t);
+  const a=(r()-.5)*.55,span=10+r()*35;
+  const nodes=[[xx-span*.6,yy-1],[xx-span*.22,yy-4+a*4],
+   [xx+span*.13,yy+2-a*4],[xx+span*.58,yy-3]];
+  stroke(g,nodes,rgba(cyan,hot?.24:.10),hot?7:5);
+  stroke(g,nodes,rgba(cyan,hot?.62:.32),hot?2.8:1.9);
+  stroke(g,nodes,rgba(hot?'255,230,155':'207,249,255',hot?.90:.51),.75);
+  if(k%4===0)glow(g,xx,yy,span,14,cyan,hot?.16:.055);
+  stats.emissiveCracks++;
+ }
+ // Four stone pedestals visually anchor the V148 crystal sculptures.
+ const pedestals=[
+  [105,top+143,50],[842,top+165,59],
+  [180,Math.min(H-220,top+(H-top)*.58)+11,46],
+  [788,Math.min(H-170,top+(H-top)*.77)+12,52]
+ ];
+ for(const [x,y,w] of pedestals){
+  const h=w*.34;
+  glow(g,x,y+18,w*2.7,39,cyan,.055);
+  polygon(g,[[x-w*.68,y],[x+w*.70,y],[x+w*.62,y+h],
+    [x-w*.56,y+h]],ink);
+  polygon(g,[[x-w*.70,y-8],[x+w*.59,y-8],[x+w*.76,y+2],
+    [x-w*.56,y+2]],hot?'#664636':'#395477');
+  stroke(g,[[x-w*.51,y-5],[x+w*.49,y-5]],rgba(cyan,.32),1.6);
+  // The small stones cast contact shadows across adjacent grout.
+  g.fillStyle='rgba(0,5,18,.23)';g.beginPath();
+  g.ellipse(x+12,y+h+12,w*.95,11,-.07,0,Math.PI*2);g.fill();
+ }
+ // Faceted shards along walls, never on top of the action center.
+ function shard(x,y,size){
+  const shade=hot?'#bd4d27':'#4387aa';
+  glow(g,x,y-size*.70,size*1.6,size*2.1,cyan,hot?.19:.12);
+  polygon(g,[[x,y-size*2],[x-size*.36,y-size],
+    [x-size*.27,y],[x+size*.18,y+4]],hot?'#ffbb65':'#a0eeff');
+  polygon(g,[[x,y-size*2],[x+size*.36,y-size*.95],
+    [x+size*.27,y],[x+size*.18,y+4]],shade);
+  stroke(g,[[x,y-size*1.85],[x+1,y-size*.47]],rgba(hi,.84),1.4);
+ }
+ shard(105,top+122,17);shard(842,top+142,20);
+ shard(180,Math.min(H-220,top+(H-top)*.58)-2,15);
+ shard(788,Math.min(H-170,top+(H-top)*.77)-4,18);
+ // Real rubble: sharp contact shadows and dark faceted sides, mostly edges.
+ const stones=[[71,.44,19],[902,.52,23],[116,.82,21],[860,.84,17],
+               [245,.70,13],[700,.91,16],[764,.58,12],[291,.49,10],
+               [627,.63,12],[370,.95,13]];
+ for(const [x,f,s] of stones){
+  const y=top+(floorEnd-top)*f;
+  g.fillStyle='rgba(0,5,17,.37)';g.beginPath();
+  g.ellipse(x+8,y+7,s*1.7,s*.40,-.12,0,Math.PI*2);g.fill();
+  polygon(g,[[x-s,y],[x-s*.52,y-s*.85],[x+s*.27,y-s*.96],
+   [x+s,y-s*.25],[x+s*.82,y+s*.34],[x-s*.9,y+s*.20]],face);
+  polygon(g,[[x-s,y],[x-s*.52,y-s*.85],[x+s*.27,y-s*.96],[x,y-s*.36]],
+   hot?'#6e5548':'#516b8a');
+  polygon(g,[[x,y-s*.36],[x+s*.27,y-s*.96],[x+s,y-s*.25],
+   [x+s*.82,y+s*.34]],hot?'#281923':'#132640');
+  stroke(g,[[x-s*.52,y-s*.85],[x+s*.27,y-s*.96]],rgba(cyan,.17),1.3);
+ }
+ // Cool blue wet reflections / fiery mineral spill on visible foreground.
+ for(const spot of [[131,top+246,78,13],[807,top+318,95,18],
+    [206,H*.76,72,15],[742,H*.81,80,18]]){
+  const [x,y,w,h]=spot;if(y>floorEnd-35)continue;
+  glow(g,x,y,w,h,cyan,hot?.16:.15);
+  for(let j=0;j<5;j++){
+   const sx=x+(j-2)*w*.19,sy=y+(j%2)*2;
+   stroke(g,[[sx-w*.045,sy],[sx+w*.065,sy]],rgba(cyan,.27-j*.026),.9);
+  }
+ }
+}
+
 function build(base,width,height){
  const can=document.createElement('canvas');can.width=width;can.height=height;
  can.complete=true;can.naturalWidth=width;can.naturalHeight=height;
@@ -226,7 +375,8 @@ function build(base,width,height){
   glow(g,x,y,93,70,palette.spark,.13);
   stroke(g,[[x-11,y],[x-4,y+4],[x+6,y+1]],rgba(palette.spark,.38),1.2);
  }
- chest(g,340,top+145);
+ chest(g,469,top+157);
+ polishDepth(g,W,H,top,floor);
  // Global composition vignette avoids washing out the scene.
  const vign=g.createRadialGradient(W/2,H*.48,W*.12,W/2,H*.48,H*.82);
  vign.addColorStop(0,'rgba(2,6,24,0)');vign.addColorStop(.62,'rgba(3,5,17,.04)');
