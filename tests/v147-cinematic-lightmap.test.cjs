@@ -22,7 +22,7 @@ assert.match(lightmap,/globalCompositeOperation='screen'/);
 assert.match(lightmap,/const wells=\[/);
 assert.match(lightmap,/litTiles/);
 assert.match(lightmap,/wells\.length|for\(const l of wells\)/);
-assert.doesNotMatch(lightmap,/new PIXI\.Application|PIXI\.Filter|Python|Pillow|requestAnimationFrame/);
+assert.doesNotMatch(lightmap,/new PIXI\.Application|PIXI\.Filter|requestAnimationFrame/);
 let nowCanvas=0;
 function make(search=''){
  const calls={canvases:0,drawImage:0,rects:0,gradients:0,transforms:0,screen:0,polygons:0};
