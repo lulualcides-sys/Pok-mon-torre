@@ -7,7 +7,7 @@ const original=fs.readFileSync('index.html','utf8');
 const cloned=fs.readFileSync('torre-v157-lab.html','utf8');
 const runtime=fs.readFileSync('effects/labs/v157-combined.js','utf8');
 new vm.Script(runtime,{filename:'v157-combined.js'});
-const script=cloned.slice(cloned.lastIndexOf('<script>')+8,cloned.lastIndexOf('</script>'));
+const script=cloned.slice(cloned.indexOf('<script>')+8,cloned.lastIndexOf('</script>'));
 new vm.Script(script,{filename:'torre-v157-lab-loader.js'});
 assert.match(cloned,/__V157_LAB=true/);
 assert.match(cloned,/__torre_lab_v157__/);
