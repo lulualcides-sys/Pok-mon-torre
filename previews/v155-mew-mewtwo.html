@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16102a">
+<title>Pokémon Torre V155 · Batalha de estudo Mew × Mewtwo</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#110d20;color:#f7eaff}
+body{display:grid;justify-items:center;align-content:start;background:radial-gradient(ellipse at 50% 4%,#3e265e,#110c1e 65%);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{width:min(100vw,730px);padding:12px 13px 10px;display:flex;gap:10px;justify-content:space-between;align-items:center}
+header h1{margin:0;font-size:clamp(14px,3.6vw,20px);letter-spacing:.04em}
+header small{display:block;color:#c4add9;letter-spacing:.08em;font-size:10px;font-weight:700}
+header a{color:#dcd0f5;text-decoration:none;border:1px solid #725d97;border-radius:9px;background:#281b3e;padding:9px 12px;font-size:11px;white-space:nowrap}
+#game-shell{position:relative;width:min(calc(100vw - 12px),710px);aspect-ratio:720/1150;max-height:calc(100dvh - 85px);border:2px solid #9478ab;border-radius:16px;overflow:hidden;background:#6e5b99;box-shadow:0 14px 52px #030007d0,0 0 0 3px #281739;touch-action:none}
+#stage,#stage canvas{width:100%;height:100%;display:block;touch-action:none}
+#stage canvas{object-fit:contain;image-rendering:pixelated}
+.hud{position:absolute;top:13px;left:13px;right:13px;display:grid;grid-template-columns:1fr 1fr;gap:13px;pointer-events:none}
+.status{border-radius:10px;background:#191225ec;border:1px solid #c4a2ce9c;padding:9px 9px 7px;box-shadow:0 5px 12px #12081a6f}
+.status foe{}.name{font-size:clamp(12px,3.5vw,20px);font-weight:950;display:flex;justify-content:space-between;letter-spacing:.02em}
+.name span{font-size:10px;align-self:center;color:#e6bbff}
+.track{margin-top:6px;height:10px;background:#301939;border-radius:99px;overflow:hidden;border:1px solid #f1dbf47c}
+.track i{display:block;background:linear-gradient(90deg,#55deab,#a2ffae);height:100%;width:100%;transition:width .18s ease}
+#foe .track i{background:linear-gradient(90deg,#f09aee,#ffe17d)}
+.value{font-size:11px;text-align:right;color:#f3dbfa;font-weight:700;margin-top:3px}
+.zone{position:absolute;inset:0;pointer-events:none}
+.statusbar{position:absolute;top:96px;left:50%;transform:translateX(-50%);border:1px solid #d3bbdb8c;border-radius:99px;background:#140d29db;padding:5px 11px;white-space:nowrap;font-size:11px;color:#efdafa;font-weight:800}
+.statusbar b{color:#adf5ff}
+.controls{position:absolute;bottom:11px;left:10px;right:10px;display:flex;align-items:end;justify-content:space-between;gap:7px;pointer-events:none}
+#joystick{width:clamp(82px,21vw,119px);height:clamp(82px,21vw,119px);border:2px solid #d7ebffc3;border-radius:100%;background:#170e3bb5;box-shadow:0 0 18px #6fb9e846;touch-action:none;pointer-events:auto;position:relative;display:grid;place-items:center}
+#knob{width:47%;height:47%;border-radius:100%;background:radial-gradient(circle at 33% 25%,#bdf6ff,#6e8fa8 67%,#284670);border:2px solid #eefaff;box-shadow:0 2px 15px #7cceff92;transition:transform .03s linear}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;max-width:min(64vw,400px);pointer-events:auto}
+.actions button{padding:9px 5px;min-width:0;border:1px solid #e9b9ffc4;border-radius:11px;color:#fff5ff;font-size:clamp(10px,2.4vw,14px);font-weight:850;text-align:center;background:linear-gradient(145deg,#562b73e8,#251436f0);box-shadow:0 4px 14px #10051a82;touch-action:manipulation}
+.actions button:disabled{opacity:.5;filter:grayscale(.45)}
+.actions button:nth-child(2){border-color:#b8e6f7;background:linear-gradient(145deg,#344e9be9,#1c285df0)}
+.actions button:nth-child(3){border-color:#f5d2a5;background:linear-gradient(145deg,#776042dd,#4e2b4fdf)}
+.actions button:nth-child(4){border-color:#9be8df;background:linear-gradient(145deg,#30655fcf,#1e3340ee)}
+.actions button small{display:block;font-size:9px;opacity:.83;letter-spacing:.07em;margin-top:3px}
+#loading{position:absolute;inset:0;display:grid;place-items:center;padding:20px;background:#201533c9;color:#f3e2ff;text-align:center;z-index:5;font-size:15px;line-height:1.5}
+#loading[hidden]{display:none}
+#message{position:absolute;left:50%;bottom:133px;transform:translateX(-50%);min-width:48%;max-width:85%;padding:7px 14px;border:1px solid #d9c4f7aa;border-radius:99px;background:#100923d0;color:#f6ddff;font-size:clamp(10px,2.6vw,14px);font-weight:750;text-align:center;white-space:normal;pointer-events:none}
+.under{width:min(calc(100vw - 15px),710px);padding:11px 12px 35px;color:#c5bad4;font-size:11px;line-height:1.55}
+.under a{color:#d8c9f4}.under summary{color:#f2dfff;cursor:pointer}
+@media(min-width:820px){#game-shell{max-height:calc(100dvh - 92px)}}
+@media(max-height:710px){.hud{top:7px}.status{padding:5px}.statusbar{top:77px}#message{bottom:100px}}
+</style>
+</head><body>
+<header><div><small>DESENVOLVIMENTO V155 · PRÉVIA ISOLADA</small><h1>MEW <span aria-hidden="true">✦</span> MEWTWO</h1></div>
+<a href="../index.html">← Voltar ao jogo</a></header>
+<main id="game-shell">
+<div id="stage"></div>
+<div class="zone">
+ <div class="hud">
+  <section class="status" id="mew"><div class="name">MEW <span>NV. 50</span></div><div class="track"><i id="mew-hp"></i></div><div class="value" id="mew-value">158/158</div></section>
+  <section class="status" id="foe"><div class="name">MEWTWO <span>NV. 50</span></div><div class="track"><i id="mewtwo-hp"></i></div><div class="value" id="mewtwo-value">240/240</div></section>
+ </div>
+ <div class="statusbar">ARENA ROCHOSA · <b id="fps">WebGL · … FPS</b></div>
+ <div id="message" aria-live="polite">Carregando os sprites originais do PMD…</div>
+ <div class="controls">
+  <div id="joystick" role="group" aria-label="Joystick de movimento"><div id="knob"></div></div>
+  <div class="actions">
+   <button id="shadow">Bola Sombria <small>PRONTO</small></button>
+   <button id="psychic">Psíquico <small>PRONTO</small></button>
+   <button id="dodge">Esquivar <small>DESVIO</small></button>
+   <button id="restart">Reiniciar <small>RECOMEÇAR</small></button>
+  </div>
+ </div>
+</div>
+<div id="loading">Preparando campo, sprites e golpes…</div>
+</main>
+<div class="under">
+ <strong>Protótipo jogável não comercial.</strong> Foco em três etapas: arena rochosa superior, sprites PMD de Mew/Mewtwo e golpes sincronizados.
+ No teclado: WASD/setas para mover, 1/2 para golpes, espaço para desviar.
+ <details><summary>Créditos e condições de uso dos sprites</summary>
+ Sprites de Mew e Mewtwo fornecidos pelo
+ <a href="https://github.com/PMDCollab/SpriteCollab">PMD SpriteCollab</a>:
+ arte original Chunsoft e colaborações de JFain; veja os
+ <a href="https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0151">arquivos de Mew</a> e
+ <a href="https://github.com/PMDCollab/SpriteCollab/tree/master/sprite/0150">Mewtwo</a>.
+ Arte customizada sujeita à <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>;
+ sprites oficiais da franquia podem ter direitos adicionais. Nenhuma venda ou monetização autorizada.
+ Cenário e efeitos da prévia desenhados para o projeto. Não afiliado a Nintendo, Pokémon ou Chunsoft.
+ </details>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@7.4.3/dist/pixi.min.js"></script>
+<script src="v155-mew-mewtwo.js?build=155-1"></script>
+</body></html>
