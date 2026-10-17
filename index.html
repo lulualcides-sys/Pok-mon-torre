@@ -447,7 +447,7 @@ if(new URLSearchParams(location.search).get('lighting146')!=='0'&&
 }
 // V150: textured crystal / volcanic dungeon with cached material, active Pixi lanterns.
 // ?arena148=0 restores V147; ?arena148=lava previews the volcanic arena.
-if(new URLSearchParams(location.search).get('arena151')==='0'&&
+if(new URLSearchParams(location.search).get('arena151')!=='1'&&
    new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
    new URLSearchParams(location.search).get('arena_preview')!=='off'&&
@@ -461,10 +461,9 @@ if(new URLSearchParams(location.search).get('arena151')==='0'&&
    String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V148 room unavailable; V147 original remains active',error);}
 }
-// V151: native battle camera and UI stay unchanged, but the flat V150 room is
-// replaced by a layout measured from the user's actual PokéSouls video.
-// ?arena151=0 restores V150; ?arena148=0 still restores V147.
-if(new URLSearchParams(location.search).get('arena151')!=='0'&&
+// V151 is archived opt-in ONLY; native battle camera and approved gameplay remain unchanged.
+// V150 restored as default after user rejected V151; ?arena151=1 opts into archived V151; ?arena148=0 still restores V147.
+if(new URLSearchParams(location.search).get('arena151')==='1'&&
    new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
    new URLSearchParams(location.search).get('arena_preview')!=='off'&&
