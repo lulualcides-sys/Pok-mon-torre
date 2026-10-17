@@ -159,6 +159,15 @@ def effect_frame(kind,i,n=16,cell=128):
             d.line(points+[points[0]],fill=[(18,8,36,220),(94,47,157,235),(184,106,236,238),(245,186,255,255)][k],width=[4,3,3,2][k],joint="curve")
         d.polygon([(64,27),(93,64),(64,103),(35,64)],fill=(97,36,172,120),outline=(226,170,255,240),width=4)
         d.polygon([(64,41),(82,64),(64,86),(45,64)],fill=(244,220,255,210),outline=(42,18,74,230),width=2)
+        # Three asymmetric travelling lens sparks. Their orbit supplies 16
+        # DISTINCT states rather than recycling a 6-frame symmetrical ring.
+        for spark in range(3):
+            a=(i*TAU/16)+spark*2.3
+            px=int(cx+math.cos(a)*(27+spark*11))
+            py=int(cy+math.sin(a)*(19+spark*8))
+            d.rectangle((px-2,py-2,px+2,py+2),fill=(247,204,255,250))
+            d.line([(px-5,py),(px+5,py)],fill=(144,79,224,214),width=1)
+
     elif kind=="fire":
         # Three-tone curling fire tongues with thick black contour.
         for k in range(9):
