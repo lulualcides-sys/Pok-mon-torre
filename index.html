@@ -65,7 +65,7 @@ if(new URLSearchParams(location.search).get('safe')!=='1'){
  if(previewModeV88===null||previewModeV88==='v86'||previewModeV88==='v92'){
   fxFiles.splice(i+1,0,"effects/moves/v86-preview/render.js");
  }
-}let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build='+(path.endsWith('/pixi-layer.js')?'v148-perspective-stone':path.includes('v89-four/render')||path.includes('v91-four/canvas-fallback')||path.includes('v92-four/')||path.includes('v86-preview/render')||path.endsWith('/end.js')||path.endsWith('/pixi-layer.js')?'v94-stable-battle-fx':path.includes('move-type-filter')?'v129-ground-filter':path.includes('move-library-v61')||path.includes('real-drain-v65')||path.includes('v63-plant/render')||path.includes('v60-four/render')||path.includes('library16-v59')||path.includes('elemental-eight-v58')||path.includes('electric-four-v56')||path.includes('catalog/bundle')||path.endsWith('/end.js')?'original-drain-v65':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.error('Falha nos módulos V89; não substituir por animações antigas',error);throw error;}if(new URLSearchParams(location.search).get('safe')!=='1'&&(!plugin||!plugin.includes('catalogElectricFourV56')||!plugin.includes('elementalEightV58')||!plugin.includes('library16V59')||!plugin.includes('cinematicFourV60')||!plugin.includes('plantFourV63')||!plugin.includes('PokemonTorreDrainV65')))throw Error('Módulos dos golpes V64 incompletos');
+}let plugin=null;try{const sections=await Promise.all(fxFiles.map(async path=>{const r=await fetch(path+'?build='+(path.endsWith('/pixi-layer.js')?'v150-dungeon-gpu-lights':path.includes('v89-four/render')||path.includes('v91-four/canvas-fallback')||path.includes('v92-four/')||path.includes('v86-preview/render')||path.endsWith('/end.js')||path.endsWith('/pixi-layer.js')?'v94-stable-battle-fx':path.includes('move-type-filter')?'v129-ground-filter':path.includes('move-library-v61')||path.includes('real-drain-v65')||path.includes('v63-plant/render')||path.includes('v60-four/render')||path.includes('library16-v59')||path.includes('elemental-eight-v58')||path.includes('electric-four-v56')||path.includes('catalog/bundle')||path.endsWith('/end.js')?'original-drain-v65':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!r.ok)throw Error('Módulo '+path+' ('+r.status+')');return r.text()}));plugin=sections.join('\n');}catch(error){console.error('Falha nos módulos V89; não substituir por animações antigas',error);throw error;}if(new URLSearchParams(location.search).get('safe')!=='1'&&(!plugin||!plugin.includes('catalogElectricFourV56')||!plugin.includes('elementalEightV58')||!plugin.includes('library16V59')||!plugin.includes('cinematicFourV60')||!plugin.includes('plantFourV63')||!plugin.includes('PokemonTorreDrainV65')))throw Error('Módulos dos golpes V64 incompletos');
 // V63: all four approved Grass/status atlases loaded before a battle starts.
 // Replaces old visuals, never overlays them; keeps the status mechanics intact.
 if(new URLSearchParams(location.search).get('safe')!=='1'){
@@ -445,7 +445,7 @@ if(new URLSearchParams(location.search).get('lighting146')!=='0'&&
    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V146 lighting disabled; original stadium preserved',error);}
 }
-// V149: richer crystal / volcanic pixel chamber, integrated in actual battles.
+// V150: textured crystal / volcanic dungeon with cached material, active Pixi lanterns.
 // ?arena148=0 restores V147; ?arena148=lava previews the volcanic arena.
 if(new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
@@ -453,7 +453,7 @@ if(new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('lighting146')!=='0'){
  try{
   const path='effects/arena/chamber-v148.js';
-  const response=await fetch(path+'?build=v149-dungeon-detail-blue-lava',{cache:'no-store'});
+  const response=await fetch(path+'?build=v150-material-stone-crystal-flame',{cache:'no-store'});
   if(!response.ok)throw Error('V148 chamber HTTP '+response.status);
   if(!game.includes(fireSpriteAnchor))throw Error('V148 battle anchor missing');
   game=game.replace(fireSpriteAnchor, String.fromCharCode(10)+(await response.text())+
