@@ -123,7 +123,7 @@ jobs:
       - name: Preparar smoke em Chrome sem incluir dependencias no site
         run: npm install --no-save --prefix /tmp/pmd-preview playwright-core@1.55.1
       - name: Importar sprites originais de Mew e Mewtwo (PMDCollab, nao comercial)
-        run: python tools/import_pmd_spritecollab.py --pokemon 150 151
+        run: python tools/import_pmd_spritecollab.py --pokemon 1 4 7 25 74 95 150 151
       - name: V155 validar no Chrome Android Pixel e dano dos golpes
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
@@ -149,6 +149,13 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v157-browser-smoke.cjs
+      # V158+V159: um unico patch em COPIA do jogo, sem tocar index.html.
+      - name: V158+V159 validar 8 sprites PMD e o patch unificado
+        run: node tests/v158-v159-unified.test.cjs
+      - name: V158+V159 validar em Chrome Android e preservar golpes
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v158-v159-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
