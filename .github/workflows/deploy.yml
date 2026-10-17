@@ -126,6 +126,8 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v155-browser-smoke.cjs
+      - name: Importar sprites originais de Mew e Mewtwo (PMDCollab, nao comercial)
+        run: python tools/import_pmd_spritecollab.py --pokemon 150 151
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
