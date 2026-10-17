@@ -133,7 +133,12 @@ function spell(e,kind,from,to,impactOnly=false){
  const dark=kind==='shadow';
  const frames=atlas(impactOnly?'impact-12.png':dark?'shadow-ball-16.png':'psychic-glyph-16.png',
    impactOnly?128:dark?128:160,impactOnly?128:dark?128:160,impactOnly?12:16);
- if(!frames)return false;
+ if(!frames){
+  const name=impactOnly?'impact-12.png':dark?'shadow-ball-16.png':'psychic-glyph-16.png';
+  const base=P.BaseTexture.from('assets/battle-v156/'+name);
+  if(!base.valid)base.once('loaded',()=>{if(live(e))spell(e,kind,from,to,impactOnly);});
+  return false;
+ }
  const sprite=new P.Sprite(frames[0]);sprite.anchor.set(.5);
  sprite.position.set(from.x,from.y);
  const sz=impactOnly?Math.min(e.h*.23,115):Math.min(e.h*(dark?.22:.27),130);
