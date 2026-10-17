@@ -10,10 +10,10 @@ const inner=copy.slice(copy.indexOf('<script>')+8,copy.lastIndexOf('</script>'))
 new vm.Script(inner,{filename:'v165-html-loader.js'});
 assert.match(copy,/__V165_LAB=true/);
 assert.match(copy,/__torre_lab_v165__/);
-assert.match(copy,/effects\/labs\/v165-combined\.js/);
+assert.match(copy,/effects\/labs\/v165-cinematic-patch\.js/);
 assert.match(copy,/labStage:\(e\)=>/);
-assert.doesNotMatch(official,/__V165_LAB|v165-combined\.js/);
-assert.doesNotMatch(previous,/__V165_LAB|v165-combined\.js/);
+assert.doesNotMatch(official,/__V165_LAB|v165-cinematic-patch\.js/);
+assert.doesNotMatch(previous,/__V165_LAB|v165-cinematic-patch\.js/);
 assert.match(engine,/LOCAL_IDS=new Set\(\[1,4,7,25,74,95,150,151\]\)/);
 assert.match(engine,/AnimData\.xml/);
 assert.match(engine,/HitFrame/);
