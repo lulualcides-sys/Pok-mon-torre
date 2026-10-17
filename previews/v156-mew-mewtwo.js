@@ -36,7 +36,7 @@ const qBtn=el('quality');if(qBtn)qBtn.addEventListener('click',qualityMode);
 function monitorPerformance(deltaMs){
  if(!Number.isFinite(deltaMs))return;
  perf.window.push(Math.min(200,Math.max(0,deltaMs)));
- if(perf.window.length<150)return;
+ if(perf.window.length<30)return;
  const sorted=[...perf.window].sort((a,b)=>a-b);
  perf.p95ms=sorted[Math.floor(sorted.length*.95)]||17;
  perf.avgFps=Math.round(1000/(perf.window.reduce((a,b)=>a+b,0)/perf.window.length));
