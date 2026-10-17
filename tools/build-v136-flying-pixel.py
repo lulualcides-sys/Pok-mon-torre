@@ -1,197 +1,240 @@
 #!/usr/bin/env python3
-"""V141 — hand-authored pixel-art Flying battle spritesheets for PixiJS WebGL.
+"""V142: high-resolution, authored, transparent animation atlases for battle PixiJS.
 
-12 or 16 individually animated 64x64 frames, nearest-neighbour indexed-style
-RGBA, 8 atlas columns. No CSS VFX, Canvas 2D, blur, or black-filled shapes.
-Frames can be opened and refined in LibreSprite/Aseprite. Not a still PNG effect.
+Pillow is an offline sprite authoring tool; the game renders only the finished
+animated spritesheets on WebGL, never CSS/canvas geometry. Detailed 256px
+alpha-blended paint frames, 8 columns, using only ~0.55-0.8 GPU scaling.
 """
+from math import sin, cos, pi, atan2
 from pathlib import Path
-from math import sin, cos, pi
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
-ROOT=Path('effects/moves/v136-flying-pixel')
-SIZE=64
+SIZE=256
 COLS=8
-INK=(28,69,89,255)
-DEEP=(61,119,151,255)
-SKY=(117,188,207,255)
-ICE=(180,232,240,255)
-WHITE=(244,252,249,255)
-PEARL=(219,244,238,255)
-GOLD=(249,218,131,255)
-AMBER=(225,160,81,255)
-LEAF=(145,224,187,255)
-CLEAR=(0,0,0,0)
+ROOT=Path("effects/moves/v136-flying-pixel")
+IVORY=(250,253,252)
+WHITE=(255,255,252)
+SKY=(112,214,244)
+DEEP=(37,90,136)
+PALE=(195,241,253)
+CYAN=(72,186,225)
+GOLD=(255,228,142)
+AMBER=(251,186,87)
+INK=(23,66,102)
 
-def p(d,x,y,color,r=1):
-    x,y=round(x),round(y)
-    d.rectangle((x,y,x+r-1,y+r-1),fill=color)
+def rgba(rgb,a=255): return (*rgb,int(max(0,min(255,a))))
+def smooth(x): x=max(0,min(1,x));return x*x*(3-2*x)
+def lerp(a,b,t):return a+(b-a)*t
+def wrap(x,y):return (round(x),round(y))
+def curve(a,b,c,d,steps=38):
+    points=[]
+    for i in range(steps+1):
+        t=i/steps;u=1-t
+        points.append((u**3*a[0]+3*u*u*t*b[0]+3*u*t*t*c[0]+t**3*d[0],
+                       u**3*a[1]+3*u*u*t*b[1]+3*u*t*t*c[1]+t**3*d[1]))
+    return points
 
-def line(d,points,base,thick=2,edge=INK):
-    points=[(round(x),round(y)) for x,y in points]
-    if len(points)<2:return
-    if edge:d.line(points,fill=edge,width=thick+2,joint='curve')
-    d.line(points,fill=base,width=thick,joint='curve')
+def paint_stroke(im,pts,width,color=SKY,shine=True,opacity=220):
+    """Four separately anti-aliased paint layers: halo, ink edge, body, shine."""
+    pts=list(map(lambda p:wrap(*p),pts))
+    if len(pts)<2:return
+    glow=Image.new("RGBA",im.size)
+    gd=ImageDraw.Draw(glow)
+    gd.line(pts,fill=rgba(color,100),width=round(width+13),joint="curve")
+    im.alpha_composite(glow.filter(ImageFilter.GaussianBlur(9)))
+    body=Image.new("RGBA",im.size)
+    d=ImageDraw.Draw(body)
+    d.line(pts,fill=rgba(INK,min(145,opacity)),width=max(2,round(width+4)),joint="curve")
+    d.line(pts,fill=rgba(color,opacity),width=round(width),joint="curve")
+    if shine:
+        d.line(pts,fill=rgba(IVORY,min(250,opacity+15)),width=max(2,round(width*.32)),joint="curve")
+    im.alpha_composite(body)
 
-def poly(d,points,color,edge=INK):
-    pts=[(round(x),round(y)) for x,y in points]
-    d.polygon(pts,fill=color)
-    if edge:d.line(pts+[pts[0]],fill=edge,width=1,joint='curve')
+def paint_poly(im,outer,color,edge=INK,alpha=240):
+    layer=Image.new("RGBA",im.size)
+    d=ImageDraw.Draw(layer)
+    coords=list(map(lambda p:wrap(*p),outer))
+    d.polygon(coords,fill=rgba(color,alpha))
+    if edge:d.line(coords+[coords[0]],fill=rgba(edge,140),width=3,joint="curve")
+    im.alpha_composite(layer)
 
-def spark(d,x,y,c=WHITE,n=3):
-    p(d,x,y,c)
-    p(d,x-1,y,c)
-    p(d,x+1,y,c)
-    p(d,x,y-1,c)
-    p(d,x,y+1,c)
-    if n>3:
-        p(d,x-2,y,SKY)
-        p(d,x+2,y,SKY)
-        p(d,x,y-2,SKY)
-        p(d,x,y+2,SKY)
+def flare(im,x,y,r=4,color=WHITE,intensity=210):
+    layer=Image.new("RGBA",im.size)
+    d=ImageDraw.Draw(layer)
+    d.ellipse((x-r*3,y-r*3,x+r*3,y+r*3),fill=rgba(color,78))
+    im.alpha_composite(layer.filter(ImageFilter.GaussianBlur(max(2,r*1.2))))
+    layer=Image.new("RGBA",im.size)
+    d=ImageDraw.Draw(layer)
+    d.line([(x-r*2,y),(x+r*2,y)],fill=rgba(color,intensity),width=2)
+    d.line([(x,y-r*2),(x,y+r*2)],fill=rgba(color,intensity),width=2)
+    d.ellipse((x-r*.7,y-r*.7,x+r*.7,y+r*.7),fill=rgba(WHITE,255))
+    im.alpha_composite(layer)
 
-def feather(d,x,y,tilt=0,gold=False):
-    fill=GOLD if gold else WHITE
-    poly(d,[(x-2+tilt,y-4),(x+1+tilt,y-3),(x+3,y),
-            (x+1-tilt,y+4),(x-2,y+2),(x-3,y-1)],fill,DEEP)
-    line(d,[(x+1,y-3),(x,y+2)],PEARL if gold else ICE,1,None)
+def feather(im,x,y,rotation=0,scale=1,color=IVORY,fade=230):
+    """Curved feather with separated spine, taper and translucent barbs."""
+    ux,uy=cos(rotation),sin(rotation)
+    vx,vy=-uy,ux
+    def pt(s,w):return (x+ux*s*scale+vx*w*scale,y+uy*s*scale+vy*w*scale)
+    shaft=[pt(-19,0),pt(-4,-4),pt(7,-3),pt(19,0)]
+    left=[pt(16,0),pt(8,-7),pt(-4,-9),pt(-15,-3),pt(-19,0)]
+    right=[pt(-19,0),pt(-10,5),pt(3,7),pt(13,4),pt(16,0)]
+    paint_poly(im,left+right,color,DEEP,fade)
+    d=ImageDraw.Draw(im)
+    d.line([wrap(*p) for p in shaft],fill=rgba(WHITE,220),width=max(1,round(scale*1.4)),joint='curve')
 
-def roost(frame,total,d):
-    t=frame/(total-1)
-    # Feather fans fold inward during the restorative golden pulse.
-    fold=max(0,min(1,(t-.23)/.49))
-    lift=round(3*sin(pi*t))
-    for direction in (-1,1):
-        x=32+direction*3
-        extent=24-12*fold
-        wing=[(x,35+lift),(x+direction*6,25+lift),
-              (x+direction*(extent-5),20+lift+6*fold),
-              (x+direction*extent,25+lift+9*fold),
-              (x+direction*(extent-4),36+lift+3*fold),
-              (x+direction*9,40+lift)]
-        poly(d,wing,PEARL)
-        line(d,[(x+direction*6,30+lift),
-                (x+direction*(extent-7),28+lift+5*fold)],WHITE,2,None)
-        for k in range(3):
-            u=8+k*5
-            p(d,x+direction*u,32+lift+int(2*sin(u*.3+frame*.38)),ICE,2)
-    if .14<t<.95:
-        phase=min(1,(t-.14)/.6)
-        ringy=42-round(11*phase)
-        for k in range(11):
-            angle=pi*k/10
-            x=32+round((9+4*phase)*cos(angle))
-            y=ringy+round((4+2*phase)*sin(angle))
-            p(d,x,y,GOLD,2 if k%3==0 else 1)
-        spark(d,32,30-round(3*phase),WHITE,5)
-    for j in range(8):
-        x=6+((j*11+frame*3)%52)
-        y=6+((j*9+frame*4)%43)
-        if (j+frame)%3==0:feather(d,x,y,(-1,0,1)[j%3],j%4==0)
-        else:p(d,x,y,WHITE if j%2 else GOLD)
-
-def gust(frame,total,d):
-    t=frame/(total-1)
-    # Three independent moving wind-stream ribbons, each with soft white core
-    # and one-pixel blue-ink edge: gust, not circles or CSS bars.
-    for k in range(3):
-        phase=frame*.42+k*1.37
-        cy=15+14*k
+def gust(im,t):
+    # Multiple independent double-wound currents with a changing crest and
+    # a bright leading compression front, not a set of static parallel bars.
+    growth=smooth(t/.23)*(1-smooth((t-.89)/.11))
+    for k in range(4):
+        y0=56+k*45
+        offset=sin(t*2*pi+k*.8)*10
         pts=[]
-        for x in range(5,59,3):
-            warp=6*sin(x/10.2-phase)+2*sin(x/4.1+phase*.68)
-            taper=.64+.36*sin(pi*x/64)
-            pts.append((x,cy+warp*taper))
-        line(d,pts,ICE if k==1 else SKY,3,INK)
-        line(d,pts[3:-2],WHITE,1,None)
-        endx,endy=pts[-1]
-        poly(d,[(endx-5,endy-3),(endx+3,endy),(endx-5,endy+3)],WHITE,DEEP)
-    for k in range(3):
-        x=8+((frame*5+k*20)%44)
-        y=10+k*16+round(3*sin(frame*.6+k))
-        line(d,[(x-7,y+3),(x,y),(x+8,y-3)],PEARL,1,DEEP)
-    for j in range(9):
-        x=5+((j*17+frame*4)%55)
-        y=7+((j*9+frame*3)%49)
-        p(d,x,y,WHITE if j%3==0 else SKY,2 if j%4==0 else 1)
+        for j in range(46):
+            u=j/45
+            x=20+214*u
+            y=y0+13*sin(u*5.9-t*2*pi*1.5+k*1.37)+7*sin(u*10.1+t*2*pi*.64+k)+offset
+            pts.append((x,y))
+        strength=(.64+.36*sin(pi*(k+1)/5))*growth
+        paint_stroke(im,pts,10+6*strength,PALE if k%2 else CYAN,True,round(120+105*strength))
+        paint_stroke(im,pts[8:39],3,IVORY,False,round(120+110*strength))
+        tip=pts[-1]
+        flare(im,tip[0]-8,tip[1],3,PALE)
+    for k in range(14):
+        phase=k*2.39+t*20
+        x=15+(k*23+round(66*t))%228
+        y=35+(k*71+round(7*sin(phase)))%181
+        flare(im,x,y,1.2,WHITE if k%4==0 else SKY,120)
+    # Polished translucent curling wisps at the center of the gust.
+    for j in range(2):
+        a=(t*1.6+j*.5)*2*pi
+        start=(112+22*sin(a),100+j*50)
+        pts=curve((start[0]-35,start[1]+10),start,
+                  (start[0]+42,start[1]-28),(start[0]+90,start[1]-10),30)
+        paint_stroke(im,pts,5,IVORY,False,170)
 
-def crescent(d,cx,cy,r,angle,body=ICE):
-    # Sharp, right-facing arc with two tapered tips and luminescent leading edge.
-    outer=[];inner=[]
-    for j in range(25):
-        a=-1.02+2.04*j/24
-        x=r*cos(a)
-        y=r*.98*sin(a)
-        outer.append((cx+x*cos(angle)-y*sin(angle),cy+x*sin(angle)+y*cos(angle)))
-    for j in range(24,-1,-1):
-        a=-1.02+2.04*j/24
-        rr=r*(.45+.17*(abs(j-12)/12))
-        x=rr*cos(a)
-        y=rr*.98*sin(a)
-        inner.append((cx+x*cos(angle)-y*sin(angle),cy+x*sin(angle)+y*cos(angle)))
-    poly(d,outer+inner,body,INK)
-    line(d,outer[2:-2],WHITE,2,None)
-    line(d,inner[3:-3],SKY,1,None)
+def arc_points(cx,cy,r,rotation=0,steps=46):
+    points=[]
+    for j in range(steps+1):
+        a=-1.33+2.66*j/steps
+        x=r*cos(a);y=.88*r*sin(a)
+        points.append((cx+x*cos(rotation)-y*sin(rotation),
+                       cy+x*sin(rotation)+y*cos(rotation)))
+    return points
 
-def airslash(frame,total,d):
-    t=frame/(total-1)
-    dx=round(5*sin(pi*min(t/.87,1)))
-    tilt=-.31+sin(t*pi)*.12
-    crescent(d,22+dx,30,27,tilt)
-    if .16<t<.82:
-        crescent(d,8+dx,39,14,tilt-.09,PEARL)
-    if .46<t<.95:
-        power=(t-.46)/.49
+def air_slash(im,t):
+    # Blade-shaped translucent crescent: taper at both tips and sharp arc.
+    drift=lerp(-18,24,smooth(t/.75))
+    power=smooth(t/.22)*(1-smooth((t-.9)/.1))
+    for k in (1,0):
+        radius=72 if k==0 else 52
+        cx=105+drift-14*k;cy=128+25*k
+        rot=-.35-.09*sin(t*pi)
+        outer=arc_points(cx,cy,radius,rot,52)
+        inner=arc_points(cx,cy,radius*.48,rot,52)
+        polygon=outer+list(reversed(inner))
+        halo=Image.new("RGBA",im.size)
+        paint_poly(halo,polygon,SKY,None,100)
+        im.alpha_composite(halo.filter(ImageFilter.GaussianBlur(12)))
+        paint_poly(im,polygon,PALE if k==0 else SKY,DEEP,round(195*power+18))
+        paint_stroke(im,outer[3:-3],8 if k==0 else 5,WHITE,True,round(225*power+18))
+        paint_stroke(im,inner[5:-5],3,CYAN,False,round(160*power+18))
+    for j in range(13):
+        x=170+((j*29+round(t*80))%75)
+        y=65+((j*41+round(t*35))%138)
+        flare(im,x,y,1.3,IVORY,140)
+    if t>.46:
+        hit=smooth((t-.46)/.18)*(1-smooth((t-.85)/.15))
         for j in range(7):
-            a=2*pi*j/7+frame*.47
-            x=49+(4+power*8)*cos(a)
-            y=31+(5+power*7)*sin(a)
-            p(d,x,y,WHITE if j%2 else SKY,2)
-    for j in range(7):
-        x=5+((j*8+frame*3)%46)
-        y=7+((j*15+frame*2)%49)
-        p(d,x,y,WHITE if j%2 else ICE)
+            a=(j/7)*2*pi+t*2
+            d=lerp(10,47,hit)
+            x=206+d*cos(a);y=132+d*sin(a)
+            paint_stroke(im,[(206+9*cos(a),132+9*sin(a)),(x,y)],max(2,5*hit),PALE,False,round(210*hit))
 
-def peck(frame,total,d):
-    t=frame/(total-1)
-    # Golden tip on pearlescent feathered impact, physically travelling to foe.
-    thrust=max(0,sin(pi*min(1,t/.75)))
-    dx=round(13*thrust)
-    poly(d,[(7+dx,33),(14+dx,24),(29+dx,23),
-            (37+dx,30),(26+dx,41),(13+dx,39)],PEARL,DEEP)
+def peck(im,t):
+    # A close-range stab, with actual beak silhouette, rapid feather flick,
+    # bright point of contact and NO full-size flying wind crescent.
+    charge=smooth(t/.24)
+    strike=smooth((t-.26)/.36)
+    retire=smooth((t-.77)/.23)
+    x=lerp(20,64,strike)-21*retire
+    y=127-8*sin(t*pi)
+    tail=[(38+x,y),(53+x,y-25),(79+x,y-21),(107+x,y-6),
+          (103+x,y+15),(75+x,y+27),(45+x,y+17)]
+    paint_poly(im,tail,IVORY,DEEP,230)
     for j in range(4):
-        line(d,[(12+dx+j*4,30+j*2),(5+dx+j*3,25+j*2)],ICE,1,DEEP)
-    poly(d,[(23+dx,28),(31+dx,26),(56+dx,31),
-            (32+dx,35),(23+dx,34)],GOLD,INK)
-    poly(d,[(28+dx,28),(46+dx,30),(51+dx,31),(30+dx,31)],WHITE,None)
-    line(d,[(27+dx,34),(44+dx,33),(54+dx,31)],AMBER,1,None)
-    if .45<t<.91:
-        burst=5+10*max(0,1-abs(t-.66)/.3)
-        for j in range(8):
-            a=2*pi*j/8
-            x=51+burst*cos(a)
-            y=31+burst*.7*sin(a)
-            p(d,x,y,WHITE if j%2 else GOLD,2 if j%3==0 else 1)
+        feather(im,65+x-j*10,y-15+j*11,-.9+j*.25,1.4-j*.17,PALE,200)
+    beak=[(92+x,y-15),(121+x,y-26),(214+x,y-4),(225+x,y),
+          (214+x,y+7),(119+x,y+23),(93+x,y+11)]
+    paint_poly(im,beak,GOLD,INK,245)
+    paint_poly(im,[(120+x,y-19),(208+x,y-4),(220+x,y-1),
+                   (135+x,y-5)],WHITE,None,235)
+    paint_stroke(im,[(115+x,y+8),(192+x,y+4),(222+x,y)],4,AMBER,False,180)
     for j in range(4):
-        p(d,7+dx-j*2,19+j*8,ICE)
+        paint_stroke(im,[(10+j*11,y-38+j*13),(55+x,y-32+j*11)],3,PALE,False,round(155*charge))
+    if t>.43:
+        hit=smooth((t-.43)/.17)*(1-smooth((t-.84)/.16))
+        for j in range(11):
+            a=2*pi*j/11
+            dist=26+40*hit
+            paint_stroke(im,[(218+6*cos(a),y+7*sin(a)),
+                              (218+dist*cos(a),y+dist*sin(a))],
+                         2+2*hit,GOLD if j%3 else IVORY,False,round(210*hit))
+        flare(im,217,y,5+5*hit,WHITE,round(230*hit))
+    for j in range(5):
+        flare(im,26+j*18,y+28+sin(t*8+j)*4,1.4,PALE,125)
 
-def build(slug,frames,draw_fn):
-    folder=ROOT/slug
-    folder.mkdir(parents=True,exist_ok=True)
-    atlas=Image.new('RGBA',(SIZE*COLS,SIZE*((frames+COLS-1)//COLS)),CLEAR)
+def roost(im,t):
+    # The wings fold towards the user. Falling feathers and a rising golden
+    # recovery ring stay on the user; Roost has no enemy-bound projectile.
+    pulse=smooth(t/.25)*(1-smooth((t-.86)/.14))
+    closure=smooth((t-.2)/.6)
+    for side in (-1,1):
+        start=(128+side*17,146)
+        tip=(128+side*(93-47*closure),66+52*closure)
+        body=[start,(128+side*(51-19*closure),99),
+              tip,(128+side*(103-46*closure),99+18*closure),
+              (128+side*60,161),(128+side*22,163)]
+        paint_poly(im,body,PALE,DEEP,round(170+65*pulse))
+        paint_stroke(im,curve(start,(128+side*45,109),
+                        (128+side*65,94),tip),5,IVORY,False,205)
+        for k in range(4):
+            u=k/4
+            feather(im,128+side*(37+51*u)*(1-.3*closure),
+                    122-34*u+25*closure,1.1*side,1.15-.2*u,IVORY,165)
+    # Halo and thin orbit ring - no solid disk, no bitmap overlay rectangle.
+    ring=Image.new('RGBA',im.size)
+    d=ImageDraw.Draw(ring)
+    r=47+15*pulse
+    d.ellipse((128-r,140-r*.45,128+r,140+r*.45),
+              outline=rgba(GOLD,round(175*pulse)),width=5)
+    im.alpha_composite(ring.filter(ImageFilter.GaussianBlur(6)))
+    im.alpha_composite(ring)
+    for j in range(11):
+        a=2*pi*j/11+t*1.2
+        x=128+(44+10*sin(t*pi))*cos(a)
+        y=125+(47+5*cos(t*pi))*sin(a)-15*t
+        flare(im,x,y,1.4+(j%3)*.6,GOLD if j%3 else IVORY,170)
+    for k in range(7):
+        y=(55+k*31+round(t*85))%218
+        x=43+(k*29)%172+8*sin(t*4+k)
+        feather(im,x,y,sin(t*pi+k)*.65,.7+(k%3)*.18,
+                IVORY if k%3 else GOLD,205)
+
+def build(slug,frames,drawfn):
+    path=ROOT/slug
+    path.mkdir(parents=True,exist_ok=True)
+    atlas=Image.new("RGBA",(SIZE*COLS,SIZE*((frames+COLS-1)//COLS)))
     for i in range(frames):
-        frame=Image.new('RGBA',(SIZE,SIZE),CLEAR)
-        d=ImageDraw.Draw(frame)
-        draw_fn(i,frames,d)
-        # Copy exactly, preserving binary transparency for nearest-neighbour.
+        frame=Image.new("RGBA",(SIZE,SIZE))
+        drawfn(frame,i/max(1,frames-1))
         atlas.paste(frame,((i%COLS)*SIZE,(i//COLS)*SIZE))
-    out=folder/'spritesheet.png'
-    atlas.save(out,optimize=True)
-    assert out.stat().st_size<120000,(out,out.stat().st_size)
-    print('V141',slug,frames,atlas.size,out.stat().st_size)
+    target=path/"spritesheet.png"
+    atlas.save(target,optimize=True,compress_level=7)
+    print(f"V142 {slug}: {frames}x{SIZE}px, {atlas.width}x{atlas.height} atlas, {target.stat().st_size//1024} KiB")
 
-if __name__=='__main__':
-    build('roost',12,roost)
-    build('gust',16,gust)
-    build('air-slash',16,airslash)
-    build('peck',12,peck)
+if __name__=="__main__":
+    build("roost",16,roost)
+    build("gust",20,gust)
+    build("air-slash",20,air_slash)
+    build("peck",16,peck)

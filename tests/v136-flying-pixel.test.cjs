@@ -13,7 +13,7 @@ assert.ok(index.includes('effects/moves/v136-flying-pixel/runtime.js'));
 assert.ok(index.includes('pixi.js@7.4.3')&&index.includes('@pixi/particle-emitter@5.0.10'));
 assert.match(pixi,/function mountPixelFlying\(engine,fx,spec\)/);
 assert.match(pixi,/new PIXI.Texture\(base,rect\)/);
-assert.match(pixi,/PIXI.SCALE_MODES.NEAREST/);
+assert.match(pixi,/PIXI.SCALE_MODES.LINEAR/);
 assert.match(pixi,/new PIXI.particles.Emitter/);
 assert.match(pixi,/updatePixelFlying\(now,dt\)/);
 assert.match(pixi,/pixelFlying\.size/);
@@ -39,16 +39,16 @@ const actor={hp:100},enemy={hp:400},battle={active:true,energy:200};
 let mounts=0,draw2d=0;
 const pixiFX={
  mountPixelFlying(engine,fx,spec){
-  assert.ok(spec.loaded&&spec.image.naturalWidth===512);
-  assert.ok(spec.frames===12||spec.frames===16);
+  assert.ok(spec.loaded&&spec.image.naturalWidth===2048);
+  assert.ok(spec.frames===16||spec.frames===20);
   mounts++;return true;
  }};
 class ImageFake{
  naturalWidth=0;naturalHeight=0;complete=true;
  set src(v){
   this._src=v;
-  this.naturalWidth=512;
-  this.naturalHeight=v.includes('roost')||v.includes('peck')?128:128;
+  this.naturalWidth=2048;
+  this.naturalHeight=v.includes('roost')||v.includes('peck')?512:768;
   this.onload?.();
  }
  get src(){return this._src;}

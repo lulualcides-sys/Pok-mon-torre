@@ -94,8 +94,7 @@ const pixiFX=(()=>{
    reset();
  }
 
- // V136 PIXEL ONLY. Texture frames are authored 64x64 indexed sprite-pixels
- // from real transparent 12/16-frame PNG atlases, not drawn with Canvas2D.
+ // V142: 256px layered transparent Flying frames, retaining all other approved FX.
  // Existing pixiFX app owns the GPU ticker and battle-scoped WebGL overlay.
  function destroyPixelFlying(fx){
   const o=pixelFlying.get(fx);if(!o)return;
@@ -119,25 +118,26 @@ const pixiFX=(()=>{
    let entry=pixelAtlasCache.get(spec.image);
    if(!entry){
     const base=PIXI.BaseTexture.from(spec.image);
-    base.scaleMode=PIXI.SCALE_MODES.NEAREST;
+    base.scaleMode=PIXI.SCALE_MODES.LINEAR;
     if(!base.valid){
      pixelFlyingLastIssue='PixiJS BaseTexture ainda inválida: '+spec.name;
      return false;
     }
     const frames=[];
     for(let i=0;i<spec.frames;i++){
-     const rect=new PIXI.Rectangle((i%8)*64,Math.floor(i/8)*64,64,64);
+     const size=spec.frameSize||256;
+     const rect=new PIXI.Rectangle((i%8)*size,Math.floor(i/8)*size,size,size);
      frames.push(new PIXI.Texture(base,rect));
     }
     entry={base,frames};pixelAtlasCache.set(spec.image,entry);
    }
    const root=new PIXI.Container(),sprite=new PIXI.Sprite(entry.frames[0]);
-   sprite.anchor.set(.5);sprite.roundPixels=true;
+   sprite.anchor.set(.5);sprite.roundPixels=false;
    // V141: colored crisp pixel atlases with warm gold/healing and pearlescent wind.
    // White tint preserves the authored palette and the one-pixel dark outline.
    sprite.tint=0xffffff;
    sprite.alpha=1;
-   sprite.scale.set((spec.scale||1.18)*1.12);
+   sprite.scale.set(spec.scale||.72);
    root.addChild(sprite);app.stage.addChild(root);
    // The emitter uses a 1x1 nearest-neighbour PIXI pixel, never Canvas.
    // Low density, no second ticker/RAF, same Particle Emitter V5 already used.
@@ -174,7 +174,7 @@ const pixiFX=(()=>{
    return true;
   }catch(e){
    pixelFlyingFailures++;
-   error='Pixel Flying V139: '+String(e?.message||e);
+   error='Flying WebGL V142: '+String(e?.message||e);
    pixelFlyingLastIssue=error;
    return false;
   }

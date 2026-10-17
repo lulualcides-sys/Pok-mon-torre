@@ -20,7 +20,7 @@ assert.match(runtime,/pixelFlyingLastIssue|diagnosis\?\.error/);
 assert.match(pixi,/WebGL não está disponível/,'Pixi stage must use WebGL not Canvas renderer');
 assert.match(pixi,/requirePixelWebGL&&window\.PIXI\?\.Application/,'legacy WebGL helper bypass must be Flying-only');
 assert.match(pixi,/pixelFlyingLastIssue/);
-assert.match(index,/build=v141-flying-color/,'browser must fetch the corrected runtime');
+assert.match(index,/build=v142-hd-alpha/,'browser must fetch the corrected runtime');
 assert.doesNotMatch(runtime,/getContext\(|drawImage\(|requestAnimationFrame\(|\.fillRect\(/,'four effects can never use Canvas2D');
 const names=['Roost','Rajada','Air Slash','Bicada'];
 const skills=names.map(name=>({name,cost:12,power:name==='Roost'?0:20,cd:1600}));
@@ -37,7 +37,7 @@ domNodes.arenaPro={appendChild(node){domNodes[node.id]=node;}};
 function TestImage(){
  this.naturalWidth=0;this.naturalHeight=0;
  Object.defineProperty(this,'src',{set(v){
-  this._src=v;this.naturalWidth=512;this.naturalHeight=128;
+  this._src=v;this.naturalWidth=2048;this.naturalHeight=v.includes('/roost/')||v.includes('/peck/')?512:768;
   this.onload?.();
  },get(){return this._src;}});
 }

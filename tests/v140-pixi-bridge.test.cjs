@@ -10,7 +10,7 @@ const html=fs.readFileSync('index.html','utf8');
 assert.doesNotThrow(()=>new vm.Script(pixi));
 assert.doesNotThrow(()=>new vm.Script(flying));
 assert.ok(html.indexOf('effects/moves/_runtime/pixi-layer.js')<html.indexOf("effects/moves/v136-flying-pixel/runtime.js"));
-assert.match(html,/build=v141-flying-color/);
+assert.match(html,/build=v142-hd-alpha/);
 const window={PokemonTorreV360Paint:()=>false};
 const stageScope={window,Map,WeakMap,console};
 vm.runInNewContext('(function(){\n'+pixi+'\n})();',stageScope,{timeout:3000});
@@ -25,7 +25,7 @@ window.PokemonTorrePixelFlyingBridge={
 };
 function Image(){this.naturalWidth=0;this.naturalHeight=0;
  Object.defineProperty(this,'src',{set(v){this._src=v;
- this.naturalWidth=512;this.naturalHeight=v.includes('/roost/')||v.includes('/peck/')?128:128;
+ this.naturalWidth=2048;this.naturalHeight=v.includes('/roost/')||v.includes('/peck/')?512:768;
  this.onload?.();}});}
 const battle={active:true,energy:100},mon={hp:100};
 const moves=['Roost','Rajada','Air Slash','Bicada'].map(name=>({name,cd:1200,cost:10}));

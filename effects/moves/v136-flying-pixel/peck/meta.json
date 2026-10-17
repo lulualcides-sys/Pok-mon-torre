@@ -6,16 +6,16 @@
     "PixiJS Particle Emitter"
   ],
   "pixelArt": true,
-  "animation": "individual original-style pixel spritesheet frames",
-  "frameWidth": 64,
-  "frameHeight": 64,
+  "animation": "high-resolution 256px authored translucent sprite frames",
+  "frameWidth": 256,
+  "frameHeight": 256,
   "columns": 8,
-  "frames": 12,
+  "frames": 16,
   "milliseconds": 1150,
-  "textureFiltering": "nearest",
+  "textureFiltering": "linear — isolated to these four Flying sprites",
   "background": "transparent",
   "antiAlias": false,
-  "format": "pixel-art PNG spritesheet (animated frames, not single still)",
-  "visualRevision": "V141",
+  "format": "256px RGBA animated PNG atlas generated offline with Pillow",
+  "visualRevision": "V142",
   "palette": "pearlescent white/sky blue, navy 1px contour; warm-gold Roost/Bicada"
 }

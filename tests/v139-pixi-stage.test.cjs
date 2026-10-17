@@ -49,7 +49,7 @@ class Application{
 const PIXI={Application,Container,Sprite,Texture,Rectangle:class Rectangle{
  constructor(x,y,w,h){this.x=x;this.y=y;this.width=w;this.height=h;}
 },BaseTexture:{from:img=>({valid:img.naturalWidth>0,scaleMode:0})},
- SCALE_MODES:{NEAREST:0},utils:{}};
+ SCALE_MODES:{NEAREST:0,LINEAR:1},utils:{}};
 // Deliberately OMIT utils.isWebGLSupported: this caused V138 to reject a
 // perfectly functioning WebGL renderer on some browsers.
 const window={PIXI};
@@ -59,8 +59,8 @@ const bridge=vm.runInNewContext(src+'\npixiFX;',world,{timeout:5000});
 assert.ok(bridge);
 assert.equal(typeof window.PokemonTorrePixelFlyingBridge?.mountPixelFlying,'function','shared bridge must be exported outside V35 closure');
 assert.equal(bridge.diagnostics().gpu,false,'legacy helper can be absent before the pixel renderer initializes');
-const spec={name:'Air Slash',frames:16,ms:1510,scale:1.32,particles:false,
- image:{naturalWidth:512,naturalHeight:128}};
+const spec={name:'Air Slash',frames:20,ms:1510,scale:.80,frameSize:256,particles:false,
+ image:{naturalWidth:2048,naturalHeight:768}};
 const fx={move:{name:'Air Slash'},battle,at:1000,end:2510,duration:1510,
  from:[170,270],to:[680,200]};
 assert.equal(bridge.mountPixelFlying(engine,fx,spec),true,'must install real GPU sprite');
@@ -71,6 +71,9 @@ assert.equal(appInstance.view.style.display,'block');
 assert.equal(appInstance.stage.children.length,1);
 const root=appInstance.stage.children[0],sprite=root.children[0];
 assert.ok(sprite.texture instanceof Texture);
+assert.equal(sprite.texture.rect.width,256);
+assert.equal(sprite.scale.x,.80);
+assert.equal(sprite.texture.base.scaleMode,1);
 now=1550;
 appInstance.ticker.frame();
 assert.ok(bridge.diagnostics().pixelFlyingFrames>0,'GPU ticker did not animate texture');
