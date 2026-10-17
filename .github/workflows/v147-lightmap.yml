@@ -1,0 +1,28 @@
+name: V147 Lightmap Realista - sombras e profundidade
+on:
+  push:
+    branches: [main]
+    paths:
+      - "effects/arena/lightmap-v147.js"
+      - "effects/moves/_runtime/pixi-layer.js"
+      - "tests/v147-cinematic-lightmap.test.cjs"
+      - ".github/workflows/v147-lightmap.yml"
+      - "index.html"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cinematic-map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar reflexos, paredes, camera, fps e rollback V147
+        run: |
+          node tests/v147-cinematic-lightmap.test.cjs
+          node tests/v146-arena-lighting.test.cjs
+          node tests/stadium-arena-v97.test.cjs
+          node tests/v140-pixi-bridge.test.cjs

@@ -94,6 +94,8 @@ jobs:
         run: node tests/v145-libresprite-flying.test.cjs
       - name: Testar luz cinematografica V146, camera e regressao WebGL
         run: node tests/v146-arena-lighting.test.cjs
+      - name: Testar lightmap V147 com relevo, reflexos e compatibilidade
+        run: node tests/v147-cinematic-lightmap.test.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
