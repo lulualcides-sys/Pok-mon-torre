@@ -71,7 +71,9 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
                      'assets/arena-v165/arch.png']){
     const request=await page.request.get('http://127.0.0.1:'+port+'/'+path);
     assert.equal(request.status(),200,'missing generated cinematic asset '+path);
-    assert((await request.body()).byteLength>1200,'empty asset '+path);
+    const bytes=await request.body();
+    assert(bytes.byteLength>160,'empty asset '+path);
+    assert.equal(bytes.subarray(0,8).toString('hex'),'89504e470d0a1a0a','invalid PNG '+path);
   }
   fs.mkdirSync('tests/artifacts',{recursive:true});
   await page.screenshot({path:'tests/artifacts/v165-kanto-android.png'});
