@@ -112,6 +112,14 @@ jobs:
         run: python tools/build-v154-video-arena.py
       - name: V154 validar arena azul, perspectiva e regressao de golpes
         run: node tests/v154-video-blue-arena.test.cjs
+      # V155: arte original + prévia Mew/Mewtwo em um único estágio PixiJS.
+      # Nenhuma alteração no motor do jogo principal ou nos golpes protegidos.
+      - name: V155 gerar arena rochosa e sprites dos dois golpes com Pillow
+        run: python tools/build-v155-mew-mewtwo.py
+      - name: V155 verificar JavaScript do combate isolado
+        run: node --check previews/v155-mew-mewtwo.js
+      - name: V155 validar cenário, sprites e dano sincronizado
+        run: node tests/v155-mew-mewtwo.test.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
