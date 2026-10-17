@@ -56,6 +56,11 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   assert.equal(hit.foeHp,217,'Shadow Ball damage (23) on real graphical contact');
   await page.locator('#psychic').click();
   await page.waitForFunction(()=>window.PokemonTorreMewPilot.diagnostics().foeHp<=186,null,{timeout:6000});
+  await page.waitForFunction(()=>window.PokemonTorreMewPilot?.diagnostics().samples>=30,
+    null,{timeout:20000});
+  const timed=await page.evaluate(()=>window.PokemonTorreMewPilot.diagnostics());
+  assert.ok(timed.p95FrameMs>0&&['low','medium','high'].includes(timed.qualityLevel),
+    'phase 5 quality adapts to observed frame-time data');
   const psychic=await page.evaluate(()=>window.PokemonTorreMewPilot.diagnostics());
   assert.ok(psychic.foeHp<=186,'Psychic lands with visible arrival');
   assert.ok(psychic.peakSpells>=1&&psychic.peakParticles>=1,
