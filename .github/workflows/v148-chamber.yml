@@ -1,0 +1,32 @@
+name: V148 - Câmara 2.5D em Perspectiva
+on:
+  push:
+    branches: [main]
+    paths:
+      - "effects/arena/chamber-v148.js"
+      - "effects/arena/chamber-v148-README.md"
+      - "effects/moves/_runtime/pixi-layer.js"
+      - "index.html"
+      - "tests/v148-perspective-chamber.test.cjs"
+      - ".github/workflows/v148-chamber.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  projected-chamber:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar perspectiva, blocos, cristais, fogo, camera e rollback
+        run: node tests/v148-perspective-chamber.test.cjs
+      - name: Garantir que a arena original, PixiJS e golpes continuam intactos
+        run: |
+          node tests/stadium-arena-v97.test.cjs
+          node tests/v147-cinematic-lightmap.test.cjs
+          node tests/v146-arena-lighting.test.cjs
+          node tests/v140-pixi-bridge.test.cjs
+          node tests/v127-move-marks.test.cjs

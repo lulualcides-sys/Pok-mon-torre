@@ -253,7 +253,7 @@ const pixiFX=(()=>{
   const w=engine.w,h=engine.h,u=w/960,root=new PIXI.Container();
   root.interactiveChildren=false;
   const dim=new PIXI.Graphics();
-  const baked147=!!window.PokemonTorreLightmapV147?.enabled;
+  const baked147=!!(window.PokemonTorreArenaV148?.enabled||window.PokemonTorreLightmapV147?.enabled);
   // Navy environment: the V98 tiled stadium remains recognizable and sharp.
   dim.beginFill(0x08162c,baked147?.045:.28);dim.drawRect(0,0,w,h);dim.endFill();
   // Contact occlusion under existing North/South walls and side columns.
@@ -271,7 +271,7 @@ const pixiFX=(()=>{
    glow146(root,tex,918*u,h*.51,290*u,530*u,0x6ed0ff,.30),
    glow146(root,tex,480*u,105*u,350*u,280*u,0xff727c,.25)
   ];
-  if(baked147)for(const lamp of lamps)lamp.alpha*=.16;
+  if(baked147)for(const lamp of lamps)lamp.alpha*=window.PokemonTorreArenaV148?.enabled?.035:.16;
   const seams=new PIXI.Graphics();
   seams.lineStyle(Math.max(1,2.1*u),0x9dddff,.42);
   seams.moveTo(0,150*u);seams.lineTo(w,150*u);
@@ -291,9 +291,9 @@ const pixiFX=(()=>{
   if(owner.w!==a.w||owner.h!==a.h){createLighting146(owner);return;}
   if(now-a.last<33)return; // Light position/tint costs capped at 30 Hz.
   a.last=now;
-  const baked147=!!window.PokemonTorreLightmapV147?.enabled;
-  a.lamps[0].alpha=(baked147?.09:.45)+.015*Math.sin(now*.0018);
-  a.lamps[1].alpha=(baked147?.09:.43)+.015*Math.cos(now*.0014);
+  const baked147=!!(window.PokemonTorreArenaV148?.enabled||window.PokemonTorreLightmapV147?.enabled);
+  a.lamps[0].alpha=(window.PokemonTorreArenaV148?.enabled?.025:(baked147?.09:.45))+.015*Math.sin(now*.0018);
+  a.lamps[1].alpha=(window.PokemonTorreArenaV148?.enabled?.025:(baked147?.09:.43))+.015*Math.cos(now*.0014);
   const actors=[owner.player,owner.enemy];
   for(let i=0;i<2;i++){
    const shadow=a.shadow[i],actor=actors[i];
