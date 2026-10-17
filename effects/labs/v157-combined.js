@@ -4,7 +4,8 @@
  */
 (() => {
 'use strict';
-if(!window.PIXI||!window.__V157_LAB||typeof BattleEngine!=='function'||typeof pixiFX==='undefined')return;
+window.PokemonTorreV157Boot={pixi:!!window.PIXI,labFlag:!!window.__V157_LAB,engine:typeof BattleEngine,pixiFX:typeof pixiFX};
+if(!window.PIXI||typeof BattleEngine!=='function'||typeof pixiFX==='undefined')return;
 const P=window.PIXI, now=()=>performance.now(), clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const lab={version:'157-lab',stages:[true,true,true,true,true],active:false,
  actors:0,animatedFrames:0,casts:0,impacts:0,webgl:false,fps:60,quality:'high',
