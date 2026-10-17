@@ -1,0 +1,33 @@
+{
+  "version": "146.0",
+  "status": "preview in normal battle",
+  "reference": "PokéSouls arena lighting video provided by user",
+  "preserve": [
+    "effects/arena/stadium-arena-v97.js",
+    "effects/arena/wide-camera-v98.js",
+    "effects/moves/STATUS_APROVADOS.json",
+    "all approved attack animations",
+    "collision/camera logic"
+  ],
+  "render": "Same PixiJS WebGL stage used for attacks — no extra context",
+  "lighting": [
+    "navy ambient darkening",
+    "five low-cost existing-wall lamp/reflection sources",
+    "contact shadows following two Pokémon",
+    "attack-tinted temporary point light",
+    "cyan edge rail highlights"
+  ],
+  "performance": {
+    "texture": "single 64x64 RGBA radial falloff buffer",
+    "maxLights": 6,
+    "maxShadows": 2,
+    "lightUpdatesHz": 30,
+    "filters": 0,
+    "extraWebGLContexts": 0
+  },
+  "rollback": "?lighting146=0",
+  "safeMode": "?safe=1",
+  "mapMode": "?arena_preview=off",
+  "limitations": "2.5D art-directed lighting only; no real 3D cast-shadow raytracing or per-pixel normal map in V146",
+  "userFeedback": "Preview must be visually tested on Android before approval"
+}

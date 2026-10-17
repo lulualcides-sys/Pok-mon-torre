@@ -221,7 +221,111 @@ const pixiFX=(()=>{
   }
  }
 
+ 
+ // V146: cinematic 2.5D lighting inside the existing Pixi/WebGL battle overlay.
+ // A reusable glow kernel is NOT Pokémon art; all sprites, map tiles and attacks are unchanged.
+ let lighting146=null,lighting146Texture=null,lighting146Frames=0,lighting146Failures=0;
+ function lightTexture146(){
+  if(lighting146Texture)return lighting146Texture;
+  const N=64,rgba=new Uint8Array(N*N*4);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+   const a=(x+.5-N/2)/(N/2),b=(y+.5-N/2)/(N/2);
+   const d=Math.min(1,Math.sqrt(a*a+b*b)),s=1-d,k=(y*N+x)*4;
+   rgba[k]=rgba[k+1]=rgba[k+2]=255;
+   rgba[k+3]=Math.round(255*s*s*(3-2*s));
+  }
+  lighting146Texture=PIXI.Texture.fromBuffer(rgba,N,N,{scaleMode:PIXI.SCALE_MODES.LINEAR});
+  return lighting146Texture;
+ }
+ function destroyLighting146(){
+  if(!lighting146)return;
+  try{lighting146.root.destroy({children:true,texture:false,baseTexture:false});}catch(_){}
+  lighting146=null;
+ }
+ function glow146(root,tex,x,y,w,h,tint,alpha,blend=PIXI.BLEND_MODES.ADD){
+  const s=new PIXI.Sprite(tex);s.anchor.set(.5);s.position.set(x,y);
+  s.width=w;s.height=h;s.tint=tint;s.alpha=alpha;s.blendMode=blend;
+  root.addChild(s);return s;
+ }
+ function createLighting146(engine){
+  if(!app?.renderer?.gl||!app.stage)return false;
+  destroyLighting146();
+  const w=engine.w,h=engine.h,u=w/960,root=new PIXI.Container();
+  root.interactiveChildren=false;
+  const dim=new PIXI.Graphics();
+  // Navy environment: the V98 tiled stadium remains recognizable and sharp.
+  dim.beginFill(0x08162c,.28);dim.drawRect(0,0,w,h);dim.endFill();
+  // Contact occlusion under existing North/South walls and side columns.
+  dim.beginFill(0x081327,.19);dim.drawRect(0,0,w,158*u);
+  dim.drawRect(0,Math.max(0,h-68*u),w,68*u);dim.endFill();
+  dim.beginFill(0x0c1a30,.13);dim.drawRect(0,170*u,26*u,Math.max(0,h-280*u));
+  dim.drawRect(Math.max(0,w-26*u),170*u,26*u,Math.max(0,h-280*u));dim.endFill();
+  root.addChild(dim);
+  const tex=lightTexture146();
+  // World coordinates map to the same positions used by stadium-arena-v97.js.
+  const lamps=[
+   glow146(root,tex,110*u,191*u,470*u,420*u,0xffdfa4,.47),
+   glow146(root,tex,850*u,h-142*u,470*u,420*u,0xffdea2,.44),
+   glow146(root,tex,45*u,h*.51,290*u,530*u,0x65c5ff,.32),
+   glow146(root,tex,918*u,h*.51,290*u,530*u,0x6ed0ff,.30),
+   glow146(root,tex,480*u,105*u,350*u,280*u,0xff727c,.25)
+  ];
+  const seams=new PIXI.Graphics();
+  seams.lineStyle(Math.max(1,2.1*u),0x9dddff,.42);
+  seams.moveTo(0,150*u);seams.lineTo(w,150*u);
+  seams.lineStyle(Math.max(1,1.8*u),0x9dddff,.26);
+  seams.moveTo(0,Math.max(0,h-69*u));seams.lineTo(w,Math.max(0,h-69*u));
+  seams.moveTo(24*u,207*u);seams.lineTo(24*u,h-168*u);
+  seams.moveTo(w-24*u,207*u);seams.lineTo(w-24*u,h-168*u);
+  root.addChild(seams);
+  // Grounding the actors: contact shadows, NOT circles behind Pokémon icons.
+  const shadow=[0,1].map(()=>glow146(root,tex,-120,-120,91*u,26*u,0x06101a,.39,PIXI.BLEND_MODES.NORMAL));
+  const attack=glow146(root,tex,-120,-120,360*u,300*u,0xffa766,0);
+  app.stage.addChildAt(root,0);lighting146={root,engine,w,h,u,lamps,shadow,attack,last:0,frames:0};
+  return true;
+ }
+ function updateLighting146(now){
+  const a=lighting146;if(!a||!owner||!battleViewReady(owner))return;
+  if(owner.w!==a.w||owner.h!==a.h){createLighting146(owner);return;}
+  if(now-a.last<33)return; // Light position/tint costs capped at 30 Hz.
+  a.last=now;
+  a.lamps[0].alpha=.45+.025*Math.sin(now*.0018);
+  a.lamps[1].alpha=.43+.024*Math.cos(now*.0014);
+  const actors=[owner.player,owner.enemy];
+  for(let i=0;i<2;i++){
+   const shadow=a.shadow[i],actor=actors[i];
+   shadow.visible=!!actor;
+   if(actor)shadow.position.set(actor.x,(actor.y||0)+8*a.u);
+  }
+  const casts=owner.v359Attacks||[],fx=casts[casts.length-1];
+  const age=fx?now-fx.at:999999,total=fx?.duration||1100;
+  if(fx&&age>=0&&age<total&&Array.isArray(fx.to)){
+   const name=String(fx.move?.type||fx.move?.name||'').toLowerCase();
+   a.attack.tint=/fire|fogo|chama|burn/.test(name)?0xff853e:
+    /ice|gelo|congel|blizzard/.test(name)?0x91e8ff:
+    /electric|raio|trov|thunder/.test(name)?0xffeb7c:
+    /grass|planta|folha/.test(name)?0x8adf97:
+    /psychic|psiq/.test(name)?0xc490ff:0x97caff;
+   a.attack.position.set(fx.to[0],fx.to[1]);
+   a.attack.alpha=.59*Math.sin(Math.PI*Math.min(1,age/total));
+  }else a.attack.alpha=0;
+  a.frames++;lighting146Frames++;
+ }
+ function frameLighting146(engine){
+  if(!window.PokemonTorreLightingV146Active||!engine?.canvas?.isConnected)return false;
+  if(!battleViewReady(engine))return false;
+  if(lighting146&&lighting146.engine===engine&&lighting146.w===engine.w&&lighting146.h===engine.h){
+   if(app&&!app.ticker.started)app.ticker.start();
+   return true;
+  }
+  try{
+   if(!ensure(engine,true))return false;
+   return createLighting146(engine);
+  }catch(e){lighting146Failures++;error='Lighting V146: '+String(e?.message||e);return false;}
+ }
+
  function reset(){
+  destroyLighting146();
   for(const fx of [...pixelFlying.keys()])destroyPixelFlying(fx);
   if(combatSheet){
    try{combatSheet.emitter?.destroy();combatSheet.root.destroy({children:true})}catch(e){}
@@ -412,6 +516,7 @@ const pixiFX=(()=>{
   if(!battleViewReady()){reset();return;}
   const now=performance.now(),dt=Math.min(.05,Math.max(.001,app.ticker.deltaMS/1000));position(owner);
   updatePixelFlying(now,dt);
+  updateLighting146(now);
   for(const [f,e] of effects){
    if(e.v72&&e.failed){
     missingLegacyAtlasesV89.add(e.key||'');
@@ -432,7 +537,7 @@ const pixiFX=(()=>{
    try{combatSheet.emitter?.destroy();combatSheet.root.destroy({children:true})}catch(e){}
    combatSheet=null;
   }
-  if(!effects.size&&!pixelFlying.size&&!combatSheet&&!activeV84&&!activeV86&&!hazeActiveV85){app.ticker.stop();app.view.style.display='none';}
+  if(!effects.size&&!pixelFlying.size&&!combatSheet&&!activeV84&&!activeV86&&!hazeActiveV85&&!lighting146){app.ticker.stop();app.view.style.display='none';}
  }
  function paint(f,engine,key){
   // V137: a pixel-only Flying move must NEVER produce semantic/legacy effects,
@@ -639,11 +744,11 @@ const pixiFX=(()=>{
   }catch(e){error='V107 Pixi illustrated sprite '+String(e?.message||e);return false;}
  }
  return {ensure,paint,paintFightingSheet,clearAll:reset,onBattleUiChange,isBattleViewReady:battleViewReady,
-  mountPixelFlying,
+  mountPixelFlying,frameLighting146,
   beginV84,clearV84,frameV84,beginHazeV85,frameHazeV85,
   beginV86,frameV86,diagnostics:()=>({version:'35.85',gpu:hasGPU()||!!app?.renderer?.gl,ready:!!app,
   sprites:!!atlas,active:effects.size,registered:typeof registry==='undefined'?0:registry.size,pixelFlyingLastIssue,
-  emitterInstances:emitterCount,frames,pixelFlyingActive:pixelFlying.size,pixelFlyingFrames,pixelFlyingStarts,pixelFlyingFailures,combatSprites:combatFrames,combatEmitterInstances:combatEmitterCount,combatSpriteActive:!!combatSheet,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:typeof grassFourV84?.source==='function'?grassFourV84.source(activeV84.key):'gpu-generated'}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
+  emitterInstances:emitterCount,frames,pixelFlyingActive:pixelFlying.size,pixelFlyingFrames,pixelFlyingStarts,pixelFlyingFailures,lighting146Active:!!lighting146,lighting146Frames,lighting146Failures,combatSprites:combatFrames,combatEmitterInstances:combatEmitterCount,combatSpriteActive:!!combatSheet,activePreview:activeV84?{key:activeV84.key,id:activeV84.id,source:typeof grassFourV84?.source==='function'?grassFourV84.source(activeV84.key):'gpu-generated'}:null,previewEffectCount:[...effects.values()].filter(e=>e?.v84).length,
   hazeActive:!!hazeActiveV85,hazeReady:!!hazeActiveV85?.ready,
   v86Active:!!activeV86,v86Name:activeV86?.spec?.name||null,
   v86Ready:!!activeV86?.ready,
@@ -657,5 +762,6 @@ const pixiFX=(()=>{
 })();
 window.PokemonTorrePixelFlyingBridge=Object.freeze({
  mountPixelFlying:pixiFX.mountPixelFlying,
+ frameLighting146:pixiFX.frameLighting146,
  diagnostics:pixiFX.diagnostics
 });

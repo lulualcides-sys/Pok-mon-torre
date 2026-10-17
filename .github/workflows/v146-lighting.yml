@@ -1,0 +1,30 @@
+name: V146 Cinematic Arena Lighting - shared Pixi WebGL
+on:
+  push:
+    branches: [main]
+    paths:
+      - "effects/arena/lighting-v146.*"
+      - "effects/moves/_runtime/pixi-layer.js"
+      - "tests/v146-arena-lighting.test.cjs"
+      - ".github/workflows/v146-lighting.yml"
+      - "index.html"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gpu-lighting-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Testar luz ambiente WebGL, camera e rollback
+        run: node tests/v146-arena-lighting.test.cjs
+      - name: Preservar mapa oficial, progressao e golpes
+        run: |
+          node tests/stadium-arena-v97.test.cjs
+          node tests/cinematic-arena-v96.test.cjs
+          node tests/v140-pixi-bridge.test.cjs
+          node tests/v127-move-marks.test.cjs

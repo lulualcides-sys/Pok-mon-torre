@@ -92,6 +92,8 @@ jobs:
         run: bash tools/libresprite/build-v145-flying.sh
       - name: Testar quatro golpes V145 montados no PixiJS
         run: node tests/v145-libresprite-flying.test.cjs
+      - name: Testar luz cinematografica V146, camera e regressao WebGL
+        run: node tests/v146-arena-lighting.test.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
