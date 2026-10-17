@@ -182,6 +182,18 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v166-rtx-browser.cjs
+      # V167: isolated video-fidelity lab; four reference videos inspected before authoring.
+      # Generated artifacts are separate from the official arena and approved move registry.
+      - name: V167 gerar azulejos de pedra, bordas neon e atlases dos 4 golpes
+        run: |
+          python tools/build-v167-video-fidelity.py
+          python tools/test-v167-reference-art.py
+      - name: V167 conferir isolamento do jogo original e renderizadores WebGL
+        run: node tests/v167-video-regression.test.cjs
+      - name: "V167 verificar no Chrome: quatro golpes, arena roxa e azul, vida e salvamento"
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v167-video-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
