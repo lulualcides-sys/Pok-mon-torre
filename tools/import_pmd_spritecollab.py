@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 BASE="https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/sprite"
-ANIMS=("Idle", "Walk", "Attack", "Hurt", "Sleep", "Faint")
+ANIMS=("Idle", "Walk", "Attack", "Shoot", "Hurt", "Sleep", "Faint")
 def fetch(url):
     req=urllib.request.Request(url,headers={"User-Agent":"PokemonTorre-FanProject/1.0"})
     with urllib.request.urlopen(req,timeout=30) as rsp:
