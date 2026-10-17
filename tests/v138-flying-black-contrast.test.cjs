@@ -11,7 +11,8 @@ for(const pattern of [/build\("roost",16,roost\)/,/build\("gust",20,gust\)/,
 assert.match(validator,/hard\/pixelated edges/);
 assert.match(pixi,/base\.scaleMode=spec\.flying144\?PIXI\.SCALE_MODES\.NEAREST:PIXI\.SCALE_MODES\.LINEAR/);
 assert.match(pixi,/sprite\.roundPixels=false/);
-assert.match(pixi,/new PIXI\.Rectangle\(\(i%8\)\*size,Math\.floor\(i\/8\)\*size,size,size\)/);
+assert.match(pixi,/atlasFrame=\(spec\.frameStart\|\|0\)\+i/);
+assert.match(pixi,/new PIXI\.Rectangle\(\(atlasFrame%8\)\*size,Math\.floor\(atlasFrame\/8\)\*size,size,size\)/);
 assert.match(pixi,/sprite\.tint=0xffffff;/);
 assert.match(runtime,/spritesheet\.png\?v=142-hd-alpha/);
 assert.match(runtime,/frameSize:256/);
