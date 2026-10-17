@@ -1,0 +1,63 @@
+{
+  "version": "V144",
+  "status": "functional battle preview — awaiting visual evaluation",
+  "atlas": "effects/moves/v144-flying-original/atlas.png",
+  "size": [
+    768,
+    384
+  ],
+  "frame": [
+    96,
+    96
+  ],
+  "columns": 8,
+  "source": "ChatGPT Library /Pokemon Torre/Biblioteca de Sprites/varios/pixel_fx_sheet_blue_background.png",
+  "source_kind": "user-provided existing pixel-art effect sheet",
+  "artwork": "cropped unmodified pixels from user-provided original sprite sheet; transparent background and palette storage only",
+  "licence": "Source supplied by project owner; confirm original artists' reuse conditions before distribution.",
+  "editor": "Source extracted via Node.js Sharp raster crop; LibreSprite unavailable on this runner. Atlas remains editable in LibreSprite.",
+  "generator_used": "No Python; no procedural vector/Canvas/CSS animation.",
+  "saved_visuals_preserved": [
+    "Roost",
+    "Rajada",
+    "Bicada",
+    "Air Slash"
+  ],
+  "moves": [
+    {
+      "name": "Bico Broca",
+      "row": 0,
+      "frames": 8,
+      "kind": "contact",
+      "preview_ms": 1270,
+      "design": "existing blue spin frames"
+    },
+    {
+      "name": "Vendaval",
+      "row": 1,
+      "frames": 8,
+      "kind": "area",
+      "preview_ms": 1610,
+      "design": "existing vertical wind twister sprites"
+    },
+    {
+      "name": "Aerocorte",
+      "row": 2,
+      "frames": 8,
+      "kind": "projectile",
+      "preview_ms": 1270,
+      "design": "existing white air blades"
+    },
+    {
+      "name": "Pique",
+      "row": 3,
+      "frames": 8,
+      "kind": "contact",
+      "preview_ms": 1070,
+      "design": "existing white forward rush"
+    }
+  ],
+  "rollback": "?flying144=0",
+  "render": "same PixiJS WebGL stage as V143",
+  "code": "effects/moves/v144-flying-original/runtime.js"
+}

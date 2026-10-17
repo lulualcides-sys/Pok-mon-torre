@@ -118,7 +118,7 @@ const pixiFX=(()=>{
    let entry=pixelAtlasCache.get(spec.image);
    if(!entry){
     const base=PIXI.BaseTexture.from(spec.image);
-    base.scaleMode=PIXI.SCALE_MODES.LINEAR;
+    base.scaleMode=spec.flying144?PIXI.SCALE_MODES.NEAREST:PIXI.SCALE_MODES.LINEAR;
     if(!base.valid){
      pixelFlyingLastIssue='PixiJS BaseTexture ainda inválida: '+spec.name;
      return false;
@@ -126,7 +126,8 @@ const pixiFX=(()=>{
     const frames=[];
     for(let i=0;i<spec.frames;i++){
      const size=spec.frameSize||256;
-     const rect=new PIXI.Rectangle((i%8)*size,Math.floor(i/8)*size,size,size);
+     const atlasFrame=(spec.frameStart||0)+i;
+     const rect=new PIXI.Rectangle((atlasFrame%8)*size,Math.floor(atlasFrame/8)*size,size,size);
      frames.push(new PIXI.Texture(base,rect));
     }
     entry={base,frames};pixelAtlasCache.set(spec.image,entry);
@@ -134,7 +135,7 @@ const pixiFX=(()=>{
    const root=new PIXI.Container(),sprite=new PIXI.Sprite(entry.frames[0]);
    // V143: requested 80% reduction of the WHOLE Flying V142 artwork,
    // including its particles; unrelated Pixi effects keep their original size.
-   root.scale.set(.20);
+   root.scale.set(spec.flying144?1:.20);
    sprite.anchor.set(.5);sprite.roundPixels=false;
    // V141: colored crisp pixel atlases with warm gold/healing and pearlescent wind.
    // White tint preserves the authored palette and the one-pixel dark outline.
@@ -199,6 +200,13 @@ const pixiFX=(()=>{
    let x=A[0]+(B[0]-A[0])*smooth,y=A[1]+(B[1]-A[1])*smooth;
    if(key==='Roost'){x=A[0];y=A[1]+4-7*Math.sin(Math.PI*t);}
    if(key==='Bicada'){const v=Math.min(1,Math.max(0,(t-.17)/.47));x=A[0]+(B[0]-A[0])*v;y=A[1]+(B[1]-A[1])*v;}
+   if(o.spec.flying144&&o.spec.effectKind==='area'){
+    x=B[0]+Math.sin(t*Math.PI*5)*3;y=B[1]-Math.sin(t*Math.PI)*11;
+   }
+   if(o.spec.flying144&&o.spec.effectKind==='contact'){
+    const v=Math.min(1,Math.max(0,(t-.08)/.59));const dash=v*v*(3-2*v);
+    x=A[0]+(B[0]-A[0])*dash;y=A[1]+(B[1]-A[1])*dash;
+   }
    o.root.position.set(Math.round(x),Math.round(y));
    // V141: illuminated real sprite pixels, retaining sharp 1px navy outline.
    // Fade only the first and final 50ms, no glow/blur filter.
@@ -429,7 +437,8 @@ const pixiFX=(()=>{
  function paint(f,engine,key){
   // V137: a pixel-only Flying move must NEVER produce semantic/legacy effects,
   // even if its spritesheet is still downloading on the first game frame.
-  if(pixelFlying.has(f)||window.PokemonTorreFlyingPixelV136?.hasMove?.(f?.move?.name||f?.name))return true;
+  if(pixelFlying.has(f)||window.PokemonTorreFlyingPixelV136?.hasMove?.(f?.move?.name||f?.name)||
+     window.PokemonTorreFlyingOriginalV144?.hasMove?.(f?.move?.name||f?.name))return true;
   // The named V86 cast already renders a single authored WebGL layer.
   // Never create a legacy ice/grassy bolt underneath, even from stale queues.
   if(typeof referenceFourV86!=='undefined'&&

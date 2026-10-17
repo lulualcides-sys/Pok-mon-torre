@@ -12,6 +12,9 @@ on:
       - "tests/v139-flying-visible.test.cjs"
       - "tests/v139-pixi-stage.test.cjs"
       - "tests/v140-pixi-bridge.test.cjs"
+      - "tests/v144-user-sprite-flying.test.cjs"
+      - "effects/moves/v144-flying-original/**"
+      - "parts/p013.txt"
       - "index.html"
       - ".github/workflows/v136-flying-pixel.yml"
   workflow_dispatch:
@@ -38,6 +41,7 @@ jobs:
           node tests/v139-flying-visible.test.cjs
           node tests/v139-pixi-stage.test.cjs
           node tests/v140-pixi-bridge.test.cjs
+          node tests/v144-user-sprite-flying.test.cjs
       - name: Assert no Canvas 2D for four moves and battle native hit logic
         run: |
           node tests/v136-flying-pixel.test.cjs

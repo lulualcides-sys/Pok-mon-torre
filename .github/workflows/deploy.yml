@@ -68,6 +68,7 @@ jobs:
           node tests/v139-flying-visible.test.cjs
           node tests/v139-pixi-stage.test.cjs
           node tests/v140-pixi-bridge.test.cjs
+          node tests/v144-user-sprite-flying.test.cjs
           node tests/rain-v118.test.cjs
           node tests/patch-v117.test.cjs
           node tests/battle-layout-v120.test.cjs
