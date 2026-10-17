@@ -15,9 +15,14 @@ let lastTick=now(),avg=60,focusUntil=0,frameNum=0;
 const LOCAL_IDS=new Set([1,4,7,25,74,95,150,151]);
 const localEntries=new Map(),attackPhases=new Map();
 function entryFor(e,id){
- const existing=e.assets?.get(id);
- if(existing){existing.meta ||= {};existing.sheets ||= {};return existing;}
- if(!localEntries.has(id))localEntries.set(id,{meta:{},sheets:{}});
+ // Cache PMD actions per species across successive trainers/battles.
+ // A new BattleEngine must not lose assets because a global request flag is set.
+ if(!localEntries.has(id)){
+  const existing=e.assets?.get(id);
+  const entry=existing||{meta:{},sheets:{}};
+  entry.meta ||= {};entry.sheets ||= {};
+  localEntries.set(id,entry);
+ }
  return localEntries.get(id);
 }
 const logError=(err)=>{let v=String(err?.message||err);if(!lab.errors.includes(v))lab.errors.push(v);lab.errors=lab.errors.slice(-5);};
@@ -190,7 +195,7 @@ function frameFX(e,app){
   fx.sprite.alpha=1;
   if(!fx.impactOnly){const scale=.86+Math.sin(u*Math.PI)*.25;fx.sprite.scale.set(scale);}
   if(fx.rim){fx.rim.texture=fx.sprite.texture;fx.rim.position.copyFrom(fx.sprite.position);
-   fx.rim.scale.copyFrom(fx.sprite.scale);fx.rim.rotation=fx.sprite.rotation;}
+   fx.rim.scale.set(fx.sprite.scale.x*1.14,fx.sprite.scale.y*1.14);fx.rim.rotation=fx.sprite.rotation;}
   // Pixel atlas trails, bounded by quality mode. The official move VFX are untouched.
   if(fx.kind==='shadow'&&!fx.impactOnly&&frameNum%5===0&&lab.quality!=='low'&&trail.length<28){
    const dot=new P.Sprite(fx.frames[Math.min(15,Math.floor(u*16))]);dot.anchor.set(.5);
