@@ -27,7 +27,33 @@ function stage(e){
  access.app.view.style.display='block';
  return access.app;
 }
+// PMD pilot species are shipped LOCALLY by the deploy workflow: no failed CDN
+// roundtrip can turn the lab's initial Mew/Mewtwo animation invisible.
+const localRequested=new Set();
+function localPMD(e,id){
+ if(id!==150&&id!==151)return;
+ const entry=e.assets?.get(id);if(!entry||localRequested.has(id))return;
+ localRequested.add(id);
+ const base='assets/pmd-spritecollab/'+String(id).padStart(4,'0')+'/';
+ fetch(base+'AnimData.xml',{cache:'force-cache'}).then(r=>{
+  if(!r.ok)throw Error('V157 PMD XML '+r.status);
+  return r.text();
+ }).then(xml=>{
+  const doc=new DOMParser().parseFromString(xml,'application/xml');
+  for(const a of doc.querySelectorAll('Anim')){
+   const name=a.querySelector('Name')?.textContent?.trim();
+   const width=Number(a.querySelector('FrameWidth')?.textContent),height=Number(a.querySelector('FrameHeight')?.textContent);
+   const durations=[...a.querySelectorAll('Durations > Duration')].map(x=>Number(x.textContent)).filter(x=>x>0);
+   if(name&&width>0&&height>0&&durations.length)entry.meta[name]={width,height,durations};
+  }
+ }).catch(logError);
+ for(const action of ['Idle','Walk','Attack','Shoot','Hurt','Faint']){
+  const img=new Image();img.decoding='async';img.onload=()=>{if(img.naturalWidth)entry.sheets[action]=img;};
+  img.src=base+action+'-Anim.png';
+ }
+}
 function sheet(e,id,action){
+ localPMD(e,id);
  const entry=e.assets?.get(id),pic=entry?.sheets?.[action],md=entry?.meta?.[action];
  if(!pic?.complete||!pic.naturalWidth||!md?.width||!md?.height)return null;
  const cacheId=id+':'+action+':'+pic.naturalWidth;
