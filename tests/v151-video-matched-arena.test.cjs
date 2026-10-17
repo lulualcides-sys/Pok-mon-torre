@@ -1,5 +1,5 @@
 'use strict';
-/* Rebuild from the actual PokéSouls video. Guarantee normal URL V151,
+/* Archived video-based experiment V151, no longer the default,
  * blue and molten maps, video-like floor and safe preserved gameplay.
  */
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
@@ -13,8 +13,8 @@ assert.equal(approved.moves.length,46);
 assert.ok(approved.moves.every(e=>e.protect),'protected approved attacks must remain untouched');
 assert.match(html,/effects\/arena\/video-v151\.js/);
 assert.match(html,/v151-1-video-textured-stone/);
-assert.match(html,/get\('arena151'\)!=='0'/);
-assert.match(html,/get\('arena151'\)==='0'/);
+assert.match(html,/get\('arena151'\)!=='1'/); // V150 default
+assert.match(html,/get\('arena151'\)==='1'/); // archived V151 opt-in
 assert.match(html,/effects\/arena\/chamber-v148\.js/);
 assert.match(html,/effects\/arena\/stadium-arena-v97\.js/);
 assert.match(pixi,/PokemonTorreArenaV151/);
@@ -44,11 +44,11 @@ function env(search='',w=900,h=850){
  vm.runInNewContext(scene,ctx,{timeout:6000});
  return {seen,BE,window,base};
 }
-for(const q of ['?arena151=0','?safe=1','?arena148=0','?lighting146=0','?arena_preview=off']){
+for(const q of ['?arena151=0','?v=152','?safe=1','?arena148=0','?lighting146=0','?arena_preview=off']){
  const x=env(q);const b=new x.BE();b.generateBackdrop();
  assert.equal(b.bg,x.base);assert.equal(x.seen.canvas,0,'rollback no allocations');
 }
-for(const q of ['?v=151','?arena148=lava&v=151']){
+for(const q of ['?arena151=1&v=151','?arena151=1&arena148=lava&v=151']){
  const x=env(q),b=new x.BE();b.generateBackdrop();const first=b.bg;
  const d=x.window.PokemonTorreArenaV151.diagnostics();
  assert.equal(x.window.PokemonTorreArenaV151.enabled,true);
