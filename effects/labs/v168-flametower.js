@@ -9,7 +9,7 @@ if(!window.__V168_LAB||!P||typeof BattleEngine!=='function')return;
 const now=()=>performance.now(),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const data={
  version:'168.0-fire-sprite-lab',installed:true,active:false,webgl:false,
- flames:0,framesDrawn:0,contactDashes:0,completed:0,impacts:0,
+ flames:0,framesDrawn:0,contactDashes:0,dashOffsets:0,completed:0,impacts:0,
  fps:0,errors:[],loadReady:0,loadFailed:0,savedMovesUntouched:true,
  originalCampaignPreserved:true,atlasFrames:{tower:32,flamethrower:32,blast:32,punch:24},
  previews:[],maxConcurrent:4
@@ -146,6 +146,7 @@ BattleEngine.prototype.drawMon=function(actor,id,enemy,clock){
    const u=clamp((now()-punch.start)/punch.duration,0,1);
    const d=dash(u);
    if(d>.01){
+    data.dashOffsets++;
     const shown={...actor,x:actor.x+(punch.to.x-punch.from.x)*d,
        y:actor.y+(punch.to.y-punch.from.y)*d*.45};
     return nativeDrawMon.call(this,shown,id,enemy,clock);
