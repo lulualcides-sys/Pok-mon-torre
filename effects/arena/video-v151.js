@@ -2,13 +2,13 @@
  * Visual reconstruction based on the user-supplied video (blue + lava stages).
  * Baked ONCE at native world size, then drawn by the existing battle engine.
  * Zero extra canvas instances per frame, no change to actors, physics or VFX.
- * ?arena151=0 restores V150; ?arena148=0 restores original V147.
+ * Archived option only: ?arena151=1. Without it V150 is loaded instead.
  */
 (()=>{
 'use strict';
 if(typeof BattleEngine!=='function'||!BattleEngine.prototype.generateBackdrop||window.PokemonTorreArenaV151?.installed)return;
 const query=new URLSearchParams(location.search);
-const enabled=query.get('arena151')!=='0'&&query.get('arena148')!=='0'&&query.get('safe')!=='1'&&query.get('lighting146')!=='0'&&query.get('arena_preview')!=='off';
+const enabled=query.get('arena151')==='1'&&query.get('arena148')!=='0'&&query.get('safe')!=='1'&&query.get('lighting146')!=='0'&&query.get('arena_preview')!=='off';
 const lava=query.get('arena148')==='lava';
 const C=lava?{
 back:'#240c0a',mortar:'#270e0b',base:'#521a11',tile:['#572018','#4c180f','#541b12','#4d180f','#5d2217','#49170f','#591c12'],
@@ -377,7 +377,7 @@ BattleEngine.prototype.generateBackdrop=function(){
 window.PokemonTorreArenaV151=Object.freeze({
  installed:true,enabled,version:'151.0',theme:lava?'lava':'blue',
  source:'User-provided PokéSouls video scene composition and sampled color palette',
- baseline:'V150 ?arena151=0; original V147 ?arena148=0',
+ baseline:'V150 default; V151 opt-in ?arena151=1; original V147 ?arena148=0',
  diagnostics:()=>({...diag})
 });
 })();
