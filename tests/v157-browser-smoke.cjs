@@ -20,11 +20,11 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
    {waitUntil:'domcontentloaded',timeout:40000});
   try{await page.waitForFunction(()=>window.PokemonTorreV157Lab?.diagnostics()&&
     typeof window.PokemonTorreLocalCombatTestV47?.start==='function',
-    null,{timeout:70000});}
+    null,{timeout:35000});}
   catch(e){
    console.error('V157 boot',JSON.stringify(await page.evaluate(()=>({
     url:location.href,title:document.title,status:document.querySelector('#pt-status')?.textContent,
-    lab:window.PokemonTorreV157Lab?.diagnostics?.(),body:document.body.textContent.slice(0,300)
+    lab:window.PokemonTorreV157Lab?.diagnostics?.(),boot:window.PokemonTorreV157Boot,flag:window.__V157_LAB,pixi:!!window.PIXI,qa:typeof window.PokemonTorreLocalCombatTestV47?.start,body:document.body.textContent.slice(0,300)
    }))));throw e;
   }
   const initial=await page.evaluate(()=>{
