@@ -200,6 +200,8 @@ function create(engine){
    backgroundAlpha:1,antialias:false,resolution:1,autoDensity:false,
    powerPreference:'low-power'});
   if(!app.renderer?.gl)throw Error('Pixi WebGL GPU unavailable');
+  // The native actor layer remains the ONLY Canvas2D game renderer.
+  // GPU sprite stage is isolated and never replaces the approved moves.
   const atlas=buildAtlas(Pixi),textures=atlas.textures;
   const root=new Pixi.Container();root.scale.set(u);root.sortableChildren=false;app.stage.addChild(root);
   const add=(id,x,y,bw,bh,opts={})=>{
@@ -336,7 +338,12 @@ BattleEngine.prototype.generateBackdrop=function(){
 BattleEngine.prototype.draw=function(now){
  // Alpha-enabled battle canvas is cleared to transparent each frame; game
  // still draws the original actors, attacks, aim, numbers, dodge and hit effects.
- if(gpu.has(this))this.ctx.clearRect(0,0,this.w,this.h);
+ if(gpu.has(this)){
+  this.ctx.clearRect(0,0,this.w,this.h);
+  const layer=gpu.get(this);
+  if(layer?.app?.ticker&&!layer.app.ticker.started&&this.running&&battle?.active)
+   layer.app.ticker.start();
+ }
  const result=nativeDraw.apply(this,arguments);
  if(gpu.has(this))sync(this);
  return result;
