@@ -186,6 +186,9 @@ if(plugin){
  if(!plugin.includes(point))throw Error('V157 PixiJS shared renderer hook not found');
  plugin=plugin.replace(point,
   'return {ensure,labStage:(e)=>{if(!ensure(e,true))return null;position(e);return {app,position:()=>position(e)};},paint,paintFightingSheet');
+ const api='frameLighting146:pixiFX.frameLighting146,';
+ if(!plugin.includes(api))throw Error('V157 export bridge absent');
+ plugin=plugin.replace(api,api+'labStage:pixiFX.labStage,');
 }
 if(plugin){const anchor='\nrender();\n})();\n</scr'+'ipt>';if(game.includes(anchor)&&plugin.includes('PokemonTorreMewtwo4FX'))game=game.replace(anchor,'\n'+plugin+'\n'+anchor);else if(new URLSearchParams(location.search).get('safe')!=='1')throw Error('Falha na integração dos golpes V58 no jogo principal');else console.warn('Modo seguro: carregando o jogo original.');}// Sprite-only fire effects V41 + V42.5: 8 isolated original-GIF animations.
 ptProgress(68,'Carregando sprites de fogo…');const fireSpriteFiles=[
