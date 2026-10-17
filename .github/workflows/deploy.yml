@@ -178,7 +178,7 @@ jobs:
       # Publish ONLY after source and headless Chrome battle gates succeed.
       - name: V166 RTX validar WebGL, sprites, isolamento e sintaxe
         run: node tests/v166-rtx-regression.test.cjs
-      - name: V166 RTX testar no Chrome Android: Pokemon, golpes e arena
+      - name: "V166 RTX testar no Chrome Android: Pokemon, golpes e arena"
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v166-rtx-browser.cjs
