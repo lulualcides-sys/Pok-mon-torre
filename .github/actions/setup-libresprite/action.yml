@@ -1,0 +1,13 @@
+name: Instalar LibreSprite no projeto
+description: Instala LibreSprite 1.3 oficial, verificado por SHA-256 e reutilizado via cache
+runs:
+  using: composite
+  steps:
+    - name: Cache do LibreSprite v1.3
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pokemon-torre/libresprite-v1.3
+        key: libresprite-linux-x86_64-v1.3-fd90bddda8135fe00f4a9a9c8c9ebd48
+    - name: Instalar ou restaurar LibreSprite
+      shell: bash
+      run: bash tools/libresprite/install.sh

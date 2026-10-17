@@ -1,0 +1,24 @@
+name: LibreSprite 1.3 - instalar e validar sprites reais
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/actions/setup-libresprite/**"
+      - ".github/workflows/libresprite.yml"
+      - "tools/libresprite/**"
+      - "effects/moves/v144-flying-original/atlas.png"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  install-and-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: ./.github/actions/setup-libresprite
+      - name: Testar importacao e exportacao reais pelo LibreSprite
+        run: bash tools/libresprite/smoke-test.sh
