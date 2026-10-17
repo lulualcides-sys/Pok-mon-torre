@@ -139,6 +139,8 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v156-browser-smoke.cjs
+      - name: V157 testar copia isolada, motor Pixi GPU e protecao do jogo oficial
+        run: node tests/v157-integration.test.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
