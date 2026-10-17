@@ -106,10 +106,35 @@ function bricks(g,W,top){
    rgba(C.white,.11),1.6);
  }
 }
+// V151.1: real material microtexture sampled from small, UI-free portions
+// of the user-provided video (32px swatch per theme, 16-color packed pixels).
+// Reassembled only ONCE when building a new static environment backdrop;
+// it is not a sprite PNG, attack animation, image download or extra frame loop.
+const footagePalette={blue:"2b4889,274488,254385,234182,213f81,213f7f,233e81,203e7e,233d83,223d80,223d7e,213c7e,1f3b7d,1f3a7c,1d397b,1b3679",lava:"e0742a,b65825,782a0c,50150b,47150f,45150f,4d140b,48130c,46140d,45130d,43140d,541004,46120c,400f09,3d1009,3e0e08"};
+const footagePixels={blue:"44444333332222222222222357bceffd44433333221000000001222357bceffd33322222211000000002223337bcdefd22222210000000000012233357cdeeed00000000000011222222335557cddeec00001111122222333333335777bddeeb00112222233333335555577777ddddca2222233355554477777777777cdeebb933333355777754555777777ccedddba95555555555554455557777cceeddda995555555555444455577777ceeedcba66555555555544445577777ceeeedca966445555554444445555777eeeeeccba99445555554444445555777cceeedbaa99666655444444444555557ceeecbaaa99666655444444444444457ceec7baa966666666666666666666abcdeedbb99688666666666666666669abcfffc9996688999999999966669999bceffeb9996688b99999baaa9669999bcdfffd63666688cbbbbb99aaaa999bbcdefffd66666699eddcddccccbcccccddefffff99bbbbcceeeeffeeddddddeedeffffffddeeeeddeeefefeddddddddeeffffffedfffffddedccddccdcbbbcccdffffe6288999999ccbb999699bbbbaabdefe61011111122cbb99969999999abcefec20001111111bbbb9699999999acdffe610001111111bbbbbb99999999cdfffd210001111111bbbbbb9999999bcefffc100001111111bbbbbb999999bbdefff6100001111111cbbbbb99999bbdefffc2100001111111",lava:"aaaaeeeeefd99aa444444488999cc999aaaaeeeeefd9855444444448999cc999aaaeeddeeff9855444444447ccccc999aaeeeddeefd9455444444447ccccc999aeeeeddeefd945a77887777cccccc779deeeeffeefa845a77887777cccccc779ddddfffeed94488777777889999cccc7ddddfffeed94448744477889999cccc7deeeeeefdc844777766666699cccc777deeeeeefdcc88cc7766666699cccc77cddddfeeffd866bbbbbbbbbbbbbbbbbbbddddfeefdc833333333bbbb333333333ddddfeee563b22222222222222222222ddddfeea433221111111111111111111ddddfdda432210000000000000000000ddfffdda432110000000000000000000ddfffda4432211100111100000000000dffffa54433222222222222111100000dfffdaa4433bbbbbbbbbbbb222110000ffffda54466bbbbbbbbbbbbbb2211111fffdaaa487766bb66bbbbbbbbb222222fffdaa5487766bbb6bbbbbbbbbbbb222fffaa5588887c777766666667bbbbbbbffda555888877777766666677bbbbbbbffaa55a99888899cc777777676666663fda555a98888999c7777777666666663da555aa8888999977777777666666666da555aa8888999977777777666666666a555aaa4889999977777777666666666a555aa54889999977777777666666666555aa55889999997777777766666666655aaa5a9999999977777777666666666"};
+function footageMaterial(g){
+ if(typeof g.createImageData!=='function'||typeof g.putImageData!=='function')return null;
+ const key=lava?'lava':'blue',colors=footagePalette[key].split(',').map(hex=>[
+  parseInt(hex.slice(0,2),16),parseInt(hex.slice(2,4),16),parseInt(hex.slice(4,6),16)]);
+ const pixels=footagePixels[key];
+ if(pixels.length!==1024)return null;
+ const tile=document.createElement('canvas');tile.width=32;tile.height=32;
+ const ctx=tile.getContext('2d');if(!ctx?.createImageData||!ctx?.putImageData)return null;
+ const img=ctx.createImageData(32,32);
+ for(let i=0;i<1024;i++){
+  const color=colors[parseInt(pixels.charAt(i),16)],p=i*4;
+  img.data[p]=color[0];img.data[p+1]=color[1];
+  img.data[p+2]=color[2];img.data[p+3]=255;
+ }
+ ctx.putImageData(img,0,0);
+ return tile;
+}
+
 function floorMap(g,W,H,top){
  // Key comparison to the video: broad near-orthographic stone squares, only
  // gentle perspective, not the aggressively converging V148/V150 floor.
  const r=R(151204),bottom=H-20,n=17,ny=Math.max(11,Math.round((bottom-top)/58));
+ const filmed=footageMaterial(g);
  const depth=t=>top+(bottom-top)*Math.pow(t,1.075);
  const project=(x,t)=>W*.5+(x-W*.5)*(.91+.09*t);
  g.fillStyle=C.base;g.fillRect(0,top,W,H-top);
@@ -121,6 +146,17 @@ function floorMap(g,W,H,top){
    [project(x1,b),yb],[project(x0,b),yb]];
    path(g,p,C.tile[Math.floor(r()*C.tile.length)],
     rgba(lava?'34,8,6':'8,25,57',lava?.49:.45),1.25);
+   if(filmed){
+    // Film-textured stone paint remains clipped INSIDE the native tile polygon,
+    // including its gentle trapezoid projection (no distortion of hitboxes).
+    g.save();g.beginPath();g.moveTo(p[0][0],p[0][1]);
+    for(let v=1;v<4;v++)g.lineTo(p[v][0],p[v][1]);
+    g.closePath();g.clip();
+    g.globalAlpha=lava?.24:.38;
+    g.drawImage(filmed,p[0][0],ya,p[1][0]-p[0][0],yb-ya);
+    g.globalAlpha=1;g.restore();
+   }
+
    const xx=(p[0][0]+p[1][0])*.5,yy=(ya+yb)*.5;
    const ww=p[1][0]-p[0][0],hh=yb-ya;
    // Chiseled borders / self-shadow make each quadrangle read as a slab.
