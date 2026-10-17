@@ -9,7 +9,7 @@ for(const pattern of [/build\("roost",16,roost\)/,/build\("gust",20,gust\)/,
  /build\("air-slash",20,air_slash\)/,/build\("peck",16,peck\)/,/GaussianBlur/])
  assert.match(generator,pattern);
 assert.match(validator,/hard\/pixelated edges/);
-assert.match(pixi,/base\.scaleMode=PIXI\.SCALE_MODES\.LINEAR/);
+assert.match(pixi,/base\.scaleMode=spec\.flying144\?PIXI\.SCALE_MODES\.NEAREST:PIXI\.SCALE_MODES\.LINEAR/);
 assert.match(pixi,/sprite\.roundPixels=false/);
 assert.match(pixi,/new PIXI\.Rectangle\(\(i%8\)\*size,Math\.floor\(i\/8\)\*size,size,size\)/);
 assert.match(pixi,/sprite\.tint=0xffffff;/);

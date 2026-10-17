@@ -19,8 +19,9 @@ assert.match(pixi,/updatePixelFlying\(now,dt\)/);
 assert.match(pixi,/pixelFlying\.size/);
 assert.match(pixi,/destroyPixelFlying\(fx\)/);
 const nativeDraw=read('parts/p013.txt');
-assert.ok(nativeDraw.includes("if(!window.PokemonTorreFlyingPixelV136?.hasMove?.(fx.move?.name))speciesAura359(ctx,fx,now)"),
- 'new Flying pixel moves must NOT get legacy 2D species aura');
+assert.ok(nativeDraw.includes("!window.PokemonTorreFlyingPixelV136?.hasMove?.(fx.move?.name)&&") &&
+ nativeDraw.includes("!window.PokemonTorreFlyingOriginalV144?.hasMove?.(fx.move?.name))speciesAura359(ctx,fx,now)"),
+ 'both V143 and V144 GPU sprites suppress old 2D species aura');
 assert.ok(pixi.includes("window.PokemonTorreFlyingPixelV136?.hasMove?.(f?.move?.name||f?.name)"),
  'new Flying moves must suppress generic PIXI semantic effects too');
 assert.ok(!/(\.beginPath|\.lineTo|\.arc\(|\.stroke\(|\.fill\(|drawImage\(|requestAnimationFrame\(|getContext\()/.test(script),
