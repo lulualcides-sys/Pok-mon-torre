@@ -24,7 +24,7 @@ assert.match(js,/savedMovesUntouched:true/);
 for(const [kind,count] of [['tower',32],['flamethrower',32],['blast',32],['punch',24]]){
  assert(js.includes(kind+':{name:'),'missing type '+kind);
  assert(js.includes('count:'+count),'missing frame count '+count);
- assert(js.includes("data-flame168"),'missing button data marker');
+ assert(js.includes('b.dataset.flame168=kind'),'missing dynamic move button binding');
 }
 assert.match(js,/P\.SCALE_MODES\.NEAREST/);
 assert.match(js,/const bt=P\.BaseTexture\.from\(img\)/);
