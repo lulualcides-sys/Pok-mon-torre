@@ -194,6 +194,18 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v167-video-browser.cjs
+      # V168 FlameTower: all four cinematic reference-inspired fire moves are
+      # generated in CI, never overwriting saved official fire animations.
+      - name: V168 gerar 120 quadros originais de fogo em quatro spritesheets
+        run: |
+          python tools/build-v168-flametower.py
+          python tools/test-v168-flametower.py
+      - name: V168 verificar efeitos 32/24 e isolamento dos golpes aprovados
+        run: node tests/v168-flametower-regression.test.cjs
+      - name: "V168 testar no Chrome: Flame Tower, Lanca-Chamas, Fire Blast, Soco de Fogo"
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v168-flametower-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
