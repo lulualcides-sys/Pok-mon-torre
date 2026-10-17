@@ -418,7 +418,8 @@ if(new URLSearchParams(location.search).get('arena_preview')!=='off'){
 }
 // V147: ambient shading and physical lightmap baked once into V97 stadium.
 // Uses identical floor textures and cameras; ?lightmap147=0 restores V146.
-if(new URLSearchParams(location.search).get('lightmap147')!=='0'&&
+if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('lightmap147')!=='0'&&
    new URLSearchParams(location.search).get('lighting146')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
    new URLSearchParams(location.search).get('arena_preview')!=='off'){
@@ -433,7 +434,8 @@ if(new URLSearchParams(location.search).get('lightmap147')!=='0'&&
 }
 // V146: cinematic 2.5D WebGL lighting in normal battles, V97/V98 arena preserved.
 // ?lighting146=0 disables only lighting. Safe mode and arena-preview off bypass it.
-if(new URLSearchParams(location.search).get('lighting146')!=='0'&&
+if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('lighting146')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
    new URLSearchParams(location.search).get('arena_preview')!=='off'){
  try{
@@ -447,7 +449,8 @@ if(new URLSearchParams(location.search).get('lighting146')!=='0'&&
 }
 // V150: textured crystal / volcanic dungeon with cached material, active Pixi lanterns.
 // ?arena148=0 restores V147; ?arena148=lava previews the volcanic arena.
-if(new URLSearchParams(location.search).get('arena151')!=='1'&&
+if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('arena151')!=='1'&&
    new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
    new URLSearchParams(location.search).get('arena_preview')!=='off'&&
@@ -463,7 +466,8 @@ if(new URLSearchParams(location.search).get('arena151')!=='1'&&
 }
 // V151 is archived opt-in ONLY; native battle camera and approved gameplay remain unchanged.
 // V150 restored as default after user rejected V151; ?arena151=1 opts into archived V151; ?arena148=0 still restores V147.
-if(new URLSearchParams(location.search).get('arena151')==='1'&&
+if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('arena151')==='1'&&
    new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
    new URLSearchParams(location.search).get('arena_preview')!=='off'&&
@@ -476,6 +480,24 @@ if(new URLSearchParams(location.search).get('arena151')==='1'&&
   game=game.replace(fireSpriteAnchor,
     String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(e){console.error('V151 no vídeo unavailable; existing battle safe',e);}
+}
+
+// V152: isolated blue dungeon PILOT inside normal, live Pokémon battles.
+// This mode alone changes the native actor canvas to transparent alpha;
+// PixiJS draws NEW original GPU pixel sprites BEHIND Pokémon at battle world
+// coordinates. Public V150, V151 archived mode and all attacks are unchanged.
+// ?arena_lab=blue152 => preview; otherwise this patch does not run.
+if(new URLSearchParams(location.search).get('arena_lab')==='blue152'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const constructorAlpha="canvas.getContext('2d',{alpha:false})";
+  if(!game.includes(constructorAlpha))throw Error('V152 alpha context anchor missing');
+  game=game.replace(constructorAlpha,"canvas.getContext('2d',{alpha:true})");
+  const response=await fetch('effects/arena/blue-v152-pixi.js?build=v152-original-tileset-webgl',{cache:'no-store'});
+  if(!response.ok)throw Error('V152 GPU sprite arena HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V152 game anchor unavailable');
+  game=game.replace(fireSpriteAnchor,'\n'+(await response.text())+'\n'+fireSpriteAnchor);
+ }catch(e){console.error('V152 preview failed; original game still available',e);}
 }
 
 // V148 HUD: keep combat data readable but uncover the back-wall depth on mobile.
