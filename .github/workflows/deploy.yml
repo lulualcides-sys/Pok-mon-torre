@@ -156,6 +156,13 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v158-v159-browser.cjs
+      # V160-V162: strictly isolated, validate all visual regressions in browser.
+      - name: V160-V162 validar escala fixa, render e camera sem sobreposicao
+        run: node tests/v160-v162-regression.test.cjs
+      - name: V160-V162 testar no Chrome Android antes de publicar
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v160-v162-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
