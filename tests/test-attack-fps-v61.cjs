@@ -8,7 +8,7 @@ const runtime=read('effects/moves/_runtime/end.js');
 const pixi=read('effects/moves/_runtime/pixi-layer.js');
 // A separate WebGL surface must NEVER be created for these four 2D sprites.
 assert.ok(!runtime.includes(' pixiFX.ensure(this);'), 'Eager Pixi init during every battle draw');
-assert.ok(pixi.includes("if(!effects.size&&!combatSheet&&!activeV84&&!activeV86&&!hazeActiveV85){app.ticker.stop();app.view.style.display='none';}"), 'Idle GPU ticker not suspended');
+assert.ok(pixi.includes("if(!effects.size&&!pixelFlying.size&&!combatSheet&&!activeV84&&!activeV86&&!hazeActiveV85){app.ticker.stop();app.view.style.display='none';}"), 'Idle GPU ticker not suspended');
 assert.ok(pixi.includes('if(!app.ticker.started)app.ticker.start();'), 'GPU ticker cannot resume');
 assert.ok(pixi.includes('if(!ensure(engine))return false;'), 'GPU effects lost their lazy initializer');
 const images=[];

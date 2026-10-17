@@ -15,9 +15,9 @@ for(const file of sourceFiles)assert.ok(index.includes(root+file),'missing embed
 assert.ok(index.includes("get('flying135')==='preview'"));
 assert.ok(index.indexOf('v133-ground-preview/runtime.js')<index.indexOf(root+'runtime.js'),'V135 must come after the official V134');
 const registry=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(registry.moves.length,42,'V135 preview cannot approve untested Flying animation');
+assert.equal(registry.moves.length,46,'V143 saved the four V142 Flying animations; archived V135 remains preview-only');
 const names=['Roost','Rajada','Air Slash','Bicada'];
-for(const name of names)assert.ok(!registry.moves.some(x=>x.move===name),'preview wrongly marked official: '+name);
+for(const name of names)assert.ok(registry.moves.some(x=>x.move===name&&x.status==='salvo'&&x.visual_scale_factor===.2),'V143 saved version missing: '+name);
 for(const n of ['Garra de Areia','Soco de Terra','Lança de Areia','Fenda Rasa','Osso','Grande Fissura']){
  assert.equal(registry.moves.find(x=>x.move===n)?.protect,true,'lost previous approval '+n);
 }
@@ -97,4 +97,4 @@ const shapes=ops.shapes;
 assert.equal(window.PokemonTorreV360Paint(g,engine.v359Attacks[1],1500,engine),true);
 assert.equal(ops.shapes,shapes,'no drawing after battle ends');
 battle.active=true;
-console.log('PASS V135: 4 unique Flying animations, balanced Canvas state, native single heal/hit, no PNG, opt-in preview, preserves 42 approved effects.');
+console.log('PASS V135: 4 unique Flying animations, balanced Canvas state, native single heal/hit, no PNG, opt-in preview, preserves 42 previous entries and 4 V143 saved effects.');

@@ -61,7 +61,10 @@ for(const item of manifest.records){
  const stored=JSON.parse(fs.readFileSync(path,'utf8'));
  assert.equal(stored.approval_state,item.status,'per-move status mismatch');
  assert.equal(stored.move,item.name);
- assert.equal(mark.status(item.name)?.status,item.status);
+ // Historical Gust remains recorded as edited; its alias now resolves to saved Rajada.
+ if(item.name==='Gust'&&item.status==='editado_legado')
+  assert.equal(mark.status(item.name)?.status,'salvo');
+ else assert.equal(mark.status(item.name)?.status,item.status);
 }
 const accepted=sandbox.skillMarkup({name:'Raio de Gelo'},0);
 assert.ok(accepted.includes('v127MoveCheck')&&accepted.includes('✓'),'approved beam check must render in battle');
