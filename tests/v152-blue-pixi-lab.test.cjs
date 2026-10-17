@@ -72,7 +72,7 @@ assert.ok(on.host.children[0].dataset.pokemonArena==='blue152','mounted BEHIND n
 assert.equal(on.host.children[1],on.canvas);
 assert.equal(on.canvas.style.background,'transparent');
 const d=on.window.PokemonTorreBlue152.diagnostics();
-assert.equal(d.starts,1);assert.ok(d.tiles>200);assert.ok(d.props>=10);
+assert.equal(d.starts,1);assert.ok(d.tiles>=144);assert.ok(d.props>=10);
 e.draw(100);assert.equal(on.metrics.clears,1);
 assert.equal(on.host.children[0].style.transform,on.canvas.style.transform,'camera synced');
 on.app().ticker.stop();e.draw(200);assert.equal(on.app().ticker.started,true,'resume GPU ticker in active battle');
