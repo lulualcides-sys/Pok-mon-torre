@@ -4,8 +4,8 @@
  */
 (() => {
 'use strict';
-window.PokemonTorreV157Boot={pixi:!!window.PIXI,labFlag:!!window.__V157_LAB,engine:typeof BattleEngine,pixiFX:typeof pixiFX};
-if(!window.PIXI||typeof BattleEngine!=='function'||typeof pixiFX==='undefined')return;
+window.PokemonTorreV157Boot={pixi:!!window.PIXI,labFlag:!!window.__V157_LAB,engine:typeof BattleEngine,bridge:!!window.PokemonTorrePixelFlyingBridge,stageAPI:typeof window.PokemonTorrePixelFlyingBridge?.labStage};
+if(!window.PIXI||typeof BattleEngine!=='function'||typeof window.PokemonTorrePixelFlyingBridge?.labStage!=='function')return;
 const P=window.PIXI, now=()=>performance.now(), clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const lab={version:'157-lab',stages:[true,true,true,true,true],active:false,
  actors:0,animatedFrames:0,casts:0,impacts:0,webgl:false,fps:60,quality:'high',
@@ -16,7 +16,7 @@ const logError=(err)=>{let v=String(err?.message||err);if(!lab.errors.includes(v
 const live=e=>!!(e?.canvas?.isConnected&&typeof battle!=='undefined'&&battle?.active);
 function stage(e){
  if(!live(e))return null;
- let access=typeof pixiFX.labStage==='function'?pixiFX.labStage(e):null;
+ let access=window.PokemonTorrePixelFlyingBridge?.labStage?.(e);
  if(!access?.app?.renderer?.gl)return null;
  if(owner!==e||!layer?.parent||!fxLayer?.parent){
   owner=e;actorViews.clear();sheetCache.clear();casts.length=0;
