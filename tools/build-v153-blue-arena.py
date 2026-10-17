@@ -110,5 +110,5 @@ def props():
  save(ring,'magic-ring.png')
 if __name__=='__main__':
  draw_floor();draw_wall();crystal('crystal-a.png',0);crystal('crystal-b.png',10);props()
- assert len(list(OUT.glob('*.png')))==7
- print('V153: 7 original materials and objects exported', OUT)
+ assert len(list(OUT.glob('*.png')))==8
+ print('V153: 8 original material textures exported', OUT)
