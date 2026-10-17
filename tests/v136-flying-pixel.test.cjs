@@ -26,12 +26,12 @@ assert.ok(pixi.includes("window.PokemonTorreFlyingPixelV136?.hasMove?.(f?.move?.
 assert.ok(!/(\.beginPath|\.lineTo|\.arc\(|\.stroke\(|\.fill\(|drawImage\(|requestAnimationFrame\(|getContext\()/.test(script),
  'V136 runtime contains Canvas/geometry rather than GPU spritesheet');
 const approved=JSON.parse(read('effects/moves/STATUS_APROVADOS.json')).moves;
-assert.equal(approved.length,42);
+assert.equal(approved.length,46);
 for(const name of ['Osso','Grande Fissura','Garra de Areia','Soco de Terra','Lança de Areia','Fenda Rasa']){
  assert.equal(approved.find(x=>x.move===name)?.protect,true);
 }
 for(const name of ['Roost','Rajada','Air Slash','Bicada']){
- assert.ok(!approved.some(x=>x.move===name),'preview cannot claim approval '+name);
+ assert.ok(approved.some(x=>x.move===name&&x.status==='salvo'&&x.protect),'saved V143 Flying move is protected '+name);
 }
 const names=['Roost','Rajada','Air Slash','Bicada'];
 const skills=names.map((name,i)=>({name,power:i?22+i*3:0,cost:10}));

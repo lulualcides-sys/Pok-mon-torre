@@ -882,7 +882,7 @@ if(new URLSearchParams(location.search).get('ui126')!=='0'){
 if(new URLSearchParams(location.search).get('marks127')!=='0'){
  try{
   const file='effects/v127/approval-marks.js';
-  const response=await fetch(file+'?build=v127-approved-registry',{cache:'no-store'});
+  const response=await fetch(file+'?build=v143-four-flying-saved',{cache:'no-store'});
   if(!response.ok)throw Error('V127 HTTP '+response.status);
   if(!game.includes(fireSpriteAnchor))throw Error('V127 insertion anchor missing');
   game=game.replace(fireSpriteAnchor,String.fromCharCode(10)+await response.text()+String.fromCharCode(10)+fireSpriteAnchor);

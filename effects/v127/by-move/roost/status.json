@@ -1,0 +1,16 @@
+{
+  "move": "Roost",
+  "aliases": [
+    "Pousar"
+  ],
+  "approval_state": "salvo",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v136-flying-pixel/runtime.js",
+  "reference": "STATUS_APROVADOS.json",
+  "saved_at": "2026-10-16",
+  "version": "V143",
+  "frames": 16,
+  "scale_relative_to_V142": 0.2,
+  "approval_confirmation": "Deixa assim mesmo, diminui bastante 80% e salva.",
+  "scope": "Arte V142 mantida; V143 reduz a 20% apenas os quatro Flying, incluindo partículas; guardar sem declarar qualidade visual aprovada."
+}

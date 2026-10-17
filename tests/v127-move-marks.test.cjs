@@ -5,9 +5,9 @@ const manifest=JSON.parse(fs.readFileSync('effects/v127/edited-moves.json','utf8
 const index=fs.readFileSync('index.html','utf8');
 const part=fs.readFileSync('parts/p008.txt','utf8');
 const old=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(old.moves.length,42,'the original registry must remain unchanged');
-assert.equal(manifest.records.length,74,'every edited legacy/official move must have its own status record');
-assert.equal(manifest.records.filter(x=>x.source==='STATUS_APROVADOS.json').length,42);
+assert.equal(old.moves.length,46,'four Flying moves now saved as V143; original 42 retained');
+assert.equal(manifest.records.length,78,'every edited legacy/official move must have its own status record');
+assert.equal(manifest.records.filter(x=>x.source==='STATUS_APROVADOS.json').length,46);
 assert.equal(manifest.records.filter(x=>x.status==='editado_legado').length,32);
 assert.equal(old.moves.filter(x=>x.status==='em_teste').length,0,'approved fighting moves must not revert to test status');
 const fighting=['Chute','Golpe de Karatê','Cross Chop','Brick Break'];
@@ -35,8 +35,16 @@ const sandbox={window:{},document,URLSearchParams,location:{search:''},console,
 vm.runInNewContext(src,sandbox,{filename:'effects/v127/approval-marks.js',timeout:2500});
 const mark=sandbox.window.PokemonTorreMoveMarksV127;
 assert.ok(mark?.installed,'module loaded');
-assert.equal(mark.diagnostics().official,42);
+assert.equal(mark.diagnostics().official,46);
 assert.equal(mark.diagnostics().legacy,32);
+for(const name of ['Roost','Rajada','Air Slash','Bicada']){
+ const entry=old.moves.find(m=>m.move===name);
+ assert.ok(entry&&entry.status==='salvo'&&entry.protect===true);
+ assert.equal(entry.visual_scale_factor,.2);
+ assert.equal(mark.status(name)?.status,'salvo');
+ assert.ok(mark.badge(name).includes('✓'),'saved Flying move must show checkmark');
+}
+assert.equal(mark.status('Gust')?.status,'salvo','Rajada alias overrides older legacy Gust mark');
 for(const m of old.moves){
  const names=[m.move,...m.aliases||[]];
  for(const name of names){
@@ -75,4 +83,4 @@ assert.equal(mark.badge('Inventado Fantasma'),'', 'unregistered move must not re
 assert.ok(mark.badge('Dança da Chuva').includes('✓'),'accent aliases matched');
 const css=html.find(e=>e.id==='v127-approved-move-checks')?.textContent||'';
 assert.ok(css.includes('.v127MoveCheck'),'small non-emoji badge styled');
-console.log('PASS V134: 74 per-move status files, 42 authoritative official, 32 historical edited; battle, equipped slots, catalogue, aliases, fighting and V122 poison approved, no attack/saving changes.');
+console.log('PASS V143: 78 per-move status files, 46 authoritative official (including 4 Flying saved), 32 historical edited; battle, equipped slots, catalogue, aliases, fighting and V122 poison approved, no attack/saving changes.');

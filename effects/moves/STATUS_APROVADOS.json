@@ -590,6 +590,75 @@
       "aprovacao_visual": "aprovado_pelo_usuario",
       "notes": "Efeito visual aprovado da V133; animação principal idêntica, otimização adaptativa V134 corta somente partículas secundárias em quadros lentos, preservando dano/energia/recarga. Não alterar sem autorização.",
       "rollback_parameter": "?ground133=0"
+    },
+    {
+      "move": "Roost",
+      "aliases": [
+        "Pousar"
+      ],
+      "status": "salvo",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V143 (visual V142 reduzido em 80%)",
+      "frames": 16,
+      "effect_file": "effects/moves/v136-flying-pixel/runtime.js",
+      "renderer": "effects/moves/_runtime/pixi-layer.js",
+      "sprite_base": "effects/moves/v136-flying-pixel/",
+      "visual_scale_factor": 0.2,
+      "feedback_usuario": "Deixa assim mesmo, diminui bastante 80% e salva.",
+      "notes": "Arte e quadros V142 mantidos exatamente; só o Container Pixi do golpe e suas partículas são reduzidos a 20% da escala original. Salvo para manter sem afirmar aprovação estética; proteger futuras edições. Dano e recarga nativos intactos."
+    },
+    {
+      "move": "Rajada",
+      "aliases": [
+        "Gust"
+      ],
+      "status": "salvo",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V143 (visual V142 reduzido em 80%)",
+      "frames": 20,
+      "effect_file": "effects/moves/v136-flying-pixel/runtime.js",
+      "renderer": "effects/moves/_runtime/pixi-layer.js",
+      "sprite_base": "effects/moves/v136-flying-pixel/",
+      "visual_scale_factor": 0.2,
+      "feedback_usuario": "Deixa assim mesmo, diminui bastante 80% e salva.",
+      "notes": "Arte e quadros V142 mantidos exatamente; só o Container Pixi do golpe e suas partículas são reduzidos a 20% da escala original. Salvo para manter sem afirmar aprovação estética; proteger futuras edições. Dano e recarga nativos intactos."
+    },
+    {
+      "move": "Air Slash",
+      "aliases": [
+        "Airslash",
+        "Corte Aéreo"
+      ],
+      "status": "salvo",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V143 (visual V142 reduzido em 80%)",
+      "frames": 20,
+      "effect_file": "effects/moves/v136-flying-pixel/runtime.js",
+      "renderer": "effects/moves/_runtime/pixi-layer.js",
+      "sprite_base": "effects/moves/v136-flying-pixel/",
+      "visual_scale_factor": 0.2,
+      "feedback_usuario": "Deixa assim mesmo, diminui bastante 80% e salva.",
+      "notes": "Arte e quadros V142 mantidos exatamente; só o Container Pixi do golpe e suas partículas são reduzidos a 20% da escala original. Salvo para manter sem afirmar aprovação estética; proteger futuras edições. Dano e recarga nativos intactos."
+    },
+    {
+      "move": "Bicada",
+      "aliases": [
+        "Peck"
+      ],
+      "status": "salvo",
+      "protect": true,
+      "accepted_at": "2026-10-16",
+      "version": "V143 (visual V142 reduzido em 80%)",
+      "frames": 16,
+      "effect_file": "effects/moves/v136-flying-pixel/runtime.js",
+      "renderer": "effects/moves/_runtime/pixi-layer.js",
+      "sprite_base": "effects/moves/v136-flying-pixel/",
+      "visual_scale_factor": 0.2,
+      "feedback_usuario": "Deixa assim mesmo, diminui bastante 80% e salva.",
+      "notes": "Arte e quadros V142 mantidos exatamente; só o Container Pixi do golpe e suas partículas são reduzidos a 20% da escala original. Salvo para manter sem afirmar aprovação estética; proteger futuras edições. Dano e recarga nativos intactos."
     }
   ]
 }

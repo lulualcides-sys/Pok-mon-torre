@@ -26,7 +26,7 @@ class Sprite{
  destroy(){}
 }
 class Container{
- constructor(){this.children=[];this.position={x:0,y:0,set(x,y){this.x=x;this.y=y;}};}
+ constructor(){this.children=[];this.scale={set(s){this.x=s;this.y=s;}};this.position={x:0,y:0,set(x,y){this.x=x;this.y=y;}};}
  addChild(x){this.children.push(x);return x;}
  destroy(){this.children=[];}
 }
@@ -73,6 +73,7 @@ const root=appInstance.stage.children[0],sprite=root.children[0];
 assert.ok(sprite.texture instanceof Texture);
 assert.equal(sprite.texture.rect.width,256);
 assert.equal(sprite.scale.x,.80);
+assert.equal(root.scale.x,.20,'Flying artwork and emitter scaled to exactly 20% of V142');
 assert.equal(sprite.texture.base.scaleMode,1);
 now=1550;
 appInstance.ticker.frame();

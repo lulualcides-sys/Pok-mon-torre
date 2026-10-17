@@ -132,6 +132,9 @@ const pixiFX=(()=>{
     entry={base,frames};pixelAtlasCache.set(spec.image,entry);
    }
    const root=new PIXI.Container(),sprite=new PIXI.Sprite(entry.frames[0]);
+   // V143: requested 80% reduction of the WHOLE Flying V142 artwork,
+   // including its particles; unrelated Pixi effects keep their original size.
+   root.scale.set(.20);
    sprite.anchor.set(.5);sprite.roundPixels=false;
    // V141: colored crisp pixel atlases with warm gold/healing and pearlescent wind.
    // White tint preserves the authored palette and the one-pixel dark outline.

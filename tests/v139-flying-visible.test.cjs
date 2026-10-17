@@ -121,6 +121,6 @@ assert.equal(canvasCalls,0,'no rejected Canvas Flying painter executed');
 assert.equal(ui.PokemonTorreV360Paint({}, {move:{name:'Osso'}},1100,engine),false);
 assert.equal(canvasCalls,1,'other approved 2D effect remains unchanged');
 const approved=JSON.parse(get('effects/moves/STATUS_APROVADOS.json')).moves;
-assert.equal(approved.length,42);
-for(const name of names)assert.ok(!approved.some(s=>s.move===name),'unapproved art must not show ✓');
+assert.equal(approved.length,46);
+for(const name of names)assert.ok(approved.some(s=>s.move===name&&s.status==='salvo'&&s.protect),'V143 saved Flying art must be protected');
 console.log('PASS V139: Roost animated despite native status returning undefined, exactly one heal, all 4 GPU casts, blocked casts safe, visible GPU fault/recovery, no Flying Canvas2D.');

@@ -18,9 +18,9 @@ assert.match(runtime,/frameSize:256/);
 assert.match(html,/build=v142-hd-alpha/);
 assert.doesNotMatch(runtime,/getContext\(|drawImage\(|requestAnimationFrame\(/);
 const approved=JSON.parse(read('effects/moves/STATUS_APROVADOS.json')).moves;
-assert.equal(approved.length,42);
+assert.equal(approved.length,46);
 for(const name of ['Osso','Grande Fissura','Garra de Areia','Soco de Terra','Lança de Areia','Fenda Rasa'])
  assert.equal(approved.find(s=>s.move===name)?.protect,true);
 for(const name of ['Roost','Rajada','Air Slash','Bicada'])
- assert.ok(!approved.some(s=>s.move===name));
+ assert.ok(approved.some(s=>s.move===name&&s.status==='salvo'&&s.visual_scale_factor===.2));
 console.log('PASS V142: 256px detailed Flying frames, smooth textures, protected moves unchanged.');
