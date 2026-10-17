@@ -120,6 +120,12 @@ jobs:
         run: node --check previews/v155-mew-mewtwo.js
       - name: V155 validar cenário, sprites e dano sincronizado
         run: node tests/v155-mew-mewtwo.test.cjs
+      - name: Preparar smoke em Chrome sem incluir dependencias no site
+        run: npm install --no-save --prefix /tmp/pmd-preview playwright-core@1.55.1
+      - name: V155 validar no Chrome Android Pixel e dano dos golpes
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v155-browser-smoke.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
