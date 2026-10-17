@@ -102,6 +102,8 @@ jobs:
         run: node tests/v150-dungeon-material.test.cjs
       - name: Video PokéSouls V151 comparacao piso/camera e regressao
         run: node tests/v151-video-matched-arena.test.cjs
+      - name: Arena azul V152 PixiJS WebGL pixels e batalha real
+        run: node tests/v152-blue-pixi-lab.test.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
