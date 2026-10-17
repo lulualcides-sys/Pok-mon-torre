@@ -16,7 +16,7 @@ app.view.setAttribute('aria-label','Prévia jogável Mew contra Mewtwo');
 const view=new PIXI.Container();app.stage.addChild(view);
 const scenery=new PIXI.Container(),actorsLayer=new PIXI.Container(),fxLayer=new PIXI.Container();
 view.addChild(scenery,actorsLayer,fxLayer);
-const url="../assets/battle-v156/";
+const url="../assets/battle-v155/"; // V155 authored stage and base textures; new V156 animation sheets use fxUrl.
 const SRC="https://raw.githubusercontent.com/PMDCollab/SpriteCollab/0b346b2be91935c16a95bd90939447289c3c83da/sprite/";
 const LOCAL="../assets/pmd-spritecollab/";
 const metaCache=new Map();
