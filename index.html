@@ -419,6 +419,7 @@ if(new URLSearchParams(location.search).get('arena_preview')!=='off'){
 // V147: ambient shading and physical lightmap baked once into V97 stadium.
 // Uses identical floor textures and cameras; ?lightmap147=0 restores V146.
 if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
    new URLSearchParams(location.search).get('lightmap147')!=='0'&&
    new URLSearchParams(location.search).get('lighting146')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
@@ -435,6 +436,7 @@ if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
 // V146: cinematic 2.5D WebGL lighting in normal battles, V97/V98 arena preserved.
 // ?lighting146=0 disables only lighting. Safe mode and arena-preview off bypass it.
 if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
    new URLSearchParams(location.search).get('lighting146')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
    new URLSearchParams(location.search).get('arena_preview')!=='off'){
@@ -450,6 +452,7 @@ if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
 // V150: textured crystal / volcanic dungeon with cached material, active Pixi lanterns.
 // ?arena148=0 restores V147; ?arena148=lava previews the volcanic arena.
 if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
    new URLSearchParams(location.search).get('arena151')!=='1'&&
    new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
@@ -467,6 +470,7 @@ if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
 // V151 is archived opt-in ONLY; native battle camera and approved gameplay remain unchanged.
 // V150 restored as default after user rejected V151; ?arena151=1 opts into archived V151; ?arena148=0 still restores V147.
 if(new URLSearchParams(location.search).get('arena_lab')!=='blue152'&&
+   new URLSearchParams(location.search).get('arena_lab')!=='blue153'&&
    new URLSearchParams(location.search).get('arena151')==='1'&&
    new URLSearchParams(location.search).get('arena148')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
@@ -498,6 +502,22 @@ if(new URLSearchParams(location.search).get('arena_lab')==='blue152'&&
   if(!game.includes(fireSpriteAnchor))throw Error('V152 game anchor unavailable');
   game=game.replace(fireSpriteAnchor,'\n'+(await response.text())+'\n'+fireSpriteAnchor);
  }catch(e){console.error('V152 preview failed; original game still available',e);}
+}
+
+// V153 isolated PIXEL-ART arena experiment. The official game (V150),
+// approved attacks and campaign are NOT replaced. 7+ distinct tilesets and
+// props made by Python/Pillow are composed as GPU sprites, not a painted PNG.
+if(new URLSearchParams(location.search).get('arena_lab')==='blue153'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const before="canvas.getContext('2d',{alpha:false})";
+  if(!game.includes(before))throw Error('V153 actor canvas alpha context unavailable');
+  game=game.replace(before,"canvas.getContext('2d',{alpha:true})");
+  const response=await fetch('effects/arena/blue-v153-pixi.js?build=v153-pillow-authored-materials',{cache:'no-store'});
+  if(!response.ok)throw Error('V153 GPU stage HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V153 game integration hook unavailable');
+  game=game.replace(fireSpriteAnchor,'\n'+(await response.text())+'\n'+fireSpriteAnchor);
+ }catch(err){console.warn('V153 optional GPU pilot failed; official game unchanged',err);}
 }
 
 // V148 HUD: keep combat data readable but uncover the back-wall depth on mobile.
