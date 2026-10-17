@@ -11,7 +11,7 @@ const enabled=qs.get('arena148')!=='0'&&qs.get('safe')!=='1'&&qs.get('arena_prev
 const lava=qs.get('arena148')==='lava';
 const original=BattleEngine.prototype.generateBackdrop;
 const cache=new Map(),LIMIT=3;
-const stats={builds:0,hits:0,failures:0,tiles:0,walls:0,crystals:0,emissiveCracks:0,lastSize:null,lastError:null};
+const stats={builds:0,hits:0,failures:0,tiles:0,walls:0,crystals:0,emissiveCracks:0,materialChips:0,reflectionRays:0,columns:0,braziers:0,lastSize:null,lastError:null};
 function rng(seed){return()=>{seed=(Math.imul(seed,1664525)+1013904223)|0;return(seed>>>0)/4294967296;};}
 const r0=rng(14815);const lerp=(a,b,t)=>a+(b-a)*t;
 const rgba=(rgb,a)=>`rgba(${rgb},${Math.max(0,Math.min(1,a))})`;
@@ -344,6 +344,202 @@ function polishDepth(g,W,H,top,floor){
  }
 }
 
+
+// V150 — textured dungeon architecture. Cached in a single battle background:
+// no new RAF, no attack graphics, no DOM layers, no extra Pixi stage.
+const v150=new URLSearchParams(location.search).get('arena150')!=='0';
+function v150Material(g,W,H,top,floor){
+ if(!v150)return;
+ const r=rng(150719),hot=lava,bottom=H-54;
+ const amb=hot?'255,124,59':'116,196,240',white=hot?'255,216,132':'197,243,255';
+ // Distressed flagstones with material variation, NOT flat repeating CSS tiles.
+ // All marks follow the same V148 floor perspective and its projected rows.
+ const rows=19,cols=19;
+ for(let j=0;j<rows;j++){
+  const t0=j/rows,t1=(j+1)/rows;
+  const y0=floor.row(t0),y1=floor.row(t1),cy=(y0+y1)*.5;
+  if(cy>bottom-7)continue;
+  const pW=(floor.lx(960/cols,t1)-floor.lx(0,t1));
+  const step=pW,cellH=y1-y0;
+  for(let i=0;i<cols;i++){
+   const mx=floor.lx((i+.5)*960/cols,(t0+t1)*.5);
+   const left=floor.lx(i*960/cols,(t0+t1)*.5);
+   const bw=(floor.lx((i+1)*960/cols,(t0+t1)*.5)-left);
+   // Raised north and east borders add chipped, angular stone volume.
+   const bevel=hot?'215,131,95':'154,195,225';
+   stroke(g,[[left+3,y0+3],[left+bw-3,y0+3]],
+    rgba(bevel,.10+.08*r()),Math.max(.6,cellH*.045));
+   if(r()>.35)stroke(g,[[left+bw-3,y0+4],[left+bw-2,y1-3]],
+    rgba('4,12,30',.29),.9);
+   // Slab interiors have deterministic layered mineral specks and hairline etching.
+   const specks=4+Math.floor(r()*7);
+   for(let k=0;k<specks;k++){
+    const x=left+5+r()*Math.max(2,bw-10),y=y0+4+r()*Math.max(2,cellH-8);
+    if(y>bottom-10)continue;
+    const shade=r();
+    g.fillStyle=shade<.43?
+      (hot?'rgba(253,164,110,.12)':'rgba(189,215,255,.11)'):
+      shade<.78?'rgba(2,6,19,.19)':
+      (hot?'rgba(169,73,51,.16)':'rgba(91,125,181,.17)');
+    g.fillRect(Math.round(x),Math.round(y),.8+r()*2.4,.6+r()*1.4);
+    stats.materialChips++;
+   }
+   if((i*13+j*17)%11===0){
+    const len=Math.min(19,bw*.38);
+    stroke(g,[[mx-len*.62,cy+cellH*.17],[mx-len*.06,cy+cellH*.08],
+     [mx+len*.18,cy+cellH*.19],[mx+len*.63,cy+cellH*.05]],
+     rgba('2,8,22',.18),.8);
+   }
+  }
+ }
+ // Source-matched floor light. Narrow specular reflections, not broad diffuse blobs.
+ const wells=hot?
+  [[92,top+137,78],[867,top+146,72],[183,H*.58,72],[795,H*.78,74]]:
+  [[103,top+133,70],[845,top+162,90],[185,H*.58,73],[792,H*.78,80]];
+ for(const [sx,sy,range] of wells){
+  const y=Math.min(bottom-25,sy+26);
+  glow(g,sx,y,range*1.4,range*.61,amb,hot?.19:.16);
+  for(let k=0;k<24;k++){
+   const depth=(k+1)/25,xx=sx+(r()-.5)*(range*.7+depth*80);
+   const yy=y+depth*(bottom-y)*.79+r()*6;
+   if(yy>bottom-14)continue;
+   const length=(2+r()*19)*(1-depth*.48);
+   g.fillStyle=rgba(k%4===0?white:amb,(hot?.29:.22)*(1-depth*.67));
+   g.fillRect(xx,yy,length,.55+r()*1.2);
+   stats.reflectionRays++;
+  }
+ }
+ // Contact-depth shadows from distant walls into the walkable field.
+ for(const side of [-1,1]){
+  const x=side<0?0:W;
+  const grad=g.createLinearGradient(x,0,x+(side<0?155:-155),0);
+  grad.addColorStop(0,rgba('0,5,16',.42));
+  grad.addColorStop(1,rgba('0,5,16',0));
+  g.fillStyle=grad;
+  g.fillRect(side<0?0:W-155,top+17,155,Math.min(H*.70,bottom-top-17));
+ }
+ // Slight stone patina depth along the near lip of the camera field.
+ const fore=g.createLinearGradient(0,bottom-115,0,bottom);
+ fore.addColorStop(0,rgba('1,6,18',0));
+ fore.addColorStop(1,rgba('1,7,20',.20));
+ g.fillStyle=fore;g.fillRect(0,bottom-115,W,115);
+}
+function v150Architecture(g,W,H,top){
+ if(!v150)return;
+ const r=rng(150771),hot=lava,bright=hot?'255,148,67':'111,214,255';
+ const metal=hot?'#77503e':'#466589';
+ // The rear wall has heavyweight projecting jambs/corners, real side faces.
+ for(const x of [110,245,714,850]){
+  const w=x===110||x===850?67:54,topY=Math.max(13,top-151);
+  const shadow=g.createLinearGradient(x-w/2,0,x+w/2,0);
+  shadow.addColorStop(0,hot?'#140c13':'#0b1831');
+  shadow.addColorStop(.44,hot?'#492924':'#213b62');
+  shadow.addColorStop(1,hot?'#1b1019':'#0e203c');
+  polygon(g,[[x-w*.52,topY],[x+w*.41,topY],
+    [x+w*.50,top-16],[x-w*.48,top-16]],shadow);
+  polygon(g,[[x-w*.55,topY-12],[x+w*.43,topY-12],
+    [x+w*.56,topY+3],[x-w*.65,topY+3]],
+    hot?'#624032':'#3e597d');
+  polygon(g,[[x-w*.58,top-21],[x+w*.54,top-21],
+    [x+w*.64,top-7],[x-w*.70,top-7]],metal);
+  stroke(g,[[x-w*.48,topY+9],[x-w*.48,top-25]],
+    rgba(hot?'255,195,131':'168,213,250',.17),2);
+  // Edge chips and worn masonry on the column shaft.
+  for(let k=0;k<22;k++){
+   const xx=x-w*.35+r()*w*.65,yy=topY+11+r()*(top-topY-40);
+   g.fillStyle=r()<.50?rgba('1,6,19',.20):rgba(bright,.095);
+   g.fillRect(xx,yy,1+r()*3,1+r()*1.9);
+  }
+  stats.columns++;
+ }
+ // Deep doorway arch with stone voussoirs, a dark recess and a luminous threshold.
+ const cx=W*.5,depth=top-149;
+ polygon(g,[[cx-98,top-10],[cx-98,depth+32],[cx-77,depth+2],
+   [cx+78,depth+2],[cx+98,depth+32],[cx+98,top-10]],
+   hot?'#23141a':'#132544');
+ polygon(g,[[cx-81,top-12],[cx-81,depth+38],[cx-65,depth+23],
+   [cx+65,depth+23],[cx+81,depth+38],[cx+81,top-12]],
+   hot?'#100a0e':'#071127');
+ for(let i=0;i<9;i++){
+  const x=cx-85+i*21;
+  stroke(g,[[x,depth+15],[x+3,depth+32]],
+   rgba(hot?'190,112,75':'100,154,202',.24),1.7);
+ }
+ stroke(g,[[cx-89,top-10],[cx+89,top-10]],
+  rgba(bright,.33),2.8);
+ glow(g,cx,top-48,125,83,bright,hot?.10:.18);
+ // Wall brackets are grounded in the arch, not arbitrary floating lights.
+ const sconces=hot?[
+  [120,top-22,1],[841,top-22,1],[280,top-38,.75],[681,top-38,.75]
+ ]:[
+  [124,top-20,.65],[835,top-20,.65],[281,top-55,.55],[680,top-55,.55]
+ ];
+ for(const [x,y,scale] of sconces){
+  const size=16*scale,flame=hot;
+  glow(g,x,y-22*scale,74*scale,87*scale,
+   flame?'255,103,38':'103,206,255',flame?.35:.26);
+  polygon(g,[[x-size,y-3],[x+size,y-3],[x+size*.79,y+8*scale],
+   [x-size*.82,y+8*scale]],hot?'#36211d':'#1a304d');
+  polygon(g,[[x-size*1.12,y-5],[x+size*1.13,y-5],[x+size*.78,y-11],
+   [x-size*.73,y-11]],metal);
+  if(flame){
+   const points=[[x,y-56*scale],[x-size*.72,y-24*scale],
+    [x-size*.38,y-11*scale],[x+size*.57,y-11*scale],
+    [x+size*.70,y-24*scale]];
+   polygon(g,points,'#fb5e21');
+   polygon(g,[[x,y-46*scale],[x-size*.27,y-25*scale],
+    [x,y-13*scale],[x+size*.36,y-24*scale]],'#ffb33d');
+   polygon(g,[[x,y-31*scale],[x-3,y-18*scale],
+    [x+3,y-15*scale],[x+5,y-23*scale]],'#fff1aa');
+   for(let k=0;k<7;k++){
+    const px=x+(r()-.5)*size*1.7,py=y-(30+r()*50)*scale;
+    g.fillStyle=rgba('255,175,77',.26+r()*.28);
+    g.fillRect(px,py,1+r()*3,1+r()*3);
+   }
+   stats.braziers++;
+  }else{
+   // Cyan ambient lantern set into an armored stone housing.
+   polygon(g,[[x,y-48*scale],[x-size*.44,y-27*scale],
+    [x,y-8*scale],[x+size*.44,y-27*scale]],'#4fb9e6');
+   polygon(g,[[x,y-48*scale],[x-size*.28,y-26*scale],
+    [x,y-12*scale]],'#d1f8ff');
+   stroke(g,[[x,y-45*scale],[x+2,y-20*scale]],rgba('226,251,255',.93),1.1);
+  }
+ }
+ // Wall-to-floor cast shadow from rear architecture is narrow and directional.
+ const horizon=g.createLinearGradient(0,top-24,0,top+102);
+ horizon.addColorStop(0,rgba('0,4,14',.03));
+ horizon.addColorStop(.36,rgba('0,5,17',.42));
+ horizon.addColorStop(1,rgba('0,7,20',0));
+ g.fillStyle=horizon;g.fillRect(0,top-24,W,127);
+}
+// V150 physically faceted clusters added on top of each V148 crystal.
+// Drawn as real stone volume: asymmetric planes, caustics and scratch veins.
+function v150Crystalline(g,x,y,h,size){
+ if(!v150)return;
+ const r=rng(Math.round(x*67+y)),hot=lava;
+ const light=hot?'255,159,67':'108,225,255';
+ for(let j=0;j<3;j++){
+  const dx=(j-1)*size*.72,dy=(j%2)*size*.21;
+  const hh=h*(.33+j*.075),sz=size*(.37+j*.1);
+  polygon(g,[[x+dx,y-dy-hh],[x+dx-sz*.5,y-dy-hh*.42],
+   [x+dx-sz*.36,y-dy+2],[x+dx+.17*sz,y-dy+3]],
+   hot?'#fa7f2c':'#87eaff');
+  polygon(g,[[x+dx,y-dy-hh],[x+dx+sz*.59,y-dy-hh*.50],
+   [x+dx+sz*.3,y-dy+2],[x+dx+.17*sz,y-dy+3]],
+   hot?'#843821':'#265b9c');
+  stroke(g,[[x+dx,y-dy-hh],[x+dx+sz*.05,y-dy-hh*.33]],
+   rgba(light,.73),.9);
+ }
+ for(let k=0;k<16;k++){
+  const yy=y-r()*h,xx=x+(r()-.5)*size*.93;
+  g.fillStyle=rgba(k%3===0?'255,255,238':light,.13+r()*.38);
+  g.fillRect(xx,yy,.6+r()*2,.6+r()*3);
+ }
+ // Luminous contact reflection under the crystal follows the floor depth.
+ glow(g,x,y+size*.27,size*2.1,size*.6,light,hot?.28:.21);
+}
+
 function build(base,width,height){
  const can=document.createElement('canvas');can.width=width;can.height=height;
  can.complete=true;can.naturalWidth=width;can.naturalHeight=height;
@@ -358,8 +554,11 @@ function build(base,width,height){
  const top=Math.min(193,Math.max(138,H*.21));
  stoneBackWall(g,W,top);
  const floor=perspectiveFloor(g,W,H,top);
+ v150Material(g,W,H,top,floor);
  sideWall(g,W,H,floor);
  raisedLedge(g,W,top);
+ v150Architecture(g,W,H,top);
+ polishDepth(g,W,H,top,floor);
  // Light shafts, emissive fissures and floor reflections originate at crystals.
  const gems=[{x:106,y:top+127,s:20,h:77},{x:843,y:top+154,s:25,h:112},
    {x:180,y:Math.min(H-220,top+(H-top)*.58),s:18,h:81},
@@ -368,6 +567,7 @@ function build(base,width,height){
   glow(g,e.x,e.y-e.h*.38,112,177,palette.glow,.25);
   glow(g,e.x,e.y+28,145,39,palette.glow,.13);
   prism(g,e.x,e.y,e.h,e.s);
+  v150Crystalline(g,e.x,e.y,e.h,e.s);
  }
  // Recessed fixture light on the floor, with no giant bright circle.
  for(const x of [264,530,716]){
@@ -376,7 +576,6 @@ function build(base,width,height){
   stroke(g,[[x-11,y],[x-4,y+4],[x+6,y+1]],rgba(palette.spark,.38),1.2);
  }
  chest(g,469,top+157);
- polishDepth(g,W,H,top,floor);
  // Global composition vignette avoids washing out the scene.
  const vign=g.createRadialGradient(W/2,H*.48,W*.12,W/2,H*.48,H*.82);
  vign.addColorStop(0,'rgba(2,6,24,0)');vign.addColorStop(.62,'rgba(3,5,17,.04)');
@@ -404,8 +603,8 @@ BattleEngine.prototype.generateBackdrop=function(){
  }catch(e){stats.failures++;stats.lastError=String(e?.message||e);}
  return result;
 };
-window.PokemonTorreArenaV148=Object.freeze({installed:true,enabled,version:'149.0',theme:lava?'lava':'ice',
- mode:'V149 enhanced pixel-stone dungeon; native physics/camera unchanged',
- baseline:'V97 tiles and V147 fallback preserved behind ?arena148=0',
+window.PokemonTorreArenaV148=Object.freeze({installed:true,enabled,version:v150?'150.0':'149.0',theme:lava?'lava':'ice',
+ mode:v150?'V150 textured perspective stone, physical lamp and crystal materials':'V149 enhanced dungeon',
+ baseline:'V149 rollback ?arena150=0; V147 fallback ?arena148=0',
  diagnostics:()=>({...stats})});
 })();
