@@ -207,12 +207,13 @@ jobs:
         run: node tests/v169-flamethrower-regression.test.cjs
       # V169 retired; V170 real Chrome visual evidence supersedes its deprecated gate.
       # V170 screenshot showed a clipped orange wedge; V171 replaces Filter with GPU Mesh.
-      - name: V171 validar malha WebGL UV real e salvar golpes originais
-        run: node tests/v171-flamethrower-regression.test.cjs
-      - name: "V171 Chrome testar fogo continuo no campo: UV, fluxo e captura real"
+      # V172 supersedes the validated V171 lab without editing approved attacks.
+      - name: V172 conferir textura de chamas e preservacao dos golpes salvos
+        run: node tests/v172-flamethrower-regression.test.cjs
+      - name: "V172 testar no Chrome: fogo continuo, volume e impacto do alvo"
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
-        run: node tests/v171-flamethrower-browser.cjs
+        run: node tests/v172-flamethrower-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
