@@ -178,7 +178,15 @@ function context(e){
   const w=Math.ceil(e.w),h=Math.ceil(e.h);
   const renderer=new T.WebGLRenderer({antialias:false,alpha:false,powerPreference:'high-performance',preserveDrawingBuffer:false});
   renderer.setPixelRatio(1);renderer.setSize(w,h,false);
-  renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
+  // Preserve full shadows on the user's RTX GPU. Software-based SwiftShader
+  // runners and low-end fallback browsers cannot rasterize 3D shadow maps at
+  // 60 FPS; skip the costly secondary shadow pass on those only.
+  const gl=renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
+  const gpu=debug?String(gl.getParameter(debug.UNMASKED_RENDERER_WEBGL)||''):String(gl.getParameter(gl.RENDERER)||'');
+  const software=/swiftshader|llvmpipe|software renderer/i.test(gpu);
+  renderer.shadowMap.enabled=!software;renderer.shadowMap.type=T.PCFSoftShadowMap;
+  if(software)renderer.setPixelRatio(.75);
+  info.softwareFallback=software;info.gpuRenderer=gpu.slice(0,92);
   renderer.outputEncoding=T.sRGBEncoding;
   renderer.toneMapping=T.ACESFilmicToneMapping;
   renderer.toneMappingExposure=1.27;
@@ -241,7 +249,7 @@ function prefetch(id){
   texLoader.load(base+action+'-Anim.png',texture=>{
    texture.magFilter=T.NearestFilter;texture.minFilter=T.NearestFilter;
    texture.wrapS=T.ClampToEdgeWrapping;texture.wrapT=T.ClampToEdgeWrapping;
-   texture.flipY=false;texture.generateMipmaps=false;
+   texture.flipY=true;texture.generateMipmaps=false;
    data.actions.set(action,texture);
   },undefined,()=>{});
  }
@@ -264,7 +272,7 @@ function actor(v,who,id,enemy){
    sizeAttenuation:true,color:0xffffff});
   mat.map.magFilter=T.NearestFilter;mat.map.minFilter=T.NearestFilter;
   mat.map.wrapS=T.ClampToEdgeWrapping;mat.map.wrapT=T.ClampToEdgeWrapping;
-  mat.map.flipY=false;mat.map.generateMipmaps=false;mat.map.needsUpdate=true;
+  mat.map.flipY=true;mat.map.generateMipmaps=false;mat.map.needsUpdate=true;
   const sprite=new T.Sprite(mat);
   const shadow=new T.Mesh(new T.CircleGeometry(.72,28),
     new T.MeshBasicMaterial({color:0x020916,transparent:true,opacity:.38,depthWrite:false}));
