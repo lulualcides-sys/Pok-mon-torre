@@ -123,6 +123,6 @@ document.head.appendChild(style);document.body.appendChild(panel);
 window.PokemonTorreFlamethrowerV169=Object.freeze({
  test:()=>owner?start(owner,'preview'):false,
  diagnostics:()=>({...info,activeStreams:active.length,
-  uniforms:active.map(f=>({...f.filter.uniforms})),sources:active.map(f=>f.source)})
+  uniforms:active.map(f=>({uTime:Number(f.filter.uniforms.uTime),uReach:Number(f.filter.uniforms.uReach),uOpacity:Number(f.filter.uniforms.uOpacity)})),sources:active.map(f=>f.source)})
 });
 })();
