@@ -5,10 +5,10 @@ const manifest=JSON.parse(fs.readFileSync('effects/v127/edited-moves.json','utf8
 const index=fs.readFileSync('index.html','utf8');
 const part=fs.readFileSync('parts/p008.txt','utf8');
 const old=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(old.moves.length,46,'four Flying moves now saved as V143; original 42 retained');
+assert.equal(old.moves.length,47,'V143 four flying plus V172 saved Flamethrower: now 47 approved');
 assert.equal(manifest.records.length,78,'every edited legacy/official move must have its own status record');
-assert.equal(manifest.records.filter(x=>x.source==='STATUS_APROVADOS.json').length,46);
-assert.equal(manifest.records.filter(x=>x.status==='editado_legado').length,32);
+assert.equal(manifest.records.filter(x=>x.source==='STATUS_APROVADOS.json').length,47);
+assert.equal(manifest.records.filter(x=>x.status==='editado_legado').length,31);
 assert.equal(old.moves.filter(x=>x.status==='em_teste').length,0,'approved fighting moves must not revert to test status');
 const fighting=['Chute','Golpe de Karatê','Cross Chop','Brick Break'];
 const poison=['Venoshock','Toxina Pesada','Rajada Ácida','Golpe de Veneno'];
@@ -35,8 +35,8 @@ const sandbox={window:{},document,URLSearchParams,location:{search:''},console,
 vm.runInNewContext(src,sandbox,{filename:'effects/v127/approval-marks.js',timeout:2500});
 const mark=sandbox.window.PokemonTorreMoveMarksV127;
 assert.ok(mark?.installed,'module loaded');
-assert.equal(mark.diagnostics().official,46);
-assert.equal(mark.diagnostics().legacy,32);
+assert.equal(mark.diagnostics().official,47);
+assert.equal(mark.diagnostics().legacy,31);
 for(const name of ['Roost','Rajada','Air Slash','Bicada']){
  const entry=old.moves.find(m=>m.move===name);
  assert.ok(entry&&entry.status==='salvo'&&entry.protect===true);
@@ -70,7 +70,7 @@ const accepted=sandbox.skillMarkup({name:'Raio de Gelo'},0);
 assert.ok(accepted.includes('v127MoveCheck')&&accepted.includes('✓'),'approved beam check must render in battle');
 assert.ok(!accepted.includes('v122ApprovedMark'),'old + must not double with new badge');
 assert.ok(mark.badge('Ice Beam').includes('✓'),'English/Portuguese aliases must share approval');
-assert.ok(mark.badge('Lança-Chamas').includes('EDITADO'),'legacy edited attack displayed with qualified status');
+assert.ok(mark.badge('Lança-Chamas').includes('✓'),'approved V172 Flamethrower must show accepted checkmark');
 assert.ok(mark.badge('Shadow Ball').includes('EDITADO'));
 assert.ok(mark.badge('Chamas de Moltres').includes('EDITADO'),'missing legacy approved animation marker');
 assert.ok(mark.badge('Solar Beam').includes('EDITADO'));
@@ -86,4 +86,4 @@ assert.equal(mark.badge('Inventado Fantasma'),'', 'unregistered move must not re
 assert.ok(mark.badge('Dança da Chuva').includes('✓'),'accent aliases matched');
 const css=html.find(e=>e.id==='v127-approved-move-checks')?.textContent||'';
 assert.ok(css.includes('.v127MoveCheck'),'small non-emoji badge styled');
-console.log('PASS V143: 78 per-move status files, 46 authoritative official (including 4 Flying saved), 32 historical edited; battle, equipped slots, catalogue, aliases, fighting and V122 poison approved, no attack/saving changes.');
+console.log('PASS V172: 78 per-move status files, 47 authoritative approved including V172 Flamethrower, 31 historical edited, accepted water+flying+poison retained.');
