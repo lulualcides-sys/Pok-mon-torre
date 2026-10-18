@@ -31,6 +31,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const slot=await attack.getAttribute('data-skill');
   await attack.click({timeout:12000});
   await page.waitForFunction(()=>window.PokemonTorreFlamethrowerApprovedV172?.diagnostics().moveCasts>=1,null,{timeout:25000});
+  await page.waitForFunction(()=>window.PokemonTorreFlamethrowerApprovedV172?.diagnostics().shaderFrames>=1,null,{timeout:7000});
   const first=await page.evaluate(()=>window.PokemonTorreFlamethrowerApprovedV172.diagnostics());
   assert.equal(first.installed,true);
   assert.equal(first.sandboxOnly,false);
