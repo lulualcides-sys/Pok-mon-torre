@@ -21,7 +21,7 @@ assert.match(js,/float fadeEnd=1.0-smoothstep/);
 assert.match(js,/Math\.min\(66,Math\.max\(46,e\.h\*\.115\)\)/);
 assert.match(js,/uReach/);
 assert.match(js,/uOpacity/);
-assert.match(js,/noise2\(vec2 x\)/);
+assert.match(js,/float noise\(vec2 p\)/);
 assert.match(js,/rounded-3D-tube-continuous-flow/);
 assert.match(js,/const oldUse=BattleEngine\.prototype\.useMove;/);
 assert.match(js,/const oldPaint=window\.PokemonTorreV360Paint;/);
