@@ -28,7 +28,7 @@ assert.ok(pixi.includes("window.PokemonTorreFlyingPixelV136?.hasMove?.(f?.move?.
 assert.ok(!/(\.beginPath|\.lineTo|\.arc\(|\.stroke\(|\.fill\(|drawImage\(|requestAnimationFrame\(|getContext\()/.test(script),
  'V136 runtime contains Canvas/geometry rather than GPU spritesheet');
 const approved=JSON.parse(read('effects/moves/STATUS_APROVADOS.json')).moves;
-assert.equal(approved.length,46);
+assert.equal(approved.length,47);
 for(const name of ['Osso','Grande Fissura','Garra de Areia','Soco de Terra','Lança de Areia','Fenda Rasa']){
  assert.equal(approved.find(x=>x.move===name)?.protect,true);
 }
