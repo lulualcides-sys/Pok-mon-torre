@@ -57,6 +57,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const done=await page.evaluate(()=>window.PokemonTorreFlamethrowerV169.diagnostics());
   assert.equal(done.activeStreams,0,'flame stops without remaining on menu');
   assert.equal(done.errors.length,0);
+  console.log('V169 CONSOLE DIAGNOSTICS',JSON.stringify({errors,done}));
   assert.equal(errors.length,0,'no uncaught shader, WebGL or page errors');
   console.log('V169 CHROME PASS',JSON.stringify({isolation:iso,first,second,done,errors}));
  }finally{
