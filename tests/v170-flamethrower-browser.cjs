@@ -52,6 +52,14 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   assert.equal(second.activeStreams,1);
   fs.mkdirSync('tests/artifacts',{recursive:true});
   await page.screenshot({path:'tests/artifacts/v170-flamethrower-flow.png'});
+
+  // Publish a compact battle capture to the CI log for a REAL visual review.
+  // A passing JS test by itself did not catch the rectangle in V169.
+  const thumbCode="from PIL import Image\nfrom io import BytesIO\nimport base64\nim=Image.open('tests/artifacts/v170-flamethrower-flow.png').convert('RGB')\nim.thumbnail((390,850))\nout=BytesIO();im.save(out,'JPEG',quality=68,optimize=True)\nprint(base64.b64encode(out.getvalue()).decode())";
+  const probe=require('node:child_process').spawnSync('python',['-c',thumbCode],{encoding:'utf8'});
+  assert.equal(probe.status,0,'CI visual evidence capture must succeed');
+  console.log('V170_BATTLE_JPEG_B64:'+probe.stdout.trim());
+
   assert.equal(second.errors.length,0,'no PixiJS filter errors');
   await page.waitForFunction(()=>window.PokemonTorreFlamethrowerV170?.diagnostics().finished>=1,
      null,{timeout:6500});
