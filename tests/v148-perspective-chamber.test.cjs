@@ -7,7 +7,7 @@ const html=fs.readFileSync('index.html','utf8');
 const pixi=fs.readFileSync('effects/moves/_runtime/pixi-layer.js','utf8');
 const camera=fs.readFileSync('effects/arena/wide-camera-v98.js','utf8');
 const approvals=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(approvals.moves.length,46);
+assert.equal(approvals.moves.length,47);
 for(const name of ['Roost','Rajada','Bicada','Air Slash'])assert.ok(approvals.moves.some(x=>x.move===name&&x.protect),name+' approval changed');
 assert.match(html,/effects\/arena\/chamber-v148\.js/);
 assert.match(html,/arena148/);
