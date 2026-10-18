@@ -214,6 +214,13 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v172-flamethrower-browser.cjs
+      # User-approved V172 fire is now loaded by index.html, not just lab page.
+      - name: V172 validar salvamento do Lanca-Chamas e preservar os 2 golpes de agua V128
+        run: node tests/v172-flamethrower-official-save.test.cjs
+      - name: "V172 Chrome confirmar Lanca-Chamas salvo no jogo oficial"
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v172-flamethrower-official-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
