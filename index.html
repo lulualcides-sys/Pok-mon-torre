@@ -180,6 +180,18 @@ await Promise.all(electricCatalogAssets.map(src=>new Promise((resolve,reject)=>{
  frame.src=src;
 })));
 }
+// V172 approved: reuse existing WebGL Pixi actor layer for the saved flame.
+ // This is a tiny extension of the already-loaded PixiFX module, not a new canvas.
+if(plugin&&new URLSearchParams(location.search).get('flame172')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ const point='return {ensure,paint,paintFightingSheet';
+ const api='frameLighting146:pixiFX.frameLighting146,';
+ if(plugin.includes(point)&&plugin.includes(api)){
+  plugin=plugin.replace(point,
+   'return {ensure,labStage:(e)=>{if(!ensure(e,true))return null;position(e);return {app,position:()=>position(e)};},paint,paintFightingSheet');
+  plugin=plugin.replace(api,api+'labStage:pixiFX.labStage,');
+ }else console.warn('V172 Pixi bridge hook unavailable; legacy flame retained');
+}
 if(plugin){const anchor='\nrender();\n})();\n</scr'+'ipt>';if(game.includes(anchor)&&plugin.includes('PokemonTorreMewtwo4FX'))game=game.replace(anchor,'\n'+plugin+'\n'+anchor);else if(new URLSearchParams(location.search).get('safe')!=='1')throw Error('Falha na integração dos golpes V58 no jogo principal');else console.warn('Modo seguro: carregando o jogo original.');}// Sprite-only fire effects V41 + V42.5: 8 isolated original-GIF animations.
 ptProgress(68,'Carregando sprites de fogo…');const fireSpriteFiles=[
  "effects/moves/_runtime/fire-sprite-kit.js",
@@ -1172,6 +1184,21 @@ if(new URLSearchParams(location.search).get('flying145')!=='0'&&
   game=game.replace(fireSpriteAnchor,
    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(err){console.warn('V145 LibreSprite preview unavailable; saved attacks preserved',err);}
+}
+// V172 approved organic Flamethrower — NORMAL GAME, not a separate preview.
+// ?flame172=0 reverts this single effect, ?safe=1 retains native fallbacks.
+// The full renderer is injected AFTER V128 water, V133 earth and V145 flying,
+// allowing it to suppress only legacy Flamethrower visuals without touching them.
+if(new URLSearchParams(location.search).get('flame172')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const file='effects/moves/v172-flamethrower-approved/runtime.js';
+  const response=await fetch(file+'?build=v172-flame-approved-save',{cache:'no-store'});
+  if(!response.ok)throw Error('V172 approved flame HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V172 original battle insertion marker missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V172 fire GPU unavailable; previous visual preserved',error);}
 }
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
