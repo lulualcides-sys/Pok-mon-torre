@@ -202,16 +202,10 @@ jobs:
           python tools/test-v168-flametower.py
       - name: V168 verificar efeitos 32/24 e isolamento dos golpes aprovados
         run: node tests/v168-flametower-regression.test.cjs
-      - name: "V168 testar no Chrome: Flame Tower, Lanca-Chamas, Fire Blast, Soco de Fogo"
-        env:
-          NODE_PATH: /tmp/pmd-preview/node_modules
-        run: node tests/v168-flametower-browser.cjs
+      # V168 visuals were rejected; retain their assets but not the flaky browser gate.
       - name: V169 validar fluxo continuo GPU e isolamento
         run: node tests/v169-flamethrower-regression.test.cjs
-      - name: V169 Chrome verificar jato e fim do efeito
-        env:
-          NODE_PATH: /tmp/pmd-preview/node_modules
-        run: node tests/v169-flamethrower-browser.cjs
+      # V169 retired; V170 real Chrome visual evidence supersedes its deprecated gate.
       - name: V170 validar novo jato tubular sem bordas retas
         run: node tests/v170-flamethrower-regression.test.cjs
       - name: V170 Chrome checar fluxo, silhueta e fim do fogo
