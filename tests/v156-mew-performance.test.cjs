@@ -20,7 +20,7 @@ const h=fs.readFileSync('previews/v156-mew-mewtwo.html','utf8');
 const j=fs.readFileSync('previews/v156-mew-mewtwo.js','utf8');
 const official=fs.readFileSync('index.html','utf8');
 const moves=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(moves.moves.length,46);
+assert.equal(moves.moves.length,47);
 assert.ok(moves.moves.every(x=>x.protect));
 assert.match(h,/v156-mew-mewtwo\.js\?build=156-2/);
 assert.match(h,/id="quality"/);assert.match(h,/CC BY-NC 4\.0/);
