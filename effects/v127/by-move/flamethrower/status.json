@@ -4,9 +4,13 @@
     "Lança-Chamas",
     "Lança Chamas"
   ],
-  "approval_state": "editado_legado",
-  "protected_effect": false,
-  "source_effect": null,
-  "reference": "move-approved-mark-v122.js (registro anterior, confirmação individual pendente)",
-  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v172-flamethrower-approved/runtime.js",
+  "reference": "effects/moves/STATUS_APROVADOS.json",
+  "scope": "Fogo contínuo V172 aprovado; preservar o shader orgânico e pequeno impacto; ?flame172=0 reverte ao legado sem alterar outros golpes.",
+  "version": "V172",
+  "approval_confirmed_at": "2026-10-17",
+  "approval_confirmation": "pode salvar",
+  "visual_source": "effects/labs/v172-flamethrower-organic.js"
 }
