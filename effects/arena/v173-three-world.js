@@ -9,7 +9,7 @@
 'use strict';
 const T=window.THREE,qs=new URLSearchParams(location.search);
 const info={version:'173.0-true-3d-billboard',installed:true,enabled:!!window.__V173_LAB,
- three:!!T,webgl:false,geometry3d:0,meshes:0,layers:0,lights:0,shadowReceivers:0,
+ three:!!T,webgl:false,mounts:0,geometry3d:0,meshes:0,layers:0,lights:0,shadowReceivers:0,
  pmSprites:0,actors3d:0,monCalls:0,monFallbacks:0,animatedFrames:0,animatedSpecies:[],frameCount:0,
  projectionChecks:0,avgFps:0,renderer:'pending',failedAssets:0,
  errors:[],isolated:true,approvedMovesIntact:true,campaignUntouched:true};
@@ -168,7 +168,10 @@ function buildRoom(v){
 function context(e){
  if(!live(e)||!e.w||!e.h)return null;
  let v=entries.get(e);
- if(v&&v.w===e.w&&v.h===e.h)return v;
+ // Original combat size can be fractional CSS pixels; WebGL buffer uses integer
+ // ceil values. Comparing integer buffer to raw e.w/e.h destroyed the world
+ // EVERY frame, removing the previous opponent and recreating 3D meshes/lights.
+ if(v&&v.w===Math.ceil(e.w)&&v.h===Math.ceil(e.h))return v;
  if(v)drop(e);
  const host=e.canvas.parentElement;if(!host)return null;
  try{
@@ -190,7 +193,7 @@ function context(e){
   host.insertBefore(view,e.canvas);
   v={e,w,h,renderer,scene,camera,view,actors:new Map(),frame:0,last:0,ray:new T.Raycaster(),
      plane:new T.Plane(new T.Vector3(0,1,0),0),tmp:new T.Vector3(),lastFps:performance.now(),frames:0};
-  entries.set(e,v);active.add(v);
+  entries.set(e,v);active.add(v);info.mounts++;
   buildRoom(v);
   const clear=document.createElement('canvas');clear.width=w;clear.height=h;
   e.bg=clear;
