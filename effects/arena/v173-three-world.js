@@ -10,7 +10,7 @@
 const T=window.THREE,qs=new URLSearchParams(location.search);
 const info={version:'173.0-true-3d-billboard',installed:true,enabled:!!window.__V173_LAB,
  three:!!T,webgl:false,geometry3d:0,meshes:0,layers:0,lights:0,shadowReceivers:0,
- pmSprites:0,actors3d:0,animatedFrames:0,animatedSpecies:[],frameCount:0,
+ pmSprites:0,actors3d:0,monCalls:0,monFallbacks:0,animatedFrames:0,animatedSpecies:[],frameCount:0,
  projectionChecks:0,avgFps:0,renderer:'pending',failedAssets:0,
  errors:[],isolated:true,approvedMovesIntact:true,campaignUntouched:true};
 const api={diagnostics:()=>({...info}),setTheme:()=>false};
@@ -327,8 +327,10 @@ BattleEngine.prototype.generateBackdrop=function(){
  return result;
 };
 BattleEngine.prototype.drawMon=function(a,id,enemy,now){
+ info.monCalls++;
  const stage=context(this);
  if(stage)try{if(actor(stage,a,id,enemy))return;}catch(err){log('3D billboard: '+err.message);}
+ info.monFallbacks++;
  return native.mon.apply(this,arguments);
 };
 BattleEngine.prototype.draw=function(now){
@@ -352,6 +354,7 @@ api.setTheme=value=>{
  return theme;
 };
 api.diagnostics=()=>({...info,activeStages:active.size,theme,actorSides:[...active].flatMap(v=>[...v.actors.keys()]),
+  spriteLibrary:[...spriteLibrary].map(([id,x])=>({id,ready:x.ready,actions:[...x.actions.keys()],meta:[...x.meta.keys()],errors:x.errors})),
   actorPositions:[...active].flatMap(v=>[...v.actors.values()].map(o=>({
    x:o.sprite.position.x,y:o.sprite.position.y,z:o.sprite.position.z}))),errors:[...info.errors]});
 })();
