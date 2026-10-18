@@ -14,7 +14,7 @@ assert.match(scripts[0],/WeakMap/);
 assert.match(scripts[0],/detailStep/);
 const registry=JSON.parse(read('effects/moves/STATUS_APROVADOS.json')).moves;
 const manifest=JSON.parse(read('effects/v127/edited-moves.json')).records;
-assert.equal(registry.length,46);assert.equal(manifest.length,78);
+assert.equal(registry.length,47);assert.equal(manifest.length,78);
 for(const name of [...targets,'Osso','Grande Fissura','Withdraw','Pistola d’Água','Bolhas','Mergulho']){
  assert.equal(registry.find(x=>x.move===name)?.protect,true);
  if(targets.includes(name))assert.equal(manifest.find(x=>x.name===name)?.status,'aprovado');
