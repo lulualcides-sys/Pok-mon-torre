@@ -1,0 +1,66 @@
+'use strict';
+// V169 WebGL flame-flow smoke: verify browser compiles shader and visible stream advances.
+const fs=require('node:fs'),assert=require('node:assert/strict'),{spawn}=require('node:child_process');
+const {chromium}=require('playwright-core');
+const bin=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'].find(fs.existsSync);
+if(!bin)throw Error('Chromium unavailable');
+const port=18769;
+const server=spawn('python',['-m','http.server',String(port),'--bind','127.0.0.1'],{cwd:process.cwd(),stdio:'ignore'});
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{
+ let browser;
+ try{
+  await sleep(1400);
+  browser=await chromium.launch({executablePath:bin,headless:true,
+   args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-gpu-sandbox']});
+  const page=await browser.newPage({viewport:{width:390,height:850},deviceScaleFactor:1});
+  const errors=[];
+  page.on('pageerror',e=>errors.push('page: '+e.message));
+  page.on('console',msg=>{if(msg.type()==='error')errors.push('console: '+msg.text());});
+  await page.goto('http://127.0.0.1:'+port+'/torre-v169-flamethrower-lab.html',
+    {waitUntil:'domcontentloaded',timeout:55000});
+  await page.waitForFunction(()=>window.PokemonTorreFlamethrowerV169?.diagnostics()&&
+    typeof window.PokemonTorreLocalCombatTestV47?.start==='function',null,{timeout:65000});
+  const iso=await page.evaluate(()=>{
+    localStorage.setItem('flame169','yes');
+    return {key:Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)).find(k=>k?.endsWith('flame169')),
+      value:localStorage.getItem('flame169')};
+  });
+  assert.equal(iso.key,'__torre_lab_v169__flame169');
+  assert.equal(iso.value,'yes');
+  assert(await page.evaluate(()=>window.PokemonTorreLocalCombatTestV47.start(4,74)));
+  await page.waitForFunction(()=>window.PokemonTorreFlamethrowerV169?.diagnostics().webgl,null,{timeout:30000});
+  await page.locator('#v169-stream-button').waitFor({state:'visible',timeout:15000});
+  await page.locator('#v169-stream-button').click();
+  await page.waitForFunction(()=>window.PokemonTorreFlamethrowerV169?.diagnostics().casts>=1,
+    null,{timeout:8000});
+  await page.waitForTimeout(440);
+  const first=await page.evaluate(()=>window.PokemonTorreFlamethrowerV169.diagnostics());
+  assert.equal(first.activeStreams,1,'one continuous jet, no clusters or polygons');
+  assert(first.shaderFrames>=4,'shader updates along battle loop');
+  assert(first.uniforms[0].uReach>.9,'nozzle reached the enemy');
+  assert(first.uniforms[0].uOpacity>.5,'beam persists over time');
+  assert.equal(first.flameMode,'single-continuous-GPU-cylinder');
+  assert.equal(first.previews,1);
+  assert.equal(first.preservedOriginal,true);
+  fs.mkdirSync('tests/artifacts',{recursive:true});
+  await page.screenshot({path:'tests/artifacts/v169-flamethrower-jet-1.png'});
+  await page.waitForTimeout(240);
+  const second=await page.evaluate(()=>window.PokemonTorreFlamethrowerV169.diagnostics());
+  await page.screenshot({path:'tests/artifacts/v169-flamethrower-jet-2.png'});
+  assert(second.shaderFrames>first.shaderFrames+2,'continuous shader must animate while fully extended');
+  assert(second.uniforms[0].uTime>first.uniforms[0].uTime+.15,'material texture flows toward target');
+  assert.equal(second.activeStreams,1);
+  assert.equal(second.errors.length,0,'no PixiJS filter errors');
+  await page.waitForFunction(()=>window.PokemonTorreFlamethrowerV169?.diagnostics().finished>=1,
+     null,{timeout:6500});
+  const done=await page.evaluate(()=>window.PokemonTorreFlamethrowerV169.diagnostics());
+  assert.equal(done.activeStreams,0,'flame stops without remaining on menu');
+  assert.equal(done.errors.length,0);
+  assert.equal(errors.length,0,'no uncaught shader, WebGL or page errors');
+  console.log('V169 CHROME PASS',JSON.stringify({isolation:iso,first,second,done,errors}));
+ }finally{
+  if(browser)await browser.close();
+  server.kill('SIGTERM');
+ }
+})().catch(e=>{console.error('V169 CHROME FAILED',e.stack||e);process.exitCode=1;});
