@@ -221,6 +221,14 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v172-flamethrower-official-browser.cjs
+      # V173 full isolated architectural change: real Three.js 3D room, 2D PMD
+      # billboards, directional 3D shadows and screenshot evidence on mobile.
+      - name: V173 validar cena 3D real e preservacao da campanha
+        run: node tests/v173-three-stage-regression.test.cjs
+      - name: "V173 Chrome testar arena 3D, perspectiva, 2 Pokemon PMD e sombras"
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v173-three-stage-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
