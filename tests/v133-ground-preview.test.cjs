@@ -29,7 +29,7 @@ targets.forEach(name=>{
  assert.equal(row?.status,'aprovado','approved animation missing '+name);
  assert.equal(row?.protect,true,'approved art is not protected '+name);
 });
-assert.equal(approved.length,46,'preserve 42 original entries and four V143 saved Flying moves');
+assert.equal(approved.length,47,'preserve all 46 previous moves and the approved V172 Flamethrower');
 
 const actor={id:150,hp:100},victim={id:25,hp:500};
 const battle={active:true,paused:false,energy:300};
