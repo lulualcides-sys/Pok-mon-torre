@@ -43,14 +43,15 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   assert.equal(first.flameMode,'single-continuous-GPU-cylinder');
   assert.equal(first.previews,1);
   assert.equal(first.preservedOriginal,true);
-  fs.mkdirSync('tests/artifacts',{recursive:true});
-  await page.screenshot({path:'tests/artifacts/v169-flamethrower-jet-1.png'});
-  await page.waitForTimeout(240);
+  // Screenshots can take 0.8-1.5s on SwiftShader; capture AFTER checking
+  // live uniforms so a legitimate 1.33s fire cast cannot expire during testing.
+  await page.waitForTimeout(155);
   const second=await page.evaluate(()=>window.PokemonTorreFlamethrowerV169.diagnostics());
-  await page.screenshot({path:'tests/artifacts/v169-flamethrower-jet-2.png'});
   assert(second.shaderFrames>first.shaderFrames+2,'continuous shader must animate while fully extended');
   assert(second.uniforms[0].uTime>first.uniforms[0].uTime+.15,'material texture flows toward target');
   assert.equal(second.activeStreams,1);
+  fs.mkdirSync('tests/artifacts',{recursive:true});
+  await page.screenshot({path:'tests/artifacts/v169-flamethrower-flow.png'});
   assert.equal(second.errors.length,0,'no PixiJS filter errors');
   await page.waitForFunction(()=>window.PokemonTorreFlamethrowerV169?.diagnostics().finished>=1,
      null,{timeout:6500});
