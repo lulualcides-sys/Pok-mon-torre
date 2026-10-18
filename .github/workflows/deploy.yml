@@ -206,6 +206,12 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v168-flametower-browser.cjs
+      - name: V169 validar fluxo continuo GPU e isolamento
+        run: node tests/v169-flamethrower-regression.test.cjs
+      - name: V169 Chrome verificar jato e fim do efeito
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v169-flamethrower-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
