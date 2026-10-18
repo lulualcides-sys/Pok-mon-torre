@@ -10,7 +10,7 @@ const pixi=read('effects/moves/_runtime/pixi-layer.js');
 const html=read('index.html');
 const native=read('effects/arena/stadium-arena-v97.js');
 const oldApprovals=JSON.parse(read('effects/moves/STATUS_APROVADOS.json'));
-assert.equal(oldApprovals.moves.length,46);
+assert.equal(oldApprovals.moves.length,47);
 assert.ok(native.includes('function tileFloor(g,H,r)'));
 assert.ok(html.includes("effects/arena/lightmap-v147.js"));
 assert.ok(html.includes("get('lightmap147')!=='0'"));
