@@ -41,6 +41,8 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   assert(first.three&&first.webgl,'actual Three.js GPU renderer');
   assert.equal(first.renderer,'THREE.WebGLRenderer');
   assert(first.geometry3d>=25,'3D room needs real wall/stone/door meshes');
+  assert.equal(first.mounts,1,'one world per battle — no scene remount every fractional-size frame');
+  assert(first.geometry3d<180,'scene must stay bounded, not recreate meshes on every frame');
   assert(first.lights>=4,'real scene lights exist');
   assert(first.shadowReceivers>=1,'real shadow receiving floor');
   assert.equal(first.activeStages,1,'one isolated 3D stage per battle');
