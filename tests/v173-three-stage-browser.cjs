@@ -69,6 +69,8 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   assert(done.d.animatedSpecies.includes(25)&&done.d.animatedSpecies.includes(74));
   assert(done.d.animatedFrames>=3,'actual animated PMD 2D sprites on 3D world');
   assert(done.d.projectionChecks>=2,'3D billboard location derived from game hitboxes');
+  assert.equal(done.d.backdrop?.[0]?.blank,true,'old opaque backdrop must not cover the 3D camera');
+  assert.equal(done.d.backdrop?.[0]?.complete,true,'transparent canvas must satisfy native background readiness');
   assert.equal(done.d.approvedMovesIntact,true);
   assert.equal(done.d.campaignUntouched,true);
   assert.equal(done.d.errors.length,0,'scene, sprites and projections error-free');
