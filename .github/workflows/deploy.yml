@@ -212,6 +212,12 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v169-flamethrower-browser.cjs
+      - name: V170 validar novo jato tubular sem bordas retas
+        run: node tests/v170-flamethrower-regression.test.cjs
+      - name: V170 Chrome checar fluxo, silhueta e fim do fogo
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v170-flamethrower-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
