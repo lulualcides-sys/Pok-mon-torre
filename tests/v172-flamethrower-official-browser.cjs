@@ -23,16 +23,13 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
      'Charmander vs Geodude starts normal battle');
   await page.waitForFunction(()=>window.PokemonTorreFlamethrowerApprovedV172?.diagnostics().webgl,
      null,{timeout:35000});
-  const result=await page.evaluate(()=>{
-    const skills=typeof skillSet==='function'?skillSet(current()):[];
-    const normalized=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-    const idx=skills.findIndex(x=>/lanca[- ]?chamas|flamethrower/.test(normalized(x?.name)));
-    const before=window.PokemonTorreFlamethrowerApprovedV172.diagnostics();
-    if(idx<0)return {slot:-1,skills:skills.map(x=>x?.name),before};
-    const used=engine.useMove(idx);
-    return {slot:idx,skills:skills.map(x=>x?.name),used,before};
-  });
-  assert(result.slot>=0,'Charmander has Lança-Chamas equipped: '+JSON.stringify(result));
+  // Browser evaluate executes OUTSIDE the game's closure, so it cannot
+  // access its private current()/skillSet(). Click the REAL game skill button.
+  const skills=await page.locator('button.skillV8').allInnerTexts();
+  const attack=page.locator('button.skillV8').filter({hasText:/Lança[- ]?Chamas|Flamethrower/i}).first();
+  assert(await attack.count()>0,'Lança-Chamas must be equipped: '+JSON.stringify(skills));
+  const slot=await attack.getAttribute('data-skill');
+  await attack.click({timeout:12000});
   await page.waitForFunction(()=>window.PokemonTorreFlamethrowerApprovedV172?.diagnostics().moveCasts>=1,null,{timeout:25000});
   const first=await page.evaluate(()=>window.PokemonTorreFlamethrowerApprovedV172.diagnostics());
   assert.equal(first.installed,true);
@@ -50,7 +47,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   assert.equal(end.activeStreams,0,'no flame overlay after battle cast');
   assert.deepEqual(end.errors,[]);
   assert.equal(errs.length,0,'unexpected JavaScript exception in production');
-  console.log('PASS V172 OFFICIAL BATTLE',JSON.stringify({slot:result.slot,moves:result.skills,casts:end.moveCasts,frames:end.shaderFrames,impactFrames:end.impactFrames,errors:errs}));
+  console.log('PASS V172 OFFICIAL BATTLE',JSON.stringify({slot,moves:skills,casts:end.moveCasts,frames:end.shaderFrames,impactFrames:end.impactFrames,errors:errs}));
  }finally{
   if(browser)await browser.close();
   server.kill('SIGTERM');
