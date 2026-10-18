@@ -44,7 +44,15 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   assert(first.lights>=4,'real scene lights exist');
   assert(first.shadowReceivers>=1,'real shadow receiving floor');
   assert.equal(first.activeStages,1,'one isolated 3D stage per battle');
-  await page.waitForFunction(()=>window.PokemonTorreV173Stage?.diagnostics().actors3d>=2,null,{timeout:42000});
+  try{
+   await page.waitForFunction(()=>window.PokemonTorreV173Stage?.diagnostics().actors3d>=2,null,{timeout:13000});
+  }catch(err){
+   const d=await page.evaluate(()=>window.PokemonTorreV173Stage?.diagnostics());
+   console.error('V173 BILLBOARD DIAGNOSTICS',JSON.stringify(d));
+   fs.mkdirSync('tests/artifacts',{recursive:true});
+   await page.screenshot({path:'tests/artifacts/v173-billboard-debug.png'});
+   throw err;
+  }
   await page.waitForFunction(()=>window.PokemonTorreV173Stage?.diagnostics().animatedFrames>=3,null,{timeout:15000});
   const done=await page.evaluate(()=>({
    d:window.PokemonTorreV173Stage.diagnostics(),
