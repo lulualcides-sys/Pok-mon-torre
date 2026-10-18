@@ -12,7 +12,7 @@ if(!window.PIXI||typeof BattleEngine!=='function'||
 const P=window.PIXI,clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const smooth=x=>{x=clamp(x,0,1);return x*x*(3-2*x);};
 const clock=()=>performance.now();
-const info={version:'172.0-organic-flame',webgl:false,casts:0,moveCasts:0,previews:0,
+const info={version:'172.0-organic-flame',installed:true,webgl:false,casts:0,moveCasts:0,previews:0,
  shaderFrames:0,activeStreams:0,maxStreams:2,finished:0,impacts:0,impactFrames:0,errors:[],
  suppressedLegacy:0,preservedOriginal:true,approved:true,sandboxOnly:false,
  flameMode:'organic-uv-mesh-flame-with-contact'};
