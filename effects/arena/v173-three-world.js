@@ -195,8 +195,12 @@ function context(e){
      plane:new T.Plane(new T.Vector3(0,1,0),0),tmp:new T.Vector3(),lastFps:performance.now(),frames:0};
   entries.set(e,v);active.add(v);info.mounts++;
   buildRoom(v);
-  const clear=document.createElement('canvas');clear.width=w;clear.height=h;
-  e.bg=clear;
+  // Native draw() tests .complete and .naturalWidth before drawing its backdrop.
+  // A normal Canvas object has neither, so it falls back to an OPAQUE gray
+  // gradient and conceals the real Three.js world. Give it image semantics.
+  const clear=document.createElement('canvas');
+  clear.width=w;clear.height=h;clear.complete=true;clear.naturalWidth=w;
+  v.blankBackdrop=clear;e.bg=clear;
   info.webgl=!!renderer.getContext();info.renderer='THREE.WebGLRenderer';
   update(v,performance.now());
   return v;
@@ -339,10 +343,27 @@ BattleEngine.prototype.drawMon=function(a,id,enemy,now){
 BattleEngine.prototype.draw=function(now){
  let v=entries.get(this);
  if(!v&&live(this))v=context(this);
- if(v)this.ctx.clearRect(0,0,this.w,this.h);
+ if(v){
+  // Other archived arena scripts can reset .bg. Force the known-transparent
+  // pixel source right before native draw so its effects remain on top of 3D.
+  this.bg=v.blankBackdrop;
+  this.ctx.clearRect(0,0,this.w,this.h);
+ }
  const result=native.draw.apply(this,arguments);
  if(v)update(v,Number.isFinite(now)?now:performance.now());
  return result;
+};
+// Old flat rocks/props are environmental pixels, not approved attack effects.
+// They must not be painted over the 3D room; all damage/rings/attacks remain native.
+const originalDrawRocks=BattleEngine.prototype.drawRocks;
+if(typeof originalDrawRocks==='function')BattleEngine.prototype.drawRocks=function(c){
+ if(entries.has(this))return;
+ return originalDrawRocks.apply(this,arguments);
+};
+const originalDrawProps=BattleEngine.prototype.v26DrawProps;
+if(typeof originalDrawProps==='function')BattleEngine.prototype.v26DrawProps=function(c){
+ if(entries.has(this))return;
+ return originalDrawProps.apply(this,arguments);
 };
 BattleEngine.prototype.destroy=function(){
  drop(this);return native.destroy.apply(this,arguments);
@@ -358,6 +379,7 @@ api.setTheme=value=>{
 };
 api.diagnostics=()=>({...info,activeStages:active.size,theme,actorSides:[...active].flatMap(v=>[...v.actors.keys()]),
   spriteLibrary:[...spriteLibrary].map(([id,x])=>({id,ready:x.ready,actions:[...x.actions.keys()],meta:[...x.meta.keys()],errors:x.errors})),
+  backdrop:[...active].map(v=>({complete:v.e.bg?.complete,naturalWidth:v.e.bg?.naturalWidth,blank:v.e.bg===v.blankBackdrop,alpha:v.e.ctx?.getContextAttributes?.()?.alpha})),
   actorPositions:[...active].flatMap(v=>[...v.actors.values()].map(o=>({
    x:o.sprite.position.x,y:o.sprite.position.y,z:o.sprite.position.z}))),errors:[...info.errors]});
 })();
