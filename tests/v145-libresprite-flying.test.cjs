@@ -59,7 +59,7 @@ assert.match(index,/get\('flying145'\)==='0'/);
 assert.match(index,/v145-flying-libresprite\/runtime\.js/);
 assert.doesNotMatch(rt,/getContext\(|drawImage\(|requestAnimationFrame\(|drawCatalogMove\(/);
 const approved=JSON.parse(read('effects/moves/STATUS_APROVADOS.json')).moves;
-assert.equal(approved.length,46);
+assert.equal(approved.length,47);
 for(const name of ['Roost','Rajada','Bicada','Air Slash'])
  assert.ok(approved.find(x=>x.move===name)?.protect,'V143 saved sprites changed: '+name);
 for(const name of names)assert.ok(!approved.some(x=>x.move===name),'preview cannot mark itself approved');
