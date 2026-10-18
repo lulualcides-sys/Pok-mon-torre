@@ -55,7 +55,7 @@ function loadTexture(url){
  });
 }
 function material(color,rough=.86,metal=.04){
- return new T.MeshStandardMaterial({color,roughness:rough,metalness:metal});
+ return info.softwareFallback?new T.MeshLambertMaterial({color}):new T.MeshStandardMaterial({color,roughness:rough,metalness:metal});
 }
 function mesh(v,geometry,mat,x,y,z,shadow=true){
  const o=new T.Mesh(geometry,mat);
@@ -99,7 +99,7 @@ function buildRoom(v){
  loadTexture(atlas).then(t=>{
   if(!v.renderer.domElement.isConnected){t.dispose();return;}
   t.repeat.set(1.75,1.6);
-  const m=new T.MeshStandardMaterial({map:t,color:0xb7b5d3,roughness:1,metalness:0});
+  const m=info.softwareFallback?new T.MeshLambertMaterial({map:t,color:0xb7b5d3}):new T.MeshStandardMaterial({map:t,color:0xb7b5d3,roughness:1,metalness:0});
   floor.material.dispose();floor.material=m;floor.userData.stageOnly=true;
   v.floorTexture=t;
  }).catch(e=>{info.failedAssets++;log('Stone texture: '+e.message);});
@@ -108,7 +108,7 @@ function buildRoom(v){
  loadTexture(wallArt).then(t=>{
   if(!v.renderer.domElement.isConnected){t.dispose();return;}
   t.wrapS=T.ClampToEdgeWrapping;t.wrapT=T.ClampToEdgeWrapping;t.repeat.set(1,1);
-  wall.material.dispose();wall.material=new T.MeshStandardMaterial({map:t,color:0xaeb6df,roughness:.91});
+  wall.material.dispose();wall.material=info.softwareFallback?new T.MeshLambertMaterial({map:t,color:0xaeb6df}):new T.MeshStandardMaterial({map:t,color:0xaeb6df,roughness:.91});
  }).catch(e=>{info.failedAssets++;log('Wall texture: '+e.message);});
  // Real architectural doorway, inset stone lintel + illuminated edge.
  col(v,0x0a1026,4.6,3.9,.12,0,1.98,-6.46);
@@ -185,7 +185,7 @@ function context(e){
   const gpu=debug?String(gl.getParameter(debug.UNMASKED_RENDERER_WEBGL)||''):String(gl.getParameter(gl.RENDERER)||'');
   const software=/swiftshader|llvmpipe|software renderer/i.test(gpu);
   renderer.shadowMap.enabled=!software;renderer.shadowMap.type=T.PCFSoftShadowMap;
-  if(software)renderer.setPixelRatio(.75);
+  if(software)renderer.setPixelRatio(.58);
   info.softwareFallback=software;info.gpuRenderer=gpu.slice(0,92);
   renderer.outputEncoding=T.sRGBEncoding;
   renderer.toneMapping=T.ACESFilmicToneMapping;
@@ -308,7 +308,18 @@ function actor(v,who,id,enemy){
  }
  const p=footprint(v,who.x,who.y);
  const pixelHeight=v.e.h*(id===95?.23:id===150?.21:enemy?.205:.223);
- const unit=pixelsWorld(v,p,pixelHeight);
+ let unit=pixelsWorld(v,p,pixelHeight);
+ // Keep animated sprite quads wholly on screen even for wide PMD bodies
+ // such as Geodude. Preserve the real hitbox anchor (no moving Pokémon away
+ // from their collision position); reduce only the size at camera edges.
+ const ndc=p.clone().project(v.camera);
+ const centerPx=(ndc.x+1)*.5*v.w;
+ const n2=p.clone().add(new T.Vector3(1,0,0)).project(v.camera);
+ const pxPerWorld=Math.max(1,Math.abs(n2.x-ndc.x)*.5*v.w);
+ const projectedHalf=unit*width/height*.5*pxPerWorld;
+ const safeHalf=Math.max(20,Math.min(centerPx-13,v.w-centerPx-13));
+ const edgeFactor=clamp(safeHalf/Math.max(projectedHalf,1),.53,1);
+ unit*=edgeFactor;
  // World-space billboard and its own ground shadow share a 3D anchor.
  view.sprite.position.set(p.x,.03+unit*.51+Math.sin(performance.now()*.003)*.025,p.z);
  view.sprite.scale.set(unit*width/height,unit,1);
@@ -327,7 +338,7 @@ function update(v,now){
  v.view.style.width=style.width||'100%';v.view.style.height=style.height||'100%';
  v.view.style.left=style.left||'0px';v.view.style.top=style.top||'0px';
  v.view.style.transform=style.transform||'none';
- if(now-v.frame<20)return;
+ if(now-v.frame<(info.softwareFallback?115:20))return;
  v.frame=now;
  try{
   v.renderer.render(v.scene,v.camera);
