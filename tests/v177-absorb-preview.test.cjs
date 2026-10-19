@@ -4,7 +4,7 @@ const vm=require('node:vm');
 const source=fs.readFileSync('effects/moves/v177-absorb-preview/runtime.js','utf8');
 const index=fs.readFileSync('index.html','utf8');
 new vm.Script(source,{filename:'v177-absorb-preview/runtime.js'});
-assert.match(index,/get\('absorb177'\)==='preview'/);
+assert.match(index,/get\('absorb177'\)!=='0'/);
 assert.match(index,/v177-absorb-preview\/runtime\.js/);
 assert.match(source,/originalHit\.apply\(this,arguments\)/);
 assert.doesNotMatch(source,/(?:getContext\(['"]2d|requestAnimationFrame\s*\()/);
@@ -28,7 +28,9 @@ function setup(search,withGpu=true){
  return {window,Engine,battle,step:ms=>{time+=ms;},stats:()=>window.PokemonTorreAbsorbV177?.diagnostics(),get baseHits(){return baseHits},get draws(){return draws},get stageCalls(){return stageCalls}};
 }
 const normal=setup('');
-assert.equal(normal.window.PokemonTorreAbsorbV177,undefined,'Preview must not install on normal URL');
+assert.equal(normal.window.PokemonTorreAbsorbV177?.installed,true,'Approved Absorb must load on normal URL');
+const rollback=setup('?absorb177=0');
+assert.equal(rollback.window.PokemonTorreAbsorbV177,undefined,'Rollback must restore legacy Absorb');
 const preview=setup('?absorb177=preview');
 const e=new preview.Engine();
 assert.equal(e.useMove(0),true);
@@ -48,4 +50,4 @@ const fallback=setup('?absorb177=preview',false);
 const f=new fallback.Engine();f.useMove(0);f.draw();
 assert.equal(fallback.stats().casts,0,'WebGL missing must preserve native effect');
 assert.equal(fallback.battle.energy,90,'Gameplay remains active without WebGL');
-console.log('PASS V177: opt-in only; 12-frame Pixi preview; transfer on confirmed damage; no extra hit or cost; GPU fallback');
+console.log('PASS V177.1: approved by default; rollback; 12-frame Pixi; confirmed HP drain; no extra hit or cost; GPU fallback');
