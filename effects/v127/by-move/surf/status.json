@@ -3,9 +3,9 @@
   "aliases": [
     "Surfar"
   ],
-  "approval_state": "aprovado",
-  "protected_effect": true,
+  "approval_state": "editado_legado",
+  "protected_effect": false,
   "source_effect": null,
-  "reference": "Aprovação expressa 19/10/2026: Surf é o melhor efeito; preservar exatamente a animação atual.",
-  "scope": "Registro de aprovação visual — sem copiar/substituir sprites, código ou mecânica de Surf."
+  "reference": "move-approved-mark-v122.js (registro anterior, confirmação individual pendente)",
+  "scope": "Metadados isolados por golpe; renderers compartilhados NÃO foram copiados nem modificados."
 }
