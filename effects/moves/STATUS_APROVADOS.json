@@ -682,6 +682,21 @@
       "renderer": "PixiJS/WebGL (malha UV + fragment shader de fogo e impacto)",
       "approval_note": "Usuário aprovou explicitamente o jato V172: 'pode salvar' em 17/10/2026. Preservar o visual aprovado sem alterações futuras não solicitadas.",
       "notes": "Jato contínuo orgânico V172, núcleo dourado, borda ondulante, leve impacto de fogo. Mantém dano, energia, recarga e todos os demais golpes inalterados."
+    },
+    {
+      "move": "Absorb",
+      "aliases": [
+        "Absorver"
+      ],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-19",
+      "version": "V177.1",
+      "effect_file": "effects/moves/v177-absorb-preview/runtime.js",
+      "renderer": "PixiJS/WebGL (12 quadros pixel-art na batalha)",
+      "rollback_parameter": "?absorb177=0",
+      "approval_note": "Usuário: 'aprovado simples e eficaz' em 19/10/2026.",
+      "notes": "Partículas verdes discretas absorvidas do inimigo até o usuário após acerto real; cura unicamente pelo motor V65. Preservar e manter no jogo normal."
     }
   ],
   "v175_extra_protected": [
