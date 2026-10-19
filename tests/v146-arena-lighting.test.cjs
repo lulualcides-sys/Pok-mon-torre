@@ -19,7 +19,7 @@ assert.match(pixiSrc,/destroyLighting146\(\)/);
 assert.doesNotMatch(rtSrc,/getContext\s*\(|drawImage\s*\(|createElement\s*\(|PIXI\.Application\s*\(/);
 assert.equal(arenaSrc.includes('function tileFloor(g,H,r)'),true);
 assert.equal(cameraSrc.includes('WORLD_FACTOR=1.55'),true);
-assert.equal(JSON.parse(read('effects/moves/STATUS_APROVADOS.json')).moves.length,47);
+assert.equal(JSON.parse(read('effects/moves/STATUS_APROVADOS.json')).moves.length,48);
 function setup(search=''){
  const counter={nativeDraws:0,apps:0,texture:0};
  class Point {set(x,y){this.x=x;this.y=y;}}
