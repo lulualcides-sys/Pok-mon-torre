@@ -18,7 +18,7 @@ for(const [name,[w,h]] of Object.entries(assets)){
 assert.equal(new Set(Object.keys(assets).map(n=>crypto.createHash('sha256')
  .update(fs.readFileSync(home+n+'.png')).digest('hex'))).size,8);
 const approved=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(approved.moves.length,47);
+assert.equal(approved.moves.length,48);
 assert.ok(approved.moves.every(x=>x.protect));
 const html=fs.readFileSync('index.html','utf8');
 const src=fs.readFileSync('effects/arena/blue-v153-pixi.js','utf8');
