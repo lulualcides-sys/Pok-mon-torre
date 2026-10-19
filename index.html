@@ -1192,6 +1192,7 @@ if(new URLSearchParams(location.search).get('flying145')!=='0'&&
 // allowing it to suppress only legacy Flamethrower visuals without touching them.
 if(new URLSearchParams(location.search).get('flame172')!=='0'&&
    new URLSearchParams(location.search).get('fire178')!=='preview'&&
+   new URLSearchParams(location.search).get('fire179')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v172-flamethrower-approved/runtime.js';
@@ -1261,6 +1262,7 @@ if(new URLSearchParams(location.search).get('absorb177')!=='0'&&
 // Preview intentionally skips approved V172 flame to avoid double visualization.
 // Original Fire Blast painter stays intact for normal URLs and ?fire178=0.
 if(new URLSearchParams(location.search).get('fire178')==='preview'&&
+   new URLSearchParams(location.search).get('fire179')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v178-fire-pair-preview/runtime.js';
@@ -1270,6 +1272,21 @@ if(new URLSearchParams(location.search).get('fire178')==='preview'&&
   game=game.replace(fireSpriteAnchor,
    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V178 Fire preview unavailable, V172 and classic Fire Blast preserved',error);}
+}
+
+// V179 — user-video-matched Fire remake in original battle.
+// ?fire179=preview has precedence over V178 and V172, old visuals are safe.
+// Flamethrower = overlapping orange flames; Fire Blast = concentrated fire + 5-tip star.
+if(new URLSearchParams(location.search).get('fire179')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const file='effects/moves/v179-video-reference/runtime.js';
+  const response=await fetch(file+'?build=v179-user-video-ref',{cache:'no-store'});
+  if(!response.ok)throw Error('V179 Fire video renderer HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V179 battle anchor not found');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V179 video-matched preview unavailable; prior Fire versions preserved',error);}
 }
 
 // The retired Atelier stays in GitHub history; it is not inside the game.
