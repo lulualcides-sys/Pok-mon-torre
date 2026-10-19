@@ -245,8 +245,14 @@ jobs:
               assert im.size==(960,600) and im.mode=='RGB'
           print('V174 baked texture valid')
           PY
-      - name: V174 proteger campanha e checar renderer leve
-        run: node tests/v174-light-2p5d-regression.test.cjs
+      - name: V174 preservar comparador antigo e testar oito arenas regionais
+        run: |
+          node tests/v174-light-2p5d-regression.test.cjs
+          node tests/v174-regional-pixel.test.cjs
+      - name: "V174 Chrome regional verificar um Pixi WebGL e golpe preservado"
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v174-regional-pixel-browser.cjs
       - name: "V174 Chrome verificar batalha 2.5D sem Three.js, carga e sprites"
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
