@@ -37,10 +37,24 @@ const serve=http.createServer((req,res)=>{
   assert.equal(before[7].leader,'Giovanni');
   const started=await page.evaluate(()=>window.PokemonTorreLocalCombatTestV47.start(25,74));
   assert(started,'battle must actually start');
-  await page.waitForFunction(()=>{
-   const d=window.PokemonTorreV174Regional?.diagnostics();
-   return d&&d.generated>=1&&d.applied>=1&&d.frames>=12;
-  },null,{timeout:35000});
+  try{
+   await page.waitForFunction(()=>{
+    const d=window.PokemonTorreV174Regional?.diagnostics();
+    return d&&d.generated>=1&&d.applied>=1&&d.frames>=12;
+   },null,{timeout:16000});
+  }catch(err){
+   const debug=await page.evaluate(()=>({
+    stage:window.PokemonTorreV174Regional?.diagnostics?.(),
+    bridge:typeof window.PokemonTorrePixelFlyingBridge?.labStage,
+    pixi:typeof window.PIXI,
+    combat:typeof battle==='undefined'?null:{active:battle?.active},
+    canvas:document.querySelectorAll('#battleCanvas').length,
+    gpu:window.PokemonTorrePixelFlyingBridge?.diagnostics?.(),
+    log:document.querySelector('#pt-status')?.textContent
+   })).catch(e=>({error:String(e)}));
+   console.error('V174 REGIONAL CHROME DEBUG',JSON.stringify({debug,fatal}));
+   throw err;
+  }
   const data=await page.evaluate(()=>({
    regional:window.PokemonTorreV174Regional.diagnostics(),
    three:typeof window.THREE,
