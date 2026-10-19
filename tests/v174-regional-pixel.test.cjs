@@ -47,17 +47,20 @@ const window={
  __V174_LAB:true,
  PIXI:{Graphics},
  PokemonTorrePixelFlyingBridge:{
-  labStage:()=>({app:{renderer:{gl:{},extract:{base64:()=>{extractions++;return 'data:image/png;base64,AA==';}}}}})
+  labStage:()=>({app:{renderer:{gl:{},extract:{base64:()=>{extractions++;return Promise.resolve('data:image/png;base64,AA==');}}}}})
  }
 };
 vm.runInNewContext(js,{window,URLSearchParams,location:{search:'?arena_lab=regional174'},
  BattleEngine,save,battle,performance:{now:()=>t},
  v29TrainerCount:g=>13+2*g,Image:LoadedImage});
+(async()=>{
 const instance=new BattleEngine();
 const regionNames=['Brock','Misty','Lt. Surge','Erika','Koga','Sabrina','Blaine','Giovanni'];
 for(let i=0;i<8;i++){
  save.gym=i;save.stage=0;t+=1400;
  instance.generateBackdrop();instance.draw(t);
+ await new Promise(resolve=>setImmediate(resolve));
+ instance.draw(t);
  const d=window.PokemonTorreV174Regional.diagnostics();
  assert.equal(d.leader,regionNames[i]);
  assert.equal(d.variant,0);
@@ -70,8 +73,10 @@ assert.equal(extractions,8);
 instance.draw(t+16);instance.draw(t+33);
 assert.equal(extractions,8,'reuse cached room instead of redrawing each frame');
 save.gym=0;save.stage=1;t+=1400;instance.generateBackdrop();instance.draw(t);
+await new Promise(resolve=>setImmediate(resolve));instance.draw(t);
 assert.equal(window.PokemonTorreV174Regional.diagnostics().variant,1);
 save.stage=13;t+=1400;instance.generateBackdrop();instance.draw(t);
+await new Promise(resolve=>setImmediate(resolve));instance.draw(t);
 assert.equal(window.PokemonTorreV174Regional.diagnostics().leaderRoom,true);
 assert.equal(window.PokemonTorreV174Regional.diagnostics().variant,'leader');
 assert.equal(extractions,10);
@@ -84,4 +89,5 @@ vm.runInNewContext(js,{window:{__V174_LAB:true},URLSearchParams,
 assert.equal(new SafeEngine().draw(),19);
 const approved=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
 assert(approved.moves.filter(x=>x.protect).length>20);
-console.log('V174 REGIONAL PIXEL PASS: 8 leaders, trainer variants, boss, shared renderer, cache and rollback');
+console.log('V174 REGIONAL PIXEL PASS: async WebGL extraction, 8 leaders, trainer variants, boss, cache and rollback');
+})().catch(e=>{console.error(e);process.exitCode=1;});
