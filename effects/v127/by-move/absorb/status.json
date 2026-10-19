@@ -1,0 +1,14 @@
+{
+  "move": "Absorb",
+  "aliases": [
+    "Absorver"
+  ],
+  "approval_state": "aprovado",
+  "protected_effect": true,
+  "source_effect": "effects/moves/v177-absorb-preview/runtime.js",
+  "reference": "effects/moves/STATUS_APROVADOS.json",
+  "version": "V177.1",
+  "approval_confirmed_at": "2026-10-19",
+  "approval_confirmation": "aprovado simples e eficaz",
+  "scope": "12 quadros de partículas verdes em PixiJS WebGL; drena após acerto confirmado, cura somente por V65; ativo no jogo normal; ?absorb177=0 reverte apenas este efeito."
+}
