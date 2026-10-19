@@ -682,7 +682,9 @@
       "renderer": "PixiJS/WebGL (malha UV + fragment shader de fogo e impacto)",
       "approval_note": "Usuário aprovou explicitamente o jato V172: 'pode salvar' em 17/10/2026. Preservar o visual aprovado sem alterações futuras não solicitadas.",
       "notes": "Jato contínuo orgânico V172, núcleo dourado, borda ondulante, leve impacto de fogo. Mantém dano, energia, recarga e todos os demais golpes inalterados."
-    },
+    }
+  ],
+  "v175_extra_protected": [
     {
       "move": "Surf",
       "aliases": [
@@ -693,7 +695,8 @@
       "accepted_at": "2026-10-19",
       "approval_note": "Usuário apontou Surf como o melhor efeito criado e pediu expressamente que seja mantido sem alteração visual. Preservar renderer atual e som; remover somente mediante autorização.",
       "visual_change_authorized": false,
-      "display_name": "Surf"
+      "display_name": "Surf",
+      "note": "Registrado fora da lista histórica V127 de 47, que deve permanecer imutável."
     }
   ]
 }
