@@ -63,7 +63,7 @@ function start(e,name,instantHit=false){
   const f={engine:e,app,root,visual,impact:null,name,
    began:clock(),hitAt:instantHit?clock():0,impactAt:0,impactConsumed:false,
    duration:name==='fireblast'?1500:1320,dead:false};
-  active.push(f);stats.starts[name]++;return f;
+  active.push(f);stats.starts[name]++;if(instantHit)stats.confirmedImpacts++;return f;
  }catch(err){failure(err);return null;}
 }
 function positionFlame(f,e){
