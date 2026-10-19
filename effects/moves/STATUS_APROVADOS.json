@@ -350,7 +350,9 @@
       "source_file": "parts/p019.txt — V35.64 weather_rain_00..09",
       "notes": "Usuário autorizou restaurar a chuva que já havia sido aprovada. O módulo usa somente os 10 quadros PMD originais; respeita uso do golpe, energia, cooldown e desenho nativo do clima, sem sobreposição ou troca de outros golpes. Confirmado pelo usuário após testes Chromium normal/seguro e publicação GitHub Pages; preservar os 10 quadros PMD originais, visuais sem CSS, e a lógica nativa de energia/recarga.",
       "aprovacao_visual": "aprovado_pelo_usuario",
-      "feedback_usuario": "Pode salvar — aprovação expressa após correção da chuva original V118 e dos cinco módulos V117, 2026-10-16."
+      "feedback_usuario": "Pode salvar — aprovação expressa após correção da chuva original V118 e dos cinco módulos V117, 2026-10-16.",
+      "display_name": "Rain Dance",
+      "approval_note": "19/10/2026: preservar animação; mostrar nome inglês no jogo sem alterar o nome interno de disparo."
     },
     {
       "move": "Toxina Pesada",
@@ -464,7 +466,9 @@
       "aprovacao_visual": "aprovado_pelo_usuario",
       "feedback_usuario": "Ficou muito bom",
       "rollback_parameter": "?water128=0",
-      "notes": "V128 mesmo visual da prévia aprovada; preservar animação e regras originais de combate."
+      "notes": "V128 mesmo visual da prévia aprovada; preservar animação e regras originais de combate.",
+      "display_name": "Water Gun",
+      "approval_note": "19/10/2026: preservar animação; mostrar nome inglês no jogo sem alterar o nome interno de disparo."
     },
     {
       "move": "Bolhas",
@@ -482,7 +486,9 @@
       "aprovacao_visual": "aprovado_pelo_usuario",
       "feedback_usuario": "Ficou muito bom",
       "rollback_parameter": "?water128=0",
-      "notes": "V128 mesmo visual da prévia aprovada; preservar animação e regras originais de combate."
+      "notes": "V128 mesmo visual da prévia aprovada; preservar animação e regras originais de combate.",
+      "display_name": "Bubble",
+      "approval_note": "19/10/2026: preservar animação; mostrar nome inglês no jogo sem alterar o nome interno de disparo."
     },
     {
       "move": "Mergulho",
@@ -676,6 +682,18 @@
       "renderer": "PixiJS/WebGL (malha UV + fragment shader de fogo e impacto)",
       "approval_note": "Usuário aprovou explicitamente o jato V172: 'pode salvar' em 17/10/2026. Preservar o visual aprovado sem alterações futuras não solicitadas.",
       "notes": "Jato contínuo orgânico V172, núcleo dourado, borda ondulante, leve impacto de fogo. Mantém dano, energia, recarga e todos os demais golpes inalterados."
+    },
+    {
+      "move": "Surf",
+      "aliases": [
+        "Surfar"
+      ],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-19",
+      "approval_note": "Usuário apontou Surf como o melhor efeito criado e pediu expressamente que seja mantido sem alteração visual. Preservar renderer atual e som; remover somente mediante autorização.",
+      "visual_change_authorized": false,
+      "display_name": "Surf"
     }
   ]
 }
