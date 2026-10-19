@@ -5,9 +5,9 @@ const manifest=JSON.parse(fs.readFileSync('effects/v127/edited-moves.json','utf8
 const index=fs.readFileSync('index.html','utf8');
 const part=fs.readFileSync('parts/p008.txt','utf8');
 const old=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(old.moves.length,47,'V143 four flying plus V172 saved Flamethrower: now 47 approved');
-assert.equal(manifest.records.length,78,'every edited legacy/official move must have its own status record');
-assert.equal(manifest.records.filter(x=>x.source==='STATUS_APROVADOS.json').length,47);
+assert.equal(old.moves.length,48,'V177 Absorb approved alongside 47 previously accepted');
+assert.equal(manifest.records.length,79,'every edited legacy/official move must have its own status record');
+assert.equal(manifest.records.filter(x=>x.source==='STATUS_APROVADOS.json').length,48);
 assert.equal(manifest.records.filter(x=>x.status==='editado_legado').length,31);
 assert.equal(old.moves.filter(x=>x.status==='em_teste').length,0,'approved fighting moves must not revert to test status');
 const fighting=['Chute','Golpe de Karatê','Cross Chop','Brick Break'];
@@ -35,8 +35,9 @@ const sandbox={window:{},document,URLSearchParams,location:{search:''},console,
 vm.runInNewContext(src,sandbox,{filename:'effects/v127/approval-marks.js',timeout:2500});
 const mark=sandbox.window.PokemonTorreMoveMarksV127;
 assert.ok(mark?.installed,'module loaded');
-assert.equal(mark.diagnostics().official,47);
+assert.equal(mark.diagnostics().official,48);
 assert.equal(mark.diagnostics().legacy,31);
+assert.ok(mark.badge('Absorb').includes('✓'),'user approved V177 Absorb');
 for(const name of ['Roost','Rajada','Air Slash','Bicada']){
  const entry=old.moves.find(m=>m.move===name);
  assert.ok(entry&&entry.status==='salvo'&&entry.protect===true);
@@ -86,4 +87,4 @@ assert.equal(mark.badge('Inventado Fantasma'),'', 'unregistered move must not re
 assert.ok(mark.badge('Dança da Chuva').includes('✓'),'accent aliases matched');
 const css=html.find(e=>e.id==='v127-approved-move-checks')?.textContent||'';
 assert.ok(css.includes('.v127MoveCheck'),'small non-emoji badge styled');
-console.log('PASS V172: 78 per-move status files, 47 authoritative approved including V172 Flamethrower, 31 historical edited, accepted water+flying+poison retained.');
+console.log('PASS V177.1: 79 per-move records, 48 accepted including Absorb, 31 historical edited; protected moves preserved.');
