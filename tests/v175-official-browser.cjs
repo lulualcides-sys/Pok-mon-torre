@@ -13,10 +13,23 @@ const sleep=t=>new Promise(r=>setTimeout(r,t));
   browser=await chromium.launch({executablePath:bin,headless:true,
    args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-gpu-sandbox']});
   const page=await browser.newPage({viewport:{width:390,height:850},deviceScaleFactor:1});
-  const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+  const errors=[];const networkErrors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('requestfailed',req=>{if(networkErrors.length<25)networkErrors.push(req.url()+' '+req.failure()?.errorText)});
   await page.goto('http://127.0.0.1:'+port+'/index.html',{waitUntil:'domcontentloaded',timeout:55000});
-  await page.waitForFunction(()=>typeof window.PokemonTorreV175Diagnostics==='function'&&
-   typeof window.PokemonTorreLocalCombatTestV47?.start==='function',null,{timeout:110000});
+  try{
+   await page.waitForFunction(()=>typeof window.PokemonTorreV175Diagnostics==='function'&&
+   typeof window.PokemonTorreLocalCombatTestV47?.start==='function',null,{timeout:35000});
+  }catch(err){
+   const debug=await page.evaluate(()=>({url:location.href,ready:document.readyState,
+    title:document.title,body:document.body.innerText.slice(0,700),
+    v175:typeof window.PokemonTorreV175Diagnostics,
+    v174:typeof window.PokemonTorreV174Regional,
+    engine:typeof window.PokemonTorreLocalCombatTestV47,
+    status:document.getElementById('pt-status')?.textContent,
+    loader:document.getElementById('pt-loader')?.innerText?.slice(0,250)
+   })).catch(e=>({error:String(e)}));
+   console.error('V175 BROWSER BOOT DEBUG',JSON.stringify({debug,errors,networkErrors}));
+   throw err;
+  }
   const info=await page.evaluate(()=>window.PokemonTorreV175Diagnostics());
   assert.equal(info.speciesCount,151);
   assert.equal(Object.keys(info.typeCounts).length,18);
