@@ -8,7 +8,7 @@
 'use strict';
 const query=new URLSearchParams(location.search);
 const specs=[
- {id:'flying',place:'Penhascos do Vento',leader:'Falkner',sky:0x95c6dd,wall:0x567b8a,floor:0x77999b,deep:0x324d68,tile:0x8aaeb0,edge:0xd5e7d4,light:0xe6f3e6,detail:0x4a7180},
+ {id:'rock',place:'Grutas de Pewter',leader:'Brock',sky:0x9d9f91,wall:0x656d62,floor:0x817f70,deep:0x393f3c,tile:0x9a9984,edge:0xd3ceb3,light:0xece3ca,detail:0x51554c},
  {id:'water',place:'Piscinas de Cerulean',leader:'Misty',sky:0x78a9b8,wall:0x387d94,floor:0x437e9c,deep:0x17475e,tile:0x60acc4,edge:0xc0eafa,light:0xe0faff,detail:0x27718b},
  {id:'electric',place:'Usina de Vermilion',leader:'Lt. Surge',sky:0x8a9aa0,wall:0x586b78,floor:0x737f77,deep:0x253c47,tile:0x899797,edge:0xf3db78,light:0xfff1ba,detail:0x414b52},
  {id:'grass',place:'Jardins de Celadon',leader:'Erika',sky:0x9bbd95,wall:0x53795c,floor:0x567f51,deep:0x284d39,tile:0x7eac6c,edge:0xe5dca3,light:0xfaf2c9,detail:0x315d38},
@@ -142,7 +142,7 @@ function makeArtwork(PIXI,sel){
   for(let j=0;j<3;j++){
    const y=122+j*64,dx=Math.floor(rng()*10)-5;
    switch(sel.gym){
-    case 0: pillar(x+dx,y,s.tile);r(x-13,y-23,27,3,s.light);break;
+    case 0: stone(x+dx,y,1.3);pillar(x,y-18,s.wall);break;
     case 1: water(x-16,y-10,33,28);stone(x+dx,y+18);break;
     case 2: outline(x-11,y-16,24,31,s.deep,s.wall);r(x-7,y-11,15,5,s.edge);r(x+3,y+1,3,8,0xf0c441);break;
     case 3: grass(x-12,y);grass(x+12,y+12);flower(x,y-7,j%2?0xf4a3ca:0xffd887);break;
@@ -155,9 +155,9 @@ function makeArtwork(PIXI,sel){
  }
  // Architecture and environment unique to each region and leader.
  switch(sel.gym){
-  case 0: // Falkner: sky-facing cliff arches and feathers.
-   for(let x=28;x<460;x+=89){r(x,38,43,4,0xe2f3fa);r(x+9,34,24,4,0xf6fcff);r(x+5,43,34,2,0xc1e5e8);}
-   pillar(120,86);pillar(360,86);break;
+  case 0: // Brock: Pewter rock gym, caves, cut stone and fossil edges.
+   for(let x=0;x<480;x+=54){r(x,24,34,13,0x62655e);r(x+9,38,27,8,0x4f554e);}
+   pillar(120,86);pillar(360,86);stone(87,89,1.25);stone(395,89,1.25);break;
   case 1: // Misty: falls and pools around tiled arena.
    for(let x of [16,425])water(x,97,39,182);
    for(let x=168;x<312;x+=16){r(x,59,8,27,0x4aa9cf);r(x+4,66,3,15,0xb0edf1);}
