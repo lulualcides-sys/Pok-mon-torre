@@ -9,7 +9,7 @@ const html=read('index.html');
 const pixi=read('effects/moves/_runtime/pixi-layer.js');
 const camera=read('effects/arena/wide-camera-v98.js');
 const approved=JSON.parse(read('effects/moves/STATUS_APROVADOS.json'));
-assert.equal(approved.moves.length,47);
+assert.equal(approved.moves.length,48);
 assert.ok(approved.moves.every(e=>e.protect),'protected approved attacks must remain untouched');
 assert.match(html,/effects\/arena\/video-v151\.js/);
 assert.match(html,/v151-1-video-textured-stone/);
