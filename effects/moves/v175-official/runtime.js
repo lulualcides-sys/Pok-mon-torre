@@ -42,11 +42,33 @@ const aliases={
 const alias=new Map(Object.entries(aliases).map(([a,b])=>[norm(a),b]));
 const translations=new Map([['Bolhas','Bubble'],['Pistola d’Água','Water Gun'],["Pistola d'Água",'Water Gun']]);
 function canonical(name){const n=norm(name),id=byEnglish.get(n);return alias.get(n)||(id?data.moves[id]?.[0]:null)}
+// Audit metadata only: the existing combat engine remains responsible for targeting,
+// damage, healing and visual effects. Never fake a new projectile for a drain/status.
+const selfTarget=new Set(['Recover','Roost','Rest','Synthesis','Moonlight','Growth',
+ 'Calm Mind','Harden','Iron Defense','Bulk Up','Agility','Amnesia','Dragon Dance',
+ 'Withdraw','Minimize','Acid Armor','Splash','Protect','Reflect','Light Screen']);
+const fieldTarget=new Set(['Rain Dance','Sunny Day','Sandstorm','Hail','Electric Terrain',
+ 'Grassy Terrain','Misty Terrain','Psychic Terrain']);
+const drainTarget=new Set(['Absorb','Mega Drain','Giga Drain','Leech Life',
+ 'Dream Eater','Drain Punch']);
+const targetOf=name=>fieldTarget.has(name)?'field':drainTarget.has(name)?'enemy-to-self':
+ selfTarget.has(name)?'self':'enemy';
+function isOwnedTestMewtwo(m){
+ if(Number(m?.id)!==150)return false;
+ if(m.v3566MewtwoTest===true)return true;
+ // Also support older saves whose owned Mewtwo lacks the test flag.
+ return [...(save?.team||[]),...(save?.box||[])].some(owned=>owned===m);
+}
 const previousCatalogue=v32Catalogue,previousSkillSet=skillSet;
 let nesting=0,invalidSaved=0,lastSpecies=null,displayEdits=0;
 const icons={normal:'✦',fire:'🔥',water:'💧',grass:'🍃',electric:'⚡',ice:'❄',ground:'◆',rock:'⬟',
  psychic:'◈',poison:'☣',fighting:'✊',flying:'➤',bug:'✳',ghost:'◉',dragon:'✧',dark:'◆',steel:'⚙',fairy:'✧'};
-const kindNames={'Surf':'area','Hydro Pump':'beam','Rain Dance':'status','Bubble':'bolt',
+const kindNames={'Absorb':'drain','Mega Drain':'drain','Giga Drain':'drain',
+ 'Leech Life':'drain','Dream Eater':'drain','Drain Punch':'dash',
+ 'Rock Throw':'bolt','Rock Slide':'area','Stone Edge':'area','Bonemerang':'pierce',
+ 'Bullet Seed':'pierce','Pin Missile':'pierce','Ice Shard':'pierce',
+ 'Tackle':'dash','Scratch':'dash','Quick Attack':'dash','Ember':'bolt',
+ 'Surf':'area','Hydro Pump':'beam','Rain Dance':'status','Bubble':'bolt',
  'Water Gun':'bolt','Water Pulse':'bolt','Aqua Jet':'dash','Aqua Tail':'dash',
  'Waterfall':'dash','Dive':'dash','Flamethrower':'beam','Fire Spin':'hazard','Fire Blast':'area',
  'Sunny Day':'status','Will-O-Wisp':'status','Thunder':'homing','Thunderbolt':'bolt',
@@ -56,8 +78,9 @@ const kindNames={'Surf':'area','Hydro Pump':'beam','Rain Dance':'status','Bubble
 function builtMove(id){
  const info=data.moves[id];if(!info)return null;
  const [name,type,officialPower,cls]=info;
- const kind=kindNames[name]||(officialPower===0?'status':cls===2?'dash':'bolt');
- const power=officialPower===0?0:Math.min(68,Math.max(15,Math.round(officialPower*.62)));
+ const kind=kindNames[name]||(cls===1?'status':cls===2?'dash':'bolt');
+ // Zero listed power can mean variable damage, not necessarily a status move.
+ const power=cls===1?0:Math.min(68,Math.max(15,Math.round((officialPower||40)*.62)));
  const cd=kind==='homing'?10000:kind==='area'?4650:kind==='hazard'?5900:
   kind==='beam'?4400:kind==='recover'?8500:kind==='status'?5900:kind==='dash'?1800:2400;
  return {name,type,kind,cat:cls===2?'physical':cls===3?'special':'status',
@@ -66,7 +89,10 @@ function builtMove(id){
 }
 function officialCatalogue(m){
  if(!m||!data.species[m.id])return [];
- const source=data.species[m.id];let native=[];
+ const testMewtwo=isOwnedTestMewtwo(m);
+ // Only the player's test Mewtwo may equip the entire 18 x 16 review catalogue.
+ const source=testMewtwo?Object.keys(data.moves).map(id=>[Number(id),0,1]):data.species[m.id];
+ let native=[];
  if(nesting===0){try{nesting++;native=previousCatalogue(m)||[]}catch(e){console.warn('V175: legacy catalogue unavailable',e)}finally{nesting--}}
  const availableNative=new Map();
  for(const item of native){
@@ -78,23 +104,38 @@ function officialCatalogue(m){
   if(!availableNative.has(id)||score>availableNative.get(id).score)availableNative.set(id,{item,score});
  }
  const early=source.filter(x=>x[2]===1).slice().sort((a,b)=>a[1]-b[1]);
- const beginner=new Set(early.slice(0,4).map(x=>x[0]));
  const level=Number(m.level)||1,owned=new Set(save?.v32?.tms||[]);
+ // A single canonical starter move is allowed if the species has no legal level-1 move.
+ // Do not pre-unlock four late-level moves as V175 did.
+ const hasNatural=early.some(x=>level>=x[1]);
+ const beginner=new Set(!testMewtwo&&!hasNatural&&early.length?[early[0][0]]:[]);
  const equipped=new Set(Array.isArray(m.v32Slots)?m.v32Slots:[]),result=[],seen=new Set();
  for(const [id,requiredLevel,method] of source){
   if(seen.has(id))continue;seen.add(id);
   const info=data.moves[id];if(!info)continue;
   const original=availableNative.get(id)?.item;
-  const move=original?{...original.move,v175MoveId:id}:builtMove(id);
+  const move=original?{...original.move,
+   // Historic visual dispatch uses the original name/kind/key; fix only inaccurate
+   // type and category labels from the legacy catalog (e.g. Tackle = Normal).
+   type:info[1],cat:info[3]===2?'physical':info[3]===3?'special':'status',
+   v175MoveId:id}:builtMove(id);
+ if(move){move.v176Target=targetOf(info[0]);move.v176ReviewType=info[1];}
   if(!move)continue;
   const key=original?.key||v32MoveKey(move);
-  const unlocked=method===1?(level>=requiredLevel||beginner.has(id)):
-   owned.has(info[1])||equipped.has(key);
+  const unlocked=testMewtwo|| (method===1?(level>=requiredLevel||beginner.has(id)):
+   owned.has(info[1])||equipped.has(key));
   result.push({key,move,level:method===1?requiredLevel:1,tm:method===4,available:unlocked,
    v175Id:id,v175English:info[0],v175Method:method});
  }
- result.sort((a,b)=>Number(b.available)-Number(a.available)||Number(a.tm)-Number(b.tm)||
-  a.level-b.level||a.v175English.localeCompare(b.v175English,'en'));
+ const species=typeof D!=='undefined'?D[m.id]:null;
+ const primary=species?.type,secondary=species?.type2;
+ const affinity=row=>row.move.type===primary?0:row.move.type===secondary?1:2;
+ const typeOrder=['normal','fire','water','grass','electric','ice','ground','rock',
+  'psychic','poison','fighting','flying','bug','ghost','dragon','dark','steel','fairy'];
+ result.sort((a,b)=>Number(b.available)-Number(a.available)||
+  (testMewtwo?typeOrder.indexOf(a.move.type)-typeOrder.indexOf(b.move.type):affinity(a)-affinity(b))||
+  Number(a.tm)-Number(b.tm)||a.level-b.level||
+  a.v175English.localeCompare(b.v175English,'en'));
  lastSpecies=m.id;return result;
 }
 v32Catalogue=officialCatalogue;
@@ -143,10 +184,12 @@ function localize(){
  for(const node of targets){rx.lastIndex=0;const v=node.nodeValue.replace(rx,(s,p,n)=>p+(map.get(n.toLocaleLowerCase('pt-BR'))||n));
   if(v!==node.nodeValue){node.nodeValue=v;displayEdits++}}
 }
-window.PokemonTorreV175Diagnostics=()=>({version:'175.0',source:data.source,
+window.PokemonTorreV175Diagnostics=()=>({version:'176.0',source:data.source,
  typeCounts:Object.fromEntries(Object.entries(data.types).map(([k,a])=>[k,a.length])),
  speciesCount:Object.keys(data.species).length,lastSpecies,invalidSaved,displayEdits,
  visualFilesModified:false,protectedMoves:['Surf','Rain Dance','Bubble','Water Gun'],
+ ownedMewtwoReviewCount:officialCatalogue({id:150,level:50,v3566MewtwoTest:true}).filter(x=>x.available).length,
+ targetFor:(name)=>targetOf(name),
  sample:(id,level=50)=>officialCatalogue({id,level,v32Slots:null}).map(x=>({name:x.v175English,level:x.level,tm:x.tm,available:x.available}))});
 queueMicrotask(()=>{trackModal();localize();});
 })();

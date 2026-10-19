@@ -64,5 +64,31 @@ assert.equal(choices.find(x=>x.v175English==='Surf').move.name,'Surf');
 assert.equal(context.skillSet(testMon).length,4,'battle still requires four move buttons');
 assert.equal(context.v32Catalogue({id:4,level:5,v32Slots:null}).some(x=>x.v175English==='Surf'),false);
 assert.equal(context.window.PokemonTorreV175Diagnostics().speciesCount,151);
-console.log('V175 PASS: 151 Kanto official legal pools, 18x16 English moves, approved FX dispatch, starter buttons');
+// V176 regressions: Rock/Water coverage is legal, but displays its true move type.
+assert(!has(138,'Absorb'),'Omanyte should not receive Kabuto\'s Absorb');
+assert(has(140,'Absorb')&&has(141,'Absorb'),'Kabuto family must retain official Absorb coverage');
+const kabuto=context.v32Catalogue({id:140,level:6,v32Slots:null});
+const absorb=kabuto.find(x=>x.v175English==='Absorb');
+assert(absorb?.available,'Kabuto gains Absorb at level 6');
+assert.equal(absorb.move.type,'grass','Absorb is Grass, not Water/Rock');
+assert.equal(absorb.move.v176Target,'enemy-to-self','Absorb is a drain, not self damage');
+assert.equal(context.window.PokemonTorreV175Diagnostics().targetFor('Rain Dance'),'field');
+assert.equal(context.window.PokemonTorreV175Diagnostics().targetFor('Recover'),'self');
+assert.equal(context.window.PokemonTorreV175Diagnostics().ownedMewtwoReviewCount,288);
+const testMewtwo={id:150,level:50,v3566MewtwoTest:true,v32Slots:null};
+const review=context.v32Catalogue(testMewtwo);
+assert.equal(review.length,288,'test Mewtwo should see all 18 x 16 review moves');
+assert(review.every(x=>x.available),'all review moves are unlocked for test Mewtwo');
+assert.equal(context.skillSet(testMewtwo).length,4,'test Mewtwo still equips four at once');
+const wildMewtwo=context.v32Catalogue({id:150,level:50,v32Slots:null});
+assert(wildMewtwo.length<288,'wild/ordinary unowned Mewtwo should not get developer catalogue');
+const ch=context.v32Catalogue({id:4,level:5,v32Slots:null});
+assert(ch.filter(x=>x.v175Method===1&&x.level>5).every(x=>!x.available),
+ 'late-level moves must not auto-unlock as starter buttons');
+// Existing effects keep their dispatch names even when erroneous historic types are fixed.
+native.push({key:'Tackle|bug|dash',move:{name:'Tackle',type:'bug',cat:'physical',kind:'dash',power:20,cd:900,cost:0}});
+const tackle=context.v32Catalogue({id:7,level:40,v32Slots:null}).find(x=>x.v175English==='Tackle');
+assert.equal(tackle?.move.type,'normal','legacy typing must not override canonical Normal');
+assert.equal(tackle.key,'Tackle|bug|dash','historic equipped slot key stays compatible');
+console.log('V176 PASS: 288 test moves unlocked, Kabuto Absorb drain, official types, lv gates and existing keys');
 
