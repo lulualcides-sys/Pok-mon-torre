@@ -1,10 +1,11 @@
-/* V177 Absorb preview — 12 discrete pixel frames, shared PixiJS/WebGL only.
- * Enable ?absorb177=preview; never modifies real V65 damage/healing.
+/* V177 Absorb approved — 12 discrete pixel frames, shared PixiJS/WebGL only.
+ * Active by default; ?absorb177=0 returns to legacy, safe=1 disables.
+ * Never modifies real V65 damage/healing.
  */
 (()=>{
 'use strict';
 const query=new URLSearchParams(location.search);
-if(query.get('absorb177')!=='preview'||query.get('safe')==='1'||
+if(query.get('absorb177')==='0'||query.get('safe')==='1'||
  query.get('moves175')==='0'||!window.PIXI||typeof BattleEngine!=='function'||
  window.PokemonTorreAbsorbV177?.installed)return;
 const P=window.PIXI,now=()=>performance.now();
@@ -12,7 +13,7 @@ const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLo
 const isAbsorb=s=>['absorb','absorver'].includes(norm(s));
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
-const metrics={version:'177.0-preview',casts:0,hits:0,misses:0,frames:0,suppressed:0,errors:[]};
+const metrics={version:'177.1-approved',casts:0,hits:0,misses:0,frames:0,suppressed:0,errors:[]};
 let active=[];
 function report(e){metrics.errors.push(String(e?.message||e));metrics.errors=metrics.errors.slice(-5);}
 function live(e){return !!(battle?.active&&e?.canvas?.isConnected&&e.player&&e.enemy);}
@@ -130,6 +131,6 @@ if(typeof oldPaint==='function')window.PokemonTorreV360Paint=function(ctx,fx,t,e
  }
  return oldPaint.apply(this,arguments);
 };
-window.PokemonTorreAbsorbV177=Object.freeze({installed:true,version:'177.0',
- approved:false,diagnostics:()=>({...metrics,active:active.length,phase:active.map(f=>f.hitAt?'return':'prepare')})});
+window.PokemonTorreAbsorbV177=Object.freeze({installed:true,version:'177.1',
+ approved:true,diagnostics:()=>({...metrics,active:active.length,phase:active.map(f=>f.hitAt?'return':'prepare')})});
 })();
