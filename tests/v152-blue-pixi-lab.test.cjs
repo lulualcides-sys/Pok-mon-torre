@@ -5,8 +5,8 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const src=fs.readFileSync('effects/arena/blue-v152-pixi.js','utf8');
 const html=fs.readFileSync('index.html','utf8');
 const approved=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(approved.moves.length,47);
-assert.equal(approved.moves.filter(x=>x.protect).length,47);
+assert.equal(approved.moves.length,48);
+assert.equal(approved.moves.filter(x=>x.protect).length,48);
 assert.match(html,/effects\/arena\/blue-v152-pixi\.js\?build=v152-original-tileset-webgl/);
 assert.match(html,/canvas\.getContext\('2d',\{alpha:true\}\)/);
 assert.match(html,/get\('arena_lab'\)==='blue152'/);
