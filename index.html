@@ -1241,6 +1241,22 @@ if(new URLSearchParams(location.search).get('moves175')!=='0'&&
  }catch(error){console.warn('V175 official English moves unavailable; prior gameplay preserved',error);}
 }
 
+// V177 — optional Absorb pixel-art preview in the REAL battle, never in normal play.
+// Reuses the existing PixiJS WebGL stage. V65 alone calculates damage and HP recovery.
+// ?absorb177=preview enables the trial; ?safe=1 and no query preserve V176 exactly.
+if(new URLSearchParams(location.search).get('absorb177')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'&&
+   new URLSearchParams(location.search).get('moves175')!=='0'){
+ try{
+  const path='effects/moves/v177-absorb-preview/runtime.js';
+  const response=await fetch(path+'?build=v177-absorb-pixel',{cache:'no-store'});
+  if(!response.ok)throw Error('V177 Absorb module HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V177 battle anchor missing');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V177 Absorb preview unavailable; saved V176 effects retained',error);}
+}
+
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
