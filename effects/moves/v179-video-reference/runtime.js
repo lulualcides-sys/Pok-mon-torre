@@ -62,7 +62,7 @@ function start(e,name,instantHit=false){
   root.addChild(visual.sprite);
   const f={engine:e,app,root,visual,impact:null,name,
    began:clock(),hitAt:instantHit?clock():0,impactAt:0,impactConsumed:false,
-   duration:name==='fireblast'?1080:1320,dead:false};
+   duration:name==='fireblast'?1500:1320,dead:false};
   active.push(f);stats.starts[name]++;return f;
  }catch(err){failure(err);return null;}
 }
@@ -106,7 +106,7 @@ function update(e){
    shader.uAlpha=ease(u/.085)*(1-ease((u-.89)/.11));
   }else{
    // Short concentrated projectile grows into star ONLY at the confirmed impact.
-   const fly=f.hitAt?1:ease((u-.045)/.65);
+   const fly=f.hitAt?1:ease((elapsed-70)/620);
    positionBlast(f,e,fly);
    shader.uReach=1;
    shader.uAlpha=ease((u-.04)/.10)*(f.hitAt?0:1-ease((u-.78)/.20));
@@ -127,7 +127,7 @@ function update(e){
    else{
     const h=e.h||420,diam=f.name==='fireblast'?clamp(h*.33,104,167):clamp(h*.105,29,52);
     m.sprite.rotation=0;
-    m.sprite.position.set(e.enemy.x-diam*.5,e.enemy.y-h*.13-diam*.5);
+    m.sprite.position.set(e.enemy.x-diam*.5,e.enemy.y-h*.13);
     m.sprite.width=diam;m.sprite.height=diam;
     m.shader.uniforms.uTime=ms*.001;
     m.shader.uniforms.uAlpha=ease(q/.12)*(1-ease((q-.57)/.43));
