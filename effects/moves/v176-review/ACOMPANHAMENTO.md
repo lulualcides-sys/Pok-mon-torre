@@ -8,6 +8,8 @@
 
 **Proteção absoluta das quatro referências favoritas:** **Surf**, **Rain Dance**, **Bubble** (Bolhas), **Water Gun** (Pistola d’Água): não substituir seus efeitos ou renderizadores. As demais aprovações registradas em `effects/moves/STATUS_APROVADOS.json` e seus backups **também permanecem protegidas**. O campo «revisar» abaixo significa *não auditado nesta rodada*, **não** «efeito ausente» nem «autorizado a sobrescrever».
 
+**Teste em jogo:** abrir a URL normal do Pokémon Torre, acessar o sumário de um Mewtwo da equipe, pesquisar o golpe pelo nome inglês e selecionar até quatro movimentos para usar na arena. Verificar o caso **Kabuto Lv6 + Absorb**, que deve ser **Grass**, drenar do adversário para o usuário e preservar o golpe equipado em salvamentos anteriores. No modo `?safe=1`, a V176 é desativada por segurança.
+
 **Roteiro de aprovação por golpe:** 1. conferir animação original e alvo; 2. abrir prévia na batalha com o Mewtwo de testes; 3. verificar tipo/categoria, origem, trajetória e impacto; 4. conferir dano/cura/status sem duplo hit, custo, cooldown e desempenho; 5. só depois de aprovação expressa, marcar «salvo» mantendo backup e rollback. Prioridade: **Absorb** (dreno do inimigo ao usuário), **Ember** (brasas curtas), **Aqua Jet** (contato), **Scratch** (contato sem projétil). Renderizar novas animações em pixel art com PixiJS/WebGL e de 8 a 16 quadros, sem Canvas2D e sem substituir as aprovadas.
 
 ## WATER — 16 golpes
