@@ -16,7 +16,7 @@ const pixi=get('effects/moves/_runtime/pixi-layer.js');
 const html=get('index.html');
 const native=get('parts/p013.txt');
 const approvals=JSON.parse(get('effects/moves/STATUS_APROVADOS.json')).moves;
-assert.equal(approvals.length,47,'preserve V143 saved status count');
+assert.equal(approvals.length,48,'preserve V143 saved status and approved V177 Absorb');
 for(const name of ['Roost','Rajada','Bicada','Air Slash'])
  assert.ok(approvals.some(x=>x.move===name&&x.protect&&x.visual_scale_factor===.2),'V143 protected '+name);
 for(const name of ['Bico Broca','Vendaval','Aerocorte','Pique'])
