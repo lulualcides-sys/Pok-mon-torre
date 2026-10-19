@@ -1218,6 +1218,26 @@ if(new URLSearchParams(location.search).get('arena174')!=='0'&&
    (await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V174 regional arena unavailable; previous official stage preserved',error);}
 }
+// V175 — only replace the MOVE OPTIONS and displayed names; original art remains intact.
+// Learnsets: official USUM (151 Kanto species, 18 types), with 16 English names per type.
+// ?moves175=0 returns to the saved native moves. The regional V174 arena is unchanged.
+if(new URLSearchParams(location.search).get('moves175')!=='0'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const files=['effects/moves/v175-official/learnsets-usum-kanto.json',
+               'effects/moves/v175-official/runtime.js'];
+  const responses=await Promise.all(files.map(path=>fetch(path+'?build=v175-learnsets-english',{cache:'no-store'})));
+  if(responses.some(response=>!response.ok))throw Error('V175 learnsets/runtime HTTP missing');
+  const [learnsets,runtime]=await Promise.all([responses[0].json(),responses[1].text()]);
+  if(Object.keys(learnsets.species||{}).length!==151)throw Error('V175 species catalogue incomplete');
+  if(!game.includes(fireSpriteAnchor))throw Error('V175 native integration anchor missing');
+  const body='window.PokemonTorreV175Learnsets='+JSON.stringify(learnsets)+';'
+              +String.fromCharCode(10)+runtime;
+  game=game.replace(fireSpriteAnchor,()=>String.fromCharCode(10)+body+
+         String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V175 official English moves unavailable; prior gameplay preserved',error);}
+}
+
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
