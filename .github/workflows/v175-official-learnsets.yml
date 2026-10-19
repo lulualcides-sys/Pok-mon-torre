@@ -1,7 +1,7 @@
 name: V175-V176 Pokemon original English learnsets and audit
 on:
   push:
-    branches: [v175-original-english-learnsets, v176-moveset-audit-20261019]
+    branches: [v175-original-english-learnsets, v176-moveset-audit-20261019, v176-save-compat-20261019]
   workflow_dispatch:
 permissions:
   contents: read
