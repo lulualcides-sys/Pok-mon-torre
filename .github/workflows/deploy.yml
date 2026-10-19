@@ -98,6 +98,11 @@ jobs:
           node --check effects/moves/v178-fire-pair-preview/runtime.js
           node --check tests/v178-fire-pair-preview.test.cjs
           node tests/v178-fire-pair-preview.test.cjs
+      - name: Testar V179 fogo continuo e Fire Blast da referencia em batalha
+        run: |
+          node --check effects/moves/v179-video-reference/runtime.js
+          node --check tests/v179-video-fire-preview.test.cjs
+          node tests/v179-video-fire-preview.test.cjs
       - name: Exportar quatro spritesheets editaveis no LibreSprite V145
         run: bash tools/libresprite/build-v145-flying.sh
       - name: Testar quatro golpes V145 montados no PixiJS
