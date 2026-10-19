@@ -28,6 +28,9 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   await page.waitForFunction(()=>window.PokemonTorreV174Stage.diagnostics().materialsReady,null,{timeout:30000});
   await page.waitForFunction(()=>window.PokemonTorreV174Stage.diagnostics().backdropApplied>=1,null,{timeout:16000});
   await page.waitForFunction(()=>window.PokemonTorreV174Stage.diagnostics().drawFrames>=15,null,{timeout:12000});
+  fs.mkdirSync('tests/artifacts',{recursive:true});
+  // Capture the fight BEFORE waiting for FPS samples: the battle may finish normally.
+  await page.screenshot({path:'tests/artifacts/v174-light-2p5d-mobile.png'});
   await page.waitForFunction(()=>window.PokemonTorreV174Stage.diagnostics().avgFPS>0,null,{timeout:13000});
   const d=await page.evaluate(()=>({
    v:window.PokemonTorreV174Stage.diagnostics(),
@@ -52,8 +55,6 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   assert(d.approved&&d.water,'approved water and fire runtime intact');
   // Combat may finish naturally while waiting for FPS sampling; successful start checked above.
   assert.equal(errors.length,0,'no fatal browser errors');
-  fs.mkdirSync('tests/artifacts',{recursive:true});
-  await page.screenshot({path:'tests/artifacts/v174-light-2p5d-mobile.png'});
   const py="from PIL import Image\nimport base64,io\nim=Image.open('tests/artifacts/v174-light-2p5d-mobile.png').convert('RGB');im.thumbnail((390,850))\nb=io.BytesIO();im.save(b,'JPEG',quality=67,optimize=True)\nprint(base64.b64encode(b.getvalue()).decode())";
   const shot=spawnSync('python',['-c',py],{encoding:'utf8',maxBuffer:1024*1024});
   assert.equal(shot.status,0,'visual evidence');
