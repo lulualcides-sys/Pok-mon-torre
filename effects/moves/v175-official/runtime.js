@@ -115,11 +115,18 @@ skillSet=function(m){
  while(out.length<4)out.push(out[out.length%Math.max(1,used.size)]);
  return out.map(x=>({...x.move}));
 };
-const oShowTeam=showTeam,oRender=render,oRenderBattle=renderBattle,oOverlay=overlay;
+const oShowTeam=showTeam,oRender=render,oRenderBattle=renderBattle;
 showTeam=function(){const r=oShowTeam.apply(this,arguments);queueMicrotask(localize);return r};
 render=function(){const r=oRender.apply(this,arguments);queueMicrotask(localize);return r};
 renderBattle=function(){const r=oRenderBattle.apply(this,arguments);queueMicrotask(localize);return r};
-overlay=function(){const r=oOverlay.apply(this,arguments);queueMicrotask(localize);return r};
+// Native overlay is a const; observe modal text rather than assigning to it.
+let modalObserver=null;
+function trackModal(){
+ const modal=document.getElementById('modal');
+ if(!modal||modalObserver||typeof MutationObserver!=='function')return;
+ modalObserver=new MutationObserver(()=>queueMicrotask(localize));
+ modalObserver.observe(modal,{childList:true,subtree:true,characterData:true});
+}
 function localize(){
  if(!document.body||!translations.size)return;
  const names=[...translations.keys()].filter(k=>translations.get(k)!==k).sort((a,b)=>b.length-a.length);
@@ -141,5 +148,5 @@ window.PokemonTorreV175Diagnostics=()=>({version:'175.0',source:data.source,
  speciesCount:Object.keys(data.species).length,lastSpecies,invalidSaved,displayEdits,
  visualFilesModified:false,protectedMoves:['Surf','Rain Dance','Bubble','Water Gun'],
  sample:(id,level=50)=>officialCatalogue({id,level,v32Slots:null}).map(x=>({name:x.v175English,level:x.level,tm:x.tm,available:x.available}))});
-queueMicrotask(localize);
+queueMicrotask(()=>{trackModal();localize();});
 })();
