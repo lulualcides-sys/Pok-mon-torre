@@ -23,7 +23,7 @@ body:before{content:"";position:fixed;inset:0;background:repeating-linear-gradie
 <div class="pt-emblem" aria-hidden="true">⚡</div>
 <p class="pt-kicker">POKÉMON • TORRE DE BATALHAS</p>
 <h1>POKÉMON TORRE</h1>
-<p class="pt-desc">V174 · Arena 2.5D leve · Pokémon originais · sem renderização 3D</p>
+<p class="pt-desc">V174 · 8 regiões e líderes · arena pixel 2D · sem 3D pesado</p>
 <div class="pt-bar-track" role="progressbar" aria-label="Progresso do carregamento" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pt-progress">
 <div id="pt-bar-fill"></div></div>
 <div class="pt-numbers"><span id="pt-status">Iniciando jogo…</span><span id="pt-percent">0%</span></div>
@@ -31,7 +31,7 @@ body:before{content:"";position:fixed;inset:0;background:repeating-linear-gradie
 </main><script>
 const ptProgress=(value,phase)=>{const pct=Math.max(0,Math.min(100,Math.round(value)));const fill=document.getElementById('pt-bar-fill'),label=document.getElementById('pt-status'),number=document.getElementById('pt-percent'),bar=document.getElementById('pt-progress');if(fill)fill.style.width=pct+'%';if(label&&phase)label.textContent=phase;if(number)number.textContent=pct+'%';if(bar)bar.setAttribute('aria-valuenow',String(pct));};
 const v174Query=new URLSearchParams(location.search);
-if(!v174Query.has('arena_lab'))v174Query.set('arena_lab','baked174');
+if(!v174Query.has('arena_lab'))v174Query.set('arena_lab','regional174');
 // No RTX override: V174 uses the normal canvas, not a second GPU renderer.
 if(location.search!=='?'+v174Query.toString())history.replaceState(null,'',location.pathname+'?'+v174Query.toString()+location.hash);
 (async()=>{ptProgress(2,'Preparando V174 · arena 2.5D leve com sprites originais…');const total=25;const paths=Array.from({length:total},(_,i)=>'parts/p'+String(i).padStart(3,'0')+'.txt');let completed=0;const pieces=await Promise.all(paths.map(async path=>{const response=await fetch(path+'?build='+(path==='effects/moves/catalog/electric-four-v56.js'||path==='effects/moves/catalog/bundle.js'||path==='effects/moves/_runtime/end.js'?'electric-four-v56':'sprite-fire-v42-5-water45-v47-8-melee-range-alignment'),{cache:'no-store'});if(!response.ok)throw Error('Falha '+response.status+' ao carregar '+path);const txt=await response.text();completed++;ptProgress(5+completed/total*46,'Carregando recursos do jogo…');return txt}));ptProgress(52,'Montando o campo de batalha…');let game=pieces.join('');if(!game.startsWith('<!doctype html>')&&!game.startsWith('<!DOCTYPE html>'))throw Error('Conteúdo do jogo não encontrado');if(!game.includes('PokemonTorreV3579Diagnostics'))throw Error('Versão do jogo incompleta');ptProgress(60,'Preparando efeitos e animações…');const fxFiles=["effects/moves/_runtime/begin.js","effects/moves/psychic/index.js","effects/moves/confusion/index.js","effects/moves/flamethrower/index.js","effects/moves/telekinesis/index.js","effects/moves/_runtime/beam-kit.js","effects/moves/hyper-beam/index.js","effects/moves/aurora-beam/index.js","effects/moves/ice-beam/index.js","effects/moves/solar-beam/index.js","effects/moves/catalog/painter.js","effects/moves/catalog/elemental-eight-v58.js","effects/moves/catalog/library16-v59.js","effects/moves/v60-four/render.js","effects/moves/v63-plant/render.js","effects/moves/catalog/electric-four-v56.js","effects/moves/catalog/bundle.js","effects/moves/_runtime/semantic-vfx.js","effects/moves/_runtime/cinematic-vfx.js","effects/moves/tri-attack/index.js","effects/moves/v72-battle/render.js","effects/moves/_runtime/frame-policy-v87.js","effects/moves/_runtime/pixi-layer.js","effects/ui/move-type-filter.js","effects/ui/move-library-v61.js","effects/moves/_runtime/original-gba-vfx.js","effects/moves/_runtime/fire-original-vfx.js","effects/moves/_runtime/legendary-fire-vfx.js","effects/moves/_runtime/heritage-37-v66.js","effects/moves/v91-four/canvas-fallback.js","effects/moves/v92-four/canvas-fallback.js","effects/moves/_runtime/end.js","effects/moves/_runtime/real-drain-v65.js"];// V81: user's four approved moves are the normal-game renderer.
@@ -538,17 +538,18 @@ if(new URLSearchParams(location.search).get('arena_lab')==='blue153'&&
  }catch(err){console.warn('V153 optional GPU pilot failed; official game unchanged',err);}
 }
 
-// V154 - video-comparison, authored Python pixel-art environment.
-// Only this opt-in uses the new textures. V150 stays the official game.
-// Input, camera, saved attacks, campaign, Pokemon sprites all remain native.
-if(new URLSearchParams(location.search).get('arena_lab')==='baked174'&&
+// V174: regional pixel-art stages; baked174 remains a historical opt-in.
+// Only the experimental copy is affected; approved attacks and saves remain intact.
+if(['regional174','baked174'].includes(new URLSearchParams(location.search).get('arena_lab'))&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
-  // No second transparent canvas: draw the baked background in native 2D.
-  const path='effects/arena/v174-light-perspective.js';
-  const res=await fetch(path+'?build=v174-light-baked-room',{cache:'no-store'});
-  if(!res.ok)throw Error('V154 arena source '+res.status);
-  if(!game.includes(fireSpriteAnchor))throw Error('V154 battle insertion anchor unavailable');
+  // Regional rooms are authored as PixiJS pixel tiles and rasterized only when needed.
+  // Both modes use the existing battle stage and do not create a second WebGL context.
+  const regional=new URLSearchParams(location.search).get('arena_lab')==='regional174';
+  const path=regional?'effects/arena/v174-regional-pixel.js':'effects/arena/v174-light-perspective.js';
+  const res=await fetch(path+'?build=v174-regional-8-gym-1',{cache:'no-store'});
+  if(!res.ok)throw Error('V174 arena source '+res.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V174 battle insertion anchor unavailable');
   game=game.replace(fireSpriteAnchor,
    String.fromCharCode(10)+(await res.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(e){console.warn('V154 optional arena failed, previous game preserved',e);}
@@ -1187,7 +1188,7 @@ if(new URLSearchParams(location.search).get('flying145')!=='0'&&
 }
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
-// V174 uses Native Canvas + prerendered pixel perspective stage; zero extra GPU layers.
+// V174: eight region/leader-specific pixel arenas generated once by the shared Pixi WebGL layer.
 // Preserve the official approved V172 Flamethrower visual in the isolated copy.
 window.__V174_LAB=true;
 try{
@@ -1200,7 +1201,7 @@ try{
 
 // V174 sandbox must run in the newly written game document, BEFORE saving starts.
 game=game.replace('<script>','<script>'+ "window.__V174_LAB=true;\n(function(){\n if(window.__torreLabSandboxed)return;\n const storage=Storage.prototype,get=storage.getItem,set=storage.setItem,rm=storage.removeItem,clear=storage.clear;\n const prefix='__torre_lab_v174__',official=window.localStorage;\n storage.getItem=function(k){if(this!==official)return get.call(this,k);\n   const value=get.call(this,prefix+String(k));return value===null?get.call(this,k):value;};\n storage.setItem=function(k,v){return set.call(this,this===official?prefix+String(k):k,v);};\n storage.removeItem=function(k){return rm.call(this,this===official?prefix+String(k):k);};\n storage.clear=function(){if(this!==official)return clear.call(this);\n   const keys=[];for(let n=0;n<this.length;n++){const name=this.key(n);if(name?.startsWith(prefix))keys.push(name);}\n   keys.forEach(name=>rm.call(this,name));};\n window.__torreLabSandboxed=true;\n})();\n");
-game=game.replace('</head>','<meta name="torre-lab" content="v174-light-2p5d-native-canvas"></head>');
+game=game.replace('</head>','<meta name="torre-lab" content="v174-regional-pixel-art"></head>');
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{
  if(new URLSearchParams(location.search).get('safe')!=='1'){
   const safeUrl=new URL(location.href);safeUrl.searchParams.set('safe','1');
