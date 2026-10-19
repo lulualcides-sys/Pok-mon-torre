@@ -213,7 +213,7 @@ function apply(e,selected){
  info.region=selected.region;info.leader=selected.leader;info.variant=selected.variant;info.leaderRoom=selected.leaderRoom;
  return true;
 }
-function renderRoom(e,sel,bridge){
+async function renderRoom(e,sel,bridge){
  const PIXI=window.PIXI,shared=bridge(e);
  if(!shared?.app?.renderer?.gl||!PIXI?.Graphics)return false;
  const app=shared.app;const root=makeArtwork(PIXI,sel);
@@ -222,7 +222,7 @@ function renderRoom(e,sel,bridge){
   // Extract ONCE per theme via the existing V174 Pixi renderer, no new GPU layer.
   const extracted=app.renderer.extract;
   if(typeof extracted?.base64!=='function')throw Error('Pixi WebGL extract unavailable');
-  url=extracted.base64(root,'image/png',1);
+  url=await extracted.base64(root,'image/png',1);
  }finally{root.destroy({children:true});}
  if(!url||!url.startsWith('data:image/'))throw Error('Pixel arena extraction returned no image');
  const image=new Image();
@@ -246,9 +246,10 @@ function update(e){
  const bridge=window.PokemonTorrePixelFlyingBridge?.labStage;
  if(typeof bridge!=='function'){nextTry=performance.now()+1500;return;}
  pending.set(e,s.key);
- try{if(!renderRoom(e,s,bridge))nextTry=performance.now()+1100;}
- catch(ex){err(ex);nextTry=performance.now()+1500;}
- finally{pending.delete(e);}
+ renderRoom(e,s,bridge)
+  .then(ok=>{if(!ok)nextTry=performance.now()+1100;})
+  .catch(ex=>{err(ex);nextTry=performance.now()+1500;})
+  .finally(()=>{if(pending.get(e)===s.key)pending.delete(e);});
 }
 BattleEngine.prototype.generateBackdrop=function(){
  const value=originalBg.apply(this,arguments);
