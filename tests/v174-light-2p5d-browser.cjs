@@ -1,5 +1,5 @@
 'use strict';
-// Real Chrome check of no 3D libraries/second canvas, sprite battle, baked room.
+// Real Chrome regression of the legacy baked174 comparison, explicitly selected.
 const fs=require('node:fs'),assert=require('node:assert/strict'),{spawn,spawnSync}=require('node:child_process');
 const {chromium}=require('playwright-core');
 const bin=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'].find(fs.existsSync);
@@ -14,7 +14,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
    args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-gpu-sandbox']});
   const page=await browser.newPage({viewport:{width:390,height:850},deviceScaleFactor:1});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('http://127.0.0.1:'+port+'/torre-v174-light-2p5d-lab.html',{waitUntil:'domcontentloaded',timeout:50000});
+  await page.goto('http://127.0.0.1:'+port+'/torre-v174-light-2p5d-lab.html?arena_lab=baked174',{waitUntil:'domcontentloaded',timeout:50000});
   await page.waitForFunction(()=>window.PokemonTorreV174Stage?.diagnostics()?.installed&&
    typeof window.PokemonTorreLocalCombatTestV47?.start==='function',null,{timeout:95000});
   const iso=await page.evaluate(()=>{
