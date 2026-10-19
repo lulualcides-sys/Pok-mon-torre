@@ -31,7 +31,7 @@ for(const [species,list] of Object.entries(data.species)){
  }
 }
 for(const name of ['Surf','Rain Dance','Bolhas','Pistola d’Água']){
- assert(approvals.moves.some(x=>x.move===name&&x.protect),'approved visual missing: '+name);
+ assert([...approvals.moves,...(approvals.v175_extra_protected||[])].some(x=>x.move===name&&x.protect),'approved visual missing: '+name);
 }
 assert(loader.includes('effects/moves/v175-official/runtime.js'));
 assert(loader.includes("get('moves175')!=='0'"));
