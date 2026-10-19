@@ -93,6 +93,11 @@ jobs:
           node --check effects/moves/v177-absorb-preview/runtime.js
           node --check tests/v177-absorb-preview.test.cjs
           node tests/v177-absorb-preview.test.cjs
+      - name: Testar V178 Fire Blast e Flamethrower em batalha WebGL
+        run: |
+          node --check effects/moves/v178-fire-pair-preview/runtime.js
+          node --check tests/v178-fire-pair-preview.test.cjs
+          node tests/v178-fire-pair-preview.test.cjs
       - name: Exportar quatro spritesheets editaveis no LibreSprite V145
         run: bash tools/libresprite/build-v145-flying.sh
       - name: Testar quatro golpes V145 montados no PixiJS
