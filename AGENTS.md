@@ -1,5 +1,9 @@
 # SCRIPT MESTRE — POKÉMON TORRE (15/10/2026)
 
+## V174.2 — ARENAS REGIONAIS PIXEL APROVADAS E OFICIAIS (19/10/2026)
+
+O usuário aprovou a V174 regional com **"Tá bom salva"**. Manter `effects/arena/v174-regional-pixel.js` ativo na **URL normal** (`index.html`) e marcado aprovado em `effects/arena/STATUS_V174_APROVADA.md`. São oito ginásios/ambientes de Kanto, três variantes de treinadores por região e palco especial para o líder. Preservar a arte aprovada, as proporções 2D pixel e a reutilização do mesmo PixiJS WebGL; sem 3D pesado da V173, sem segundo contexto, sem sobrescrever golpes aprovados/saves. Reversão só da arena: `?arena174=0`; `?safe=1` mantém modo seguro. A prévia `torre-v174-light-2p5d-lab.html` permanece isolada para comparação. Não editar esse visual sem nova solicitação. Validar Chrome da URL normal em cada publicação.
+
 ## V139 — consertar invisibilidade de verdade dos 4 Voadores (16/10/2026)
 
 Após V138 o usuário confirmou **"Tá invisível mesmo arruma isso"**. A causa NÃO é simplesmente contraste: o runtime retornava `true` e escondia o painter anterior mesmo quando `pixiFX.mountPixelFlying` falhava, gerando um golpe totalmente invisível. Além disso **Roost**, um status/cura, usava a mecânica nativa (retornando `undefined`) e não criava a entrada V359 necessária à camada visual. Os testes antigos simulavam sempre Pixi montado, não exercitavam estes bugs.
