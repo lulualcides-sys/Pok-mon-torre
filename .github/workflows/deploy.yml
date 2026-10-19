@@ -229,6 +229,26 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v173-three-stage-browser.cjs
+      # V174: user rejected heavy V173. Build the room ONCE, use the
+      # EXISTING native battle Canvas, no Three.js or second GPU context.
+      - name: V174 preparar cenario 2.5D pre-renderizado
+        run: |
+          python tools/build-v174-light-2p5d.py
+          python - <<'PY'
+          from PIL import Image
+          p='assets/arena-v174/arena-light-2p5d.png'
+          with Image.open(p) as im:
+              im.verify()
+          with Image.open(p) as im:
+              assert im.size==(960,600) and im.mode=='RGB'
+          print('V174 baked texture valid')
+          PY
+      - name: V174 proteger campanha e checar renderer leve
+        run: node tests/v174-light-2p5d-regression.test.cjs
+      - name: "V174 Chrome verificar batalha 2.5D sem Three.js, carga e sprites"
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v174-light-2p5d-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
