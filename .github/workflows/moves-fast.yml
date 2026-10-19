@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'effects/moves/**'
+      - 'tests/test-attack-fps-v61.cjs'
       - 'tests/test-v76-preview.cjs'
       - 'tests/test-v77-preview.cjs'
       - 'tools/build-v77-preview.py'
@@ -36,6 +37,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'tests/test-attack-fps-v61.cjs'
       - 'effects/moves/**'
       - 'tests/test-v76-preview.cjs'
       - 'tools/build-v72-battle.py'
