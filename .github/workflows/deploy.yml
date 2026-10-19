@@ -257,6 +257,13 @@ jobs:
         env:
           NODE_PATH: /tmp/pmd-preview/node_modules
         run: node tests/v174-light-2p5d-browser.cjs
+      # Approved 19/10/2026: REGIONAL stage is now the official game default.
+      - name: V174 oficial verificar aprovacao, 8 regioes, salvamento e rollback
+        run: node tests/v174-approved-official.test.cjs
+      - name: "V174 Chrome Android: oito arenas no jogo principal, golpes e saves preservados"
+        env:
+          NODE_PATH: /tmp/pmd-preview/node_modules
+        run: node tests/v174-approved-official-browser.cjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .
