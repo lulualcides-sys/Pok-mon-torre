@@ -15,7 +15,7 @@ for(const file of sourceFiles)assert.ok(index.includes(root+file),'missing embed
 assert.ok(index.includes("get('flying135')==='preview'"));
 assert.ok(index.indexOf('v133-ground-preview/runtime.js')<index.indexOf(root+'runtime.js'),'V135 must come after the official V134');
 const registry=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(registry.moves.length,47,'V143 saved the four V142 Flying animations; archived V135 remains preview-only');
+assert.equal(registry.moves.length,48,'V177 saved Absorb while the V143 Flying animations remain protected; archived V135 remains preview-only');
 const names=['Roost','Rajada','Air Slash','Bicada'];
 for(const name of names)assert.ok(registry.moves.some(x=>x.move===name&&x.status==='salvo'&&x.visual_scale_factor===.2),'V143 saved version missing: '+name);
 for(const n of ['Garra de Areia','Soco de Terra','Lança de Areia','Fenda Rasa','Osso','Grande Fissura']){
