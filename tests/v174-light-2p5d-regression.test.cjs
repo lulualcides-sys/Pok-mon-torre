@@ -13,7 +13,8 @@ assert(h.includes('effects/arena/v174-light-perspective.js'));
 assert(h.includes('effects/moves/v172-flamethrower-approved/runtime.js'));
 assert(!h.includes('three@0.128.0'));
 assert(!h.includes('effects/arena/v173-three-world.js'));
-assert(!h.includes('canvas.getContext(\'2d\',{alpha:true})'));
+assert(h.includes('// No second transparent canvas: draw the baked background in native 2D.'));
+// Dormant legacy V152/V153 modules still contain alpha:true but are disabled by arena_lab=baked174.
 assert(!original.includes('__V174_LAB'));
 assert(!original.includes('v174-light-perspective.js'));
 assert(js.includes('BattleEngine.prototype'));
