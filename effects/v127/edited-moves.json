@@ -1,7 +1,7 @@
 {
   "version": "V143",
   "as_of": "2026-10-17",
-  "description": "Auditoria dos golpes alterados: aprovados/salvos via STATUS_APROVADOS e histórico de edições V122, com status distinguíveis. Metadados por golpe não implicam motor de efeito individual. Complementado com golpes previamente editados mencionados no histórico do usuário, sem elevar automaticamente seu estado a 'aprovado'. Em 16/10/2026 o usuário confirmou aprovação dos quatro Lutador que constavam erroneamente em teste e reiterou aprovação dos quatro Veneno V122. Nenhuma animação foi substituída. Em 16/10/2026 o usuário reconfirmou Cauda de Água e Pulso de Água como aprovados, sem mudar seus visuais; o registro tem 64 golpes. Aprovação expressa de quatro golpes Água V128 ('Ficou muito bom'), promovidos oficialmente sem mudar sprites/animações, 36 oficiais e 32 editados legados. Em 16/10/2026, usuário aprovou explicitamente Grande Fissura. Preservar animação existente; os quatro efeitos V130 seguem em prévia sem aprovação. V132: Grande Fissura geológica V131 aprovada e Osso reduzido para 40% e aprovado no jogo normal. Arte V130 e V131 preservada para comparação, 38 entradas oficiais e 70 fichas. V134: Garra de Areia, Soco de Terra, Lança de Areia e Fenda Rasa da V133 aprovados e ativados oficialmente, com densidade adaptativa de partículas em celulares lentos; 42 oficiais, 74 fichas, 32 históricos. V143: Roost, Rajada, Air Slash e Bicada foram aceitos para salvar mantendo V142 em 20% da escala; registro como 'salvo', sem afirmar perfeição estética. 46 fichas oficiais, 32 históricas. V172: Flamethrower/Lança-Chamas aprovado para salvar, sem alterar outros golpes.",
+  "description": "Auditoria dos golpes alterados: aprovados/salvos via STATUS_APROVADOS e histórico de edições V122, com status distinguíveis. Metadados por golpe não implicam motor de efeito individual. Complementado com golpes previamente editados mencionados no histórico do usuário, sem elevar automaticamente seu estado a 'aprovado'. Em 16/10/2026 o usuário confirmou aprovação dos quatro Lutador que constavam erroneamente em teste e reiterou aprovação dos quatro Veneno V122. Nenhuma animação foi substituída. Em 16/10/2026 o usuário reconfirmou Cauda de Água e Pulso de Água como aprovados, sem mudar seus visuais; o registro tem 64 golpes. Aprovação expressa de quatro golpes Água V128 ('Ficou muito bom'), promovidos oficialmente sem mudar sprites/animações, 36 oficiais e 32 editados legados. Em 16/10/2026, usuário aprovou explicitamente Grande Fissura. Preservar animação existente; os quatro efeitos V130 seguem em prévia sem aprovação. V132: Grande Fissura geológica V131 aprovada e Osso reduzido para 40% e aprovado no jogo normal. Arte V130 e V131 preservada para comparação, 38 entradas oficiais e 70 fichas. V134: Garra de Areia, Soco de Terra, Lança de Areia e Fenda Rasa da V133 aprovados e ativados oficialmente, com densidade adaptativa de partículas em celulares lentos; 42 oficiais, 74 fichas, 32 históricos. V143: Roost, Rajada, Air Slash e Bicada foram aceitos para salvar mantendo V142 em 20% da escala; registro como 'salvo', sem afirmar perfeição estética. 46 fichas oficiais, 32 históricas. V172: Flamethrower/Lança-Chamas aprovado para salvar, sem alterar outros golpes. V177.1: Absorb aprovado ('simples e eficaz'), marcado ✓ e protegido.",
   "states": {
     "aprovado": "Golpe aprovado, preservar",
     "salvo": "Efeito aceito para salvar",
@@ -835,6 +835,18 @@
       "version": null,
       "source": "Histórico de edições e aprovações do projeto (registro antigo não consolidado)",
       "protect": false
+    },
+    {
+      "name": "Absorb",
+      "aliases": [
+        "Absorver"
+      ],
+      "status": "aprovado",
+      "effect_file": "effects/moves/v177-absorb-preview/runtime.js",
+      "version": "V177.1",
+      "source": "STATUS_APROVADOS.json",
+      "protect": true,
+      "approval_confirmed_at": "2026-10-19"
     }
   ]
 }
