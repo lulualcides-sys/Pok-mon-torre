@@ -19,7 +19,7 @@ assert.match(runtime,/frameSize:256/);
 assert.match(html,/build=v142-hd-alpha/);
 assert.doesNotMatch(runtime,/getContext\(|drawImage\(|requestAnimationFrame\(/);
 const approved=JSON.parse(read('effects/moves/STATUS_APROVADOS.json')).moves;
-assert.equal(approved.length,47);
+assert.equal(approved.length,48);
 for(const name of ['Osso','Grande Fissura','Garra de Areia','Soco de Terra','Lança de Areia','Fenda Rasa'])
  assert.equal(approved.find(s=>s.move===name)?.protect,true);
 for(const name of ['Roost','Rajada','Air Slash','Bicada'])
