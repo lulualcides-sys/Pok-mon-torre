@@ -2,7 +2,7 @@
  * the EXISTING PixiJS WebGL renderer; combat stays 2D and unchanged.
  * No Three.js, extra WebGL context, Canvas2D painter, external asset, CSS scene,
  * dynamic shadow pass, save mutation or edits to approved moves.
- * Preview only in torre-v174-light-2p5d-lab.html.
+ * Approved 19/10/2026: normal game + historical isolated preview, with rollback.
  */
 (()=>{
 'use strict';
@@ -17,11 +17,14 @@ const specs=[
  {id:'fire',place:'Cratera de Cinnabar',leader:'Blaine',sky:0xb97f68,wall:0x634942,floor:0x625451,deep:0x302d37,tile:0x8a6557,edge:0xf3a35a,light:0xffd79a,detail:0x413d40},
  {id:'ground',place:'Ruínas de Viridian',leader:'Giovanni',sky:0xa3a087,wall:0x736a50,floor:0x8c7d57,deep:0x3c3b31,tile:0xb09c6c,edge:0xd6c499,light:0xf1deb3,detail:0x65533d}
 ];
-const info={installed:true,enabled:!!window.__V174_LAB&&query.get('arena_lab')==='regional174'&&query.get('safe')!=='1',
- version:'174.1-regional-pixel',renderer:'shared-PixiJS-WebGL-snapshot',three:false,extraWebGLContexts:0,
+const preview=!!window.__V174_LAB&&query.get('arena_lab')==='regional174';
+const official=!!window.__V174_OFFICIAL&&query.get('arena174')!=='0'&&
+  (!query.has('arena_lab')||query.get('arena_lab')==='regional174');
+const info={installed:true,enabled:(preview||official)&&query.get('safe')!=='1',
+ version:'174.2-regional-approved',renderer:'shared-PixiJS-WebGL-snapshot',three:false,extraWebGLContexts:0,
  canvas2dScenePainters:0,dynamicShadowPasses:0,regionCount:specs.length,cachedRooms:0,
  generated:0,applied:0,frames:0,region:null,leader:null,variant:null,leaderRoom:false,
- drawFps:0,errors:[],campaignUntouched:true,approvedMovesUntouched:true,sandboxOnly:true};
+ drawFps:0,errors:[],campaignUntouched:true,approvedMovesUntouched:true,approved:true,sandboxOnly:!official,official:!!official};
 const api=Object.freeze({diagnostics:()=>({...info,errors:info.errors.slice()}),
  regions:()=>specs.map((s,i)=>({index:i,type:s.id,region:s.place,leader:s.leader})),
  themeFor:(gym,stage=0)=>choice(gym,stage)});
