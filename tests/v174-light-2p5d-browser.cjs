@@ -1,0 +1,65 @@
+'use strict';
+// Real Chrome check of no 3D libraries/second canvas, sprite battle, baked room.
+const fs=require('node:fs'),assert=require('node:assert/strict'),{spawn,spawnSync}=require('node:child_process');
+const {chromium}=require('playwright-core');
+const bin=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'].find(fs.existsSync);
+if(!bin)throw Error('Chromium unavailable');
+const port=18774,server=spawn('python',['-m','http.server',String(port),'--bind','127.0.0.1'],{cwd:process.cwd(),stdio:'ignore'});
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{
+ let browser;
+ try{
+  await sleep(1300);
+  browser=await chromium.launch({executablePath:bin,headless:true,
+   args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-gpu-sandbox']});
+  const page=await browser.newPage({viewport:{width:390,height:850},deviceScaleFactor:1});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:'+port+'/torre-v174-light-2p5d-lab.html',{waitUntil:'domcontentloaded',timeout:50000});
+  await page.waitForFunction(()=>window.PokemonTorreV174Stage?.diagnostics()?.installed&&
+   typeof window.PokemonTorreLocalCombatTestV47?.start==='function',null,{timeout:95000});
+  const iso=await page.evaluate(()=>{
+   localStorage.setItem('v174_test','sandbox');
+   const keys=Array.from({length:localStorage.length},(_,i)=>localStorage.key(i));
+   return {key:keys.find(k=>k.includes('v174_test')),value:localStorage.getItem('v174_test')};
+  });
+  assert.equal(iso.key,'__torre_lab_v174__v174_test');
+  assert.equal(iso.value,'sandbox');
+  assert(await page.evaluate(()=>window.PokemonTorreLocalCombatTestV47.start(25,74)), 'Pikachu versus Geodude real combat');
+  await page.waitForFunction(()=>window.PokemonTorreV174Stage.diagnostics().materialsReady,null,{timeout:30000});
+  await page.waitForFunction(()=>window.PokemonTorreV174Stage.diagnostics().backdropApplied>=1,null,{timeout:16000});
+  await page.waitForFunction(()=>window.PokemonTorreV174Stage.diagnostics().drawFrames>=15,null,{timeout:12000});
+  const d=await page.evaluate(()=>({
+   v:window.PokemonTorreV174Stage.diagnostics(),
+   extraThree:typeof window.THREE,
+   threeStages:document.querySelectorAll('canvas[data-arena="three173"]').length,
+   nativeBattle:document.querySelectorAll('#battleCanvas').length,
+   approved:!!window.PokemonTorreFlamethrowerApprovedV172?.installed,
+   water:!!window.PokemonTorreWaterV128?.installed,
+   battle:typeof battle!=='undefined'&&battle?.active
+  }));
+  assert.equal(d.extraThree,'undefined','no imported Three.js');
+  assert.equal(d.threeStages,0,'no 3D canvases');
+  assert.equal(d.nativeBattle,1,'one native battle render canvas');
+  assert.equal(d.v.extraWebGLContexts,0);
+  assert.equal(d.v.dynamicShadowPasses,0);
+  assert.equal(d.v.renderer,'native-battle-canvas');
+  assert.equal(d.v.textureCount,1);
+  assert(d.v.backdropApplied>=1,'pixel 2.5D background integrated into native drawing');
+  assert(d.v.drawFrames>=15,'battle runs on native draw loop');
+  assert(d.v.avgFPS>=8,'even software-rendered mobile CPU must sustain some frames');
+  assert.deepEqual(d.v.errors,[]);
+  assert(d.approved&&d.water,'approved water and fire runtime intact');
+  assert(d.battle,'original game mechanics active');
+  assert.equal(errors.length,0,'no fatal browser errors');
+  fs.mkdirSync('tests/artifacts',{recursive:true});
+  await page.screenshot({path:'tests/artifacts/v174-light-2p5d-mobile.png'});
+  const py="from PIL import Image\nimport base64,io\nim=Image.open('tests/artifacts/v174-light-2p5d-mobile.png').convert('RGB');im.thumbnail((390,850))\nb=io.BytesIO();im.save(b,'JPEG',quality=67,optimize=True)\nprint(base64.b64encode(b.getvalue()).decode())";
+  const shot=spawnSync('python',['-c',py],{encoding:'utf8',maxBuffer:1024*1024});
+  assert.equal(shot.status,0,'visual evidence');
+  console.log('V174_BATTLE_JPEG_B64:'+shot.stdout.trim());
+  console.log('V174 CHROME PASS',JSON.stringify({d,errors}));
+ }finally{
+  if(browser)await browser.close();
+  server.kill('SIGTERM');
+ }
+})().catch(e=>{console.error('V174 CHROME FAILED',e.stack||e);process.exitCode=1;});
