@@ -15,7 +15,7 @@ const page=fs.readFileSync('previews/v155-mew-mewtwo.html','utf8');
 const game=fs.readFileSync('previews/v155-mew-mewtwo.js','utf8');
 const main=fs.readFileSync('index.html','utf8');
 const protectedMoves=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.equal(protectedMoves.moves.length,47,'all approved moves remain registered');
+assert.equal(protectedMoves.moves.length,48,'all approved moves remain registered');
 assert.ok(protectedMoves.moves.every(x=>x.protect));
 assert.match(page,/pixi\.js@7\.4\.3/);
 assert.match(page,/v155-mew-mewtwo\.js\?build=155-1/);
