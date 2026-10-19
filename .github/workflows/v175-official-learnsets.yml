@@ -1,0 +1,38 @@
+name: V175 Pokemon original English learnsets
+on:
+  push:
+    branches: [v175-original-english-learnsets]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check official runtime syntax
+        run: |
+          node --check effects/moves/v175-official/runtime.js
+          node --check tests/v175-official-learnsets.test.cjs
+          node --check tests/v175-official-browser.cjs
+      - name: Test 151 authentic learnsets, original names and protected visuals
+        run: node tests/v175-official-learnsets.test.cjs
+      - name: Regression against approved region and water
+        run: |
+          node tests/v174-approved-official.test.cjs
+          node tests/v174-regional-pixel.test.cjs
+          node tests/v128-water-preview.test.cjs
+          node tests/rain-v118.test.cjs
+      - name: Install headless browser harness
+        run: npm install --no-save --prefix /tmp/pmd-v175 playwright-core@1.55.1
+      - name: Real battle test on Android-size Chrome viewport
+        env:
+          NODE_PATH: /tmp/pmd-v175/node_modules
+        run: node tests/v175-official-browser.cjs
