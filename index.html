@@ -1191,6 +1191,7 @@ if(new URLSearchParams(location.search).get('flying145')!=='0'&&
 // The full renderer is injected AFTER V128 water, V133 earth and V145 flying,
 // allowing it to suppress only legacy Flamethrower visuals without touching them.
 if(new URLSearchParams(location.search).get('flame172')!=='0'&&
+   new URLSearchParams(location.search).get('fire178')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v172-flamethrower-approved/runtime.js';
@@ -1241,10 +1242,9 @@ if(new URLSearchParams(location.search).get('moves175')!=='0'&&
  }catch(error){console.warn('V175 official English moves unavailable; prior gameplay preserved',error);}
 }
 
-// V177 — optional Absorb pixel-art preview in the REAL battle, never in normal play.
-// Reuses the existing PixiJS WebGL stage. V65 alone calculates damage and HP recovery.
-// ?absorb177=preview enables the trial; ?safe=1 and no query preserve V176 exactly.
-if(new URLSearchParams(location.search).get('absorb177')==='preview'&&
+// V177 APPROVED Absorb: simple green HP return motes, only after confirmed hit.
+// Native V65 exclusively controls HP; ?absorb177=0 reverts, ?safe=1 safe.
+if(new URLSearchParams(location.search).get('absorb177')!=='0'&&
    new URLSearchParams(location.search).get('safe')!=='1'&&
    new URLSearchParams(location.search).get('moves175')!=='0'){
  try{
@@ -1255,6 +1255,21 @@ if(new URLSearchParams(location.search).get('absorb177')==='preview'&&
   game=game.replace(fireSpriteAnchor,
     String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V177 Absorb preview unavailable; saved V176 effects retained',error);}
+}
+
+// V178 — opt-in Fire Blast and Flamethrower remake inside the original battle.
+// Preview intentionally skips approved V172 flame to avoid double visualization.
+// Original Fire Blast painter stays intact for normal URLs and ?fire178=0.
+if(new URLSearchParams(location.search).get('fire178')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const file='effects/moves/v178-fire-pair-preview/runtime.js';
+  const response=await fetch(file+'?build=v178-fire-pair-pixi',{cache:'no-store'});
+  if(!response.ok)throw Error('V178 Fire pair HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V178 battle insertion anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V178 Fire preview unavailable, V172 and classic Fire Blast preserved',error);}
 }
 
 // The retired Atelier stays in GitHub history; it is not inside the game.
