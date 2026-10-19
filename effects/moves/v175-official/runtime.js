@@ -59,6 +59,22 @@ function isOwnedTestMewtwo(m){
  // Also support older saves whose owned Mewtwo lacks the test flag.
  return [...(save?.team||[]),...(save?.box||[])].some(owned=>owned===m);
 }
+// Keep V175 equipped-slot keys stable while V176 improves attack semantics.
+// Saved keys use name + type + kind; changing kind must NOT unequip a move.
+const v175KindNames={'Surf':'area','Hydro Pump':'beam','Rain Dance':'status',
+ 'Bubble':'bolt','Water Gun':'bolt','Water Pulse':'bolt','Aqua Jet':'dash',
+ 'Aqua Tail':'dash','Waterfall':'dash','Dive':'dash','Flamethrower':'beam',
+ 'Fire Spin':'hazard','Fire Blast':'area','Sunny Day':'status',
+ 'Will-O-Wisp':'status','Thunder':'homing','Thunderbolt':'bolt',
+ 'Discharge':'area','Solar Beam':'beam','Earthquake':'area',
+ 'Shadow Ball':'homing','Ice Beam':'beam','Hyper Beam':'beam',
+ 'Roost':'recover','Recover':'recover','Rest':'recover','Fissure':'area',
+ 'Vine Whip':'bolt','Razor Leaf':'pierce'};
+function savedKeyMove(move,info){
+ const [name,,officialPower,cls]=info;
+ const kind=v175KindNames[name]||(officialPower===0?'status':cls===2?'dash':'bolt');
+ return {...move,kind};
+}
 const previousCatalogue=v32Catalogue,previousSkillSet=skillSet;
 let nesting=0,invalidSaved=0,lastSpecies=null,displayEdits=0;
 const icons={normal:'✦',fire:'🔥',water:'💧',grass:'🍃',electric:'⚡',ice:'❄',ground:'◆',rock:'⬟',
@@ -121,7 +137,7 @@ function officialCatalogue(m){
    v175MoveId:id}:builtMove(id);
  if(move){move.v176Target=targetOf(info[0]);move.v176ReviewType=info[1];}
   if(!move)continue;
-  const key=original?.key||v32MoveKey(move);
+  const key=original?.key||v32MoveKey(savedKeyMove(move,info));
   const unlocked=testMewtwo|| (method===1?(level>=requiredLevel||beginner.has(id)):
    owned.has(info[1])||equipped.has(key));
   result.push({key,move,level:method===1?requiredLevel:1,tm:method===4,available:unlocked,
