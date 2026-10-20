@@ -161,6 +161,7 @@ async function navigate(){
  await page.mouse.click(390,183);await sleep(4800);await snap('01-modes');
  await page.mouse.click(390,282);await sleep(5200);await snap('02-training');
  await page.mouse.click(...team.player);await sleep(600);
+ await page.mouse.click(556,243);await sleep(300); // Focus the Dummy selection pane before choosing opponent.
  await page.mouse.click(...team.dummy);await sleep(400);
  await page.mouse.click(...team.arena);await sleep(600);
  await snap('03-selection-'+who);
