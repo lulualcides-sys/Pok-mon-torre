@@ -107,7 +107,7 @@ function begin(e,name,alreadyHit=false,origin='native'){
   const root=new P.Container();root.interactiveChildren=false;
   const visuals=[];
   if(name==='flamethrower'){
-   for(let i=0;i<7;i++){const obj=sprite(flame[(i*3)%16]);root.addChild(obj);visuals.push(obj);}
+   for(let i=0;i<2;i++){const obj=sprite(flame[(i*3)%16]);root.addChild(obj);visuals.push(obj);}
   }else{
    const core=sprite(star[0]),aura=sprite(burst[0],.36);
    root.addChild(aura);root.addChild(core);visuals.push(core,aura);
@@ -139,37 +139,38 @@ function position(e){
 }
 function paintFlame(f,age){
  const app=f.app,p=position(f.e),nowT=now(),texture=frames(app,'stream');
- const maxEnd=f.hitAt?Math.min(1300,f.hitAt-f.start+330):1170;
+ const maxEnd=f.hitAt?Math.min(1290,f.hitAt-f.start+390):1180;
  if(age>=maxEnd){dispose(f);return;}
- const a=smooth(age/92)*(1-smooth((age-(maxEnd-160))/160));
- // The reference screenshot shows two to four small, separate animated tongues
- // and detached embers traveling over a SHORT arc near the caster.
- const trail=clamp(p.length*.39,85,173),pulse=smooth(age/155);
- const xdir=Math.cos(p.angle),ydir=Math.sin(p.angle),normalX=-ydir,normalY=xdir;
+ const alpha=smooth(age/110)*(1-smooth((age-(maxEnd-180))/180));
  const frame=Math.floor(age/(1000/14))%16;
- for(let i=0;i<f.visuals.length;i++){
-  const s=f.visuals[i],primary=i<4;
-  // Looped but staggered small flames. Cannot form one giant tube.
-  const u=((age/660+i*.105)%1)*pulse;
-  const offset=Math.sin(age*.018+i*2.3)*Math.min(7,p.h*.012);
-  s.position.set(Math.round(p.sx+xdir*(10+trail*u)+normalX*offset),
-                 Math.round(p.sy+ydir*(10+trail*u)+normalY*offset));
-  s.rotation=p.angle+(i%2?-.06:.08)*Math.sin(age*.009+i);
-  s.texture=texture[(frame+i*3)%16];
-  s.width=primary?clamp(p.h*.145,40,70):clamp(p.h*.090,24,40);
-  s.height=primary?clamp(p.h*.088,29,47):clamp(p.h*.059,17,28);
-  s.alpha=a*(primary?.98:.87)*(1-.13*u);
-  s.blendMode=P.BLEND_MODES.NORMAL;
- }
- // Only a small, dedicated contact fire flicker after an actual HP hit.
+ // One authored 112×64 painted flame field, not seven shrunken duplicates.
+ // Frame changes redraw tongues and detached embers at an honest 14 FPS.
+ const jet=f.visuals[0],puff=f.visuals[1],dx=Math.cos(p.angle),dy=Math.sin(p.angle);
+ const travel=clamp(p.length*.265,94,142),extension=smooth(age/200);
+ jet.visible=true;jet.texture=texture[frame];
+ jet.position.set(Math.round(p.sx+dx*(travel*.47)*extension),
+                  Math.round(p.sy+dy*(travel*.47)*extension));
+ jet.rotation=p.angle;
+ jet.width=travel*extension;jet.height=clamp(p.h*.165,55,78);
+ jet.alpha=alpha;
+ jet.blendMode=P.BLEND_MODES.NORMAL;
+ // A second near-nozzle mouth flicker uses the same genuine frame art,
+ // compact and translucent to blend visually with the stream rather than dots.
+ puff.visible=age>120&&age<maxEnd-110;
+ puff.texture=texture[(frame+8)%16];
+ puff.position.set(Math.round(p.sx+dx*17),Math.round(p.sy+dy*17));
+ puff.rotation=p.angle;
+ puff.width=45;puff.height=clamp(p.h*.104,36,48);
+ puff.alpha=alpha*.38;
+ for(let i=2;i<f.visuals.length;i++)f.visuals[i].visible=false;
  if(f.hitAt){
-  const elapsed=nowT-f.hitAt,u=clamp(elapsed/220,0,1);
-  f.impact.visible=elapsed<220;
-  f.impact.texture=frames(app,'ember')[Math.min(15,Math.floor(u*16))];
+  const elapsed=nowT-f.hitAt,u=clamp(elapsed/260,0,1);
+  f.impact.visible=elapsed<260;
+  f.impact.texture=frames(app,'ember')[Math.min(15,Math.floor(elapsed/(1000/16)))];
   f.impact.position.set(p.ex,p.ey);
-  const size=clamp(p.h*.079,26,40);
+  const size=clamp(p.h*.085,31,45);
   f.impact.width=size;f.impact.height=size;
-  f.impact.alpha=.74*(1-smooth((u-.66)/.34));
+  f.impact.alpha=.81*(1-smooth((u-.68)/.32));
  }else f.impact.visible=false;
  report.frames++;
 }
@@ -283,6 +284,9 @@ window.PokemonTorreReaFireV187=Object.freeze({
  visualTest:(name,simulateHit=false)=>{
   if(!kind(name)||!latestEngine||!live(latestEngine))return false;
   return begin(latestEngine,kind(name),!!simulateHit,'manual-preview');
+ },
+ availableMoves:()=>{const mon=typeof current==='function'?current():null;
+  return mon&&typeof skillSet==='function'?(skillSet(mon)||[]).map((m,slot)=>({slot,name:m?.name||'',match:kind(m?.name)})):[];
  },
  diagnostics:()=>({...report,active:active.map(x=>({name:x.name,hit:!!x.hitAt,
   source:x.origin,age:Math.round(now()-x.start)}))})
