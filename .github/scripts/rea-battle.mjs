@@ -102,20 +102,17 @@ try {
         await page.waitForTimeout(95);
       }
     }
-    await page.mouse.move(585, 230);
-    await page.mouse.click(585, 230);
-    await burst('move-left-click', 12);
-    await stage('06-after-left-click');
-    await page.waitForTimeout(700);
-    await page.keyboard.press('Space');
-    await burst('move-space', 12);
-    await page.waitForTimeout(700);
-    await page.keyboard.press('q');
-    await burst('move-q', 12);
-    await page.waitForTimeout(700);
-    await page.keyboard.press('e');
-    await burst('move-e', 12);
-    await stage('07-after-moves');
+    // Study the two requested fire moves separately. Aim at the dummy's
+    // position observed in the first actual battle screenshot.
+    await page.mouse.move(512, 199);
+    await page.mouse.click(512, 199, {button:'right'}); // RMB = Flamethrower
+    await burst('flamethrower', 22);
+    await stage('06-after-flamethrower');
+    await page.waitForTimeout(1500);
+    await page.mouse.move(512, 199);
+    await page.keyboard.press('e'); // E = Fire Blast
+    await burst('fire-blast', 22);
+    await stage('07-after-fire-blast');
   }
   const controls = after.runtime.controls || [];
   const next = controls.find(c => /solo|single|training|train|practice|offline|quick battle/i.test(c.text) && !/online/i.test(c.text));
