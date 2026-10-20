@@ -1,0 +1,114 @@
+name: REA - Registrar todos golpes reais acessiveis Poké Arena 2D
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [rea-pokearena-all-visible-moves]
+    paths:
+      - .github/workflows/rea-register-all-moves.yml
+      - .github/scripts/rea-record-public-moves.mjs
+      - .github/scripts/rea-merge-capture-index.cjs
+
+permissions:
+  contents: read
+
+jobs:
+  capturar-golpes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        pokemon: [bulbasaur, charmander, squirtle, pichu]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Instalar browser recorder e REA
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p rea-moves-evidence
+          npm install --prefix /tmp/rea-all-moves --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1 pngjs@7.0.0
+          npm install -g rea-agents@latest
+          node --version > rea-moves-evidence/node-version.txt
+          google-chrome --version > rea-moves-evidence/browser-version.txt
+      - name: Iniciar navegador isolado
+        shell: bash
+        run: |
+          set -euo pipefail
+          google-chrome --headless=new --no-sandbox --disable-dev-shm-usage \
+            --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 \
+            --window-size=780,437 --user-data-dir=/tmp/rea-capture-${{ matrix.pokemon }} \
+            about:blank > rea-moves-evidence/chrome.log 2>&1 &
+          for i in $(seq 1 45); do
+            if curl -fsS http://127.0.0.1:9222/json/list > rea-moves-evidence/chrome-targets-initial.json; then break; fi
+            sleep 2
+          done
+          test -s rea-moves-evidence/chrome-targets-initial.json
+      - name: Capturar todos os cinco controles na batalha real deste Pokemon
+        shell: bash
+        run: |
+          set +e
+          timeout 840s node .github/scripts/rea-record-public-moves.mjs ${{ matrix.pokemon }} \
+            > rea-moves-evidence/collector.log 2> rea-moves-evidence/collector.err
+          echo $? > rea-moves-evidence/collector.exit
+          cat rea-moves-evidence/collector.log || true
+          exit 0
+      - name: Inspecionar a mesma batalha via REA CDP
+        shell: bash
+        run: |
+          set +e
+          curl -fsS http://127.0.0.1:9222/json/list > rea-moves-evidence/chrome-targets-final.json
+          TARGET="$(node -e "const fs=require('fs');const list=JSON.parse(fs.readFileSync('rea-moves-evidence/chrome-targets-final.json'));const x=list.find(a=>a.type==='page'&&a.url.startsWith('https://www.pokearena2d.com/'));process.stdout.write(x?.id||'')")"
+          if [ -z "$TARGET" ]; then echo 'Pagina nao encontrada no CDP' > rea-moves-evidence/rea-status.txt; exit 0; fi
+          timeout 100s rea inspect-web-page http://127.0.0.1:9222 "$TARGET" \
+            --observation-ms 1000 --json > rea-moves-evidence/rea-inspect.json 2> rea-moves-evidence/rea-inspect.err
+          echo $? > rea-moves-evidence/rea-inspect.exit
+          timeout 100s rea analyze-web-bundle http://127.0.0.1:9222 "$TARGET" \
+            --json > rea-moves-evidence/rea-bundle.json 2> rea-moves-evidence/rea-bundle.err
+          echo $? > rea-moves-evidence/rea-bundle.exit
+          exit 0
+      - name: Guardar imagens, quadros, contatos e diagnósticos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-real-moves-${{ matrix.pokemon }}
+          path: rea-moves-evidence/
+          if-no-files-found: warn
+          retention-days: 90
+          compression-level: 5
+
+  salvar-registro:
+    needs: capturar-golpes
+    if: always() && github.ref == 'refs/heads/rea-pokearena-all-visible-moves'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rea-real-moves-*
+          path: audit-output
+      - name: Consolidar indice das capturas e dos 90 efeitos
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p docs/rea-pokearena/registro-real
+          node .github/scripts/rea-merge-capture-index.cjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/rea-pokearena/registro-real/
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(rea): consolidate actual public Training move capture status"
+            git push origin HEAD:rea-pokearena-all-visible-moves
+          fi
+      - name: Salvar indice consolidado como artefato
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rea-all-moves-consolidated-index
+          path: docs/rea-pokearena/registro-real/
+          retention-days: 90
