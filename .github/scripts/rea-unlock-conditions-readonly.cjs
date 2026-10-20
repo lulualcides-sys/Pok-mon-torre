@@ -14,13 +14,15 @@ const modules=[
  'src-3a160064ab/escenas/perfil.js',
  'src-3a160064ab/escenas/cuenta.js',
  'src-3a160064ab/escenas/liga.js',
+ 'src-3a160064ab/liga.js',
+ 'src-3a160064ab/estadisticas.js',
  'src-3a160064ab/datos.js',
  'src-3a160064ab/selector.js',
  'src-3a160064ab/main.js',
  'src-3a160064ab/escenas/batalla.js',
  'src-3a160064ab/escenas/titulo.js'
 ];
-const terms=/desbloq|bloque|candado|unlock|locked|available|habilitado|disponible|requisit|cuenta|gratis|entreno|training|ranked|progres|niv[eé]l|registro|lineas/i;
+const terms=/desbloq|bloque|candado|unlock|locked|available|habilitado|disponible|requisit|cuenta|gratis|entreno|training|ranked|progres|niv[eé]l|registro|lineas|storage|guardado|guardar|liga|ligaAbierta|vencido|ganad|derrot|victoria/i;
 const results={root,readOnly:true,modules:[],generated:new Date().toISOString(),errors:[]};
 (async()=>{
  const browser=await chromium.launch({
@@ -39,8 +41,8 @@ const results={root,readOnly:true,modules:[],generated:new Date().toISOString(),
     for(let i=0;i<lines.length;i++){
       const line=lines[i];
       let m,rx=new RegExp(terms.source,'ig'),hits=0;
-      while((m=rx.exec(line))&&hits++<14&&snippets.length<140){
-       const start=Math.max(0,m.index-165),end=Math.min(line.length,m.index+220);
+      while((m=rx.exec(line))&&hits++<100&&snippets.length<160){
+       const start=Math.max(0,m.index-210),end=Math.min(line.length,m.index+320);
        snippets.push({line:i+1,keyword:m[0],excerpt:line.slice(start,end)});
       }
     }
