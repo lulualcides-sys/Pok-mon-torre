@@ -78,6 +78,45 @@ try {
     results.trainingChangedPixels = training.pngSha256 !== after.pngSha256;
     after = training;
   }
+  if (results.trainingChangedPixels) {
+    // Coordinates recorded from the actual Training selection screenshot.
+    await page.mouse.click(112, 76); // Select Charmander as player.
+    await page.waitForTimeout(950);
+    await stage('03-charmander-selection');
+    await page.mouse.click(558, 242); // Focus the Dummy pane.
+    await page.waitForTimeout(450);
+    await page.mouse.click(670, 78); // Select Pikachu as dummy.
+    await page.waitForTimeout(950);
+    const dummy = await stage('04-dummy-selection');
+
+    await page.mouse.click(685, 392); // Fight!
+    await page.waitForTimeout(5400);
+    const combat = await stage('05-after-fight');
+    results.fightChangedPixels = combat.pngSha256 !== dummy.pngSha256;
+
+    // Evidence only: exercise visible controls and record frames for timing/impact.
+    async function burst(label, frames=10) {
+      fs.mkdirSync(base + '/frames', {recursive:true});
+      for (let i=0; i<frames; i++) {
+        await page.screenshot({path:base + '/frames/' + label + '-' + String(i).padStart(2,'0') + '.png',timeout:10000});
+        await page.waitForTimeout(95);
+      }
+    }
+    await page.mouse.move(585, 230);
+    await page.mouse.click(585, 230);
+    await burst('move-left-click', 12);
+    await stage('06-after-left-click');
+    await page.waitForTimeout(700);
+    await page.keyboard.press('Space');
+    await burst('move-space', 12);
+    await page.waitForTimeout(700);
+    await page.keyboard.press('q');
+    await burst('move-q', 12);
+    await page.waitForTimeout(700);
+    await page.keyboard.press('e');
+    await burst('move-e', 12);
+    await stage('07-after-moves');
+  }
   const controls = after.runtime.controls || [];
   const next = controls.find(c => /solo|single|training|train|practice|offline|quick battle/i.test(c.text) && !/online/i.test(c.text));
   if (next && next.text) {
