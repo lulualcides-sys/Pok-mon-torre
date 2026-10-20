@@ -1,0 +1,44 @@
+name: REA - Captura offline dos Pokémon desbloqueados no sandbox
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [rea-pokearena-all-visible-moves]
+    paths:
+      - .github/scripts/rea-record-unlocked-sandbox.mjs
+      - .github/workflows/rea-capture-all-unlocked.yml
+
+permissions:
+  contents: read
+
+jobs:
+  capturar-animações:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [pilot]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Preparar vídeo e automação
+        run: |
+          npm install --prefix /tmp/rea-unlock-test --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1 pngjs@7.0.0
+          node --check .github/scripts/rea-record-unlocked-sandbox.mjs
+          ffmpeg -version | head -n 1
+      - name: Gravar golpes em sessão temporária de Training
+        run: |
+          timeout 1080s node .github/scripts/rea-record-unlocked-sandbox.mjs ${{ matrix.group }} | tee rea-sandbox-log.txt
+      - name: Guardar os vídeos, contatos e metadados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-unlocked-moves-${{ matrix.group }}
+          path: |
+            rea-unlocked-captures/
+            rea-sandbox-log.txt
+          retention-days: 30
+          compression-level: 6
