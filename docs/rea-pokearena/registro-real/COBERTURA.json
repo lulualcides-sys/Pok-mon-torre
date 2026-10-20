@@ -1,0 +1,2074 @@
+{
+  "runId": "39419765383",
+  "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383",
+  "generated": "2026-10-20T12:11:19.359Z",
+  "atlasRecords": 90,
+  "charactersPlanned": 4,
+  "moveCommandsPlanned": 20,
+  "frameSequenceCaptures": 20,
+  "framesRecorded": 500,
+  "withVisibleChange": 20,
+  "claimsOfConfirmedExactAnimations": 0,
+  "characters": [
+    {
+      "pokemon": "bulbasaur",
+      "status": "manifest_read",
+      "roster": 26,
+      "captured": 5,
+      "errors": []
+    },
+    {
+      "pokemon": "charmander",
+      "status": "manifest_read",
+      "roster": 0,
+      "captured": 5,
+      "errors": []
+    },
+    {
+      "pokemon": "squirtle",
+      "status": "manifest_read",
+      "roster": 0,
+      "captured": 5,
+      "errors": []
+    },
+    {
+      "pokemon": "pichu",
+      "status": "manifest_read",
+      "roster": 0,
+      "captured": 5,
+      "errors": []
+    }
+  ],
+  "captures": [
+    {
+      "pokemon": "bulbasaur",
+      "move": "Razor Leaf",
+      "input": "left",
+      "slot": 0,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/bulbasaur/00-razor-leaf",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "bulbasaur",
+      "move": "Growth",
+      "input": "right",
+      "slot": 1,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/bulbasaur/01-growth",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "bulbasaur",
+      "move": "Vine Whip",
+      "input": "Space",
+      "slot": 2,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/bulbasaur/02-vine-whip",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "bulbasaur",
+      "move": "Leech Seed",
+      "input": "q",
+      "slot": 3,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/bulbasaur/03-leech-seed",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "bulbasaur",
+      "move": "Solar Beam",
+      "input": "e",
+      "slot": 4,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/bulbasaur/04-solar-beam",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "charmander",
+      "move": "Ember",
+      "input": "left",
+      "slot": 0,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/charmander/00-ember",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "charmander",
+      "move": "Flamethrower",
+      "input": "right",
+      "slot": 1,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/charmander/01-flamethrower",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "charmander",
+      "move": "Quick Attack",
+      "input": "Space",
+      "slot": 2,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/charmander/02-quick-attack",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "charmander",
+      "move": "Fire Spin",
+      "input": "q",
+      "slot": 3,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/charmander/03-fire-spin",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "charmander",
+      "move": "Fire Blast",
+      "input": "e",
+      "slot": 4,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/charmander/04-fire-blast",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "squirtle",
+      "move": "Water Gun",
+      "input": "left",
+      "slot": 0,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/squirtle/00-water-gun",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "squirtle",
+      "move": "Bubble Beam",
+      "input": "right",
+      "slot": 1,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/squirtle/01-bubble-beam",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "squirtle",
+      "move": "Rapid Spin",
+      "input": "Space",
+      "slot": 2,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/squirtle/02-rapid-spin",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "squirtle",
+      "move": "Hydro Typhoon",
+      "input": "q",
+      "slot": 3,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/squirtle/03-hydro-typhoon",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "squirtle",
+      "move": "Hydro Pump",
+      "input": "e",
+      "slot": 4,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/squirtle/04-hydro-pump",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "pichu",
+      "move": "Thunder Shock",
+      "input": "left",
+      "slot": 0,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/pichu/00-thunder-shock",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "pichu",
+      "move": "Thunderbolt",
+      "input": "right",
+      "slot": 1,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/pichu/01-thunderbolt",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "pichu",
+      "move": "Quick Attack",
+      "input": "Space",
+      "slot": 2,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/pichu/02-quick-attack",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "pichu",
+      "move": "Discharge",
+      "input": "q",
+      "slot": 3,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/pichu/03-discharge",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    },
+    {
+      "pokemon": "pichu",
+      "move": "Thunder",
+      "input": "e",
+      "slot": 4,
+      "framesSaved": 25,
+      "changedFrames": 25,
+      "status": "frames_saved_visual_change",
+      "archivePath": "rea-moves-evidence/pichu/04-thunder",
+      "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383"
+    }
+  ],
+  "effects": [
+    {
+      "id": 1,
+      "key": "potenciar",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 42,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "potenciar",
+          "fps": 14
+        },
+        {
+          "name": "potenciar-bucle",
+          "fps": 10
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 2,
+      "key": "shockwave",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "shockwave",
+          "fps": 14
+        },
+        {
+          "name": "shockwave-fin",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 3,
+      "key": "telarana",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 64,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "telarana-nace",
+          "fps": 12
+        },
+        {
+          "name": "telarana",
+          "fps": 6
+        },
+        {
+          "name": "telarana-rompe",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 4,
+      "key": "huevo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "huevo",
+          "fps": 10
+        },
+        {
+          "name": "huevo-cae",
+          "fps": 8
+        },
+        {
+          "name": "huevo-fin",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 5,
+      "key": "roca",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "roca",
+          "fps": 10
+        },
+        {
+          "name": "roca-cae",
+          "fps": 8
+        },
+        {
+          "name": "roca-fin",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 6,
+      "key": "corazon",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "corazon",
+          "fps": 10
+        },
+        {
+          "name": "corazon-fin",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 7,
+      "key": "copos",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "columns": 8,
+      "animations": [],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 8,
+      "key": "aurasphere",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "vacuum",
+          "fps": 14
+        },
+        {
+          "name": "vacuum-fin",
+          "fps": 14
+        },
+        {
+          "name": "aurasphere",
+          "fps": 12
+        },
+        {
+          "name": "aurasphere-fin",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 9,
+      "key": "curacion",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "curar",
+          "fps": 12
+        },
+        {
+          "name": "absorber",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 10,
+      "key": "hilo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "hilo",
+          "fps": 12
+        },
+        {
+          "name": "hilo-fin",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 11,
+      "key": "pilar",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 48,
+      "frameHeight": 80,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "picos",
+          "fps": 14
+        },
+        {
+          "name": "pilar",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 12,
+      "key": "fuego2",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "incinerate",
+          "fps": 12
+        },
+        {
+          "name": "incinerate-fin",
+          "fps": 14
+        },
+        {
+          "name": "searing",
+          "fps": 12
+        },
+        {
+          "name": "searing-fin",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 13,
+      "key": "diana",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 128,
+      "frameHeight": 85,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "diana",
+          "fps": 8
+        },
+        {
+          "name": "crater",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 14,
+      "key": "extrasensory",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "extrasensory-s",
+          "fps": 12
+        },
+        {
+          "name": "extrasensory-l",
+          "fps": 12
+        },
+        {
+          "name": "extrasensory-fin",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 15,
+      "key": "barrier",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "barrier-nace",
+          "fps": 14
+        },
+        {
+          "name": "barrier",
+          "fps": 8
+        },
+        {
+          "name": "barrier-rompe",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 16,
+      "key": "psirayo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "psirayo",
+          "fps": 14
+        },
+        {
+          "name": "psirayo-fin",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 17,
+      "key": "psihaz_boom",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 80,
+      "frameHeight": 80,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "psihazboom",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 18,
+      "key": "psihaz_impacto",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "psihazimpacto",
+          "fps": 18
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 19,
+      "key": "psihaz_carga",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "psihazcarga-1",
+          "fps": 14
+        },
+        {
+          "name": "psihazcarga-2",
+          "fps": 16
+        },
+        {
+          "name": "psihazcarga-3",
+          "fps": 20
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 20,
+      "key": "atadura",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "atadura",
+          "fps": 10
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 21,
+      "key": "psywave",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 22,
+      "frameHeight": 22,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "psywave",
+          "fps": 14
+        },
+        {
+          "name": "psywave-fin",
+          "fps": 18
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 22,
+      "key": "psico",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 28,
+      "frameHeight": 28,
+      "columns": 8,
+      "animations": [
+        {
+          "name": "psico-fin",
+          "fps": 18
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 23,
+      "key": "aeroblast",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 48,
+      "frameHeight": 32,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "aero-a",
+          "fps": 16
+        },
+        {
+          "name": "aero-b",
+          "fps": 16
+        },
+        {
+          "name": "aero-c",
+          "fps": 16
+        },
+        {
+          "name": "aero-boca",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 24,
+      "key": "aeroanillo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 28,
+      "frameHeight": 56,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "aero-anillo",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 25,
+      "key": "hipnosis-onda",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 112,
+      "frameHeight": 96,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "hipnosis-onda",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 26,
+      "key": "whirlwind",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 128,
+      "frameHeight": 96,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "whirlwind",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 27,
+      "key": "teleporte",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 48,
+      "frameHeight": 80,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "teleporte-sale",
+          "fps": 14
+        },
+        {
+          "name": "teleporte-llega",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 28,
+      "key": "geiser",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 56,
+      "frameHeight": 112,
+      "columns": 8,
+      "animations": [
+        {
+          "name": "geiser",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 29,
+      "key": "estela",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 120,
+      "frameHeight": 64,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "estela",
+          "fps": 10
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 30,
+      "key": "buceo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 96,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "buceo-entra",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 31,
+      "key": "viento",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 128,
+      "frameHeight": 102,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "viento",
+          "fps": 12
+        },
+        {
+          "name": "ondas",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 32,
+      "key": "pulsoagua",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "pulsoagua",
+          "fps": 12
+        },
+        {
+          "name": "pulsoagua-fin",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 33,
+      "key": "tornado",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 112,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "tornado",
+          "fps": 14
+        },
+        {
+          "name": "tornado-grande",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 34,
+      "key": "zapcannon",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "zapcannon",
+          "fps": 12
+        },
+        {
+          "name": "zapcannon-nace",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 35,
+      "key": "barrera",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "barrera-nace",
+          "fps": 12
+        },
+        {
+          "name": "barrera",
+          "fps": 6
+        },
+        {
+          "name": "barrera-rompe",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 36,
+      "key": "vllamas",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "columns": 6,
+      "animations": [],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 37,
+      "key": "hipnosis",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "hipnosis",
+          "fps": 10
+        },
+        {
+          "name": "hipnosis-fin",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 38,
+      "key": "cuchilla",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 40,
+      "frameHeight": 28,
+      "columns": 3,
+      "animations": [
+        {
+          "name": "cuchilla",
+          "fps": 12
+        },
+        {
+          "name": "cuchilla-fin",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 39,
+      "key": "onda",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 192,
+      "frameHeight": 128,
+      "columns": 3,
+      "animations": [
+        {
+          "name": "onda",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 40,
+      "key": "semilla",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "semilla",
+          "fps": 12
+        },
+        {
+          "name": "brote-nace",
+          "fps": 10
+        },
+        {
+          "name": "brote",
+          "fps": 6
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 41,
+      "key": "ingrain",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 56,
+      "frameHeight": 40,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "ingrain-nace",
+          "fps": 10
+        },
+        {
+          "name": "ingrain",
+          "fps": 6
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 42,
+      "key": "raiz",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 56,
+      "columns": 8,
+      "animations": [
+        {
+          "name": "raiz",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 43,
+      "key": "latigo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 48,
+      "columns": 3,
+      "animations": [
+        {
+          "name": "latigo",
+          "fps": 24
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 44,
+      "key": "lodo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 48,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "lodo-cae",
+          "fps": 14
+        },
+        {
+          "name": "charco",
+          "fps": 8
+        },
+        {
+          "name": "charco-seca",
+          "fps": 10
+        },
+        {
+          "name": "burbuja-veneno",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 45,
+      "key": "lodo_bola",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 40,
+      "frameHeight": 32,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "lodo",
+          "fps": 10
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 46,
+      "key": "enredaderas",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 64,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "enredaderas",
+          "fps": 10
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 47,
+      "key": "hojas",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "columns": 8,
+      "animations": [
+        {
+          "name": "corte",
+          "fps": 18
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 48,
+      "key": "solar",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 48,
+      "frameHeight": 32,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "solar-a",
+          "fps": 16
+        },
+        {
+          "name": "solar-b",
+          "fps": 16
+        },
+        {
+          "name": "solar-c",
+          "fps": 16
+        },
+        {
+          "name": "solar-boca",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 49,
+      "key": "luz",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "mota",
+          "fps": 14
+        },
+        {
+          "name": "halo-1",
+          "fps": 10
+        },
+        {
+          "name": "halo-2",
+          "fps": 10
+        },
+        {
+          "name": "halo-3",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 50,
+      "key": "shurikengigante",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "shurikengigante",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 51,
+      "key": "shuriken",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "shuriken",
+          "fps": 16
+        },
+        {
+          "name": "guijarro",
+          "fps": 10
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 52,
+      "key": "espuma",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "espuma",
+          "fps": 10
+        },
+        {
+          "name": "espuma-fin",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 53,
+      "key": "humo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 128,
+      "frameHeight": 96,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "humo-nace",
+          "fps": 12
+        },
+        {
+          "name": "humo-nube",
+          "fps": 6
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 54,
+      "key": "puf",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 48,
+      "frameHeight": 48,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "puf",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 55,
+      "key": "meteoro",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "meteoro-cae",
+          "fps": 14
+        },
+        {
+          "name": "meteoro-fin",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 56,
+      "key": "hexgolpe",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 99,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "hex-golpe",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 57,
+      "key": "hexaviso",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 48,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "hex-aviso",
+          "fps": 10
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 58,
+      "key": "lockon",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "lockon",
+          "fps": 14
+        },
+        {
+          "name": "mira-nace",
+          "fps": 16
+        },
+        {
+          "name": "mira",
+          "fps": 8
+        },
+        {
+          "name": "lockon-fin",
+          "fps": 18
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 59,
+      "key": "astonish",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "columns": 8,
+      "animations": [
+        {
+          "name": "astonish-fin",
+          "fps": 18
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 60,
+      "key": "electro",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 28,
+      "frameHeight": 28,
+      "columns": 8,
+      "animations": [
+        {
+          "name": "chispazo",
+          "fps": 18
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 61,
+      "key": "rayocae",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 48,
+      "frameHeight": 176,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "rayo-cae",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 62,
+      "key": "discharge",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 160,
+      "frameHeight": 112,
+      "columns": 3,
+      "animations": [
+        {
+          "name": "discharge",
+          "fps": 16
+        }
+      ],
+      "status": "move_with_matching_name_was_attempted",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": [
+        "pichu:Discharge"
+      ]
+    },
+    {
+      "id": 63,
+      "key": "hiper_vapor",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "hipervapor",
+          "fps": 9
+        },
+        {
+          "name": "hiperbrasa",
+          "fps": 10
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 64,
+      "key": "hiper_boom",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 80,
+      "frameHeight": 80,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "hiperboom",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 65,
+      "key": "hiper_impacto",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "hiperimpacto",
+          "fps": 18
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 66,
+      "key": "hiper_carga",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 56,
+      "frameHeight": 56,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "hipercarga-1",
+          "fps": 14
+        },
+        {
+          "name": "hipercarga-2",
+          "fps": 16
+        },
+        {
+          "name": "hipercarga-3",
+          "fps": 20
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 67,
+      "key": "electroball",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "electroball",
+          "fps": 14
+        },
+        {
+          "name": "electroball-fin",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 68,
+      "key": "thunderbolt_tramo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 69,
+      "key": "thunderbolt",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "thunderbolt-boca",
+          "fps": 18
+        },
+        {
+          "name": "thunderbolt-golpe",
+          "fps": 16
+        }
+      ],
+      "status": "move_with_matching_name_was_attempted",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": [
+        "pichu:Thunderbolt"
+      ]
+    },
+    {
+      "id": 70,
+      "key": "rayosuelo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 80,
+      "frameHeight": 48,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "rayo-aviso",
+          "fps": 10
+        },
+        {
+          "name": "rayo-suelo",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 71,
+      "key": "arco",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 48,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "arco",
+          "fps": 20
+        },
+        {
+          "name": "arco-fuerte",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 72,
+      "key": "acometida",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 80,
+      "frameHeight": 40,
+      "columns": 3,
+      "animations": [
+        {
+          "name": "acometida",
+          "fps": 24
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 73,
+      "key": "aterriza",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 48,
+      "columns": 3,
+      "animations": [
+        {
+          "name": "aterriza",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 74,
+      "key": "inferno",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 80,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "boom",
+          "fps": 18
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 75,
+      "key": "inferno_bola",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 40,
+      "frameHeight": 40,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "inferno",
+          "fps": 12
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 76,
+      "key": "aura",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 80,
+      "frameHeight": 56,
+      "columns": 3,
+      "animations": [
+        {
+          "name": "aura",
+          "fps": 30
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 77,
+      "key": "blastburn_tramo",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 95,
+      "frameHeight": 24,
+      "columns": 4,
+      "animations": [],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 78,
+      "key": "blastburn",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 40,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "blastburn-boca",
+          "fps": 14
+        },
+        {
+          "name": "blastburn-punta",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 79,
+      "key": "fly",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 96,
+      "frameHeight": 64,
+      "columns": 3,
+      "animations": [
+        {
+          "name": "fly",
+          "fps": 14
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 80,
+      "key": "fireblast_explosion",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 112,
+      "frameHeight": 112,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "fireblast-boom",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 81,
+      "key": "fireblast",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 53,
+      "frameHeight": 53,
+      "columns": 2,
+      "animations": [
+        {
+          "name": "fireblast",
+          "fps": 10
+        }
+      ],
+      "status": "move_with_matching_name_was_attempted",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": [
+        "charmander:Fire Blast"
+      ]
+    },
+    {
+      "id": 82,
+      "key": "firespin",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 128,
+      "frameHeight": 96,
+      "columns": 3,
+      "animations": [
+        {
+          "name": "firespin",
+          "fps": 14
+        }
+      ],
+      "status": "move_with_matching_name_was_attempted",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": [
+        "charmander:Fire Spin"
+      ]
+    },
+    {
+      "id": 83,
+      "key": "quickattack",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 32,
+      "columns": 2,
+      "animations": [
+        {
+          "name": "quickattack",
+          "fps": 18
+        }
+      ],
+      "status": "move_with_matching_name_was_attempted",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": [
+        "charmander:Quick Attack",
+        "pichu:Quick Attack"
+      ]
+    },
+    {
+      "id": 84,
+      "key": "rapidspin",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 64,
+      "frameHeight": 48,
+      "columns": 3,
+      "animations": [
+        {
+          "name": "rapidspin",
+          "fps": 20
+        }
+      ],
+      "status": "move_with_matching_name_was_attempted",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": [
+        "squirtle:Rapid Spin"
+      ]
+    },
+    {
+      "id": 85,
+      "key": "chorro",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 40,
+      "frameHeight": 32,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "chorro-a",
+          "fps": 10
+        },
+        {
+          "name": "chorro-b",
+          "fps": 10
+        },
+        {
+          "name": "chorro-c",
+          "fps": 10
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 86,
+      "key": "impacto_agua",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 6,
+      "animations": [
+        {
+          "name": "salpicadura",
+          "fps": 16
+        }
+      ],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 87,
+      "key": "gotas",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "columns": 8,
+      "animations": [],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 88,
+      "key": "llamitas",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 24,
+      "frameHeight": 24,
+      "columns": 8,
+      "animations": [],
+      "status": "atlas_only_no_battle_evidence",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": []
+    },
+    {
+      "id": 89,
+      "key": "flamethrower",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 112,
+      "frameHeight": 64,
+      "columns": 2,
+      "animations": [
+        {
+          "name": "flamethrower",
+          "fps": 14
+        }
+      ],
+      "status": "move_with_matching_name_was_attempted",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": [
+        "charmander:Flamethrower"
+      ]
+    },
+    {
+      "id": 90,
+      "key": "ember",
+      "source": "src-3a160064ab/vfx.js",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "columns": 4,
+      "animations": [
+        {
+          "name": "ember-s",
+          "fps": 12
+        },
+        {
+          "name": "ember-m",
+          "fps": 12
+        },
+        {
+          "name": "ember-l",
+          "fps": 12
+        },
+        {
+          "name": "ember-fin",
+          "fps": 16
+        }
+      ],
+      "status": "move_with_matching_name_was_attempted",
+      "matchIsVisualProof": false,
+      "relatedPublicCaptureNames": [
+        "charmander:Ember"
+      ]
+    }
+  ],
+  "notes": [
+    "Not all moves in Poké Arena 2D are accessible without gameplay unlocks.",
+    "An atlas entry is not a distinct move; names and statuses remain separate.",
+    "Animation frames represent screen recordings, not original spritesheets.",
+    "Pixel changes do not prove each move was activated; manually inspect frame contact sheets.",
+    "All images stay in GitHub Actions artifacts for 90 days. Metadata persists on this analysis branch."
+  ]
+}
