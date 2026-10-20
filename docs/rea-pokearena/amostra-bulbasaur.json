@@ -1,0 +1,8887 @@
+{
+  "site": "https://www.pokearena2d.com/",
+  "sampledPokemon": "bulbasaur",
+  "intendedArena": "Stadium",
+  "stages": [
+    {
+      "label": "00-home",
+      "sha256": "e9c576165b2eed93c17857c7a705dc04663832f1795e774c44ddb3a4feec6dfa",
+      "url": "https://www.pokearena2d.com/"
+    },
+    {
+      "label": "01-modes",
+      "sha256": "2e3b9ab3fa675ed1d0fdf927d5d8a01ba1bb728110cedd690a2870a46911466e",
+      "url": "https://www.pokearena2d.com/"
+    },
+    {
+      "label": "02-training",
+      "sha256": "8f10bdb45dbb6be4b8745ab3ebef401d8f4baaa4edd3ce02b9f8baf2aef6be48",
+      "url": "https://www.pokearena2d.com/"
+    },
+    {
+      "label": "03-selection-bulbasaur",
+      "sha256": "1089d473b2717a4a6429cb2888c040883aeb46cf5e1870982b55a3618ec5dfa5",
+      "url": "https://www.pokearena2d.com/"
+    },
+    {
+      "label": "04-battle-bulbasaur",
+      "sha256": "24ed1879ff4a4332077cdff05c89c1dd2bf9de57af8748ceedd7d3de4511847e",
+      "url": "https://www.pokearena2d.com/"
+    },
+    {
+      "label": "05-after-moves-bulbasaur",
+      "sha256": "23354cb9228631e7295e1971764cdaed6f96e66f0766a89e0889d114e9204d99",
+      "url": "https://www.pokearena2d.com/"
+    }
+  ],
+  "errors": [],
+  "browserErrors": [],
+  "network": [
+    {
+      "path": "/",
+      "status": 200,
+      "type": "document"
+    },
+    {
+      "path": "/analitica.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/main.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/manifest.webmanifest",
+      "status": 200,
+      "type": "manifest"
+    },
+    {
+      "path": "/lib/phaser.min.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/m/s",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/perfil.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/actualizar.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/config.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/creditos.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/reel.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/cuenta.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/chat.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/ranked.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/pokedex.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/salas.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/seleccion.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/preparar.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/datos.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/sala_arena.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/campos.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/rangos.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/arena.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/perfiles.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/titulo.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/sala.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/carga.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/luchador.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/sprites.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/novedades.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/batalla.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/tactil.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/clasificacion.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/selector.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/red.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/ia.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/combate.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/amigos.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/controles.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/avisos.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/guia.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/pantalla.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/liga.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/azar.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/vfx.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/ui.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/hud.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/aspectos.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/escenas/liga.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/online.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/iconos.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/notas.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/estadisticas.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/musica.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/sonido.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/publico.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/grabacion.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/cerebros.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/habilidades.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/juez.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/cerebros_aprendidos.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/src-3a160064ab/tutorial.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/version.json",
+      "status": 200,
+      "type": "fetch"
+    },
+    {
+      "path": "/assets/arenas/tecno/suelo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/ovaladas/neon.jpg",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/tierra/decorado.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/agua/suelo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/ovaladas/estadio.jpg",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/ui/logo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/publico.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/ovaladas/ruinas.jpg",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/tecno/decorado.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/tierra/suelo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/agua/decorado.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/ovaladas/crater.jpg",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/volcan/decorado.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/volcan/suelo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/manifest.json",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/creditos.json",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/cdn-cgi/rum",
+      "status": 204,
+      "type": "xhr"
+    },
+    {
+      "path": "/iconos/icono-192.png",
+      "status": 200,
+      "type": "other"
+    },
+    {
+      "path": "/favicon.png",
+      "status": 200,
+      "type": "other"
+    },
+    {
+      "path": "/assets/pmd/0778/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0005/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0005/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0445/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0445/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0778/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448-0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0445/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0004/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448-0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0007/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0004/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0005/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0008/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0004/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0009/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0009/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0007/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448-0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0778/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0008/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0007/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0009/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0008/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/m/e",
+      "status": 202,
+      "type": "fetch"
+    },
+    {
+      "path": "/assets/pmd/0026/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0431/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0319/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0444/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0431/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006-0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0509/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0319/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0444/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0323/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0447/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006-0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006-0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0431/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0052/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0323/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0323/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0052/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0319/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0443/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0052/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0447/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0443/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0447/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0443/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0444/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0509/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0823/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0229/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0877/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0757/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0229/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0877/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0877/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0229/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0966/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0757/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0509/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0823/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0966/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0823/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0757/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0966/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0067/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0066/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0067/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0067/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0066/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0066/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0068/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249-0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0068/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0130/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0130/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0130/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249-0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249-0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0129/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0250/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0129/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0129/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0068/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0273/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0275/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0275/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0250/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0274/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0250/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0273/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0273/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0274/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0274/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0427/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0427/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0427/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0275/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0145/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0145/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0095/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0095/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208-0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0095/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428-0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208-0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428-0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0145/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208-0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428-0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0078/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0143/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0103/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0077/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0078/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0077/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0446/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0103/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0078/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0102/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0103/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0077/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0143/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0143/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0446/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0102/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0446/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0102/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0243/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0243/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0042/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0041/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0244/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0041/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0042/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0169/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0244/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0042/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0169/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0244/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0169/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0041/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0243/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0245/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0245/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0595/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0486/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0245/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0595/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0494/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0486/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0596/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0494/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0486/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0494/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0595/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0596/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0596/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0886/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0885/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0886/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0887/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0657/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0656/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0657/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0656/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0885/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0887/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0885/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0658/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0657/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0658/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0886/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0887/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0658/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0656/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-dorado/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-dorado/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/inferno_bola.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/flamethrower.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/fireblast.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/blastburn_tramo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002-dorado/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002-dorado/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/rapidspin.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/ember.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/firespin.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/quickattack.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002-dorado/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/llamitas.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/aterriza.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/blastburn.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/fireblast_explosion.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-dorado/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/gotas.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/aura.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/chorro.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/impacto_agua.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/fly.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/acometida.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/inferno.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hiper_impacto.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hiper_carga.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/discharge.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/arco.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/electroball.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hiper_boom.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/thunderbolt.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hiper_vapor.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/rayosuelo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/thunderbolt_tramo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/enredaderas.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/raiz.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/astonish.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/humo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/shuriken.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hojas.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/espuma.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/electro.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/rayocae.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hexgolpe.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/lockon.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/lodo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/meteoro.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hexaviso.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/lodo_bola.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/ingrain.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/solar.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/puf.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/latigo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/shurikengigante.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/luz.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/semilla.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hipnosis.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/onda.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/zapcannon.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/vllamas.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/barrera.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/pulsoagua.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/viento.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/cuchilla.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/buceo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/tornado.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/estela.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/aeroanillo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/telarana.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/teleporte.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/extrasensory.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/barrier.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/whirlwind.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psico.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/roca.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psihaz_carga.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/curacion.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/aurasphere.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/corazon.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psihaz_boom.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/shockwave.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/fuego2.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/copos.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psirayo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/aeroblast.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hipnosis-onda.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hilo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/huevo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psihaz_impacto.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psywave.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/potenciar.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/diana.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/pilar.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/atadura.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/geiser.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0245/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0244/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/favicon.png",
+      "status": 200,
+      "type": "other"
+    },
+    {
+      "path": "/assets/pmd/0001/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Shoot-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Faint-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Faint-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Shoot-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Pose-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Pose-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Shoot-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/QuickStrike-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Shoot-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Faint-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/QuickStrike-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Pose-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Shoot-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Faint-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Pose-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/QuickStrike-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/src-3a160064ab/musica/alto_mando.js",
+      "status": 200,
+      "type": "script"
+    },
+    {
+      "path": "/m/e",
+      "status": 202,
+      "type": "fetch"
+    }
+  ],
+  "moveTests": [
+    {
+      "input": "left",
+      "changes": [
+        11072,
+        13340,
+        14372,
+        14364,
+        14408,
+        14152,
+        14180,
+        14268,
+        14472,
+        14188,
+        14340,
+        14316
+      ],
+      "attempted": true,
+      "caveat": "Visual differences can include idle animations; they do not prove move activation."
+    },
+    {
+      "input": "right",
+      "changes": [
+        1584,
+        1856,
+        1640,
+        1200,
+        872,
+        1480,
+        1496,
+        2072,
+        2760,
+        1784,
+        1536,
+        1068
+      ],
+      "attempted": true,
+      "caveat": "Visual differences can include idle animations; they do not prove move activation."
+    },
+    {
+      "input": "Space",
+      "changes": [
+        14988,
+        26972,
+        30804,
+        31100,
+        31816,
+        31672,
+        31884,
+        35648,
+        33500,
+        31364,
+        29716,
+        29840
+      ],
+      "attempted": true,
+      "caveat": "Visual differences can include idle animations; they do not prove move activation."
+    },
+    {
+      "input": "q",
+      "changes": [
+        2464,
+        2224,
+        2080,
+        2776,
+        0,
+        316,
+        0,
+        2128,
+        2216,
+        2168,
+        2432,
+        1688
+      ],
+      "attempted": true,
+      "caveat": "Visual differences can include idle animations; they do not prove move activation."
+    },
+    {
+      "input": "e",
+      "changes": [
+        157308,
+        6992,
+        7716,
+        10096,
+        4872,
+        1016,
+        932,
+        157404,
+        154016,
+        5896,
+        9968,
+        6008
+      ],
+      "attempted": true,
+      "caveat": "Visual differences can include idle animations; they do not prove move activation."
+    }
+  ],
+  "scriptCatalog": [
+    {
+      "file": "analitica.js",
+      "size": 639,
+      "sha256": "d31d62b554aa2682ec2ba805711ec44c3c2591f2c1abbaad70e08b80c09cb8e0",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "lib/phaser.min.js",
+      "vendor": "Phaser",
+      "skippedParse": true
+    },
+    {
+      "file": "src-3a160064ab/main.js",
+      "size": 5049,
+      "sha256": "92ca7cf5ecd686e59ba911950c100456b5c439b54cfd79f60270de9681b8e9dd",
+      "parsed": true,
+      "functions": [
+        "arrancar",
+        "reajustarTextos",
+        "centrar",
+        "medir"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/config.js",
+      "size": 5462,
+      "sha256": "be6751724388e2329b33ebabe066277c4b1fa203ff413c9ff7ffeb5acf4779b8",
+      "parsed": true,
+      "functions": [
+        "hex",
+        "estrechar",
+        "texto",
+        "vistaCamara",
+        "caso",
+        "registrarNombres",
+        "estiloFuente",
+        "empujeBorde",
+        "fueraCampo",
+        "limitarCampo"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "CAMPO_REEL",
+          "size": 4,
+          "keys": [
+            "x",
+            "y",
+            "w",
+            "h"
+          ]
+        },
+        {
+          "name": "CAMPO_GRANDE",
+          "size": 4,
+          "keys": [
+            "x",
+            "y",
+            "w",
+            "h"
+          ]
+        },
+        {
+          "name": "COLOR",
+          "size": 13,
+          "keys": [
+            "oro",
+            "oroOscuro",
+            "panel",
+            "panelBorde",
+            "p1",
+            "p2",
+            "vida",
+            "vidaMedia",
+            "vidaBaja",
+            "energia",
+            "calor",
+            "texto",
+            "equipos"
+          ]
+        },
+        {
+          "name": "PROPIAS",
+          "size": 21,
+          "keys": [
+            "POKÉMON",
+            "POKÉDEX",
+            "POKÉ",
+            "PMDCOLLAB",
+            "SPRITECOLLAB",
+            "MEGA",
+            "NINTENDO",
+            "TELEGRAM",
+            "ENTER",
+            "ESC",
+            "SPACE",
+            "TAB",
+            "SHIFT",
+            "START",
+            "SELECT",
+            "DISCORD",
+            "INSTAGRAM",
+            "TIKTOK",
+            "YOUTUBE",
+            "GOOGLE",
+            "IPHONE"
+          ]
+        },
+        {
+          "name": "CAMPO",
+          "size": 4,
+          "keys": [
+            "x",
+            "y",
+            "w",
+            "h"
+          ]
+        },
+        {
+          "name": "VISTA",
+          "size": 4,
+          "keys": [
+            "x",
+            "y",
+            "w",
+            "h"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/seleccion.js",
+      "size": 22790,
+      "sha256": "1a0b1401c6e3cd4706da931b0c7477d13f38f42736f582cf03e9e63db81a4510",
+      "parsed": true,
+      "functions": [
+        "mandosPorDefecto",
+        "estrella"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "TITULOS",
+          "size": 6,
+          "keys": [
+            "cpu",
+            "versus",
+            "entreno",
+            "online",
+            "ranked",
+            "liga"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/datos.js",
+      "size": 53099,
+      "sha256": "a812186abb4dcd23cd28024792f38d590106e727c5d21f7675d0b9eefb8517b2",
+      "parsed": true,
+      "functions": [
+        "porId",
+        "buscar",
+        "etapaDe",
+        "tipoLinea",
+        "mov",
+        "efectividad"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "MASCOTAS",
+          "size": 10,
+          "keys": [
+            "rocket",
+            "aqua",
+            "magma",
+            "galactic",
+            "plasma",
+            "flare",
+            "skull",
+            "yell",
+            "macro",
+            "star"
+          ]
+        },
+        {
+          "name": "EST",
+          "size": 3,
+          "keys": [
+            "quema",
+            "quemaAcumula",
+            "quemaFuerte"
+          ]
+        },
+        {
+          "name": "MOV",
+          "size": 3,
+          "keys": [
+            "dragonDance",
+            "quickAttack",
+            "extremeSpeed"
+          ]
+        },
+        {
+          "name": "ESTADOS_TIPO",
+          "size": 5,
+          "keys": [
+            "FIRE",
+            "WATER",
+            "GRASS",
+            "ELECTRIC",
+            "CONFUSION"
+          ]
+        },
+        {
+          "name": "ROLES",
+          "size": 5,
+          "keys": [
+            "FISICO",
+            "MIXTO",
+            "DISTANCIA",
+            "TANQUE",
+            "CONTROL"
+          ]
+        },
+        {
+          "name": "REGLAS",
+          "size": 49,
+          "keys": [
+            "energiaInicial",
+            "energiaMax",
+            "energiaPorGolpeBasico",
+            "energiaPorGolpeRecibido",
+            "surgeUmbral",
+            "surgeMult",
+            "calorMax",
+            "calorEnfriaRetraso",
+            "calorEnfria",
+            "sobrecargaDur",
+            "comboVentana",
+            "comboBonusEnergia",
+            "invulDash",
+            "rondasParaGanar",
+            "tiempoRonda",
+            "tablaTipos",
+            "superEficaz",
+            "pocoEficaz",
+            "marcaMult",
+            "ultiMax",
+            "ultiPorDanoHecho",
+            "ultiPorDanoRecibido",
+            "ultiPasiva",
+            "expEvolucion",
+            "expPorDanoHecho",
+            "expPorDanoRecibido",
+            "expPasiva",
+            "curaEvolucion",
+            "expPorLinea",
+            "expArrastre",
+            "curaPerdida",
+            "vidaGlobal",
+            "imanDisparo",
+            "imanGiro",
+            "imanCono",
+            "giroCarga",
+            "escalaPorEtapa",
+            "escalaMega",
+            "danoGlobal",
+            "basicosNeutros",
+            "estadoGolpes",
+            "estadoVentana",
+            "estadoDur",
+            "congelaGolpes",
+            "congelaVentana",
+            "congelaDur",
+            "congelaReduce",
+            "curaTras",
+            "curaFuera"
+          ]
+        },
+        {
+          "name": "TABLA",
+          "size": 12,
+          "keys": [
+            "NORMAL",
+            "GRASS",
+            "POISON",
+            "WATER",
+            "FIRE",
+            "ELECTRIC",
+            "GHOST",
+            "FAIRY",
+            "DRAGON",
+            "GROUND",
+            "FIGHTING",
+            "STEEL"
+          ]
+        },
+        {
+          "name": "TIPOS",
+          "size": 18,
+          "keys": [
+            "NORMAL",
+            "FIRE",
+            "WATER",
+            "ELECTRIC",
+            "GRASS",
+            "ICE",
+            "FIGHTING",
+            "POISON",
+            "GROUND",
+            "FLYING",
+            "PSYCHIC",
+            "BUG",
+            "ROCK",
+            "GHOST",
+            "DRAGON",
+            "DARK",
+            "STEEL",
+            "FAIRY"
+          ]
+        }
+      ],
+      "resources": [
+        "assets/arenas/ovaladas/ruinas.jpg",
+        "assets/arenas/ovaladas/crater.jpg",
+        "assets/arenas/ovaladas/neon.jpg",
+        "assets/arenas/ovaladas/estadio.jpg"
+      ],
+      "candidateNames": [
+        "WATER",
+        "PSYCHIC",
+        "Psybeam",
+        "psywave-fin",
+        "psywave",
+        "Psywave",
+        "Punch",
+        "ROCK",
+        "ELECTRIC",
+        "electroball-fin",
+        "electroball",
+        "redElectrica",
+        "Thunder",
+        "FIRE",
+        "Aeroblast",
+        "solar-boca-aura",
+        "solar-c-aura",
+        "solar-b-aura",
+        "solar-a-aura",
+        "NUZLEAF",
+        "ICE",
+        "solar-boca-hielo",
+        "solar-c-hielo",
+        "solar-b-hielo",
+        "solar-a-hielo",
+        "flamethrower",
+        "shockwave-fin",
+        "shockwave",
+        "thunderbolt",
+        "Thunderbolt",
+        "Tackle",
+        "Waterfall",
+        "POISON",
+        "BLASTOISE",
+        "fireblast",
+        "fireblast-boom",
+        "firespin",
+        "Flamethrower",
+        "ember-fin",
+        "Ember",
+        "blastburn",
+        "helice",
+        "solar-boca",
+        "solar-c",
+        "solar-b",
+        "solar-a",
+        "solar"
+      ]
+    },
+    {
+      "file": "src-3a160064ab/escenas/titulo.js",
+      "size": 13926,
+      "sha256": "a412313ca272baff44740a9eb1291712732f5241ffdaf909d9e35ef6ccf17043",
+      "parsed": true,
+      "functions": [
+        "novedadesVistas",
+        "logoNitido"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "LOGO",
+          "size": 3,
+          "keys": [
+            "w",
+            "h",
+            "dx"
+          ]
+        },
+        {
+          "name": "DISPOSICION",
+          "size": 3,
+          "keys": [
+            "principal",
+            "jugar",
+            "online"
+          ]
+        },
+        {
+          "name": "MENUS",
+          "size": 3,
+          "keys": [
+            "principal",
+            "jugar",
+            "online"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/carga.js",
+      "size": 4614,
+      "sha256": "f7b3d73f34f3e750a5599088a58477df77fa7f0088e8ce7399464b5ece291795",
+      "parsed": true,
+      "functions": [
+        "idsReel"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [
+        "assets/arenas/publico.png",
+        "assets/ui/logo.png",
+        "assets/creditos.json",
+        "assets/pmd/manifest.json"
+      ],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/combate.js",
+      "size": 35419,
+      "sha256": "d432792a996b73ad66d862f893ec3e3613cca1672dc15aabe312859139b04853",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [
+        {
+          "name": "nada",
+          "size": 3,
+          "keys": [
+            "remove",
+            "destroy",
+            "paused"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/reel.js",
+      "size": 20714,
+      "sha256": "71caae4aa6c97eaf7a764dd13ba381e2c56f2a595c16106663e9ea9116b41bbc",
+      "parsed": true,
+      "functions": [
+        "sembrar"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "f",
+          "size": 5,
+          "keys": [
+            "l",
+            "x",
+            "y",
+            "w",
+            "estela"
+          ]
+        },
+        {
+          "name": "formato",
+          "size": 4,
+          "keys": [
+            "sufijo",
+            "campo",
+            "w",
+            "h"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/preparar.js",
+      "size": 12941,
+      "sha256": "dfb2cb660a8f5f903a65bbf3f345efbc5a62fa295b818cc5fbe7af5fadf60757",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [
+        {
+          "name": "t",
+          "size": 16,
+          "keys": [
+            "i",
+            "x",
+            "y",
+            "color",
+            "fondo",
+            "titulo",
+            "pista",
+            "quitar",
+            "zonaFoco",
+            "flechas",
+            "quien",
+            "azar",
+            "contenido",
+            "mostrado",
+            "encima",
+            "encimaX"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/batalla.js",
+      "size": 21917,
+      "sha256": "c7ee29aa00552b3a86c60f1a511a891022c0268625599d0469667d2d20739f71",
+      "parsed": true,
+      "functions": [
+        "plazasAlAzar"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "f",
+          "size": 8,
+          "keys": [
+            "l",
+            "x",
+            "w",
+            "retrato",
+            "nombre",
+            "kos",
+            "ko",
+            "estela"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/pokedex.js",
+      "size": 8720,
+      "sha256": "2c2f66d16d02271e4491b38c4c42e499b30d1c319ca8e6ee11070434f7dc34b3",
+      "parsed": true,
+      "functions": [
+        "cifras",
+        "etapasDe"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "BOTON_TACTIL",
+          "size": 5,
+          "keys": [
+            "lmb",
+            "rmb",
+            "esp",
+            "q",
+            "e"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/sala.js",
+      "size": 14214,
+      "sha256": "894fc32b7e83204705add10c4f230268ea52124599339b341c4db5cc828f7be6",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [
+        {
+          "name": "m",
+          "size": 4,
+          "keys": [
+            "t",
+            "p1",
+            "p2",
+            "arena"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/creditos.js",
+      "size": 1209,
+      "sha256": "3b230391919532f4347d3f367223744be9808b17441bb4054fc50d29168dfb98",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [
+        {
+          "name": "AREA",
+          "size": 4,
+          "keys": [
+            "x",
+            "y",
+            "w",
+            "h"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/cuenta.js",
+      "size": 4920,
+      "sha256": "158f260dace1208a5eb74b82ef5ef8cd517e6cf6007a6d5cc49f6d97ce6e23ab",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [
+        {
+          "name": "BOTON",
+          "size": 4,
+          "keys": [
+            "crear",
+            "entrar",
+            "recuperar",
+            "codigo"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/ranked.js",
+      "size": 9522,
+      "sha256": "71366ace2006792245cf33822fbd5b1c584c1524980a36a2e73a6f45ada46b96",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/novedades.js",
+      "size": 1927,
+      "sha256": "1e3e8ad90d23c3f822609d17412f1dd74ed3aaf153763d08f0c5bdd124783187",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [
+        {
+          "name": "AREA",
+          "size": 4,
+          "keys": [
+            "x",
+            "y",
+            "w",
+            "h"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/salas.js",
+      "size": 9137,
+      "sha256": "24fb743a69b7b86412b116662ec2cb18c46e1057496b01e2416012c509364a8b",
+      "parsed": true,
+      "functions": [
+        "guardarPokemonOnline",
+        "pokemonOnline"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/amigos.js",
+      "size": 6139,
+      "sha256": "2a6a5e9561a750fe6fc850fec793610d714967a196e488d250a8c279c088b984",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [
+        {
+          "name": "ESTADOS",
+          "size": 7,
+          "keys": [
+            "menu",
+            "cola",
+            "ranked",
+            "amistoso",
+            "sala",
+            "arena",
+            "offline"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/sala_arena.js",
+      "size": 11673,
+      "sha256": "fb9063c8d54d3cc3522ada54195c25cc1881e445aa991e7babf9599a464ed339",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [
+        {
+          "name": "t",
+          "size": 10,
+          "keys": [
+            "i",
+            "x",
+            "y",
+            "fondo",
+            "cab",
+            "dcha",
+            "contenido",
+            "clave",
+            "extra",
+            "ping"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/perfil.js",
+      "size": 18594,
+      "sha256": "60f2d333ebb5cc846876d70827f77c19546d6af5db50ff3156907349886f364f",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/clasificacion.js",
+      "size": 5963,
+      "sha256": "1ff1a8c79a5625575cc7f7c4ab9a0d3f27d2acecdeb88f06354a31d8f7c3c2f5",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/escenas/liga.js",
+      "size": 5698,
+      "sha256": "04144bf729c143a89557838b62a30388cdd2465579189e456c27ee5bbeaea6cb",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/actualizar.js",
+      "size": 852,
+      "sha256": "819702e1b8aa68ef4ee0a6d575e81ced9c47e0f93d4e361c5db3e89089882a0a",
+      "parsed": true,
+      "functions": [
+        "vigilarVersion"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/chat.js",
+      "size": 20563,
+      "sha256": "a2cc54c01baf16199d853de540817283e47bc0b65ee509ce180f56b1db62252b",
+      "parsed": true,
+      "functions": [
+        "iniciarChat",
+        "pintar",
+        "entrar",
+        "enviar",
+        "avisar",
+        "estiloFijado",
+        "ponerFijado",
+        "anadir",
+        "linea",
+        "irACuenta",
+        "revisarSala",
+        "abrirConv",
+        "pintarAmigos",
+        "refrescarAmigos",
+        "pintarSubcab",
+        "repintarLista",
+        "pintarPestanas",
+        "irCanal",
+        "fijarAbierto",
+        "boton",
+        "montar",
+        "escenaPermite",
+        "reservaChat"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/perfiles.js",
+      "size": 8744,
+      "sha256": "8f2059c953854230dd152f528f38fc8761ea61bf9866b39551a315e4d8770acc",
+      "parsed": true,
+      "functions": [
+        "irAPerfil",
+        "pintarTarjeta",
+        "abrirTarjeta",
+        "colocar",
+        "boton",
+        "cerrarTarjeta",
+        "cerrarLuego",
+        "nombreConPerfil",
+        "iniciarTarjetas",
+        "accionAmigo",
+        "verPerfil",
+        "pedirPerfil"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "ESTADOS",
+          "size": 7,
+          "keys": [
+            "menu",
+            "cola",
+            "ranked",
+            "amistoso",
+            "sala",
+            "arena",
+            "offline"
+          ]
+        }
+      ],
+      "resources": [
+        "assets/pmd/caras.json"
+      ],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/avisos.js",
+      "size": 2735,
+      "sha256": "44de26923f4049654b153bae1c091fee04b9216902eb5fbaa46943bf6eef6681",
+      "parsed": true,
+      "functions": [
+        "iniciarAvisos",
+        "invitacion",
+        "irASala",
+        "aviso",
+        "panel",
+        "contenedor"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/campos.js",
+      "size": 2054,
+      "sha256": "2a0c2976b389dfba9d65b7008ce37aeec87e52ea184f348dd7a3358a9fd8998b",
+      "parsed": true,
+      "functions": [
+        "campoTexto"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/ui.js",
+      "size": 8714,
+      "sha256": "1616db29998ed635b71ca8eae87753fd839fe2ab3435a8ebad9ac800069f2eb9",
+      "parsed": true,
+      "functions": [
+        "leerMando",
+        "cabecera",
+        "botonGrande",
+        "boton",
+        "capsulas",
+        "escalaFicha",
+        "teclas",
+        "alTeclado",
+        "fondoMenu",
+        "chapa",
+        "marco",
+        "rectRedondo"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "UI",
+          "size": 30,
+          "keys": [
+            "fondo",
+            "cuadro",
+            "contorno",
+            "borde",
+            "bordeLuz",
+            "relleno",
+            "rellenoLuz",
+            "rellenoBajo",
+            "sombra",
+            "oro",
+            "oroBorde",
+            "oroLuz",
+            "anillo",
+            "apagado",
+            "apagadoBorde",
+            "panel",
+            "panelBorde",
+            "panelLuz",
+            "linea",
+            "rojo",
+            "rojoLuz",
+            "rojoBajo",
+            "suelo",
+            "texto",
+            "textoOscuro",
+            "suave",
+            "tenue",
+            "apagadoTexto",
+            "amarillo",
+            "bordeTexto"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/red.js",
+      "size": 11982,
+      "sha256": "e383926e3243f7ef18efd9be80d8efb604dc753c935b4156adf70a6a8aad3c50",
+      "parsed": true,
+      "functions": [
+        "urlServidor"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "SIM",
+          "size": 3,
+          "keys": [
+            "lag",
+            "jitter",
+            "perdida"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/sonido.js",
+      "size": 10757,
+      "sha256": "0cd22ce15c764429aeba6b02c3b28ebcfe18d67f6b54351d6768bac65e78fa98",
+      "parsed": true,
+      "functions": [
+        "sonar",
+        "bucle",
+        "bucleRuido",
+        "sfx",
+        "notas",
+        "ruido",
+        "tono",
+        "ocupadas",
+        "fin",
+        "audioMusica",
+        "activarMusica",
+        "musicaActiva",
+        "silenciar",
+        "volumen",
+        "iniciar",
+        "audioGrabado",
+        "grabarAudio",
+        "montar",
+        "aplicarMaster",
+        "guardar"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "BUCLES",
+          "size": 4,
+          "keys": [
+            "chorro",
+            "llamas",
+            "carga",
+            "viento"
+          ]
+        },
+        {
+          "name": "FX",
+          "size": 34,
+          "keys": [
+            "disparoAgua",
+            "disparoFuego",
+            "disparoRayo",
+            "disparoSombra",
+            "tajo",
+            "tajoFuerte",
+            "rayo",
+            "descarga",
+            "zona",
+            "golpe",
+            "golpeFuerte",
+            "superEficaz",
+            "pocoEficaz",
+            "ko",
+            "dash",
+            "salto",
+            "escudo",
+            "disfraz",
+            "clash",
+            "miss",
+            "sobrecarga",
+            "surge",
+            "combo",
+            "estado",
+            "evolucion",
+            "publico",
+            "energiaVacia",
+            "cuenta",
+            "fight",
+            "seleccion",
+            "confirmar",
+            "victoria",
+            "derrota",
+            "definitiva"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/rangos.js",
+      "size": 837,
+      "sha256": "4f9ee5d3924146d9443aac96ff007f103a12e26258fc5f746a20b2b32002f758",
+      "parsed": true,
+      "functions": [
+        "ball",
+        "rango"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/tactil.js",
+      "size": 6237,
+      "sha256": "485eaeb43acbc034caa6a6cf04d2a8608884b8903ae4e9309a24d2153dfd856c",
+      "parsed": true,
+      "functions": [
+        "esTactil"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/selector.js",
+      "size": 5153,
+      "sha256": "67bc07b434e5046f61e0aefc9c98fcf3154e7b38f372fc729d4eb544434d0209",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/arena.js",
+      "size": 31908,
+      "sha256": "9289ab14ace1b197434cd91c0a5456734b01b117b7f2b84d4329c5522ae2636a",
+      "parsed": true,
+      "functions": [
+        "ambienteArena",
+        "pixelAmb",
+        "texturaLuz",
+        "crearOvalada",
+        "crearArena",
+        "pintarKit",
+        "decoradoKit",
+        "murosKit",
+        "lineasKit",
+        "sueloKit",
+        "cubiertaDe",
+        "baldosas",
+        "gradasKit",
+        "pieza",
+        "cajasDe",
+        "charcoLuz",
+        "tramado",
+        "pintarAgua",
+        "flotador",
+        "tablones",
+        "pintarVolcan",
+        "pintarTierra",
+        "pintarTecno",
+        "cristal",
+        "muros",
+        "gradas",
+        "ruido",
+        "lineaV",
+        "lineaH",
+        "elipse",
+        "disco",
+        "circulo",
+        "rect",
+        "px",
+        "azar",
+        "medidas"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "imgs",
+          "size": 3,
+          "keys": [
+            "suelo",
+            "decorado",
+            "publico"
+          ]
+        },
+        {
+          "name": "pt",
+          "size": 5,
+          "keys": [
+            "suelo",
+            "lado",
+            "cub",
+            "brillos",
+            "lava"
+          ]
+        },
+        {
+          "name": "FILAS",
+          "size": 3,
+          "keys": [
+            "lisas",
+            "detalle",
+            "acento"
+          ]
+        },
+        {
+          "name": "KITS",
+          "size": 4,
+          "keys": [
+            "tecno",
+            "tierra",
+            "volcan",
+            "agua"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/luchador.js",
+      "size": 41825,
+      "sha256": "8e239998f285490c66cd3003cd8c3546514722020cf34955a5a54c1ba09c8931",
+      "parsed": true,
+      "functions": [
+        "hiloVerde",
+        "texturaElipse"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "SUSTITUTA",
+          "size": 25,
+          "keys": [
+            "Sleep",
+            "Strike",
+            "Swing",
+            "Shoot",
+            "Pose",
+            "Withdraw",
+            "Rotate",
+            "Hop",
+            "Faint",
+            "Charge",
+            "Attack",
+            "Double",
+            "Kick",
+            "Punch",
+            "Jab",
+            "MultiStrike",
+            "QuickStrike",
+            "SpAttack",
+            "RearUp",
+            "Hover",
+            "Shake",
+            "Appeal",
+            "Dance",
+            "Jump",
+            "LeapForth"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/ia.js",
+      "size": 27388,
+      "sha256": "4cb9500fda5c07abac16a478b6ea71cf8b592f182ee387f990f67ec99ffe3219",
+      "parsed": true,
+      "functions": [
+        "perfil"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "v",
+          "size": 17,
+          "keys": [
+            "rivalAturdido",
+            "rivalVendido",
+            "rivalCanaliza",
+            "rivalClavado",
+            "rivalSinDash",
+            "rivalEnTela",
+            "buffNivel",
+            "surge",
+            "energia",
+            "hp",
+            "rivalHp",
+            "aterrice",
+            "distancia",
+            "rivalUltiLista",
+            "rivalSinUlti",
+            "rivalQLista",
+            "rivalRmbLista"
+          ]
+        },
+        {
+          "name": "s",
+          "size": 10,
+          "keys": [
+            "r",
+            "d",
+            "ux",
+            "uy",
+            "rango",
+            "mele",
+            "rivalMele",
+            "amenazas",
+            "huir",
+            "lmb"
+          ]
+        },
+        {
+          "name": "P",
+          "size": 9,
+          "keys": [
+            "h",
+            "slot",
+            "forma",
+            "tipo",
+            "alcance",
+            "ancho",
+            "retardo",
+            "sigue",
+            "invul"
+          ]
+        },
+        {
+          "name": "DIFICULTAD",
+          "size": 5,
+          "keys": [
+            "novato",
+            "facil",
+            "normal",
+            "dificil",
+            "maestro"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/vfx.js",
+      "size": 30897,
+      "sha256": "886590ac07ce6d6c6c75cb129af8e1aa206dd5d625c768d77c4a8c7975497785",
+      "parsed": true,
+      "functions": [
+        "anuncio",
+        "globo",
+        "numeroDano",
+        "textoFlotante",
+        "estela",
+        "rayoQuebrado",
+        "impacto",
+        "grietas",
+        "terrones",
+        "anillo",
+        "rafaga",
+        "emisor",
+        "efectoHoja",
+        "voltear",
+        "spriteHoja",
+        "hay",
+        "hojaCargada",
+        "crearVariante",
+        "crearAnimsHojas",
+        "crearAnims",
+        "recolorear",
+        "cargarHojas",
+        "hojaTipo",
+        "paletaDe",
+        "kitAspecto",
+        "cicloVida",
+        "generarTexturas",
+        "aclarar"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "PREAJUSTES",
+          "size": 6,
+          "keys": [
+            "chispa",
+            "gota",
+            "humo",
+            "polvo",
+            "llama",
+            "estrella"
+          ]
+        },
+        {
+          "name": "HOJAS",
+          "size": 90,
+          "keys": [
+            "ember",
+            "flamethrower",
+            "llamitas",
+            "gotas",
+            "impacto_agua",
+            "chorro",
+            "rapidspin",
+            "quickattack",
+            "firespin",
+            "fireblast",
+            "fireblast_explosion",
+            "fly",
+            "blastburn",
+            "blastburn_tramo",
+            "aura",
+            "inferno_bola",
+            "inferno",
+            "aterriza",
+            "acometida",
+            "arco",
+            "rayosuelo",
+            "thunderbolt",
+            "thunderbolt_tramo",
+            "electroball",
+            "hiper_carga",
+            "hiper_impacto",
+            "hiper_boom",
+            "hiper_vapor",
+            "discharge",
+            "rayocae",
+            "electro",
+            "astonish",
+            "lockon",
+            "hexaviso",
+            "hexgolpe",
+            "meteoro",
+            "puf",
+            "humo",
+            "espuma",
+            "shuriken",
+            "shurikengigante",
+            "luz",
+            "solar",
+            "hojas",
+            "enredaderas",
+            "lodo_bola",
+            "lodo",
+            "latigo",
+            "raiz",
+            "ingrain",
+            "semilla",
+            "onda",
+            "cuchilla",
+            "hipnosis",
+            "vllamas",
+            "barrera",
+            "zapcannon",
+            "tornado",
+            "pulsoagua",
+            "viento",
+            "buceo",
+            "estela",
+            "geiser",
+            "teleporte",
+            "whirlwind",
+            "hipnosis-onda",
+            "aeroanillo",
+            "aeroblast",
+            "psico",
+            "psywave",
+            "atadura",
+            "psihaz_carga",
+            "psihaz_impacto",
+            "psihaz_boom",
+            "psirayo",
+            "barrier",
+            "extrasensory",
+            "diana",
+            "fuego2",
+            "pilar",
+            "hilo",
+            "curacion",
+            "aurasphere",
+            "copos",
+            "corazon",
+            "roca",
+            "huevo",
+            "telarana",
+            "shockwave",
+            "potenciar"
+          ]
+        },
+        {
+          "name": "TIPO_PALETA",
+          "size": 18,
+          "keys": [
+            "FIRE",
+            "ELECTRIC",
+            "POISON",
+            "WATER",
+            "GRASS",
+            "BUG",
+            "DARK",
+            "GHOST",
+            "DRAGON",
+            "FIGHTING",
+            "NORMAL",
+            "STEEL",
+            "PSYCHIC",
+            "FAIRY",
+            "FLYING",
+            "ROCK",
+            "GROUND",
+            "ICE"
+          ]
+        },
+        {
+          "name": "ESTILO_PALETA",
+          "size": 22,
+          "keys": [
+            "fuego",
+            "rayo",
+            "electro",
+            "veneno",
+            "agua",
+            "sombra",
+            "dragon",
+            "golpe",
+            "aura",
+            "bicho",
+            "acero",
+            "hoja",
+            "semilla",
+            "viento",
+            "sonido",
+            "rodar",
+            "psiquico",
+            "fantasma",
+            "dardo",
+            "shuriken",
+            "espuma",
+            "meteoro"
+          ]
+        },
+        {
+          "name": "PALETAS_VFX",
+          "size": 18,
+          "keys": [
+            "fuego",
+            "rayo",
+            "veneno",
+            "agua",
+            "planta",
+            "bicho",
+            "sombra",
+            "dragon",
+            "golpe",
+            "acero",
+            "aura",
+            "psiquico",
+            "volador",
+            "aire",
+            "tierra",
+            "hielo",
+            "solar",
+            "dorado"
+          ]
+        },
+        {
+          "name": "GOTAS",
+          "size": 3,
+          "keys": [
+            "burbuja-nace",
+            "burbuja",
+            "burbuja-revienta"
+          ]
+        },
+        {
+          "name": "MAPAS",
+          "size": 40,
+          "keys": [
+            "px1",
+            "px2",
+            "gota",
+            "llama",
+            "humo",
+            "estrella",
+            "p-agua",
+            "p-fuego",
+            "p-rayo",
+            "p-aura",
+            "p-hoja",
+            "p-semilla",
+            "p-brasa",
+            "p-chorrito",
+            "p-incinerar",
+            "p-roca",
+            "p-huevo",
+            "p-electro",
+            "p-corazon",
+            "p-cuchilla",
+            "p-estrella",
+            "p-pulsoAgua",
+            "p-red",
+            "p-vacio",
+            "p-hipnosis",
+            "p-copo",
+            "p-psiquico",
+            "p-fantasma",
+            "p-mira",
+            "p-shuriken",
+            "p-shurikenGigante",
+            "p-espuma",
+            "p-guijarro",
+            "p-meteoro",
+            "p-sombra",
+            "dig-monticulo-a",
+            "dig-monticulo-b",
+            "dig-terron-1",
+            "dig-terron-2",
+            "dig-terron-3"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": [
+        "shockwave-fin",
+        "psywave-fin",
+        "solar-boca",
+        "solar-c",
+        "solar-b",
+        "solar-a",
+        "solar",
+        "electroball-fin",
+        "thunderbolt-golpe",
+        "thunderbolt-boca",
+        "blastburn-punta",
+        "blastburn-boca",
+        "fireblast-boom",
+        "ember-fin",
+        "ember-l",
+        "ember-m",
+        "ember-s"
+      ]
+    },
+    {
+      "file": "src-3a160064ab/sprites.js",
+      "size": 4621,
+      "sha256": "feaaff980e26bbba164a97084c9b5a815edb7a61648dcfcdbb512dc95b682b07",
+      "parsed": true,
+      "functions": [
+        "tiemposAnim",
+        "atacarEnMenu",
+        "precargarLineas",
+        "alTerminarCarga",
+        "crearAnimsPMD",
+        "soltarPMD",
+        "cargarPMD",
+        "enCamino",
+        "soloFormas",
+        "formasDe",
+        "auraAspecto",
+        "ponerRetrato",
+        "filaDesdeAngulo"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/controles.js",
+      "size": 5063,
+      "sha256": "5878b9102a8337928d97c82db4ce1613493e41f4f947c5ea392ff074b408ce84",
+      "parsed": true,
+      "functions": [
+        "pulsacionesMenu",
+        "crearControl",
+        "alRival",
+        "mandos"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "ahora",
+          "size": 12,
+          "keys": [
+            "izq",
+            "der",
+            "arr",
+            "aba",
+            "a",
+            "b",
+            "x",
+            "y",
+            "lb",
+            "rb",
+            "select",
+            "start"
+          ]
+        },
+        {
+          "name": "DISPOSITIVOS",
+          "size": 7,
+          "keys": [
+            "kbm",
+            "teclado2",
+            "pad0",
+            "pad1",
+            "pad2",
+            "pad3",
+            "tactil"
+          ]
+        },
+        {
+          "name": "PAD",
+          "size": 6,
+          "keys": [
+            "lmb",
+            "rmb",
+            "esp",
+            "q",
+            "e",
+            "mega"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/guia.js",
+      "size": 12601,
+      "sha256": "a901963ffba2891d50140f39ae16a6f98f6c06d1adab9ec18afe5618479a1a33",
+      "parsed": true,
+      "functions": [
+        "describir"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "DESCRIPCIONES",
+          "size": 164,
+          "keys": [
+            "Razor Leaf",
+            "Solar Beam",
+            "Growth",
+            "Sludge Bomb",
+            "Vine Whip",
+            "Leech Seed",
+            "Ingrain",
+            "Frenzy Plant",
+            "Ember",
+            "Flamethrower",
+            "Quick Attack",
+            "Fire Spin",
+            "Fire Blast",
+            "Blast Burn",
+            "Fly",
+            "Water Gun",
+            "Bubble Beam",
+            "Rapid Spin",
+            "Hydro Typhoon",
+            "squirtle:Hydro Pump",
+            "Hydro Cannon",
+            "Wing Attack",
+            "Air Cutter",
+            "Acrobatics",
+            "Leech Life",
+            "Supersonic",
+            "Cross Poison",
+            "Karate Chop",
+            "Low Sweep",
+            "Bullet Punch",
+            "Revenge",
+            "Seismic Toss",
+            "Dynamic Punch",
+            "Stomp",
+            "Inferno",
+            "Flame Charge",
+            "ponyta:Bounce",
+            "Flare Blitz",
+            "Megahorn",
+            "Rock Throw",
+            "Rock Slide",
+            "Dig",
+            "Earthquake",
+            "onix:Earthquake",
+            "Stone Edge",
+            "Iron Tail",
+            "Gyro Ball",
+            "onix:Heavy Slam",
+            "Bullet Seed",
+            "Barrage",
+            "Teleport",
+            "Hypnosis",
+            "Egg Bomb",
+            "magikarp:Tackle",
+            "Flail",
+            "Splash",
+            "magikarp:Bounce",
+            "Aqua Tail",
+            "Dragon Tail",
+            "Waterfall",
+            "Dragon Dance",
+            "Hyper Beam",
+            "Lick",
+            "Body Slam",
+            "munchlax:Tackle",
+            "Rest",
+            "Giga Impact",
+            "Crunch",
+            "Pulverizing Pancake",
+            "Charge Beam",
+            "Thunderbolt",
+            "Drill Peck",
+            "Charge",
+            "Zap Cannon",
+            "Thunder Shock",
+            "pichu:Electro Ball",
+            "Discharge",
+            "pichu:Thunder",
+            "Volt Tackle",
+            "Thunder Fang",
+            "Shock Wave",
+            "Extreme Speed",
+            "Calm Mind",
+            "Wild Charge",
+            "Fire Fang",
+            "Overheat",
+            "Lava Plume",
+            "Eruption",
+            "Water Pulse",
+            "Aurora Beam",
+            "Mirror Coat",
+            "Blizzard",
+            "Grass Knot",
+            "Rollout",
+            "Harden",
+            "Explosion",
+            "Feint Attack",
+            "Fake Out",
+            "Sucker Punch",
+            "Leaf Tornado",
+            "Pound",
+            "Jump Kick",
+            "Agility",
+            "Dizzy Punch",
+            "buneary:Bounce",
+            "Low Kick",
+            "High Jump Kick",
+            "Charm",
+            "Power-Up Punch",
+            "Force Palm",
+            "Vacuum Wave",
+            "Close Combat",
+            "Reversal",
+            "Aura Storm",
+            "Bone Rush",
+            "Aura Sphere",
+            "Extrasensory",
+            "lugia:Hydro Pump",
+            "Dive",
+            "Whirlwind",
+            "Aeroblast",
+            "Shadow Wave",
+            "Shadow Blast",
+            "Incinerate",
+            "Brave Bird",
+            "Recover",
+            "Sacred Fire",
+            "Mega Punch",
+            "Knock Off",
+            "regigigas:Heavy Slam",
+            "Drain Punch",
+            "Crush Grip",
+            "Searing Shot",
+            "Zen Headbutt",
+            "Victory Dance",
+            "V-create",
+            "String Shot",
+            "Electroweb",
+            "Thread Swing",
+            "joltik:Electro Ball",
+            "Sticky Web",
+            "joltik:Thunder",
+            "Astonish",
+            "Lock-On",
+            "dreepy:Agility",
+            "Phantom Force",
+            "Hex",
+            "Dragon Darts",
+            "Draco Meteor",
+            "Bubble",
+            "froakie:Water Pulse",
+            "Smokescreen",
+            "froakie:Hydro Pump",
+            "Smack Down",
+            "Double Team",
+            "Water Shuriken",
+            "Shadow Sneak",
+            "Waterburst Shuriken",
+            "Confusion",
+            "Focus Punch",
+            "Barrier",
+            "Psywave",
+            "Psybeam",
+            "Psystrike"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/liga.js",
+      "size": 4156,
+      "sha256": "36261ad52e84d05be1f4e0f8639fd67b1a5d1d22a10b6520e867a1573815c1c6",
+      "parsed": true,
+      "functions": [
+        "reiniciarLiga",
+        "fundir",
+        "sincronizar",
+        "vencer",
+        "estadoRival",
+        "ligaAbierta",
+        "guardar",
+        "progreso"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "LIGA",
+          "size": 4,
+          "keys": [
+            "version",
+            "iniciales",
+            "abiertos",
+            "ligas"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/aspectos.js",
+      "size": 833,
+      "sha256": "e6c0614d35551fbbd83cd7a0ed8e603f633de5f57f9948ba1cddc9496e999065",
+      "parsed": true,
+      "functions": [
+        "elegirAspecto",
+        "aspectoDe",
+        "preferencias"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/pantalla.js",
+      "size": 2185,
+      "sha256": "671ee26de75ff0f2fa2b6df2bed37685a9312848b15d5fb7808a558554e82fb4",
+      "parsed": true,
+      "functions": [
+        "botonPantallaCompleta",
+        "avisoIphone",
+        "alternarPantallaCompleta"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/tutorial.js",
+      "size": 22605,
+      "sha256": "9c2edf5b21a9c3ace09ad7c40e8b7be0dfa8bd19f5c670037dd0ec608068152b",
+      "parsed": true,
+      "functions": [
+        "foco",
+        "sitio",
+        "tarjeta",
+        "escucharDispositivo",
+        "datosTutorial",
+        "marcarTutorial",
+        "tutorialHecho"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "opc",
+          "size": 4,
+          "keys": [
+            "titulo",
+            "cuerpo",
+            "botones",
+            "pista"
+          ]
+        },
+        {
+          "name": "R",
+          "size": 4,
+          "keys": [
+            "vida",
+            "exp",
+            "energia",
+            "ulti"
+          ]
+        },
+        {
+          "name": "it",
+          "size": 4,
+          "keys": [
+            "mx",
+            "my",
+            "ax",
+            "ay"
+          ]
+        },
+        {
+          "name": "GUIONES",
+          "size": 3,
+          "keys": [
+            "ember",
+            "fireblast",
+            "llamas"
+          ]
+        },
+        {
+          "name": "NOMBRE_DISP",
+          "size": 3,
+          "keys": [
+            "kbm",
+            "tactil",
+            "pad"
+          ]
+        },
+        {
+          "name": "PALABRAS",
+          "size": 3,
+          "keys": [
+            "kbm",
+            "tactil",
+            "pad"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/iconos.js",
+      "size": 8118,
+      "sha256": "aed33ebf3faa209e79280cc011a2b3894382e00feb29673b6a7359007173f8e2",
+      "parsed": true,
+      "functions": [
+        "texturasUI",
+        "pintarHalo",
+        "centrarMapa",
+        "pintarMapa"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "COLORES_DESTELLO",
+          "size": 5,
+          "keys": [
+            "cian",
+            "oro",
+            "lila",
+            "rosa",
+            "blanco"
+          ]
+        },
+        {
+          "name": "ICONOS",
+          "size": 17,
+          "keys": [
+            "pokeball",
+            "globo",
+            "pokedex",
+            "periodico",
+            "personas",
+            "perfil",
+            "robot",
+            "dos",
+            "diana",
+            "espadas",
+            "atras",
+            "trofeo",
+            "mas",
+            "lupa",
+            "amigos",
+            "podio",
+            "ayuda"
+          ]
+        },
+        {
+          "name": "PALETA",
+          "size": 19,
+          "keys": [
+            "k",
+            "w",
+            "l",
+            "g",
+            "G",
+            "r",
+            "R",
+            "p",
+            "b",
+            "B",
+            "c",
+            "n",
+            "y",
+            "Y",
+            "o",
+            "O",
+            "v",
+            "V",
+            "m"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/habilidades.js",
+      "size": 199484,
+      "sha256": "8fdd899d57a40c043d764d4ec22cbb93b3389e98c953496dfb72b039533b36ff",
+      "parsed": true,
+      "functions": [
+        "maleficio",
+        "humo",
+        "oculto",
+        "clones",
+        "humareda",
+        "renacer",
+        "bombaLodo",
+        "crecimiento",
+        "descanso",
+        "vcreate",
+        "llamaSuelo",
+        "dentroTriangulo",
+        "redElectrica",
+        "telarana",
+        "ponerTela",
+        "embestidas",
+        "lluvia",
+        "recuperar",
+        "chapoteo",
+        "viento",
+        "meteoro",
+        "patada",
+        "golpe",
+        "explosion",
+        "trampa",
+        "lanzamiento",
+        "reflejar",
+        "golpeContra",
+        "contraatacar",
+        "contra",
+        "torbellino",
+        "potenciar",
+        "crater",
+        "plantaFeroz",
+        "arraigo",
+        "tormentaHojas",
+        "burbujas",
+        "hidrocanon",
+        "caparazon",
+        "helice",
+        "vuelo",
+        "remolinoFuego",
+        "erupcion",
+        "dibujarPicos",
+        "dibujarPilar",
+        "dibujarRaices",
+        "evolucionar",
+        "tormenta",
+        "megaevolucionar",
+        "mira",
+        "furia",
+        "rafaga",
+        "esconder",
+        "terremoto",
+        "atrapa",
+        "rayoCielo",
+        "ola",
+        "explotarRayo",
+        "explotar",
+        "definitiva",
+        "salto",
+        "romperDisfraz",
+        "disfraz",
+        "andanada",
+        "estallido",
+        "burbuja",
+        "ponerBarrera",
+        "escudo",
+        "hojaDash",
+        "teleporte",
+        "dash",
+        "tajo",
+        "asistir",
+        "cortarProyectiles",
+        "dibujarZarpazo",
+        "golpearPulso",
+        "pulso",
+        "rayo",
+        "zona",
+        "cono",
+        "anularDisparos",
+        "chorro",
+        "trozosDeChorro",
+        "humoPropio",
+        "cegado",
+        "proyectil",
+        "reventarSemilla",
+        "habilidadRemota",
+        "presentar",
+        "etiquetarAccion",
+        "usarHabilidad",
+        "motaDeLuz",
+        "bulbo",
+        "canon",
+        "rayosDe",
+        "recortarParticulas",
+        "choqueRayos",
+        "salidaRecta",
+        "alturaRayo",
+        "boca",
+        "distSegmento",
+        "angApunte"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "c",
+          "size": 7,
+          "keys": [
+            "ox",
+            "oy",
+            "x",
+            "y",
+            "spr",
+            "vivo",
+            "mult"
+          ]
+        },
+        {
+          "name": "PIEZAS",
+          "size": 4,
+          "keys": [
+            "roca",
+            "huevo",
+            "magma",
+            "meteoro"
+          ]
+        },
+        {
+          "name": "bu",
+          "size": 10,
+          "keys": [
+            "x",
+            "y",
+            "alt",
+            "vx",
+            "vy",
+            "v",
+            "rec",
+            "r",
+            "fase",
+            "vivo"
+          ]
+        },
+        {
+          "name": "FORMAS",
+          "size": 53,
+          "keys": [
+            "proyectil",
+            "chorro",
+            "cono",
+            "zona",
+            "rayo",
+            "pulso",
+            "tajo",
+            "dash",
+            "escudo",
+            "disfraz",
+            "salto",
+            "ola",
+            "rayoCielo",
+            "atrapa",
+            "rafaga",
+            "furia",
+            "tormenta",
+            "erupcion",
+            "vuelo",
+            "helice",
+            "caparazon",
+            "hidrocanon",
+            "burbujas",
+            "tormentaHojas",
+            "arraigo",
+            "plantaFeroz",
+            "potenciar",
+            "torbellino",
+            "contra",
+            "lanzamiento",
+            "trampa",
+            "explosion",
+            "golpe",
+            "patada",
+            "meteoro",
+            "viento",
+            "chapoteo",
+            "recuperar",
+            "lluvia",
+            "embestidas",
+            "telarana",
+            "redElectrica",
+            "vcreate",
+            "descanso",
+            "crecimiento",
+            "bombaLodo",
+            "clones",
+            "humo",
+            "maleficio",
+            "mira",
+            "burbuja",
+            "andanada",
+            "estallido"
+          ]
+        },
+        {
+          "name": "PALETAS",
+          "size": 8,
+          "keys": [
+            "agua",
+            "solar",
+            "aura",
+            "hiper",
+            "aero",
+            "aurora",
+            "sombra",
+            "psiquico"
+          ]
+        },
+        {
+          "name": "hm",
+          "size": 4,
+          "keys": [
+            "explosion",
+            "metralla",
+            "alCursor",
+            "teledirigido"
+          ]
+        },
+        {
+          "name": "COLOR_EXPLOSION",
+          "size": 4,
+          "keys": [
+            "fuego",
+            "semilla",
+            "huevo",
+            "shurikenGigante"
+          ]
+        },
+        {
+          "name": "desde",
+          "size": 3,
+          "keys": [
+            "x",
+            "y",
+            "alt"
+          ]
+        },
+        {
+          "name": "desde",
+          "size": 3,
+          "keys": [
+            "x",
+            "y",
+            "alt"
+          ]
+        },
+        {
+          "name": "desde",
+          "size": 3,
+          "keys": [
+            "x",
+            "y",
+            "alt"
+          ]
+        },
+        {
+          "name": "COLOR_BOLA",
+          "size": 3,
+          "keys": [
+            "sombra",
+            "electro",
+            "aura"
+          ]
+        },
+        {
+          "name": "COLORES_TAJO",
+          "size": 9,
+          "keys": [
+            "sombra",
+            "dragon",
+            "hueso",
+            "golpe",
+            "agua",
+            "rayo",
+            "fuego",
+            "bicho",
+            "aura"
+          ]
+        },
+        {
+          "name": "desde",
+          "size": 3,
+          "keys": [
+            "x",
+            "y",
+            "alt"
+          ]
+        },
+        {
+          "name": "base",
+          "size": 4,
+          "keys": [
+            "fantasma",
+            "ciego",
+            "mult",
+            "fijado"
+          ]
+        },
+        {
+          "name": "g",
+          "size": 8,
+          "keys": [
+            "dano",
+            "tipo",
+            "empuje",
+            "dirX",
+            "dirY",
+            "slot",
+            "surge",
+            "proyectil"
+          ]
+        },
+        {
+          "name": "g",
+          "size": 8,
+          "keys": [
+            "dano",
+            "tipo",
+            "empuje",
+            "dirX",
+            "dirY",
+            "slot",
+            "surge",
+            "proyectil"
+          ]
+        },
+        {
+          "name": "HALO",
+          "size": 13,
+          "keys": [
+            "aura",
+            "psiquico",
+            "sombra",
+            "semilla",
+            "hoja",
+            "agua",
+            "chorrito",
+            "electro",
+            "corazon",
+            "huevo",
+            "roca",
+            "pulsoAgua",
+            "red"
+          ]
+        },
+        {
+          "name": "ESTELA",
+          "size": 28,
+          "keys": [
+            "agua",
+            "fuego",
+            "rayo",
+            "sombra",
+            "aura",
+            "hoja",
+            "semilla",
+            "psiquico",
+            "brasa",
+            "chorrito",
+            "incinerar",
+            "roca",
+            "huevo",
+            "electro",
+            "corazon",
+            "cuchilla",
+            "estrella",
+            "pulsoAgua",
+            "red",
+            "vacio",
+            "hipnosis",
+            "fantasma",
+            "mira",
+            "dardo",
+            "shuriken",
+            "espuma",
+            "guijarro",
+            "shurikenGigante"
+          ]
+        },
+        {
+          "name": "SONIDO_ESTILO",
+          "size": 28,
+          "keys": [
+            "agua",
+            "fuego",
+            "rayo",
+            "sombra",
+            "aura",
+            "hoja",
+            "semilla",
+            "psiquico",
+            "brasa",
+            "chorrito",
+            "incinerar",
+            "roca",
+            "huevo",
+            "electro",
+            "corazon",
+            "cuchilla",
+            "estrella",
+            "pulsoAgua",
+            "red",
+            "vacio",
+            "hipnosis",
+            "fantasma",
+            "mira",
+            "dardo",
+            "shuriken",
+            "espuma",
+            "guijarro",
+            "shurikenGigante"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": [
+        "ELECTRIC",
+        "solar"
+      ]
+    },
+    {
+      "file": "src-3a160064ab/azar.js",
+      "size": 377,
+      "sha256": "80e678e889d6e349de822fe395b5b9494ef9011f423fe25947455723f9b8cabf",
+      "parsed": true,
+      "functions": [
+        "sembrar",
+        "generador"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/notas.js",
+      "size": 29300,
+      "sha256": "1a6bdfab68598479efbc13f67026d7cbae2fd63870fa172975118919d54111b4",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/hud.js",
+      "size": 10200,
+      "sha256": "634a5b72bce06bd5748f8b0184d2d3623a680c4b7e47235d9a542edb78298985",
+      "parsed": true,
+      "functions": [
+        "capsula"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "lado",
+          "size": 10,
+          "keys": [
+            "l",
+            "der",
+            "nx",
+            "px",
+            "retrato",
+            "vidaTxt",
+            "estado",
+            "pips",
+            "estela",
+            "identidad"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/musica.js",
+      "size": 8556,
+      "sha256": "062d8068ad098a1c7abf1fdec8aa1ff39cfc9d4eaa45dc9166eabad05f015d40",
+      "parsed": true,
+      "functions": [
+        "renderizar",
+        "estadoMusica",
+        "refrescarMusica",
+        "pararMusica",
+        "musicaCombate",
+        "musica",
+        "soltar",
+        "vuelta",
+        "cargar",
+        "onda",
+        "pulso",
+        "timbresDe"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/online.js",
+      "size": 12030,
+      "sha256": "ac383fa976839bebf305b284f16c5d853f7b09c1248081a1f85339761f2f498d",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [
+        {
+          "name": "g",
+          "size": 5,
+          "keys": [
+            "tipo",
+            "slot",
+            "tick",
+            "pesado",
+            "puro"
+          ]
+        },
+        {
+          "name": "m",
+          "size": 13,
+          "keys": [
+            "t",
+            "l",
+            "ts",
+            "r",
+            "s",
+            "su",
+            "x",
+            "y",
+            "vx",
+            "vy",
+            "ax",
+            "ay",
+            "pc"
+          ]
+        },
+        {
+          "name": "intento",
+          "size": 4,
+          "keys": [
+            "mx",
+            "my",
+            "ax",
+            "ay"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/estadisticas.js",
+      "size": 237,
+      "sha256": "3a5c5df3eec6a873959b5f3a171e5128cbb9fbefb41f5fb895b796cc1bf4ac4c",
+      "parsed": true,
+      "functions": [
+        "modoJugado",
+        "evento"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/cerebros.js",
+      "size": 1551,
+      "sha256": "49ad5e0ed6102cffbae9b56f72aad9c2c06f827cbf65ea3ad091b998eb2f21f3",
+      "parsed": true,
+      "functions": [
+        "cerebroDe",
+        "fusionar"
+      ],
+      "exports": [],
+      "maps": [
+        {
+          "name": "POR_ROL",
+          "size": 5,
+          "keys": [
+            "FISICO",
+            "MIXTO",
+            "DISTANCIA",
+            "TANQUE",
+            "CONTROL"
+          ]
+        },
+        {
+          "name": "BASE",
+          "size": 72,
+          "keys": [
+            "rango",
+            "rangoBanda",
+            "lateralEntrada",
+            "lateral",
+            "huidaMele",
+            "pPlantarse",
+            "plantadoDur",
+            "rodeoDur",
+            "rodeo",
+            "respetoGuardia",
+            "pesoEsquiva",
+            "horizonteEsquiva",
+            "horizonteBasico",
+            "cambioLado",
+            "huidaZona",
+            "volarContraRayo",
+            "humoDist",
+            "dashUrgencia",
+            "prisa",
+            "acosadoDist",
+            "valorBase",
+            "pesoDano",
+            "pesoEficacia",
+            "pesoLetal",
+            "pesoVendido",
+            "pesoApartar",
+            "ultiAjuste",
+            "ultiPaciencia",
+            "ultiRelajo",
+            "ultiDesesperado",
+            "energiaTope",
+            "pSeguro",
+            "pConGanas",
+            "pSinGanas",
+            "agresividad",
+            "reservaEnergia",
+            "pAhorro",
+            "cautelaUlti",
+            "arraigoHp",
+            "arraigoDist",
+            "curaHp",
+            "curaUrgente",
+            "restHp",
+            "restDist",
+            "growthDist",
+            "growthEnergia",
+            "growthSoltar",
+            "buffDist",
+            "buffDistAcum",
+            "buffCalor",
+            "furiaDist",
+            "clonesDist",
+            "humoCerca",
+            "contraDist",
+            "escudoDist",
+            "splashDist",
+            "escapeHp",
+            "escapeDist",
+            "pEscape",
+            "pEmbestir",
+            "pEntrar",
+            "entradaLateral",
+            "volarLejos",
+            "pVolar",
+            "pCaer",
+            "evoDist",
+            "evoHp",
+            "megaDist",
+            "calorTope",
+            "pBasico",
+            "confianza",
+            "combos"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/publico.js",
+      "size": 4060,
+      "sha256": "e08ef613fd1a7d0be8aa7b9cd52af66cacc6d5a6c6fbd63dad68ece04d60770b",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/grabacion.js",
+      "size": 3834,
+      "sha256": "62b7c4b12750da54b5230c6cb18903794f77969638e8664ca838019b2000f0de",
+      "parsed": true,
+      "functions": [
+        "comprimir",
+        "grabable"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/juez.js",
+      "size": 8030,
+      "sha256": "16eca3f2f0e9fac4254254ffda9e81bef7240e061fb958025a21efaaeb27f45f",
+      "parsed": true,
+      "functions": [
+        "topeBuff",
+        "limpiarDatos"
+      ],
+      "exports": [],
+      "maps": [],
+      "resources": [],
+      "candidateNames": []
+    },
+    {
+      "file": "src-3a160064ab/cerebros_aprendidos.js",
+      "size": 18266,
+      "sha256": "9ac92738dc5e5333a50ebc16112b359b26adc8cba551da2610f3c4a2e01f6627",
+      "parsed": true,
+      "functions": [],
+      "exports": [],
+      "maps": [
+        {
+          "name": "META",
+          "size": 13,
+          "keys": [
+            "charmander",
+            "froakie",
+            "joltik",
+            "mewtwo",
+            "munchlax",
+            "onix",
+            "pichu",
+            "ponyta",
+            "riolu",
+            "seedot",
+            "suicune",
+            "victini",
+            "zapdos"
+          ]
+        },
+        {
+          "name": "APRENDIDOS",
+          "size": 13,
+          "keys": [
+            "charmander",
+            "froakie",
+            "joltik",
+            "mewtwo",
+            "munchlax",
+            "onix",
+            "pichu",
+            "ponyta",
+            "riolu",
+            "seedot",
+            "suicune",
+            "victini",
+            "zapdos"
+          ]
+        }
+      ],
+      "resources": [],
+      "candidateNames": []
+    }
+  ],
+  "atlas": [
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "potenciar",
+      "fw": 64,
+      "fh": 42,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "potenciar",
+          "fps": 14
+        },
+        {
+          "name": "potenciar-bucle",
+          "fps": 10
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "shockwave",
+      "fw": 32,
+      "fh": 32,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "shockwave",
+          "fps": 14
+        },
+        {
+          "name": "shockwave-fin",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "telarana",
+      "fw": 96,
+      "fh": 64,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "telarana-nace",
+          "fps": 12
+        },
+        {
+          "name": "telarana",
+          "fps": 6
+        },
+        {
+          "name": "telarana-rompe",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "huevo",
+      "fw": 32,
+      "fh": 32,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "huevo",
+          "fps": 10
+        },
+        {
+          "name": "huevo-cae",
+          "fps": 8
+        },
+        {
+          "name": "huevo-fin",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "roca",
+      "fw": 32,
+      "fh": 32,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "roca",
+          "fps": 10
+        },
+        {
+          "name": "roca-cae",
+          "fps": 8
+        },
+        {
+          "name": "roca-fin",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "corazon",
+      "fw": 32,
+      "fh": 32,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "corazon",
+          "fps": 10
+        },
+        {
+          "name": "corazon-fin",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "copos",
+      "fw": 24,
+      "fh": 24,
+      "cols": 8,
+      "anims": []
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "aurasphere",
+      "fw": 24,
+      "fh": 24,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "vacuum",
+          "fps": 14
+        },
+        {
+          "name": "vacuum-fin",
+          "fps": 14
+        },
+        {
+          "name": "aurasphere",
+          "fps": 12
+        },
+        {
+          "name": "aurasphere-fin",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "curacion",
+      "fw": 64,
+      "fh": 64,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "curar",
+          "fps": 12
+        },
+        {
+          "name": "absorber",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "hilo",
+      "fw": 32,
+      "fh": 32,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "hilo",
+          "fps": 12
+        },
+        {
+          "name": "hilo-fin",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "pilar",
+      "fw": 48,
+      "fh": 80,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "picos",
+          "fps": 14
+        },
+        {
+          "name": "pilar",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "fuego2",
+      "fw": 24,
+      "fh": 24,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "incinerate",
+          "fps": 12
+        },
+        {
+          "name": "incinerate-fin",
+          "fps": 14
+        },
+        {
+          "name": "searing",
+          "fps": 12
+        },
+        {
+          "name": "searing-fin",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "diana",
+      "fw": 128,
+      "fh": 85,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "diana",
+          "fps": 8
+        },
+        {
+          "name": "crater",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "extrasensory",
+      "fw": 24,
+      "fh": 32,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "extrasensory-s",
+          "fps": 12
+        },
+        {
+          "name": "extrasensory-l",
+          "fps": 12
+        },
+        {
+          "name": "extrasensory-fin",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "barrier",
+      "fw": 56,
+      "fh": 56,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "barrier-nace",
+          "fps": 14
+        },
+        {
+          "name": "barrier",
+          "fps": 8
+        },
+        {
+          "name": "barrier-rompe",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "psirayo",
+      "fw": 40,
+      "fh": 40,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "psirayo",
+          "fps": 14
+        },
+        {
+          "name": "psirayo-fin",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "psihaz_boom",
+      "fw": 80,
+      "fh": 80,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "psihazboom",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "psihaz_impacto",
+      "fw": 56,
+      "fh": 56,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "psihazimpacto",
+          "fps": 18
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "psihaz_carga",
+      "fw": 56,
+      "fh": 56,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "psihazcarga-1",
+          "fps": 14
+        },
+        {
+          "name": "psihazcarga-2",
+          "fps": 16
+        },
+        {
+          "name": "psihazcarga-3",
+          "fps": 20
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "atadura",
+      "fw": 32,
+      "fh": 32,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "atadura",
+          "fps": 10
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "psywave",
+      "fw": 22,
+      "fh": 22,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "psywave",
+          "fps": 14
+        },
+        {
+          "name": "psywave-fin",
+          "fps": 18
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "psico",
+      "fw": 28,
+      "fh": 28,
+      "cols": 8,
+      "anims": [
+        {
+          "name": "psico-fin",
+          "fps": 18
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "aeroblast",
+      "fw": 48,
+      "fh": 32,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "aero-a",
+          "fps": 16
+        },
+        {
+          "name": "aero-b",
+          "fps": 16
+        },
+        {
+          "name": "aero-c",
+          "fps": 16
+        },
+        {
+          "name": "aero-boca",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "aeroanillo",
+      "fw": 28,
+      "fh": 56,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "aero-anillo",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "hipnosis-onda",
+      "fw": 112,
+      "fh": 96,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "hipnosis-onda",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "whirlwind",
+      "fw": 128,
+      "fh": 96,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "whirlwind",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "teleporte",
+      "fw": 48,
+      "fh": 80,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "teleporte-sale",
+          "fps": 14
+        },
+        {
+          "name": "teleporte-llega",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "geiser",
+      "fw": 56,
+      "fh": 112,
+      "cols": 8,
+      "anims": [
+        {
+          "name": "geiser",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "estela",
+      "fw": 120,
+      "fh": 64,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "estela",
+          "fps": 10
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "buceo",
+      "fw": 96,
+      "fh": 96,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "buceo-entra",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "viento",
+      "fw": 128,
+      "fh": 102,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "viento",
+          "fps": 12
+        },
+        {
+          "name": "ondas",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "pulsoagua",
+      "fw": 32,
+      "fh": 32,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "pulsoagua",
+          "fps": 12
+        },
+        {
+          "name": "pulsoagua-fin",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "tornado",
+      "fw": 96,
+      "fh": 112,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "tornado",
+          "fps": 14
+        },
+        {
+          "name": "tornado-grande",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "zapcannon",
+      "fw": 48,
+      "fh": 48,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "zapcannon",
+          "fps": 12
+        },
+        {
+          "name": "zapcannon-nace",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "barrera",
+      "fw": 64,
+      "fh": 64,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "barrera-nace",
+          "fps": 12
+        },
+        {
+          "name": "barrera",
+          "fps": 6
+        },
+        {
+          "name": "barrera-rompe",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "vllamas",
+      "fw": 48,
+      "fh": 48,
+      "cols": 6,
+      "anims": []
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "hipnosis",
+      "fw": 32,
+      "fh": 32,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "hipnosis",
+          "fps": 10
+        },
+        {
+          "name": "hipnosis-fin",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "cuchilla",
+      "fw": 40,
+      "fh": 28,
+      "cols": 3,
+      "anims": [
+        {
+          "name": "cuchilla",
+          "fps": 12
+        },
+        {
+          "name": "cuchilla-fin",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "onda",
+      "fw": 192,
+      "fh": 128,
+      "cols": 3,
+      "anims": [
+        {
+          "name": "onda",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "semilla",
+      "fw": 24,
+      "fh": 24,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "semilla",
+          "fps": 12
+        },
+        {
+          "name": "brote-nace",
+          "fps": 10
+        },
+        {
+          "name": "brote",
+          "fps": 6
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "ingrain",
+      "fw": 56,
+      "fh": 40,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "ingrain-nace",
+          "fps": 10
+        },
+        {
+          "name": "ingrain",
+          "fps": 6
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "raiz",
+      "fw": 24,
+      "fh": 56,
+      "cols": 8,
+      "anims": [
+        {
+          "name": "raiz",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "latigo",
+      "fw": 96,
+      "fh": 48,
+      "cols": 3,
+      "anims": [
+        {
+          "name": "latigo",
+          "fps": 24
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "lodo",
+      "fw": 64,
+      "fh": 48,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "lodo-cae",
+          "fps": 14
+        },
+        {
+          "name": "charco",
+          "fps": 8
+        },
+        {
+          "name": "charco-seca",
+          "fps": 10
+        },
+        {
+          "name": "burbuja-veneno",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "lodo_bola",
+      "fw": 40,
+      "fh": 32,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "lodo",
+          "fps": 10
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "enredaderas",
+      "fw": 96,
+      "fh": 64,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "enredaderas",
+          "fps": 10
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "hojas",
+      "fw": 24,
+      "fh": 24,
+      "cols": 8,
+      "anims": [
+        {
+          "name": "corte",
+          "fps": 18
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "solar",
+      "fw": 48,
+      "fh": 32,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "solar-a",
+          "fps": 16
+        },
+        {
+          "name": "solar-b",
+          "fps": 16
+        },
+        {
+          "name": "solar-c",
+          "fps": 16
+        },
+        {
+          "name": "solar-boca",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "luz",
+      "fw": 64,
+      "fh": 64,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "mota",
+          "fps": 14
+        },
+        {
+          "name": "halo-1",
+          "fps": 10
+        },
+        {
+          "name": "halo-2",
+          "fps": 10
+        },
+        {
+          "name": "halo-3",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "shurikengigante",
+      "fw": 64,
+      "fh": 64,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "shurikengigante",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "shuriken",
+      "fw": 24,
+      "fh": 24,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "shuriken",
+          "fps": 16
+        },
+        {
+          "name": "guijarro",
+          "fps": 10
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "espuma",
+      "fw": 24,
+      "fh": 24,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "espuma",
+          "fps": 10
+        },
+        {
+          "name": "espuma-fin",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "humo",
+      "fw": 128,
+      "fh": 96,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "humo-nace",
+          "fps": 12
+        },
+        {
+          "name": "humo-nube",
+          "fps": 6
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "puf",
+      "fw": 48,
+      "fh": 48,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "puf",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "meteoro",
+      "fw": 64,
+      "fh": 64,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "meteoro-cae",
+          "fps": 14
+        },
+        {
+          "name": "meteoro-fin",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "hexgolpe",
+      "fw": 64,
+      "fh": 99,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "hex-golpe",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "hexaviso",
+      "fw": 64,
+      "fh": 48,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "hex-aviso",
+          "fps": 10
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "lockon",
+      "fw": 40,
+      "fh": 40,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "lockon",
+          "fps": 14
+        },
+        {
+          "name": "mira-nace",
+          "fps": 16
+        },
+        {
+          "name": "mira",
+          "fps": 8
+        },
+        {
+          "name": "lockon-fin",
+          "fps": 18
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "astonish",
+      "fw": 24,
+      "fh": 24,
+      "cols": 8,
+      "anims": [
+        {
+          "name": "astonish-fin",
+          "fps": 18
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "electro",
+      "fw": 28,
+      "fh": 28,
+      "cols": 8,
+      "anims": [
+        {
+          "name": "chispazo",
+          "fps": 18
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "rayocae",
+      "fw": 48,
+      "fh": 176,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "rayo-cae",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "discharge",
+      "fw": 160,
+      "fh": 112,
+      "cols": 3,
+      "anims": [
+        {
+          "name": "discharge",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "hiper_vapor",
+      "fw": 32,
+      "fh": 32,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "hipervapor",
+          "fps": 9
+        },
+        {
+          "name": "hiperbrasa",
+          "fps": 10
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "hiper_boom",
+      "fw": 80,
+      "fh": 80,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "hiperboom",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "hiper_impacto",
+      "fw": 56,
+      "fh": 56,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "hiperimpacto",
+          "fps": 18
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "hiper_carga",
+      "fw": 56,
+      "fh": 56,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "hipercarga-1",
+          "fps": 14
+        },
+        {
+          "name": "hipercarga-2",
+          "fps": 16
+        },
+        {
+          "name": "hipercarga-3",
+          "fps": 20
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "electroball",
+      "fw": 40,
+      "fh": 40,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "electroball",
+          "fps": 14
+        },
+        {
+          "name": "electroball-fin",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "thunderbolt_tramo",
+      "fw": 96,
+      "fh": 32,
+      "cols": 4,
+      "anims": []
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "thunderbolt",
+      "fw": 96,
+      "fh": 32,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "thunderbolt-boca",
+          "fps": 18
+        },
+        {
+          "name": "thunderbolt-golpe",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "rayosuelo",
+      "fw": 80,
+      "fh": 48,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "rayo-aviso",
+          "fps": 10
+        },
+        {
+          "name": "rayo-suelo",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "arco",
+      "fw": 64,
+      "fh": 48,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "arco",
+          "fps": 20
+        },
+        {
+          "name": "arco-fuerte",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "acometida",
+      "fw": 80,
+      "fh": 40,
+      "cols": 3,
+      "anims": [
+        {
+          "name": "acometida",
+          "fps": 24
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "aterriza",
+      "fw": 96,
+      "fh": 48,
+      "cols": 3,
+      "anims": [
+        {
+          "name": "aterriza",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "inferno",
+      "fw": 96,
+      "fh": 80,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "boom",
+          "fps": 18
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "inferno_bola",
+      "fw": 40,
+      "fh": 40,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "inferno",
+          "fps": 12
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "aura",
+      "fw": 80,
+      "fh": 56,
+      "cols": 3,
+      "anims": [
+        {
+          "name": "aura",
+          "fps": 30
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "blastburn_tramo",
+      "fw": 95,
+      "fh": 24,
+      "cols": 4,
+      "anims": []
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "blastburn",
+      "fw": 96,
+      "fh": 40,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "blastburn-boca",
+          "fps": 14
+        },
+        {
+          "name": "blastburn-punta",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "fly",
+      "fw": 96,
+      "fh": 64,
+      "cols": 3,
+      "anims": [
+        {
+          "name": "fly",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "fireblast_explosion",
+      "fw": 112,
+      "fh": 112,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "fireblast-boom",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "fireblast",
+      "fw": 53,
+      "fh": 53,
+      "cols": 2,
+      "anims": [
+        {
+          "name": "fireblast",
+          "fps": 10
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "firespin",
+      "fw": 128,
+      "fh": 96,
+      "cols": 3,
+      "anims": [
+        {
+          "name": "firespin",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "quickattack",
+      "fw": 64,
+      "fh": 32,
+      "cols": 2,
+      "anims": [
+        {
+          "name": "quickattack",
+          "fps": 18
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "rapidspin",
+      "fw": 64,
+      "fh": 48,
+      "cols": 3,
+      "anims": [
+        {
+          "name": "rapidspin",
+          "fps": 20
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "chorro",
+      "fw": 40,
+      "fh": 32,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "chorro-a",
+          "fps": 10
+        },
+        {
+          "name": "chorro-b",
+          "fps": 10
+        },
+        {
+          "name": "chorro-c",
+          "fps": 10
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "impacto_agua",
+      "fw": 32,
+      "fh": 32,
+      "cols": 6,
+      "anims": [
+        {
+          "name": "salpicadura",
+          "fps": 16
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "gotas",
+      "fw": 24,
+      "fh": 24,
+      "cols": 8,
+      "anims": []
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "llamitas",
+      "fw": 24,
+      "fh": 24,
+      "cols": 8,
+      "anims": []
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "flamethrower",
+      "fw": 112,
+      "fh": 64,
+      "cols": 2,
+      "anims": [
+        {
+          "name": "flamethrower",
+          "fps": 14
+        }
+      ]
+    },
+    {
+      "source": "src-3a160064ab/vfx.js",
+      "key": "ember",
+      "fw": 32,
+      "fh": 32,
+      "cols": 4,
+      "anims": [
+        {
+          "name": "ember-s",
+          "fps": 12
+        },
+        {
+          "name": "ember-m",
+          "fps": 12
+        },
+        {
+          "name": "ember-l",
+          "fps": 12
+        },
+        {
+          "name": "ember-fin",
+          "fps": 16
+        }
+      ]
+    }
+  ],
+  "resourceReferences": [
+    "assets/arenas/ovaladas/ruinas.jpg",
+    "assets/arenas/ovaladas/crater.jpg",
+    "assets/arenas/ovaladas/neon.jpg",
+    "assets/arenas/ovaladas/estadio.jpg",
+    "assets/arenas/publico.png",
+    "assets/ui/logo.png",
+    "assets/creditos.json",
+    "assets/pmd/manifest.json",
+    "assets/pmd/caras.json"
+  ],
+  "candidateNames": [
+    "Aeroblast",
+    "BLASTOISE",
+    "ELECTRIC",
+    "Ember",
+    "FIRE",
+    "Flamethrower",
+    "ICE",
+    "NUZLEAF",
+    "POISON",
+    "PSYCHIC",
+    "Psybeam",
+    "Psywave",
+    "Punch",
+    "ROCK",
+    "Tackle",
+    "Thunder",
+    "Thunderbolt",
+    "WATER",
+    "Waterfall",
+    "blastburn",
+    "blastburn-boca",
+    "blastburn-punta",
+    "electroball",
+    "electroball-fin",
+    "ember-fin",
+    "ember-l",
+    "ember-m",
+    "ember-s",
+    "fireblast",
+    "fireblast-boom",
+    "firespin",
+    "flamethrower",
+    "helice",
+    "psywave",
+    "psywave-fin",
+    "redElectrica",
+    "shockwave",
+    "shockwave-fin",
+    "solar",
+    "solar-a",
+    "solar-a-aura",
+    "solar-a-hielo",
+    "solar-b",
+    "solar-b-aura",
+    "solar-b-hielo",
+    "solar-boca",
+    "solar-boca-aura",
+    "solar-boca-hielo",
+    "solar-c",
+    "solar-c-aura",
+    "solar-c-hielo",
+    "thunderbolt",
+    "thunderbolt-boca",
+    "thunderbolt-golpe"
+  ],
+  "towerFolders": [
+    "_runtime",
+    "amnesia",
+    "aqua-jet",
+    "aqua-tail",
+    "aurora-beam",
+    "brasa",
+    "catalog",
+    "chama-circular",
+    "chamas-de-moltres",
+    "chicote-de-vinha",
+    "chicote-duplo",
+    "chicotes-em-area",
+    "confusion",
+    "discharge",
+    "electric-original",
+    "faisca",
+    "fire-blast",
+    "fire-original",
+    "flamethrower",
+    "folha-navalha",
+    "garra-de-fogo",
+    "gba-assets",
+    "geada-persistente",
+    "haze",
+    "hydro-pump",
+    "hyper-beam",
+    "ice-beam",
+    "psybeam",
+    "psychic",
+    "raio-de-gelo",
+    "raizes-violentas",
+    "rajada-flamejante",
+    "references",
+    "skull-bash",
+    "solar-beam",
+    "sopro-congelante",
+    "sprites",
+    "sunny-day",
+    "telekinesis",
+    "tempestade-de-raios",
+    "tempestade-psiquica",
+    "tri-attack",
+    "trovao",
+    "tsunami",
+    "v101-ice-official",
+    "v103-fighting",
+    "v104-fighting",
+    "v105-fighting",
+    "v106-fighting",
+    "v107-fighting",
+    "v108-fighting",
+    "v109-fighting",
+    "v110-fighting",
+    "v111-performance",
+    "v111-poison",
+    "v112-poison-preview",
+    "v113-poison-preview",
+    "v114-poison",
+    "v122-poison-preview",
+    "v128-water-preview",
+    "v130-ground-preview",
+    "v131-ground-refinement",
+    "v132-ground-approved",
+    "v133-ground-preview",
+    "v135-flying-preview",
+    "v136-flying-pixel",
+    "v144-flying-original",
+    "v145-flying-libresprite",
+    "v172-flamethrower-approved",
+    "v175-official",
+    "v176-review",
+    "v177-absorb-preview",
+    "v178-fire-pair-preview",
+    "v179-video-reference",
+    "v180-pixel-fire",
+    "v181-hand-drawn-fire",
+    "v182-flamethrower",
+    "v183-daimonji",
+    "v184-fire-four",
+    "v60-four",
+    "v63-plant",
+    "v67-four",
+    "v68-four",
+    "v72-battle",
+    "v76-preview",
+    "v77-preview",
+    "v78-preview",
+    "v79-preview",
+    "v80-preview",
+    "v81-approved",
+    "v82-preview",
+    "v83-preview",
+    "v84-preview",
+    "v86-preview",
+    "v89-four",
+    "v91-four",
+    "v92-four",
+    "v99-ice-preview",
+    "vine-whip",
+    "water-gun",
+    "water-original",
+    "water-pulse",
+    "will-o-wisp"
+  ],
+  "networkAssets": [
+    {
+      "path": "/assets/arenas/tecno/suelo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/ovaladas/neon.jpg",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/tierra/decorado.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/agua/suelo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/ovaladas/estadio.jpg",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/ui/logo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/publico.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/ovaladas/ruinas.jpg",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/tecno/decorado.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/tierra/suelo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/agua/decorado.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/ovaladas/crater.jpg",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/volcan/decorado.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/arenas/volcan/suelo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/manifest.json",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/creditos.json",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/cdn-cgi/rum",
+      "status": 204,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0778/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0005/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0005/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0445/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0445/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0778/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448-0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0445/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0004/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448-0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0007/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0004/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0005/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0008/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0004/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0009/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0009/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0007/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0448-0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0778/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0008/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0007/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0009/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0008/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0431/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0319/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0444/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0431/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006-0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0509/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0319/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0444/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0323/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0447/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006-0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0006-0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0431/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0052/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0323/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0323/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0052/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0319/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0443/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0052/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0447/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0443/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0447/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0443/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0444/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0509/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0823/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0229/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0877/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0757/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0229/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0877/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0877/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0229/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0966/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0757/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0509/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0823/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0966/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0823/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0757/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0966/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0067/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0066/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0067/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0067/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0066/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0066/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0068/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249-0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0068/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0130/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0130/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0130/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249-0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249-0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0249/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0129/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0250/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0129/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0129/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0068/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0273/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0275/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0275/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0250/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0274/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0250/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0273/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0273/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0274/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0274/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0427/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0427/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0427/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0275/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0145/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0145/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0095/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0095/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208-0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0095/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428-0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208-0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428-0001/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0145/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208-0001/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0428-0001/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0208/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0078/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0143/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0103/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0077/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0078/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0077/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0446/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0103/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0078/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0102/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0103/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0077/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0143/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0143/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0446/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0102/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0446/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0102/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0243/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0243/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0042/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0041/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0244/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0041/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0042/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0169/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0244/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0042/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0169/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0244/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0169/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0041/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0243/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0245/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0245/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0595/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0486/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0245/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0595/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0494/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0486/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0596/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0494/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0486/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0494/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0595/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0596/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0596/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0886/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0885/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0886/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0887/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0657/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0656/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0657/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0656/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0885/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0887/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0885/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0658/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0657/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0658/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0886/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0887/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0658/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0656/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-dorado/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-dorado/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/inferno_bola.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/flamethrower.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/fireblast.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/blastburn_tramo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002-dorado/Idle-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002-dorado/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/rapidspin.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/ember.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/firespin.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/quickattack.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-0002-dorado/Walk-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/llamitas.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/aterriza.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/blastburn.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/fireblast_explosion.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0150-dorado/portrait.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/gotas.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/aura.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/chorro.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/impacto_agua.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/fly.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/acometida.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/inferno.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hiper_impacto.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hiper_carga.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/discharge.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/arco.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/electroball.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hiper_boom.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/thunderbolt.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hiper_vapor.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/rayosuelo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/thunderbolt_tramo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/enredaderas.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/raiz.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/astonish.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/humo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/shuriken.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hojas.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/espuma.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/electro.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/rayocae.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hexgolpe.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/lockon.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/lodo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/meteoro.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hexaviso.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/lodo_bola.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/ingrain.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/solar.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/puf.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/latigo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/shurikengigante.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/luz.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/semilla.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hipnosis.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/onda.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/zapcannon.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/vllamas.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/barrera.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/pulsoagua.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/viento.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/cuchilla.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/buceo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/tornado.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/estela.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/aeroanillo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/telarana.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/teleporte.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/extrasensory.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/barrier.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/whirlwind.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psico.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/roca.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psihaz_carga.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/curacion.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/aurasphere.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/corazon.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psihaz_boom.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/shockwave.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/fuego2.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/copos.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psirayo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/aeroblast.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hipnosis-onda.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/hilo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/huevo.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psihaz_impacto.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/psywave.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/potenciar.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/diana.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/pilar.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/atadura.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/vfx/geiser.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0245/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0244/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Shoot-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Faint-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Faint-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Shoot-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Pose-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Pose-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Shoot-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0002/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0001/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/QuickStrike-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Shoot-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0003/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Faint-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Attack-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Charge-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/QuickStrike-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Pose-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0172/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Hurt-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Swing-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Shoot-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Faint-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Hop-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0025/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Pose-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Double-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/QuickStrike-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    },
+    {
+      "path": "/assets/pmd/0026/Rotate-Anim.png",
+      "status": 200,
+      "type": "xhr"
+    }
+  ],
+  "towerApproval": {
+    "sha256": "6000f71c4aec5650b069f40f106506b4beebe791f98367a0b9257262503b7c39",
+    "topLevelKeys": [
+      "saved_at",
+      "description",
+      "version_info",
+      "moves",
+      "v175_extra_protected"
+    ]
+  }
+}
