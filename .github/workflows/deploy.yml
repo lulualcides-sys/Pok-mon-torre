@@ -103,6 +103,11 @@ jobs:
           node --check effects/moves/v179-video-reference/runtime.js
           node --check tests/v179-video-fire-preview.test.cjs
           node tests/v179-video-fire-preview.test.cjs
+      - name: Testar V180 efeitos de fogo pixel 16 quadros WebGL
+        run: |
+          node --check effects/moves/v180-pixel-fire/runtime.js
+          node --check tests/v180-pixel-fire.test.cjs
+          node tests/v180-pixel-fire.test.cjs
       - name: Exportar quatro spritesheets editaveis no LibreSprite V145
         run: bash tools/libresprite/build-v145-flying.sh
       - name: Testar quatro golpes V145 montados no PixiJS
