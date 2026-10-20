@@ -7,6 +7,9 @@ on:
       - effects/moves/v187-rea-handdrawn-fire/**
       - index.html
       - tests/browser-v187-rea-fire.cjs
+      - tests/v187-fire-assets.test.cjs
+      - tools/build-v187-rea-fire-art.cjs
+      - tools/libresprite/build-v187-fire.sh
       - .github/workflows/v187-rea-fire.yml
   workflow_dispatch:
 
