@@ -1196,6 +1196,7 @@ if(new URLSearchParams(location.search).get('flame172')!=='0'&&
    new URLSearchParams(location.search).get('fire180')!=='preview'&&
    new URLSearchParams(location.search).get('fire181')!=='preview'&&
    new URLSearchParams(location.search).get('fire182')!=='preview'&&
+   new URLSearchParams(location.search).get('fire185')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v172-flamethrower-approved/runtime.js';
@@ -1349,6 +1350,7 @@ if(new URLSearchParams(location.search).get('fire182')==='preview'&&
 // Normal gameplay uses these 16 authentic pixel frames. ?fire183=0 rolls back.
 // Keep legacy previews V178–V181 isolated when explicitly selected.
 if(new URLSearchParams(location.search).get('fire183')!=='0'&&
+   new URLSearchParams(location.search).get('fire185')!=='preview'&&
    (new URLSearchParams(location.search).get('fire183')==='preview'||
     ['fire178','fire179','fire180','fire181'].every(key=>
      new URLSearchParams(location.search).get(key)!=='preview'))&&
@@ -1377,6 +1379,22 @@ if(new URLSearchParams(location.search).get('fire184')==='preview'&&
   game=game.replace(fireSpriteAnchor,
    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V184 Fire previews unavailable; accepted moves kept',error);}
+}
+
+// V185 — REA-inspired two-fire Pixel art COMPARISON IN THE REAL BATTLE.
+// Exact-once preview only: old approved V172/V183 remain untouched on normal URL.
+// 16-frame author-owned LibreSprite sheets and one shared PixiJS/WebGL scene.
+// URL: ?fire185=preview ; remove to restore the approved effects.
+if(new URLSearchParams(location.search).get('fire185')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const file='effects/moves/v185-rea-fire-pair/runtime.js';
+  const response=await fetch(file+'?build=v185-rea-flames-16frames',{cache:'no-store'});
+  if(!response.ok)throw Error('V185 fire pair module HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V185 battle anchor not found');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V185 preview unavailable; official fire art preserved',error);}
 }
 
 // The retired Atelier stays in GitHub history; it is not inside the game.
