@@ -149,7 +149,7 @@ function prepare(app){
   for(const key of artKeys){artCache[key]=[];report.loaded[key]=false;}
  }
  // Spread texture generation over 24 renders: no single-frame 48-sheet stall.
- for(let n=0;n<2&&prewarmIndex<48;n++,prewarmIndex++){
+ for(let n=0;n<5&&prewarmIndex<48;n++,prewarmIndex++){
   const index=Math.floor(prewarmIndex/16),frame=prewarmIndex%16,key=artKeys[index];
   try{
    artCache[key].push(generate(app,key,frame));
