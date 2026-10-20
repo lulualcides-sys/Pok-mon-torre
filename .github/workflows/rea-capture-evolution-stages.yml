@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [pilot]
+        group: [e0, e1, e2, e3, e4, e5, e6, e7]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
