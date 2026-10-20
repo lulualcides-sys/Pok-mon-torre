@@ -68,10 +68,17 @@ async function run(){
   await page.waitForTimeout(1100);
   const available=await page.evaluate(()=>window.PokemonTorreReaFireV187.availableMoves());
   const nativeBefore=await page.evaluate(()=>window.PokemonTorreReaFireV187.diagnostics());
+  const realCast=await page.evaluate(()=>window.PokemonTorreReaFireV187.castEquippedForQATest('Lança-Chamas'));
+  await page.waitForTimeout(400);
+  const nativeAfter=await page.evaluate(()=>window.PokemonTorreReaFireV187.diagnostics());
+  await page.screenshot({path:'fire187-test-report/charizard-native-flamethrower.png'});
+  if(!realCast.attempted||!realCast.started||nativeAfter.nativeCastStarted<=nativeBefore.nativeCastStarted)
+   throw Error('REAL Charizard Flamethrower failed to activate V187 visuals: '+JSON.stringify({realCast,available,nativeAfter}));
+
   // Inventory the ACTUAL equipped moves. Artificial visual test above is not
   // treated as proof of a live cast or synchronized damage.
   fs.writeFileSync('fire187-test-report/equipped-charizard.json',
-    JSON.stringify({available,nativeBefore},null,2));
+    JSON.stringify({available,nativeBefore,realCast,nativeAfter},null,2));
   console.log('V187 CHARIZARD EQUIPPED:',JSON.stringify(available));
   const result={setup,previews:{flamethrower:first,fireblast:second},
    diagnostics:blast,browserErrors:errors,consoleErrors:log};
