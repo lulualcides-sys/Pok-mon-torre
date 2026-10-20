@@ -51,9 +51,9 @@ function contact(dir,frames){
 }
 function renderMp4(dir,frames){
  const p=spawnSync('ffmpeg',['-y','-hide_banner','-loglevel','error','-framerate','10',
- '-i',dir+'/frame-%02d.png','-c:v','libx264','-preset','veryfast','-crf','25',
+ '-i',dir+'/frame-%02d.png','-vf','pad=ceil(iw/2)*2:ceil(ih/2)*2','-c:v','libx264','-preset','veryfast','-crf','25',
  '-pix_fmt','yuv420p',dir+'/real-gameplay.mp4'],{timeout:70000,encoding:'utf8'});
- if(p.status!==0)throw Error('ffmpeg failed: '+(p.stderr||'').slice(0,350));
+ if(p.status!==0)throw Error('ffmpeg failed: '+JSON.stringify({status:p.status,signal:p.signal,error:String(p.error||''),stderr:(p.stderr||'').slice(0,500)}));
  // Keep the evidence montage and real-time capture as MP4; delete redundant
  // raw PNGs only after a valid playable video exists.
  if(fs.statSync(dir+'/real-gameplay.mp4').size<2000)throw Error('MP4 too small');
