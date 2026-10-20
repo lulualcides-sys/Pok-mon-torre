@@ -58,17 +58,23 @@ jobs:
           set -euo pipefail
           ROOT=recuperado/rea-unlocked-captures
           converted=0
-          while IFS= read -r -d '' first; do
+          mapfile -d '' -t frames < <(find "$ROOT" -name frame-00.png -print0)
+          for first in "${frames[@]}"; do
             dir="$(dirname "$first")"
-            ffmpeg -y -hide_banner -loglevel error -framerate 10 \
-              -i "$dir/frame-%02d.png" \
-              -vf 'pad=ceil(iw/2)*2:ceil(ih/2)*2' \
-              -c:v libx264 -preset veryfast -crf 25 -pix_fmt yuv420p \
-              "$dir/real-gameplay.mp4"
-            test -s "$dir/real-gameplay.mp4"
-            rm "$dir"/frame-??.png
-            converted=$((converted+1))
-          done < <(find "$ROOT" -name frame-00.png -print0)
+            echo "MP4 input: $dir"
+            if [ -s "$dir/frame-24.png" ]; then
+              ffmpeg -y -hide_banner -loglevel error -framerate 10 \
+                -i "$dir/frame-%02d.png" \
+                -vf 'pad=ceil(iw/2)*2:ceil(ih/2)*2' \
+                -c:v libx264 -preset veryfast -crf 25 -pix_fmt yuv420p \
+                "$dir/real-gameplay.mp4"
+              test -s "$dir/real-gameplay.mp4"
+              rm "$dir"/frame-??.png
+              converted=$((converted+1))
+            else
+              echo "Skipping incomplete frame set: $dir"
+            fi
+          done
           echo "Vídeos recuperados: $converted"
           test "$converted" -ge 1
           node - <<'NODE'
