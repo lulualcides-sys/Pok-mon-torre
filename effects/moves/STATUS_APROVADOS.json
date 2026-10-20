@@ -697,6 +697,21 @@
       "rollback_parameter": "?absorb177=0",
       "approval_note": "Usuário: 'aprovado simples e eficaz' em 19/10/2026.",
       "notes": "Partículas verdes discretas absorvidas do inimigo até o usuário após acerto real; cura unicamente pelo motor V65. Preservar e manter no jogo normal."
+    }
+  ],
+  "v175_extra_protected": [
+    {
+      "move": "Surf",
+      "aliases": [
+        "Surfar"
+      ],
+      "status": "aprovado",
+      "protect": true,
+      "accepted_at": "2026-10-19",
+      "approval_note": "Usuário apontou Surf como o melhor efeito criado e pediu expressamente que seja mantido sem alteração visual. Preservar renderer atual e som; remover somente mediante autorização.",
+      "visual_change_authorized": false,
+      "display_name": "Surf",
+      "note": "Registrado fora da lista histórica V127 de 47, que deve permanecer imutável."
     },
     {
       "move": "Fire Blast",
@@ -713,22 +728,7 @@
       "renderer": "PixiJS/WebGL — 16 pixel-art frames, kanji 大",
       "rollback_parameter": "?fire183=0",
       "approval_note": "Usuário aprovou explicitamente o Fire Blast corrigido no mesmo turno em que pediu Flame Wheel, Inferno, Ember e Eruption.",
-      "notes": "Manter intacto o símbolo original 大 e sua escala. Não alterar efeito sem autorização. O dano, precisão e custo são nativos."
-    }
-  ],
-  "v175_extra_protected": [
-    {
-      "move": "Surf",
-      "aliases": [
-        "Surfar"
-      ],
-      "status": "aprovado",
-      "protect": true,
-      "accepted_at": "2026-10-19",
-      "approval_note": "Usuário apontou Surf como o melhor efeito criado e pediu expressamente que seja mantido sem alteração visual. Preservar renderer atual e som; remover somente mediante autorização.",
-      "visual_change_authorized": false,
-      "display_name": "Surf",
-      "note": "Registrado fora da lista histórica V127 de 47, que deve permanecer imutável."
+      "notes": "Manter intacto o símbolo original 大 e sua escala. Não alterar efeito sem autorização. O dano, precisão e custo são nativos. Registered as additive approval extension: keep historical 48-entry V127 registry stable."
     }
   ]
 }

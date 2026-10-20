@@ -72,6 +72,7 @@ assert.ok(accepted.includes('v127MoveCheck')&&accepted.includes('✓'),'approved
 assert.ok(!accepted.includes('v122ApprovedMark'),'old + must not double with new badge');
 assert.ok(mark.badge('Ice Beam').includes('✓'),'English/Portuguese aliases must share approval');
 assert.ok(mark.badge('Lança-Chamas').includes('✓'),'approved V172 Flamethrower must show accepted checkmark');
+assert.ok(mark.badge('Fire Blast').includes('✓'),'user-approved V183 must show checkmark');
 assert.ok(mark.badge('Shadow Ball').includes('EDITADO'));
 assert.ok(mark.badge('Chamas de Moltres').includes('EDITADO'),'missing legacy approved animation marker');
 assert.ok(mark.badge('Solar Beam').includes('EDITADO'));

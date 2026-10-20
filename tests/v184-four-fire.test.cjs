@@ -9,7 +9,7 @@ const page=fs.readFileSync('index.html','utf8');
 assert.match(page,/get\('fire184'\)==='preview'/);
 assert.match(page,/v184-fire-four\/runtime\.js/);
 const protectedJson=JSON.parse(fs.readFileSync('effects/moves/STATUS_APROVADOS.json','utf8'));
-assert.ok(protectedJson.moves.some(m=>m.move==='Fire Blast'&&m.status==='aprovado'&&m.protect===true&&m.version==='V183'));
+assert.ok(protectedJson.v175_extra_protected.some(m=>m.move==='Fire Blast'&&m.status==='aprovado'&&m.protect===true&&m.version==='V183'));
 for(const [name,count] of Object.entries(specs)){
  const ase=fs.readFileSync(dir+name+'/animation.aseprite');
  assert.equal(ase.readUInt16LE(4),0xa5e0,name+' true animated LibreSprite');

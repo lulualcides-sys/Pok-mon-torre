@@ -14,6 +14,12 @@ for(const item of REGISTRY.records){
   if(!index.has(key)||item.source==='STATUS_APROVADOS.json')index.set(key,item);
  }
 }
+// V183 approved after the historical V127 snapshot. Add to the lookup only,
+// never mutate 79 saved historical records or the 48-item archived registry.
+const userApprovedFireBlastV183={name:'Fire Blast',aliases:['Explosão de Fogo'],
+ status:'aprovado',protect:true,version:'V183',source:'V183 user approval'};
+for(const name of [userApprovedFireBlastV183.name,...userApprovedFireBlastV183.aliases])
+ index.set(norm(name),userApprovedFireBlastV183);
 function status(name){return index.get(norm(name))||null;}
 function badge(name){
  const item=status(name);if(!item)return '';
