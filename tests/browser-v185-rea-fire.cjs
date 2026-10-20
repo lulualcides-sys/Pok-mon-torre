@@ -47,7 +47,8 @@ async function run(){
   if(!setup.installed||setup.v172||setup.v183||!setup.qa||!setup.bridge)
    throw Error('Preview configuration invalid: '+JSON.stringify(setup));
   await page.evaluate(()=>window.PokemonTorreLocalCombatTestV47.start(150,143));
-  await page.waitForTimeout(1800);
+  await page.waitForFunction(()=>{const d=window.PokemonTorreReaFireV185?.diagnostics();return d?.loaded?.stream&&d?.loaded?.ember&&d?.loaded?.daimonji;},null,{timeout:60000,polling:500});
+  await page.waitForTimeout(300);
   const first=await page.evaluate(()=>window.PokemonTorreReaFireV185.visualTest('flamethrower'));
   await page.waitForTimeout(500);
   const flame=await page.evaluate(()=>window.PokemonTorreReaFireV185.diagnostics());
