@@ -299,7 +299,10 @@ window.PokemonTorreReaFireV187=Object.freeze({
   const after=Number(typeof foe==='function'?foe()?.hp:NaN);
   return {attempted:true,slot,result:result===false?false:'non-false',
     started:report.nativeCastStarted>before,hpBefore:prior,hpAfter:after,
-    seen:report.nativeRecognized,blocked:report.blocked};
+    seen:report.nativeRecognized,blocked:report.blocked,
+    paused:battle?.paused,active:battle?.active,energy:battle?.energy,
+    cooldownRemaining:typeof cooldowns==='object'?Math.round((cooldowns[slot]||0)-performance.now()):null,
+    playerHp:mon?.hp,moveCost:moves[slot]?.cost};
  },
  diagnostics:()=>({...report,active:active.map(x=>({name:x.name,hit:!!x.hitAt,
   source:x.origin,age:Math.round(now()-x.start)}))})
