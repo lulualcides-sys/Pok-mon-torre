@@ -68,7 +68,12 @@ function mp4(dir,frames){
 }
 async function inspectRuntime(id){
  return page.evaluate(async(targetId)=>{
-  const mod=await import('/src-3a160064ab/luchador.js');
+  const dir=([...document.querySelectorAll('script[type="module"][src]')]
+   .map(x=>x.src).find(x=>/\/src-[\w-]+\/main\.js(?:\?|$)/.test(x))||'')
+   .match(/\/(src-[\w-]+)\/main\.js/)?.[1];
+  if(!dir)return {available:false,reason:'public game module prefix absent'};
+  window.__reaSourceDir=dir;
+  const mod=await import('/'+dir+'/luchador.js');
   const entry=mod.Luchador;
   if(!entry)return {available:false,reason:'Luchador export absent',exports:Object.keys(mod)};
   window.__reaTargetId=targetId;
@@ -128,7 +133,7 @@ async function progressTo(stage,mega=false){
  const info=await page.evaluate(async(target)=>{
   const l=window.__reaPlayerById?.[window.__reaTargetId];
   if(!l)return {ok:false,reason:'no local controlled player'};
-  const {evolucionar,megaevolucionar}=await import('/src-3a160064ab/habilidades.js');
+  const {evolucionar,megaevolucionar}=await import('/'+window.__reaSourceDir+'/habilidades.js');
   const targetStage=target.stage;
   if(l.etapa<targetStage){
    const before=l.etapa;
@@ -227,9 +232,13 @@ async function captureOne(i,stage,mega,slot,known){
    await page.goto(SITE,{waitUntil:'domcontentloaded',timeout:50000});
    await wait(8500);
    meta=await page.evaluate(async()=>{
-    const d=await import('/src-3a160064ab/datos.js');
-    const l=await import('/src-3a160064ab/liga.js');
-    return {unlocked:l.resumen(),roster:d.ROSTER.map((p,i)=>({
+    const dir=([...document.querySelectorAll('script[type="module"][src]')]
+     .map(x=>x.src).find(x=>/\/src-[\w-]+\/main\.js(?:\?|$)/.test(x))||'')
+     .match(/\/(src-[\w-]+)\/main\.js/)?.[1];
+    if(!dir)throw Error('Active Poké Arena script bundle path not found');
+    const d=await import('/'+dir+'/datos.js');
+    const l=await import('/'+dir+'/liga.js');
+    return {activeBundle:dir,unlocked:l.resumen(),roster:d.ROSTER.map((p,i)=>({
      index:i,id:p.id,nombre:p.nombre,
      kit:p.kit,evoluciones:p.evoluciones||[],
      stages:1+(p.evoluciones?.length||0),
@@ -245,6 +254,7 @@ async function captureOne(i,stage,mega,slot,known){
  }
  if(meta.unlocked?.desbloqueados!==26)throw Error('Local offline roster did not unlock 26/26');
  roster=meta.roster;
+ result.activeBundle=meta.activeBundle;
  result.catalog=roster.map((p,i)=>({index:i,id:p.id,name:p.nombre,stages:p.stages,
    moves:Array.from({length:p.stages},(_,stage)=>({
     stage,form:stage===0?p.nombre:p.evoluciones[stage-1].nombre,
