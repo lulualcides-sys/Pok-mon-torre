@@ -221,18 +221,28 @@ async function captureOne(i,stage,mega,slot,known){
    JSON.stringify({v:1,vencidos:{},legado:true,visto:true}));
  });
  page=await ctx.newPage();
- await page.goto(SITE,{waitUntil:'domcontentloaded',timeout:50000});
- await wait(9000);
- const meta=await page.evaluate(async()=>{
-  const d=await import('/src-3a160064ab/datos.js');
-  const l=await import('/src-3a160064ab/liga.js');
-  return {unlocked:l.resumen(),roster:d.ROSTER.map((p,i)=>({
-    index:i,id:p.id,nombre:p.nombre,
-    kit:p.kit,evoluciones:p.evoluciones||[],
-    stages:1+(p.evoluciones?.length||0),
-    megaForms:p.evoluciones?.filter(x=>x.mega).map(x=>x.mega.nombre)||[]
-  }))};
- });
+ let meta;
+ for(let attempt=1;attempt<=5;attempt++){
+  try{
+   await page.goto(SITE,{waitUntil:'domcontentloaded',timeout:50000});
+   await wait(8500);
+   meta=await page.evaluate(async()=>{
+    const d=await import('/src-3a160064ab/datos.js');
+    const l=await import('/src-3a160064ab/liga.js');
+    return {unlocked:l.resumen(),roster:d.ROSTER.map((p,i)=>({
+     index:i,id:p.id,nombre:p.nombre,
+     kit:p.kit,evoluciones:p.evoluciones||[],
+     stages:1+(p.evoluciones?.length||0),
+     megaForms:p.evoluciones?.filter(x=>x.mega).map(x=>x.mega.nombre)||[]
+    }))};
+   });
+   break;
+  }catch(error){
+   result.errors.push({sourceAttempt:attempt,recoverable:true,error:String(error).slice(0,230)});
+   if(attempt===5)throw error;
+   await wait(3200);
+  }
+ }
  if(meta.unlocked?.desbloqueados!==26)throw Error('Local offline roster did not unlock 26/26');
  roster=meta.roster;
  result.catalog=roster.map((p,i)=>({index:i,id:p.id,name:p.nombre,stages:p.stages,
