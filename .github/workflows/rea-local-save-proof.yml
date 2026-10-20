@@ -1,0 +1,36 @@
+name: REA - Verificar desbloqueio em browser temporário
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [rea-pokearena-all-visible-moves]
+    paths:
+      - .github/scripts/rea-local-save-proof.cjs
+      - .github/workflows/rea-local-save-proof.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validar-sandbox-local:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Preparar Chrome de teste
+        run: |
+          npm install --prefix /tmp/rea-unlock-test --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1
+          node --check .github/scripts/rea-local-save-proof.cjs
+      - name: Comparar sessão pública com sessão de progresso local
+        run: |
+          node .github/scripts/rea-local-save-proof.cjs
+      - name: Salvar screenshots e resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-sandbox-local-unlock-proof
+          path: rea-local-unlock-proof/
+          retention-days: 30
