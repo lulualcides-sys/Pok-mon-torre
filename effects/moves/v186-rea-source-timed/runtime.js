@@ -68,8 +68,8 @@ function makePixels(name,k){
    const phase=x*.18-k*.44;
    const taper=1-smooth((x-94)/16);
    const cx=32+Math.sin(phase)*2.6+Math.sin(x*.43+k*.6);
-   const radius=(7.2+4.4*smooth(x/19)+2.1*Math.sin(x*.14-k*.52)+
-    1.1*Math.sin(x*.39+k*.73))*taper;
+   const radius=(15+7.0*smooth(x/19)+3.8*Math.sin(x*.14-k*.52)+
+    2.2*Math.sin(x*.39+k*.73))*taper;
    const plume=Math.abs(y-cx);
    const edge=radius+1.9*Math.sin(x*.83-k*.55+y*.11)+1.8*(random-.5);
    if(x>3&&x<110&&plume<Math.max(.15,edge)){
@@ -213,8 +213,8 @@ function confirm(e){
 function position(e){
  const h=e.h||420,p=e.player,q=e.enemy;
  const sign=q.x>=p.x?1:-1;
- const sx=p.x+sign*Math.min(15,h*.035),sy=p.y-h*.145;
- const ex=q.x-sign*Math.min(13,h*.031),ey=q.y-h*.135;
+ const sx=p.x+sign*Math.min(15,h*.035),sy=p.y-Math.min(25,h*.06);
+ const ex=q.x-sign*Math.min(13,h*.031),ey=q.y-Math.min(18,h*.045);
  return {sx,sy,ex,ey,dx:ex-sx,dy:ey-sy,
   angle:Math.atan2(ey-sy,ex-sx),length:Math.hypot(ex-sx,ey-sy),h};
 }
@@ -229,16 +229,16 @@ function paintFlame(f,age){
  const xdir=Math.cos(p.angle),ydir=Math.sin(p.angle),normalX=-ydir,normalY=xdir;
  const frame=Math.floor(age/(1000/14))%16;
  for(let i=0;i<f.visuals.length;i++){
-  const s=f.visuals[i],primary=i<3;
+  const s=f.visuals[i],primary=i<4;
   // Looped but staggered small flames. Cannot form one giant tube.
-  const u=((age/660+i*.235)%1)*pulse;
+  const u=((age/660+i*.105)%1)*pulse;
   const offset=Math.sin(age*.018+i*2.3)*Math.min(7,p.h*.012);
   s.position.set(Math.round(p.sx+xdir*(10+trail*u)+normalX*offset),
                  Math.round(p.sy+ydir*(10+trail*u)+normalY*offset));
   s.rotation=p.angle+(i%2?-.06:.08)*Math.sin(age*.009+i);
   s.texture=texture[(frame+i*3)%16];
-  s.width=primary?clamp(p.h*.089,30,42):clamp(p.h*.051,14,26);
-  s.height=primary?clamp(p.h*.048,17,24):clamp(p.h*.030,10,15);
+  s.width=primary?clamp(p.h*.105,33,49):clamp(p.h*.066,17,31);
+  s.height=primary?clamp(p.h*.064,21,31):clamp(p.h*.041,12,19);
   s.alpha=a*(primary?.88:.58)*(1-.20*u);
   s.blendMode=P.BLEND_MODES.NORMAL;
  }
