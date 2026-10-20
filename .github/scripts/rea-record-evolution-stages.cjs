@@ -74,7 +74,7 @@ async function inspectRuntime(id){
   window.__reaTargetId=targetId;
   window.__reaPlayers={};
   window.__reaPlayerById={};
-  const prototypes=Object.getOwnPropertyNames(entry.prototype).filter(k=>typeof entry.prototype[k]==='function');
+  const prototypes=Object.getOwnPropertyNames(entry.prototype).filter(k=>typeof Object.getOwnPropertyDescriptor(entry.prototype,k)?.value==='function');
   const hooks=[];
   if(!window.__reaEvolutionHook){
    for(const name of ['update','updateTitere','actualizar','actualizarTitere','actualizarGraficos','kitActual','ganarExp','animar','intentar','actualizarGrafico']){
