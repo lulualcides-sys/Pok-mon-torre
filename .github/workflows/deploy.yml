@@ -114,6 +114,12 @@ jobs:
           node --check effects/moves/v181-hand-drawn-fire/runtime.js
           bash tools/libresprite/build-v181-fire.sh
           node tests/v181-libre-fire.test.cjs
+      - name: V183 gerar Fire Blast daimonji pixel art e validar 16 quadros WebGL
+        run: |
+          node --check tools/build-v183-daimonji.cjs
+          node --check effects/moves/v183-daimonji/runtime.js
+          node tools/build-v183-daimonji.cjs
+          node tests/v183-daimonji.test.cjs
       - name: Exportar quatro spritesheets editaveis no LibreSprite V145
         run: bash tools/libresprite/build-v145-flying.sh
       - name: Testar quatro golpes V145 montados no PixiJS

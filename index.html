@@ -1345,6 +1345,21 @@ if(new URLSearchParams(location.search).get('fire182')==='preview'&&
  }catch(error){console.warn('V182 frame preview unavailable; protected effects preserved',error);}
 }
 
+// V183: canonical Pokemon Fire Blast 大 daimonji, ORIGINAL 16-frame pixel art.
+// Test directly during combat. This ONLY replaces Fire Blast in opt-in preview.
+// V172 approved Flamethrower and V182 comparison are never modified.
+if(new URLSearchParams(location.search).get('fire183')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const file='effects/moves/v183-daimonji/runtime.js';
+  const response=await fetch(file+'?build=v183-daimonji-16frames',{cache:'no-store'});
+  if(!response.ok)throw Error('V183 Fire Blast pixel spritesheet module HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V183 original battle anchor missing');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V183 Fire Blast not available, prior effects preserved',error);}
+}
+
 // The retired Atelier stays in GitHub history; it is not inside the game.
 // V81 approved: Pulse and Sphere hit at the visible impact; Dragon Claw and X-Scissor remain V77.
 ptProgress(100,'Jogo pronto!');document.open();document.write(game);document.close()})().catch(e=>{

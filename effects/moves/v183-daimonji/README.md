@@ -1,0 +1,11 @@
+# V183 — Fire Blast: daimonji 大, 16 distinct frames
+- Opt-in preview inside Pokémon Torre: https://lulualcides-sys.github.io/Pok-mon-torre/?fire182=preview&fire183=preview
+- The correct original Fire Blast outline is the Japanese kanji **大** (daimonji); NOT a rotating star, X, ball, or explosion.
+- 16-frame PNG RGBA sprite sheet: 4×4 cells of 192×128 pixels; transparent, hand-indexed palette, crisp black/red outlines.
+- Frames 1–4: compact moving spark; 5–8: expansion into correct 大; 9–12: full upright target impact; 13–16: ember decay.
+- Node.js build-time pixel artist: tools/build-v183-daimonji.cjs. No Python/Canvas2D/CSS/new WebGL context. The Pages workflow builds and validates the sheet before deployment.
+- Runtime: PixiJS/WebGL only, reuse battle stage, 70ms step on impact, centered near enemy.
+- Native BattleEngine alone applies accuracy, damage, HP, energy, burn and cooldown; effect never adds damage.
+- Approved V172 Flamethrower and V182 trial unchanged. Normal URL unchanged. Safe and GPU fallback preserved.
+- Bulbapedia (move animation and daimonji origin): https://bulbapedia.bulbagarden.net/wiki/Fire_Blast
+- Pokémon Database: https://pokemondb.net/move/fire-blast
