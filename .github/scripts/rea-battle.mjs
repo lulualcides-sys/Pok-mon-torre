@@ -70,6 +70,14 @@ try {
     after = await stage('02-after-fallback-click');
     results.fallbackChangedPixels = after.pngSha256 !== before.pngSha256;
   }
+  if (results.clickedPlayChangedPixels) {
+    // Training button observed on the actual 780x437 screenshot after Play.
+    await page.mouse.click(390, 282);
+    await page.waitForTimeout(6500);
+    const training = await stage('02-training');
+    results.trainingChangedPixels = training.pngSha256 !== after.pngSha256;
+    after = training;
+  }
   const controls = after.runtime.controls || [];
   const next = controls.find(c => /solo|single|training|train|practice|offline|quick battle/i.test(c.text) && !/online/i.test(c.text));
   if (next && next.text) {
@@ -91,3 +99,7 @@ console.log(JSON.stringify({
   networkResources:results.network.length, errors:results.errors
 },null,2));
 // Leave the externally launched Chrome running for REA's CDP inspection.
+
+// Playwright keeps its CDP socket alive. Exit after flushing synchronous evidence,
+// leaving the separately launched Chrome available for REA.
+process.exit(0);
