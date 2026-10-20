@@ -1,0 +1,64 @@
+name: REA - Conferir todos os 26 personagens do Training
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [rea-pokearena-all-visible-moves]
+    paths:
+      - .github/scripts/rea-roster-verify.mjs
+      - .github/workflows/rea-verify-roster.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verificar-selecao:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Instalar automação pública
+        run: |
+          npm install --prefix /tmp/rea-roster --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1 pngjs@7.0.0
+          mkdir -p rea-roster-evidence
+      - name: Iniciar navegador de pesquisa
+        shell: bash
+        run: |
+          set -euo pipefail
+          google-chrome --headless=new --no-sandbox --disable-dev-shm-usage \
+            --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 \
+            --user-data-dir=/tmp/rea-roster-verify about:blank \
+            > rea-roster-evidence/chrome.log 2>&1 &
+          for n in $(seq 1 50); do
+            if curl -fsS http://127.0.0.1:9222/json/list > rea-roster-evidence/targets.json; then break; fi
+            sleep 2
+          done
+          test -s rea-roster-evidence/targets.json
+      - name: Conferir 26 icones e salvar capturas por indice
+        run: |
+          timeout 360s node .github/scripts/rea-roster-verify.mjs > rea-roster-evidence/roster.log 2> rea-roster-evidence/roster.err
+          cat rea-roster-evidence/roster.log
+      - name: Arquivar evidências
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-roster-26-verificacoes
+          path: rea-roster-evidence/
+          retention-days: 90
+      - name: Salvar inventario validado na ramificacao de analise
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p docs/rea-pokearena/registro-real
+          cp rea-roster-evidence/ELENCO-ACESSIVEL.json docs/rea-pokearena/registro-real/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/rea-pokearena/registro-real/ELENCO-ACESSIVEL.json
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(rea): verify public roster selection by actual screenshots"
+            git push origin HEAD:rea-pokearena-all-visible-moves
+          fi
