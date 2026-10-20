@@ -66,32 +66,39 @@ function mp4(dir,frames){
  for(const f of frames)fs.unlinkSync(f);
  return {ok:true,bytes};
 }
-async function inspectRuntime(){
- return page.evaluate(async()=>{
+async function inspectRuntime(id){
+ return page.evaluate(async(targetId)=>{
   const mod=await import('/src-3a160064ab/luchador.js');
   const entry=mod.Luchador;
   if(!entry)return {available:false,reason:'Luchador export absent',exports:Object.keys(mod)};
+  window.__reaTargetId=targetId;
+  window.__reaPlayers={};
+  window.__reaPlayerById={};
+  const prototypes=Object.getOwnPropertyNames(entry.prototype).filter(k=>typeof entry.prototype[k]==='function');
+  const hooks=[];
   if(!window.__reaEvolutionHook){
-   const original=entry.prototype.update;
-   if(typeof original!=='function')return {available:false,reason:'update not exported on prototype'};
-   entry.prototype.update=function(...a){
-    (window.__reaPlayers??={})[this.lado]=this;
-    return original.apply(this,a);
-   };
-   const puppet=entry.prototype.updateTitere;
-   if(typeof puppet==='function')entry.prototype.updateTitere=function(...a){
-    (window.__reaPlayers??={})[this.lado]=this;
-    return puppet.apply(this,a);
-   };
-   window.__reaEvolutionHook=true;
+   for(const name of ['update','updateTitere','actualizar','actualizarTitere','actualizarGraficos','kitActual','ganarExp','animar','intentar','actualizarGrafico']){
+    const old=Object.getOwnPropertyDescriptor(entry.prototype,name)?.value;
+    if(typeof old!=='function')continue;
+    entry.prototype[name]=function(...args){
+      const id=this.def?.id,side=this.lado;
+      if(id){
+       window.__reaPlayerById[id]=this;
+       if(Number.isInteger(side))window.__reaPlayers[side]=this;
+      }
+      return old.apply(this,args);
+    };
+    hooks.push(name);
+   }
+   window.__reaEvolutionHook={hooks,prototypes};
   }
-  return {available:true,exported:Object.keys(mod)};
- });
+  return {available:true,installedHooks:window.__reaEvolutionHook?.hooks||hooks,methodNames:prototypes};
+ },id);
 }
 async function launchMatch(i){
  await page.goto(SITE,{waitUntil:'domcontentloaded',timeout:55000});
  await wait(8400);
- const hook=await inspectRuntime();
+ const hook=await inspectRuntime(roster[i]?.id);
  if(!hook.available)throw Error('Failed to install read-only fighter hook '+JSON.stringify(hook));
  await page.mouse.click(390,183);await wait(2150);
  await page.mouse.click(390,282);await wait(2700);
@@ -100,8 +107,17 @@ async function launchMatch(i){
  await page.mouse.click(669,78);await wait(280);
  await page.mouse.click(181,385);await wait(350);
  await page.mouse.click(684,393);await wait(3600);
- await page.waitForFunction(()=>!!window.__reaPlayers?.[0],null,{timeout:12000,polling:150});
- const info=await page.evaluate(()=>{const a=window.__reaPlayers?.[0];return a?{
+ try{
+  await page.waitForFunction(()=>!!window.__reaPlayerById?.[window.__reaTargetId],null,{timeout:14000,polling:200});
+ }catch(e){
+  const snap=await page.evaluate(()=>({target:window.__reaTargetId,
+    players:Object.entries(window.__reaPlayerById||{}).map(([k,p])=>({id:k,side:p.lado,stage:p.etapa})),
+    hooks:window.__reaEvolutionHook,body:document.body?.innerText?.slice(0,250),
+    canvasCount:document.querySelectorAll('canvas').length}));
+  await page.screenshot({path:ROOT+'/'+String(i).padStart(2,'0')+'-hook-failure.png'});
+  throw Error('Fighter capture timed out: '+JSON.stringify(snap));
+ }
+ const info=await page.evaluate(()=>{const a=window.__reaPlayerById?.[window.__reaTargetId];return a?{
   id:a.def?.id,stage:a.etapa,total:a.etapasTotales,mega:a.mega,
   hp:a.hp,actualKit:Object.fromEntries(Object.entries(a.kitActual()).map(([k,m])=>[k,m?.nombre||k]))
  }:null});
@@ -110,7 +126,7 @@ async function launchMatch(i){
 }
 async function progressTo(stage,mega=false){
  const info=await page.evaluate(async(target)=>{
-  const l=window.__reaPlayers?.[0];
+  const l=window.__reaPlayerById?.[window.__reaTargetId];
   if(!l)return {ok:false,reason:'no local controlled player'};
   const {evolucionar,megaevolucionar}=await import('/src-3a160064ab/habilidades.js');
   const targetStage=target.stage;
@@ -132,7 +148,7 @@ async function progressTo(stage,mega=false){
  },{stage,mega});
  if(info?.pending)await wait(1800);
  if(info?.pendingMega)await wait(1200);
- const actual=await page.evaluate(()=>{const l=window.__reaPlayers?.[0];return l?{
+ const actual=await page.evaluate(()=>{const l=window.__reaPlayerById?.[window.__reaTargetId];return l?{
   name:l.nombre,id:l.def.id,stage:l.etapa,total:l.etapasTotales,mega:!!l.mega,
   kit:Object.fromEntries(Object.entries(l.kitActual()).map(([k,m])=>[k,{
    name:m?.nombre||k,sprite:m?.hoja||null,shape:m?.forma||null}]))
@@ -150,7 +166,7 @@ async function captureOne(i,stage,mega,slot,known){
  fs.mkdirSync(folder,{recursive:true});
  const shot=async f=>page.screenshot({path:f,timeout:16000});
  await page.evaluate((slot)=>{
-  const l=window.__reaPlayers?.[0];
+  const l=window.__reaPlayerById?.[window.__reaTargetId];
   if(l){
     l.hp=l.hpMax;l.energia=100;l.ulti=100;
     if(l.cd&&slot in l.cd)l.cd[slot]=0;
@@ -181,7 +197,7 @@ async function captureOne(i,stage,mega,slot,known){
  }
  try{contact(folder,frames)}catch(e){result.errors.push({i,stage,slot,contact:String(e).slice(0,120)})}
  const enc=mp4(folder,frames);
- const actual=await page.evaluate(()=>{const l=window.__reaPlayers?.[0];return l?{
+ const actual=await page.evaluate(()=>{const l=window.__reaPlayerById?.[window.__reaTargetId];return l?{
    stage:l.etapa,mega:!!l.mega,name:l.nombre,
    energy:l.energia,ulti:l.ulti,cooldown:l.cd||{}
  }:null});
