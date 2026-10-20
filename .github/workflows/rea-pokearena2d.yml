@@ -1,0 +1,81 @@
+name: REA - Analise Poké Arena 2D
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analisar-site:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Preparar Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Instalar REA e verificar ambiente
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p rea-report
+          node --version | tee rea-report/node-version.txt
+          npm install --global rea-agents@latest
+          rea --help > rea-report/rea-help.txt 2>&1
+          rea doctor --json > rea-report/doctor.json 2> rea-report/doctor.err || true
+          command -v google-chrome | tee rea-report/chrome-path.txt
+          google-chrome --version | tee rea-report/chrome-version.txt
+
+      - name: Abrir Poké Arena 2D em navegador isolado
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p rea-report
+          google-chrome --headless=new --no-sandbox --disable-dev-shm-usage \
+            --disable-gpu --remote-debugging-address=127.0.0.1 \
+            --remote-debugging-port=9222 --user-data-dir=/tmp/rea-pokearena-profile \
+            'https://www.pokearena2d.com/' > rea-report/chrome.log 2>&1 &
+          echo $! > rea-report/chrome.pid
+          for i in $(seq 1 45); do
+            if curl --silent --fail http://127.0.0.1:9222/json/list > rea-report/chrome-targets.json; then break; fi
+            sleep 2
+          done
+          test -s rea-report/chrome-targets.json
+          sleep 8
+
+      - name: Inspecionar com REA
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p rea-report
+          rea list-browser-targets http://127.0.0.1:9222 --json \
+            > rea-report/rea-targets.json 2> rea-report/rea-targets.err
+          echo $? > rea-report/rea-targets.exit
+          curl --silent --fail http://127.0.0.1:9222/json/list > rea-report/chrome-targets.json || true
+          TARGET_ID="$(node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('rea-report/chrome-targets.json'));const t=x.find(v=>v.type==='page' && (v.url||'').startsWith('https://www.pokearena2d.com/'));process.stdout.write(t?.id||'')")"
+          if [ -z "$TARGET_ID" ]; then
+            echo 'Poké Arena não apareceu como página HTTPS ativa no Chrome.' | tee rea-report/status.txt
+            exit 0
+          fi
+          echo 'Alvo encontrado no Chrome; iniciando inspeção do REA.' > rea-report/status.txt
+          timeout 120s rea inspect-web-page http://127.0.0.1:9222 "$TARGET_ID" \
+            --observation-ms 1000 --json > rea-report/inspect.json 2> rea-report/inspect.err
+          echo $? > rea-report/inspect.exit
+          timeout 120s rea analyze-web-bundle http://127.0.0.1:9222 "$TARGET_ID" \
+            --json > rea-report/bundle.json 2> rea-report/bundle.err
+          echo $? > rea-report/bundle.exit
+          timeout 60s rea capture-web-screenshot http://127.0.0.1:9222 "$TARGET_ID" \
+            --json > rea-report/screenshot-evidence.json 2> rea-report/screenshot.err
+          echo $? > rea-report/screenshot.exit
+          echo 'Inspeção executada; verificar exit codes e JSON para identificar limitações.' >> rea-report/status.txt
+
+      - name: Guardar relatórios (inclusive falhas)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-pokearena2d-relatorio
+          path: rea-report/
+          if-no-files-found: warn
+          retention-days: 7
