@@ -22,34 +22,28 @@ const kind=s=>{
  if(n==='fireblast'||n==='explosaodefogo'||n==='rajadadefogo')return 'fireblast';
  return null;
 };
-const SOURCES={
- stream:{url:'effects/moves/v181-hand-drawn-fire/flamethrower/sheet.png',
-  frameW:144,frameH:48,columns:8,count:16},
- ember:{url:'effects/moves/v181-hand-drawn-fire/impact/sheet.png',
-  frameW:112,frameH:112,columns:8,count:16},
- daimonji:{url:'effects/moves/v183-daimonji/sheet.png',
-  frameW:192,frameH:128,columns:4,count:16}
+// Real animated pixel-art frames rendered once to WebGL textures.
+// Nothing depends on missing PNG files or Canvas2D at runtime.
+const SPECS={
+ stream:{w:144,h:48,count:16},
+ ember:{w:112,h:112,count:16},
+ daimonji:{w:128,h:128,count:16}
 };
-const report={installed:true,approved:false,version:'185.0-rea-fire-review',
- renderer:'shared PixiJS WebGL; author-owned 16-frame LibreSprite atlases',
+const PAL=[0x210e18,0x63191b,0x9d2718,0xdb4818,0xf97921,
+ 0xffac2b,0xffd45b,0xfff6be];
+const report={installed:true,approved:false,version:'185.1-rea-pixel-authoring',
+ renderer:'shared PixiJS/WebGL, GPU cached 16-frame editable pixel art',
  loaded:{},casts:{flamethrower:0,fireblast:0},frames:0,textureFrames:0,
  confirmedImpacts:0,misses:0,legacySuppressed:0,blocked:0,previewCasts:0,
- errors:[],maxObjects:16,nativeDamageUntouched:true};
-const imageCache=Object.create(null),cache=Object.create(null),active=[];
-let latestEngine=null;
-for(const [key,s] of Object.entries(SOURCES)){
- const image=new Image();image.decoding='async';
- const r={image,ok:false,frames:null,app:null,base:null};
- image.onload=()=>{
-  r.ok=image.naturalWidth===s.frameW*s.columns&&
-   image.naturalHeight===s.frameH*Math.ceil(s.count/s.columns);
-  report.loaded[key]=r.ok;
-  if(!r.ok)fail('Sprite dimensions invalid: '+key);
- };
- image.onerror=()=>{report.loaded[key]=false;fail('Sprite not found: '+key)};
- image.src=s.url+'?build=v185-rea-pixel';
- imageCache[key]=r;
-}
+ errors:[],maxObjects:16,nativeDamageUntouched:true,prewarm:0};
+let latestEngine=null,cacheApp=null,artCache=Object.create(null),prewarmIndex=0;
+const active=[],artKeys=['stream','ember','daimonji'];
+const getRandom=(x,y,k)=>{const n=Math.sin(x*127.1+y*311.7+k*74.77)*43758.5453;return n-Math.floor(n)};
+const pointDist=(x,y,ax,ay,bx,by)=>{
+ const dx=bx-ax,dy=by-ay;
+ const t=clamp(((x-ax)*dx+(y-ay)*dy)/Math.max(.01,dx*dx+dy*dy),0,1);
+ return Math.hypot(x-ax-dx*t,y-ay-dy*t);
+};
 function fail(error){
  report.errors.push(String(error?.message||error).slice(0,230));
  report.errors=report.errors.slice(-7);
@@ -62,20 +56,112 @@ function gpu(e){
   return app?.renderer?.gl&&!app.renderer.gl.isContextLost?.()?app:null;
  }catch(error){fail(error);return null;}
 }
-function frames(app,key){
- const res=imageCache[key],spec=SOURCES[key];
- if(!res?.ok)return null;
- if(res.app===app&&res.frames?.length===spec.count)return res.frames;
+function makePixels(name,k){
+ const {w,h}=SPECS[name],pixels=new Int8Array(w*h).fill(-1);
+ const t=k/16;
+ for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){
+  const random=getRandom(x,y,k), p=y*w+x;
+  let band=-1;
+  if(name==='stream'){
+   // Flame tongue extending naturally from a nozzle, never a rectangle.
+   const phase=x*.17-k*.35,spread=(1-smooth((x-126)/17));
+   const cx=24+Math.sin(phase)*2.5+Math.sin(x*.43+k*.65)*1.0;
+   const radius=(5.2+4.5*smooth(x/18)+2.3*Math.sin(x*.12-k*.54)+
+    1.5*Math.sin(x*.34+k*.72))*spread;
+   const plume=Math.abs(y-cx);
+   const edge=radius+1.5*Math.sin(x*.9-k*.56+y*.13)+1.7*(random-.5);
+   if(x>3&&x<142&&plume<Math.max(.15,edge)){
+    const heat=1-plume/Math.max(1,radius);
+    band=heat>.79?7:heat>.62?6:heat>.43?5:heat>.22?4:3;
+    if(random>.89&&heat<.5)band=Math.max(2,band-1);
+   }else if(x>20&&x<130&&(y<cx-7||y>cx+7)&&random>.992){
+    band=4+(k+x)%3;
+   }
+  }else if(name==='daimonji'){
+   // The distinctive Pokémon Fire Blast 大, drawn as strokes with flickering tongues.
+   const n=Math.sin(k*.55),cx=64,cy=61;
+   const stroke=Math.min(
+    pointDist(x,y,27,40,101,40),
+    pointDist(x,y,64,17,64,68),
+    pointDist(x,y,65,58,26,105),
+    pointDist(x,y,65,58,103,105)
+   );
+   const flicker=1.9*Math.sin(x*.29+y*.11-k*.7)+1.2*(random-.5);
+   const thick=9.6+1.1*n+flicker;
+   if(stroke<thick){
+    const heat=1-stroke/Math.max(thick,1);
+    band=heat>.81?7:heat>.64?6:heat>.43?5:heat>.17?4:3;
+   }else if(stroke<thick+3.4&&random>.67&&k>2){band=3;}
+   // detached fragments along top and wing tips, not huge glowing circles.
+   if(k>=4&&k<=12&&random>.995&&x>15&&x<113&&y>11&&y<115)band=5;
+  }else{
+   // Irregular contact flare from an actual hit. Five asymmetrical tongues
+   // expand then fade in sixteen distinct frames, not a white disc.
+   const dx=x-56,dy=y-56,angle=Math.atan2(dy,dx);
+   const radius=Math.hypot(dx,dy);
+   const size=7+37*smooth(t/.68);
+   const spikes=Math.pow(.5+.5*Math.cos(angle*5-k*.21),3)*14+
+    Math.pow(.5+.5*Math.cos(angle*9+k*.32),6)*8;
+   const limit=size*.70+spikes+(getRandom(x>>2,y>>2,k)-.5)*5;
+   const hollow=t>.5?(t-.5)*39:0;
+   if(radius<limit&&radius>hollow){
+    const heat=1-radius/Math.max(1,limit);
+    band=heat>.65?7:heat>.43?6:heat>.22?5:4;
+    if(t>.75&&random>.5)band=Math.max(2,band-2);
+   }
+  }
+  if(band>=0)pixels[p]=band;
+ }
+ // Single-pixel outline drawn on the sprite sheet itself, not a CSS border.
+ const snapshot=pixels.slice();
+ for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){
+  const idx=y*w+x;
+  if(snapshot[idx]>=0)continue;
+  let edge=false;
+  for(let yy=-1;yy<=1&&!edge;yy++)for(let xx=-1;xx<=1;xx++){
+   if(snapshot[idx+yy*w+xx]>=2){edge=true;break;}
+  }
+  if(edge)pixels[idx]=0;
+ }
+ return pixels;
+}
+function generate(app,name,index){
+ const {w,h}=SPECS[name],cells=makePixels(name,index),g=new P.Graphics();
  try{
-  if(res.frames)for(const f of res.frames)try{f.destroy()}catch(_){}
-  res.base=P.BaseTexture.from(res.image);
-  res.base.scaleMode=P.SCALE_MODES.NEAREST;
-  const list=Array.from({length:spec.count},(_,i)=>new P.Texture(res.base,
-   new P.Rectangle((i%spec.columns)*spec.frameW,Math.floor(i/spec.columns)*spec.frameH,
-    spec.frameW,spec.frameH)));
-  res.frames=list;res.app=app;report.textureFrames+=list.length;
-  return list;
- }catch(error){fail(error);return null;}
+  for(let y=0;y<h;y++)for(let x=0;x<w;){
+   const color=cells[y*w+x];
+   if(color<0){x++;continue;}
+   let right=x+1;
+   while(right<w&&cells[y*w+right]===color)right++;
+   g.beginFill(PAL[color]);g.drawRect(x,y,right-x,1);g.endFill();
+   x=right;
+  }
+  const tex=app.renderer.generateTexture(g,{region:new P.Rectangle(0,0,w,h),resolution:1});
+  tex.baseTexture.scaleMode=P.SCALE_MODES.NEAREST;
+  return tex;
+ }finally{g.destroy();}
+}
+function prepare(app){
+ if(!app)return;
+ if(cacheApp!==app){
+  for(const list of Object.values(artCache))for(const tex of list)try{tex.destroy()}catch(_){}
+  artCache=Object.create(null);cacheApp=app;prewarmIndex=0;
+  for(const key of artKeys){artCache[key]=[];report.loaded[key]=false;}
+ }
+ // Spread texture generation over 24 renders: no single-frame 48-sheet stall.
+ for(let n=0;n<2&&prewarmIndex<48;n++,prewarmIndex++){
+  const index=Math.floor(prewarmIndex/16),frame=prewarmIndex%16,key=artKeys[index];
+  try{
+   artCache[key].push(generate(app,key,frame));
+   report.textureFrames++;
+   report.loaded[key]=artCache[key].length===16;
+  }catch(err){fail(err);break;}
+ }
+ report.prewarm=prewarmIndex;
+}
+function frames(app,key){
+ prepare(app);
+ return artCache[key]?.length===16?artCache[key]:null;
 }
 function dispose(f){
  if(f.dead)return;
@@ -92,6 +178,7 @@ function begin(e,name,alreadyHit=false,origin='native'){
  if(!live(e))return false;
  const app=gpu(e);
  if(!app){report.blocked++;return false;}
+ prepare(app);
  const flame=frames(app,'stream'),burst=frames(app,'ember'),star=frames(app,'daimonji');
  if(!burst||(name==='flamethrower'&&!flame)||(name==='fireblast'&&!star)){
   report.blocked++;return false;
@@ -207,9 +294,11 @@ function paintBlast(f,age){
  report.frames++;
 }
 function render(e){
- if(!active.length||!live(e)){if(!live(e))kill(e);return;}
+ if(!live(e)){kill(e);return;}
  const app=gpu(e);
  if(!app)return;
+ prepare(app);
+ if(!active.length)return;
  for(const f of active.slice()){
   if(f.e!==e)continue;
   if(app!==f.app||!f.root.parent||
