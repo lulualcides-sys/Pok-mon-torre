@@ -1,0 +1,78 @@
+name: REA - Auditoria completa Poké Arena 2D
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [rea-pokearena-full-audit]
+    paths:
+      - .github/scripts/rea-full-audit.mjs
+      - .github/workflows/rea-full-audit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  levantamento:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    strategy:
+      fail-fast: false
+      matrix:
+        pokemon: [bulbasaur, charmander, squirtle, pikachu]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Instalar REA e verificadores de scripts/imagens
+        run: |
+          set -euo pipefail
+          mkdir -p rea-full-report
+          npm install -g rea-agents@latest
+          npm install --prefix /tmp/rea-play --no-package-lock --no-save --no-audit --no-fund playwright-core@1.56.1 acorn@8.15.0 pngjs@7.0.0
+          node --version > rea-full-report/node.txt
+          google-chrome --version > rea-full-report/chrome-version.txt
+          rea doctor --json > rea-full-report/rea-doctor.json 2> rea-full-report/rea-doctor.err || true
+      - name: Abrir Chrome em sessão dedicada, sem usuário real
+        shell: bash
+        run: |
+          set -euo pipefail
+          google-chrome --headless=new --no-sandbox --mute-audio --disable-dev-shm-usage \
+            --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 \
+            --window-size=780,437 --user-data-dir=/tmp/rea-full-${{ matrix.pokemon }} \
+            about:blank > rea-full-report/chrome.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:9222/json/list > rea-full-report/chrome-targets-start.json; then break; fi
+            sleep 2
+          done
+          test -s rea-full-report/chrome-targets-start.json
+      - name: Capturar arena, cinco comandos e inventário público
+        shell: bash
+        run: |
+          set +e
+          timeout 180s node .github/scripts/rea-full-audit.mjs ${{ matrix.pokemon }} > rea-full-report/audit.log 2> rea-full-report/audit.err
+          echo $? > rea-full-report/audit.exit
+          cat rea-full-report/audit.log || true
+          exit 0
+      - name: Executar REA no navegador com batalha carregada
+        shell: bash
+        run: |
+          set +e
+          curl -fsS http://127.0.0.1:9222/json/list > rea-full-report/chrome-targets-final.json
+          TARGET="$(node -e "const fs=require('fs');const t=JSON.parse(fs.readFileSync('rea-full-report/chrome-targets-final.json')).find(x=>x.type==='page'&&x.url.startsWith('https://www.pokearena2d.com/'));process.stdout.write(t?.id||'')")"
+          if [ -z "$TARGET" ]; then echo 'Target não encontrado' > rea-full-report/rea-status.txt; exit 0; fi
+          timeout 90s rea inspect-web-page http://127.0.0.1:9222 "$TARGET" \
+            --observation-ms 1000 --json > rea-full-report/rea-inspect.json 2> rea-full-report/rea-inspect.err
+          echo $? > rea-full-report/rea-inspect.exit
+          timeout 90s rea analyze-web-bundle http://127.0.0.1:9222 "$TARGET" \
+            --json > rea-full-report/rea-bundle.json 2> rea-full-report/rea-bundle.err
+          echo $? > rea-full-report/rea-bundle.exit
+          exit 0
+      - name: Guardar todas as evidências, inclusive diagnósticos
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rea-auditoria-${{ matrix.pokemon }}
+          path: rea-full-report/
+          if-no-files-found: warn
+          retention-days: 14
