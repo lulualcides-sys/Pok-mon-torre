@@ -3,7 +3,7 @@ set -Eeuo pipefail
 export SDL_VIDEODRIVER=dummy
 bin="${LIBRESPRITE_BIN:-$HOME/.cache/pokemon-torre/libresprite-v1.3/squashfs-root/AppRun}"
 test -x "$bin" || { echo "LibreSprite is required for V187 export"; exit 1; }
-node tools/build-v187-fire-art.cjs
+node tools/build-v187-rea-fire-art.cjs
 root="effects/moves/v187-rea-handdrawn-fire"
 for type in flamethrower fireblast impact; do
  case "$type" in
