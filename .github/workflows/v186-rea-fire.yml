@@ -2,9 +2,9 @@ name: V186 - REA-Sourced Fire Scale and Timing in Real Battle
 
 on:
   push:
-    branches: [preview-rea-fire186]
+    branches: [preview-rea-fire186-source-timing]
     paths:
-      - effects/moves/v186-rea-fire-pair/**
+      - effects/moves/v186-rea-source-timed/**
       - index.html
       - tests/browser-v186-rea-fire.cjs
       - .github/workflows/v186-rea-fire.yml
@@ -25,14 +25,14 @@ jobs:
       - name: Test syntax and opt-in loader
         run: |
           set -euo pipefail
-          node --check effects/moves/v186-rea-fire-pair/runtime.js
+          node --check effects/moves/v186-rea-source-timed/runtime.js
           node --check tests/browser-v186-rea-fire.cjs
           node - <<'NODE'
           const fs=require('fs'),assert=require('assert');
           const html=fs.readFileSync('index.html','utf8');
-          const js=fs.readFileSync('effects/moves/v186-rea-fire-pair/runtime.js','utf8');
+          const js=fs.readFileSync('effects/moves/v186-rea-source-timed/runtime.js','utf8');
           assert(html.includes("get('fire186')==='preview'"));
-          assert(html.includes("v186-rea-fire-pair/runtime.js"));
+          assert(html.includes("v186-rea-source-timed/runtime.js"));
           assert(js.includes('PokemonTorreReaFireV186'));
           assert(!js.includes('createElement("canvas")')&&!js.includes("getContext('2d')"));
           console.log('PASS V186 static checks');
