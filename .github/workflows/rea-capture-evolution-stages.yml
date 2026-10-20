@@ -1,0 +1,47 @@
+name: REA - Todos os golpes em todas as evoluções e Megas
+on:
+  workflow_dispatch:
+  push:
+    branches: [rea-pokearena-all-visible-moves]
+    paths:
+      - .github/scripts/rea-record-evolution-stages.cjs
+      - .github/workflows/rea-capture-evolution-stages.yml
+permissions:
+  contents: read
+jobs:
+  capturar-estagios:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 27
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [pilot]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Instalar Chrome recorder, PNG e FFmpeg
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/rea-evo-capture --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1 pngjs@7.0.0
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
+          ffmpeg -version | head -1
+          node --check .github/scripts/rea-record-evolution-stages.cjs
+      - name: Registrar os 3 estágios + Mega no Training temporário
+        shell: bash
+        run: |
+          set -o pipefail
+          timeout 1310s node .github/scripts/rea-record-evolution-stages.cjs ${{ matrix.group }} | tee rea-evolution-console.log
+      - name: Salvar vídeos reais, contact sheets e índice por estágio
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-evolution-moves-${{ matrix.group }}
+          path: |
+            rea-evolved-moves/
+            rea-evolution-console.log
+          retention-days: 90
+          if-no-files-found: warn
+          compression-level: 6
