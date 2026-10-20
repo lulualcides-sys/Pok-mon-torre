@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path');
 const groups=['e0','e1','e2','e3','e4','e5','e6','e7'],list=[],reports=[],errors=[];
 for(const group of groups){
- const file=path.join('quality-input',group,'QUALITY.json');
+ const file=path.join('quality-input','REA-QA-'+group,'QUALITY.json');
  try{
   const src=JSON.parse(fs.readFileSync(file));
   reports.push(src.summary);list.push(...src.moves);errors.push(...src.problems);
