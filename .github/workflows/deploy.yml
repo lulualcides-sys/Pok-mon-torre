@@ -120,6 +120,12 @@ jobs:
           node --check effects/moves/v183-daimonji/runtime.js
           node tools/build-v183-daimonji.cjs
           node tests/v183-daimonji.test.cjs
+      - name: V187 gerar sprites REA originais em LibreSprite para o jogo
+        run: |
+          node --check tools/build-v187-rea-fire-art.cjs
+          node --check effects/moves/v187-rea-handdrawn-fire/runtime.js
+          bash tools/libresprite/build-v187-fire.sh
+          node tests/v187-fire-assets.test.cjs
       - name: V184 Flame Wheel, Inferno, Ember e Eruption - 4 spritesheets reais LibreSprite
         run: |
           node --check tools/build-v184-four-fire.cjs
