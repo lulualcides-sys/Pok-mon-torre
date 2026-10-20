@@ -1,0 +1,33 @@
+name: REA - Catalogar evoluções e golpes por estágio
+on:
+  workflow_dispatch:
+  push:
+    branches: [rea-pokearena-all-visible-moves]
+    paths:
+      - .github/scripts/rea-discover-evolutions.cjs
+      - .github/workflows/rea-discover-evolutions.yml
+permissions:
+  contents: read
+jobs:
+  evolucoes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Browser automation
+        run: |
+          npm install --prefix /tmp/rea-evolution --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1
+          node --check .github/scripts/rea-discover-evolutions.cjs
+      - name: Extract evolution and moveset data from public client
+        run: |
+          node .github/scripts/rea-discover-evolutions.cjs
+      - name: Preserve evolutionary moveset analysis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-evolution-source-discovery
+          path: rea-evolution-discovery/
+          retention-days: 30
