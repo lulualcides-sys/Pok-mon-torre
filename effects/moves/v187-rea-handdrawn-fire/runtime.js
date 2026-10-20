@@ -295,7 +295,15 @@ window.PokemonTorreReaFireV187=Object.freeze({
   const slot=moves.findIndex(x=>kind(x?.name)===kind(name));
   if(slot<0)return {attempted:false,reason:'not equipped',moves:moves.map(x=>x?.name||'')};
   const before=report.nativeCastStarted,prior=Number(typeof foe==='function'?foe()?.hp:NaN);
-  const result=latestEngine.useMove(slot);
+  const wasPaused=!!battle.paused;
+  // The local QA harness leaves battle paused. Unpause only for this isolated
+  // localhost-only REAL useMove execution, then restore the prior QA state.
+  const localQA=/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&
+    typeof window.PokemonTorreLocalCombatTestV47?.start==='function';
+  if(wasPaused&&!localQA)return {attempted:false,reason:'battle paused outside QA'};
+  if(wasPaused&&localQA)battle.paused=false;
+  let result;
+  try{result=latestEngine.useMove(slot)}finally{if(wasPaused&&localQA)battle.paused=true;}
   const after=Number(typeof foe==='function'?foe()?.hp:NaN);
   return {attempted:true,slot,result:result===false?false:'non-false',
     started:report.nativeCastStarted>before,hpBefore:prior,hpAfter:after,
