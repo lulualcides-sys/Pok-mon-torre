@@ -1,0 +1,103 @@
+name: REA - Recuperar videos de capturas reais do sandbox
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [rea-pokearena-all-visible-moves]
+    paths:
+      - .github/workflows/rea-convert-unlocked-captures.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  converter:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [g0, g1, g2, g3]
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      GROUP: ${{ matrix.group }}
+      SOURCE_RUN: '39424358851'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Preparar FFmpeg e ferramentas GitHub
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
+          command -v ffmpeg
+          command -v gh
+      - name: Aguardar os quadros capturados sem repetir o jogo
+        shell: bash
+        run: |
+          set -euo pipefail
+          ID=""
+          for n in $(seq 1 90); do
+            ID="$(gh api "/repos/$REPO/actions/runs/$SOURCE_RUN/artifacts?per_page=100" \
+              --jq ".artifacts[] | select(.name==\"rea-unlocked-moves-$GROUP\") | .id" 2>/dev/null | head -n 1 || true)"
+            if [ -n "$ID" ]; then break; fi
+            sleep 20
+          done
+          test -n "$ID"
+          mkdir -p recuperado
+          gh run download "$SOURCE_RUN" --repo "$REPO" -n "rea-unlocked-moves-$GROUP" -D recuperado
+          test -s recuperado/rea-unlocked-captures/manifest.json
+      - name: Gerar MP4 a partir das imagens já existentes
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=recuperado/rea-unlocked-captures
+          converted=0
+          while IFS= read -r -d '' first; do
+            dir="$(dirname "$first")"
+            ffmpeg -y -hide_banner -loglevel error -framerate 10 \
+              -i "$dir/frame-%02d.png" \
+              -vf 'pad=ceil(iw/2)*2:ceil(ih/2)*2' \
+              -c:v libx264 -preset veryfast -crf 25 -pix_fmt yuv420p \
+              "$dir/real-gameplay.mp4"
+            test -s "$dir/real-gameplay.mp4"
+            rm "$dir"/frame-??.png
+            converted=$((converted+1))
+          done < <(find "$ROOT" -name frame-00.png -print0)
+          echo "Vídeos recuperados: $converted"
+          test "$converted" -ge 1
+          node - <<'NODE'
+          const fs=require('fs'),p='recuperado/rea-unlocked-captures/';
+          const m=JSON.parse(fs.readFileSync(p+'manifest.json'));
+          const videos=[];
+          for(const a of fs.readdirSync(p,{withFileTypes:true}).filter(x=>x.isDirectory())){
+            for(const b of fs.readdirSync(p+a.name,{withFileTypes:true}).filter(x=>x.isDirectory())){
+              const f=p+a.name+'/'+b.name+'/real-gameplay.mp4';
+              if(!fs.existsSync(f))continue;
+              const i=Number(a.name.split('-')[0]),k=Number(b.name.split('-')[0]);
+              const mon=m.roster[i];
+              videos.push({index:i,pokemon:mon?.name||a.name,
+                move:mon?.moves?.[k]||b.name,slot:k,
+                file:a.name+'/'+b.name+'/real-gameplay.mp4',
+                videoBytes:fs.statSync(f).size,
+                status:'CAPTURED_REAL_VIDEO_ATTACK_NOT_INDEPENDENTLY_VERIFIED'});
+            }
+          }
+          fs.writeFileSync(p+'VIDEOS-RECUPERADOS.json',
+            JSON.stringify({sourceRun:process.env.SOURCE_RUN,group:m.group,
+              unlocked:m.unlocked,total:videos.length,videos},null,2));
+          console.log('Video files ready:',videos.length);
+          NODE
+      - name: Salvar vídeos de referência e quadros de contato
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-offline-videos-${{ matrix.group }}
+          path: recuperado/rea-unlocked-captures/
+          retention-days: 30
+          compression-level: 6
