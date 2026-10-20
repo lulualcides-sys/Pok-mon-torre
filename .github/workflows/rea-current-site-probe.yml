@@ -1,0 +1,27 @@
+name: REA - Diagnostico de carregamento do site atual
+on:
+  push:
+    branches: [rea-pokearena-all-visible-moves]
+    paths:
+      - .github/scripts/rea-current-site-probe.cjs
+      - .github/workflows/rea-current-site-probe.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnosticar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --prefix /tmp/rea-path-check --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1
+      - run: node .github/scripts/rea-current-site-probe.cjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-current-site-diagnostics
+          path: rea-site-path-diagnostics/
+          retention-days: 7
