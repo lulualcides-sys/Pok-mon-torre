@@ -9,7 +9,7 @@ assert.match(html,/effects\/moves\/v180-pixel-fire\/runtime\.js/);
 assert.match(src,/FRAMES=16/);
 assert.match(src,/const SIZES=\{stream:\[72,26\],projectile:\[40,30\],burst:\[72,72\]\}/);
 assert.match(src,/five-flame star ONLY on hit/);
-assert.match(src,/renderer\.generateTexture\(g\)/);
+assert.match(src,/renderer\.generateTexture\(g,\{region:new P\.Rectangle\(0,0,w,h\),resolution:1\}\)/);
 assert.match(src,/P\.SCALE_MODES\.NEAREST/);
 assert.doesNotMatch(src,/getContext\s*\(|createElement\s*\(\s*['"]canvas|requestAnimationFrame/);
 let created=0,rendered=0;
@@ -18,12 +18,13 @@ class Texture{constructor(){this.baseTexture={scaleMode:0}}destroy(){}}
 class Sprite{constructor(t){this.texture=t;this.anchor={set:()=>{}};this.position={set:()=>{}};}
  destroy(){}}
 class Container{constructor(){this.parent=null;this.children=[]}addChild(c){this.children.push(c);c.parent=this;return c}destroy(){this.parent=null}}
-const Pixi={Graphics:G,Sprite,Container,SCALE_MODES:{NEAREST:0}};
+class Rectangle{constructor(x,y,w,h){this.x=x;this.y=y;this.width=w;this.height=h;}}
+const Pixi={Graphics:G,Sprite,Container,Rectangle,SCALE_MODES:{NEAREST:0}};
 function setup(search,{gpu=true}={}){
  let time=1000,hitCalls=0,legacy=0;
  const battle={energy:100,active:true},cd={0:0,1:0};
  const app={renderer:{gl:gpu?{isContextLost:()=>false}:null,
-  generateTexture(){created++;return new Texture()}},stage:new Container()};
+  generateTexture(g,{region}){assert.ok(region.width>=40&&region.height>=26);created++;return new Texture()}},stage:new Container()};
  class Engine{constructor(){this.canvas={isConnected:true};this.h=430;this.player={x:75,y:300};this.enemy={x:330,y:125,hp:140};}
  useMove(i){battle.energy-=10;cd[i]=time+1200;return true}
  hitTarget(who,type,power){hitCalls++;this.enemy.hp-=power;return true}
