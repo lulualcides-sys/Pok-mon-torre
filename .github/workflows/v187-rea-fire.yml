@@ -1,0 +1,62 @@
+name: V187 - REA Drawn LibreSprite Fire in Real Battle
+
+on:
+  push:
+    branches: [preview-v187-rea-painted-fires]
+    paths:
+      - effects/moves/v187-rea-handdrawn-fire/**
+      - index.html
+      - tests/browser-v187-rea-fire.cjs
+      - tests/v187-fire-assets.test.cjs
+      - tools/build-v187-rea-fire-art.cjs
+      - tools/libresprite/build-v187-fire.sh
+      - .github/workflows/v187-rea-fire.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  syntax-and-chrome:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test syntax and opt-in loader
+        run: |
+          set -euo pipefail
+          node --check effects/moves/v187-rea-handdrawn-fire/runtime.js
+          node --check tests/browser-v187-rea-fire.cjs
+          node - <<'NODE'
+          const fs=require('fs'),assert=require('assert');
+          const html=fs.readFileSync('index.html','utf8');
+          const js=fs.readFileSync('effects/moves/v187-rea-handdrawn-fire/runtime.js','utf8');
+          assert(html.includes("get('fire187')==='preview'"));
+          assert(html.includes("v187-rea-handdrawn-fire/runtime.js"));
+          assert(js.includes('PokemonTorreReaFireV187'));
+          assert(!js.includes('createElement("canvas")')&&!js.includes("getContext('2d')"));
+          console.log('PASS V187 static checks');
+          NODE
+      - uses: ./.github/actions/setup-libresprite
+      - name: Generate actual 16-frame art with LibreSprite
+        run: |
+          bash tools/libresprite/build-v187-fire.sh
+          node tests/v187-fire-assets.test.cjs
+      - name: Install browser automation
+        run: |
+          npm install --prefix /tmp/fire187-test --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1
+          google-chrome --version
+      - name: Test live battle and capture two screenshots
+        run: |
+          node tests/browser-v187-rea-fire.cjs
+      - name: Upload test screenshots and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v187-flamethrower-fireblast-preview
+          path: fire187-test-report/
+          if-no-files-found: warn
+          retention-days: 14

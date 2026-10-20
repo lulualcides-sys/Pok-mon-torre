@@ -1198,6 +1198,7 @@ if(new URLSearchParams(location.search).get('flame172')!=='0'&&
    new URLSearchParams(location.search).get('fire182')!=='preview'&&
    new URLSearchParams(location.search).get('fire185')!=='preview'&&
    new URLSearchParams(location.search).get('fire186')!=='preview'&&
+   new URLSearchParams(location.search).get('fire187')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v172-flamethrower-approved/runtime.js';
@@ -1353,6 +1354,7 @@ if(new URLSearchParams(location.search).get('fire182')==='preview'&&
 if(new URLSearchParams(location.search).get('fire183')!=='0'&&
    new URLSearchParams(location.search).get('fire185')!=='preview'&&
    new URLSearchParams(location.search).get('fire186')!=='preview'&&
+   new URLSearchParams(location.search).get('fire187')!=='preview'&&
    (new URLSearchParams(location.search).get('fire183')==='preview'||
     ['fire178','fire179','fire180','fire181'].every(key=>
      new URLSearchParams(location.search).get(key)!=='preview'))&&
@@ -1413,6 +1415,20 @@ if(new URLSearchParams(location.search).get('fire186')==='preview'&&
   game=game.replace(fireSpriteAnchor,
     String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V186 preview unavailable, approved effects unchanged',error);}
+}
+
+// V187 real 16-frame LibreSprite fire preview; NO procedural placeholder art.
+// The existing approved V172/V183 still run without ?fire187=preview.
+if(new URLSearchParams(location.search).get('fire187')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const file='effects/moves/v187-rea-handdrawn-fire/runtime.js';
+  const response=await fetch(file+'?build=v187-rea-libresprite',{cache:'no-store'});
+  if(!response.ok)throw Error('V187 source art module HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V187 battle anchor not found');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V187 painted preview failed; approved visual preserved',error);}
 }
 
 // The retired Atelier stays in GitHub history; it is not inside the game.
