@@ -288,6 +288,19 @@ window.PokemonTorreReaFireV187=Object.freeze({
  availableMoves:()=>{const mon=typeof current==='function'?current():null;
   return mon&&typeof skillSet==='function'?(skillSet(mon)||[]).map((m,slot)=>({slot,name:m?.name||'',match:kind(m?.name)})):[];
  },
+ castEquippedForQATest:(name)=>{
+  if(!latestEngine||!live(latestEngine)||!kind(name))return {attempted:false,reason:'no engine'};
+  const mon=typeof current==='function'?current():null;
+  const moves=mon&&typeof skillSet==='function'?(skillSet(mon)||[]):[];
+  const slot=moves.findIndex(x=>kind(x?.name)===kind(name));
+  if(slot<0)return {attempted:false,reason:'not equipped',moves:moves.map(x=>x?.name||'')};
+  const before=report.nativeCastStarted,prior=Number(typeof foe==='function'?foe()?.hp:NaN);
+  const result=latestEngine.useMove(slot);
+  const after=Number(typeof foe==='function'?foe()?.hp:NaN);
+  return {attempted:true,slot,result:result===false?false:'non-false',
+    started:report.nativeCastStarted>before,hpBefore:prior,hpAfter:after,
+    seen:report.nativeRecognized,blocked:report.blocked};
+ },
  diagnostics:()=>({...report,active:active.map(x=>({name:x.name,hit:!!x.hitAt,
   source:x.origin,age:Math.round(now()-x.start)}))})
 });
