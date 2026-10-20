@@ -124,7 +124,7 @@ function texture(app,type,k){
   }
  }
  let result;
- try{result=app.renderer.generateTexture(g);
+ try{result=app.renderer.generateTexture(g,{region:new P.Rectangle(0,0,w,h),resolution:1});
   if(result?.baseTexture)result.baseTexture.scaleMode=P.SCALE_MODES.NEAREST;
  }finally{g.destroy();}
  if(!result)throw Error('PixiJS pixel texture was not generated');
