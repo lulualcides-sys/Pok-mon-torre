@@ -1371,7 +1371,7 @@ if(new URLSearchParams(location.search).get('fire184')==='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v184-fire-four/runtime.js';
-  const response=await fetch(file+'?build=v184-four-original-pixel-fire',{cache:'no-store'});
+  const response=await fetch(file+'?build=v184-1-stage-fire',{cache:'no-store'});
   if(!response.ok)throw Error('V184 fire sprites HTTP '+response.status);
   if(!game.includes(fireSpriteAnchor))throw Error('V184 battle insertion marker missing');
   game=game.replace(fireSpriteAnchor,

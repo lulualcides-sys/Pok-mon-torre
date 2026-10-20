@@ -28,6 +28,19 @@ class Art{
    this.set(x,y,Math.max(3,Math.min(13,Math.round(c*power))));
   }
  }
+ polygon(points,color){
+  const minY=Math.max(1,Math.floor(Math.min(...points.map(p=>p[1]))));
+  const maxY=Math.min(H-2,Math.ceil(Math.max(...points.map(p=>p[1]))));
+  for(let y=minY;y<=maxY;y++){
+   const cuts=[];
+   for(let i=0,j=points.length-1;i<points.length;j=i++){
+    const a=points[j],b=points[i];
+    if((a[1]>y)!==(b[1]>y))cuts.push(a[0]+(y-a[1])*(b[0]-a[0])/(b[1]-a[1]));
+   }
+   cuts.sort((a,b)=>a-b);
+   for(let i=0;i+1<cuts.length;i+=2)for(let x=Math.ceil(cuts[i]);x<=Math.floor(cuts[i+1]);x++)this.set(x,y,color);
+  }
+ }
  spark(x,y,idx){this.set(x,y,idx);if(idx>8)this.set(x+1,y,Math.max(5,idx-2))}
  border(){
   const copy=this.p.slice();
@@ -68,21 +81,31 @@ function flame(a,cx,base,tip,spread,k,heat=1){
  }
 }
 function ember(k){
- const a=new Art(),progress=k/7,fade=k>=6?.7:.99;
- if(k<6){
-  const x=31+k*5.0;
-  for(let j=0;j<3;j++){
-   const ox=(j-1)*9,oy=(j%2?3:-2),s=.66+.11*((k+j)%3);
-   a.brush(x+ox,32+oy,5.5*s,4.0*s,1);
-   flame(a,x+ox-3,32+oy+2,32+oy-8,3.5*s,k+j);
-   for(let t=0;t<2;t++)a.spark(x+ox-9-t*3,31+oy+((k+j+t)%4-2)*2,t?5:8);
-  }
+ const a=new Art();
+ // One asymmetric flame at a fixed pivot. Travel belongs to the battle actor,
+ // never to frame offsets; three staggered sprites form the compact volley.
+ if(k<4){
+  const flick=[0,2,-1,1][k],tip=[-2,1,0,2][k];
+  a.polygon([[25,24+flick],[36,28],[33,22+flick],[44,26],
+   [48,24],[55,27],[62+tip,32],[56,38],[47,40],[39,37],
+   [28,39-flick],[34,34],[24,32]],4);
+  a.polygon([[32,27+flick],[43,30],[40,25+flick],[49,28],
+   [54,28],[60+tip,32],[54,36],[46,37],[35,35],[39,32]],7);
+  a.polygon([[40,29],[49,31],[47,28],[54,30],[57+tip,32],
+   [52,35],[45,34]],10);
+  a.polygon([[48,31],[54+tip,32],[50,34],[46,33]],12);
+  a.spark(21-k*2,29+flick,7);a.spark(26-k,36-flick,9);
  }else{
-  for(let j=0;j<5-(k-6)*2;j++){
-   const cx=35+j*7,cy=31+(j%2)*7;
-   flame(a,cx,cy+4,cy-8,4*(1-progress*.6)+1,k+j);
-   a.spark(cx+7,cy-6,8-k+5);
+  const u=(k-4)/3,extent=6+u*18;
+  for(let j=0;j<7;j++){
+   const angle=j*6.283/7+.2,dx=Math.cos(angle),dy=Math.sin(angle);
+   const cx=48+dx*extent,cy=32+dy*extent*.7,sz=4-u*2.5;
+   a.polygon([[cx-dx*sz*2,cy-dy*sz],[cx-dy*sz,cy+dx*sz],
+    [cx+dx*sz,cy+dy*sz],[cx+dy*sz,cy-dx*sz]],j%2?7:5);
+   a.spark(cx,cy,10);
   }
+  if(k===4)a.polygon([[43,27],[48,29],[51,25],[52,30],[57,32],
+   [52,34],[53,38],[48,35],[43,37],[45,32]],12);
  }
  a.border();return a;
 }
@@ -91,10 +114,11 @@ function wheel(k){
  const ring=18*growth,inner=9*growth;
  for(let y=2;y<H-2;y++)for(let x=2;x<W-2;x++){
   const dx=x-48,dy=y-33,r=Math.hypot(dx,dy),ang=Math.atan2(dy,dx);
-  const turn=ang+k*.42,spike=Math.pow(Math.max(0,Math.sin(turn*9)),5)*5;
+  const turn=ang+k*.42,spike=Math.pow(Math.max(0,Math.sin(turn*5+Math.sin(turn*3))),3)*6;
   const flick=Math.sin(turn*17)*1.35+Math.sin(turn*6-k*.35)*.75;
   const outer=ring+spike+flick*growth;
-  if(r<inner||r>outer||growth<.1)continue;
+  const hollow=inner+Math.sin(turn*4)*2.3;
+  if(r<hollow||r>outer||growth<.1)continue;
   const depth=outer-r;
   const c=depth<1.4?4:depth<3?6:depth<5?8:depth<7?10:depth<9?11:12;
   a.set(x,y,c);
@@ -113,15 +137,16 @@ function wheel(k){
 function inferno(k){
  const a=new Art(),rise=k<5?ease((k+1)/6):k>12?1-ease((k-12)/4)*.82:1;
  for(const [i,cx,base,h,w] of [[0,28,55,31,9],[1,43,59,44,10],[2,59,57,37,11],[3,70,55,28,8]]){
-  const tip=base-h*rise+(i%2?Math.sin(k*.7+i)*3:0);
+  const local=Math.max(.06,rise-(i%3)*.12);
+  const tip=base-h*local+Math.sin(k*.7+i)*3;
   flame(a,cx,base,tip,w*(.78+.22*rise),k*2+i,.93);
  }
  // A central fire channel burns inside an enclosure. No projectile and no spherical explosion.
  if(rise>.48)flame(a,51,50,53-25*rise,5,k+8,.99);
  const sparks=Math.floor(4+rise*13);
  for(let j=0;j<sparks;j++){
-  const x=24+hash(j,2,k)*48,y=14+hash(j,3,k)*41;
-  if(hash(j,6,k)>.32)a.spark(x,y,6+Math.floor(hash(j,7,k)*5));
+  const x=24+hash(j,2,0)*48+Math.sin(k*.5+j)*2,y=54-((k*3+j*9)%43);
+  if(hash(j,6,0)>.32)a.spark(x,y,6+Math.floor(hash(j,7,0)*5));
  }
  a.border();return a;
 }
@@ -140,9 +165,10 @@ function eruption(k){
  // Ejected magma/rock chunks are compact and angular, not glowing magic orbs.
  for(let j=0;j<19;j++){
   const flight=hash(j,3,2),spread=hash(j,8,5);
-  const x=49+(spread-.5)*75+Math.sin(k*.6+j)*2,
-        y=56-(10+flight*34)*power+Math.sin(j+k*.8)*3;
-  if(hash(j,k,4)<power*.70) {
+  const travel=clamp((k-2-(j%3))/11,0,1);
+  const x=49+(spread-.5)*78*travel,
+        y=56-(22+flight*35)*Math.sin(travel*Math.PI);
+  if(k>2&&k<15&&hash(j,0,4)<.8) {
    const color=j%4===0?2:j%3===0?5:8;
    a.set(x,y,color);a.set(x+1,y,color);if(j%2===0)a.set(x,y+1,color);
    if(color>=8)a.spark(x+1,y-2,10);

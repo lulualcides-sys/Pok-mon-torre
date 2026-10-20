@@ -22,3 +22,9 @@ Each is an independent real 4-column, 192×128 RGBA sprite sheet exported by the
 - https://pokemondb.net/move/eruption
 
 **Visual approval:** pending for these four new effects. V183 Fire Blast was approved separately and is in the normal game.
+
+## V184.1 refinement
+
+Ember uses three staggered fixed-pivot flame sprites; flight loops frames 0–3 and confirmed impact advances frames 4–7 exactly once. Flame Wheel follows the actual player position. Inferno has staggered column growth and Eruption has coherent ballistic debris. Impact playback starts at its first frame and advances every frame interval. Optional existing Particle Emitter adds at most eight tiny embers per cast. All casts share the existing Pixi renderer and battle draw; no second context or animation loop. Native cast identity/timing gates damage observation; actor, target and battle changes clean up effects.
+
+Regression tests cover flight/impact separation, mantle attachment, misses, overlapping casts, cleanup, native damage and cost, and WebGL fallback. The four remain pending visual approval.
