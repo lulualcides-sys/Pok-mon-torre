@@ -36,6 +36,7 @@ const report={installed:true,approved:false,version:'185.0-rea-fire-review',
  confirmedImpacts:0,misses:0,legacySuppressed:0,blocked:0,previewCasts:0,
  errors:[],maxObjects:16,nativeDamageUntouched:true};
 const imageCache=Object.create(null),cache=Object.create(null),active=[];
+let latestEngine=null;
 for(const [key,s] of Object.entries(SOURCES)){
  const image=new Image();image.decoding='async';
  const r={image,ok:false,frames:null,app:null,base:null};
@@ -270,6 +271,7 @@ BattleEngine.prototype.hitTarget=function(who,type,power){
 };
 const oldDraw=BattleEngine.prototype.draw;
 BattleEngine.prototype.draw=function(){
+ latestEngine=this;
  const result=oldDraw.apply(this,arguments);
  try{render(this)}catch(error){fail(error);kill(this);}
  return result;
@@ -279,8 +281,10 @@ BattleEngine.prototype.destroy=function(){kill(this);return oldDestroy.apply(thi
 window.PokemonTorreReaFireV185=Object.freeze({
  installed:true,approved:false,
  // Visual-only QA helper: no damage and never called during normal game operation.
- visualTest:name=>{if(!kind(name)||typeof engine==='undefined'||!live(engine))return false;
-  return begin(engine,kind(name),false,'manual-preview');},
+ visualTest:(name,simulateHit=false)=>{
+  if(!kind(name)||!latestEngine||!live(latestEngine))return false;
+  return begin(latestEngine,kind(name),!!simulateHit,'manual-preview');
+ },
  diagnostics:()=>({...report,active:active.map(x=>({name:x.name,hit:!!x.hitAt,
   source:x.origin,age:Math.round(now()-x.start)}))})
 });
