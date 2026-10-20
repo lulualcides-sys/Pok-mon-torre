@@ -1,0 +1,54 @@
+name: V186 - REA-Sourced Fire Scale and Timing in Real Battle
+
+on:
+  push:
+    branches: [preview-rea-fire186-source-timing]
+    paths:
+      - effects/moves/v186-rea-source-timed/**
+      - index.html
+      - tests/browser-v186-rea-fire.cjs
+      - .github/workflows/v186-rea-fire.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  syntax-and-chrome:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test syntax and opt-in loader
+        run: |
+          set -euo pipefail
+          node --check effects/moves/v186-rea-source-timed/runtime.js
+          node --check tests/browser-v186-rea-fire.cjs
+          node - <<'NODE'
+          const fs=require('fs'),assert=require('assert');
+          const html=fs.readFileSync('index.html','utf8');
+          const js=fs.readFileSync('effects/moves/v186-rea-source-timed/runtime.js','utf8');
+          assert(html.includes("get('fire186')==='preview'"));
+          assert(html.includes("v186-rea-source-timed/runtime.js"));
+          assert(js.includes('PokemonTorreReaFireV186'));
+          assert(!js.includes('createElement("canvas")')&&!js.includes("getContext('2d')"));
+          console.log('PASS V186 static checks');
+          NODE
+      - name: Install browser automation
+        run: |
+          npm install --prefix /tmp/fire186-test --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1
+          google-chrome --version
+      - name: Test live battle and capture two screenshots
+        run: |
+          node tests/browser-v186-rea-fire.cjs
+      - name: Upload test screenshots and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v186-flamethrower-fireblast-preview
+          path: fire186-test-report/
+          if-no-files-found: warn
+          retention-days: 14
