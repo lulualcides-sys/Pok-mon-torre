@@ -1,5 +1,7 @@
 # Poké Arena 2D — Registro de golpes em batalha real
 
+[Conferir elenco disponível e limites de captura](ELENCO-OBSERVADO.md)
+
 Ação: [abrir execução no GitHub](https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39419765383)
 
 Esta coleta registra quadros capturados em sessões reais do jogo público,
