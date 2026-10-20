@@ -102,16 +102,25 @@ try {
         await page.waitForTimeout(95);
       }
     }
-    // Study the two requested fire moves separately. Aim at the dummy's
-    // position observed in the first actual battle screenshot.
-    await page.mouse.move(512, 199);
-    await page.mouse.click(512, 199, {button:'right'}); // RMB = Flamethrower
-    await burst('flamethrower', 22);
+    // During CDP automation, a short synthetic right click can open a browser
+    // menu. Suppress only that native menu and hold RMB across animation frames.
+    await page.evaluate(() => document.querySelector('canvas')?.addEventListener(
+      'contextmenu', e => {e.preventDefault(); e.stopPropagation();}, {capture:true}
+    ));
+    await page.keyboard.press('k'); // Training: toggle dummy still/moving.
+    await page.mouse.move(510, 200);
+    await page.mouse.down({button:'right'});
+    await burst('flamethrower-held-rmb', 18);
+    await page.mouse.up({button:'right'});
     await stage('06-after-flamethrower');
-    await page.waitForTimeout(1500);
-    await page.mouse.move(512, 199);
-    await page.keyboard.press('e'); // E = Fire Blast
-    await burst('fire-blast', 22);
+    await page.waitForTimeout(900);
+    // Build some damage/charge separately, then sample the Fire Blast ultimate.
+    await page.mouse.click(510, 200, {button:'left'});
+    await page.waitForTimeout(550);
+    await page.keyboard.press('q');
+    await page.waitForTimeout(850);
+    await page.keyboard.press('e');
+    await burst('fire-blast-with-charge', 18);
     await stage('07-after-fire-blast');
   }
   const controls = after.runtime.controls || [];
@@ -128,6 +137,22 @@ try {
 } catch(e) {
   results.errors.push('navigation: ' + String(e));
 }
+const pathPrefix = 'src-582c990074/';
+const modules = ['controles.js','vfx.js','habilidades.js','arena.js','luchador.js','sprites.js','escenas/combate.js'];
+const codeMap = [];
+for(const mod of modules) {
+  try {
+    const resp = await page.request.get(target + pathPrefix + mod, {timeout:10000});
+    const js = await resp.text();
+    const pattern = /flamethrower|fire.?blast|contextmenu|pointer|mouse|sprite|particles|tween|texture|blendMode/gi;
+    const matches = [...js.matchAll(pattern)].slice(0, 12).map(m => ({
+      term:m[0], offset:m.index, snippet:js.slice(Math.max(0,m.index-60),Math.min(js.length,m.index+100)).replace(/\s+/g,' ')
+    }));
+    codeMap.push({module:mod, status:resp.status(), bytes:js.length,
+      sha256:crypto.createHash('sha256').update(js).digest('hex'),matches});
+  } catch(e) { codeMap.push({module:mod,error:String(e).slice(0,200)}); }
+}
+fs.writeFileSync(base + '/code-signatures.json',JSON.stringify(codeMap,null,2));
 fs.writeFileSync(base + '/navigation-summary.json', JSON.stringify(results, null, 2));
 console.log(JSON.stringify({
   stages:results.stages.map(s=>({stage:s.stage, url:s.runtime.url,bodyText:s.runtime.bodyText?.slice(0,250),canvas:s.runtime.canvas,sha:s.pngSha256})),
