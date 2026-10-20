@@ -108,6 +108,12 @@ jobs:
           node --check effects/moves/v180-pixel-fire/runtime.js
           node --check tests/v180-pixel-fire.test.cjs
           node tests/v180-pixel-fire.test.cjs
+      - name: Testar Fire Blast e Flamethrower V181 com LibreSprite real
+        run: |
+          node --check tools/build-v181-fire-art.cjs
+          node --check effects/moves/v181-hand-drawn-fire/runtime.js
+          bash tools/libresprite/build-v181-fire.sh
+          node tests/v181-libre-fire.test.cjs
       - name: Exportar quatro spritesheets editaveis no LibreSprite V145
         run: bash tools/libresprite/build-v145-flying.sh
       - name: Testar quatro golpes V145 montados no PixiJS
