@@ -1195,6 +1195,7 @@ if(new URLSearchParams(location.search).get('flame172')!=='0'&&
    new URLSearchParams(location.search).get('fire179')!=='preview'&&
    new URLSearchParams(location.search).get('fire180')!=='preview'&&
    new URLSearchParams(location.search).get('fire181')!=='preview'&&
+   new URLSearchParams(location.search).get('fire182')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v172-flamethrower-approved/runtime.js';
@@ -1266,6 +1267,7 @@ if(new URLSearchParams(location.search).get('absorb177')!=='0'&&
 if(new URLSearchParams(location.search).get('fire178')==='preview'&&
    new URLSearchParams(location.search).get('fire179')!=='preview'&&
    new URLSearchParams(location.search).get('fire181')!=='preview'&&
+   new URLSearchParams(location.search).get('fire182')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v178-fire-pair-preview/runtime.js';
@@ -1283,6 +1285,7 @@ if(new URLSearchParams(location.search).get('fire178')==='preview'&&
 if(new URLSearchParams(location.search).get('fire179')==='preview'&&
    new URLSearchParams(location.search).get('fire180')!=='preview'&&
    new URLSearchParams(location.search).get('fire181')!=='preview'&&
+   new URLSearchParams(location.search).get('fire182')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v179-video-reference/runtime.js';
@@ -1299,6 +1302,7 @@ if(new URLSearchParams(location.search).get('fire179')==='preview'&&
 // The original damage, timing, enemy AI and saved games remain controlled by BattleEngine.
 if(new URLSearchParams(location.search).get('fire180')==='preview'&&
    new URLSearchParams(location.search).get('fire181')!=='preview'&&
+   new URLSearchParams(location.search).get('fire182')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v180-pixel-fire/runtime.js';
@@ -1314,6 +1318,7 @@ if(new URLSearchParams(location.search).get('fire180')==='preview'&&
 // Three independently hand-painted 16-frame sheets. Normal game remains protected.
 // URL ?fire181=preview takes precedence over prior experimental Fire V178-180.
 if(new URLSearchParams(location.search).get('fire181')==='preview'&&
+   new URLSearchParams(location.search).get('fire182')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v181-hand-drawn-fire/runtime.js';
@@ -1323,6 +1328,21 @@ if(new URLSearchParams(location.search).get('fire181')==='preview'&&
   game=game.replace(fireSpriteAnchor,
    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V181 hand-drawn Fire unavailable; saved effects preserved',error);}
+}
+
+// V182: 12-frame original PNG pixel-art Flamethrower, opt-in only.
+// Approved V172 unchanged. Sustain frames loop until native hit.
+// ?fire182=preview is playable; remove it to restore the official game.
+if(new URLSearchParams(location.search).get('fire182')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const file='effects/moves/v182-flamethrower/runtime.js';
+  const response=await fetch(file+'?build=v182-12frame-pixel-flamethrower',{cache:'no-store'});
+  if(!response.ok)throw Error('V182 sprite preview HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V182 battle anchor missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V182 frame preview unavailable; protected effects preserved',error);}
 }
 
 // The retired Atelier stays in GitHub history; it is not inside the game.
