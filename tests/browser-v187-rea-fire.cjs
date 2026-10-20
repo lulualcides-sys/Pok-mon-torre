@@ -64,6 +64,15 @@ async function run(){
   if(!second||blast.casts.fireblast<1||blast.frames<=flame.frames||blast.confirmedImpacts<1)
    throw Error('Fire Blast impact not rendered: '+JSON.stringify(blast));
   if(blast.errors.length)throw Error('Rendering errors: '+JSON.stringify(blast.errors));
+  await page.evaluate(()=>window.PokemonTorreLocalCombatTestV47.start(6,143)); // Charizard
+  await page.waitForTimeout(1100);
+  const available=await page.evaluate(()=>window.PokemonTorreReaFireV187.availableMoves());
+  const nativeBefore=await page.evaluate(()=>window.PokemonTorreReaFireV187.diagnostics());
+  // Inventory the ACTUAL equipped moves. Artificial visual test above is not
+  // treated as proof of a live cast or synchronized damage.
+  fs.writeFileSync('fire187-test-report/equipped-charizard.json',
+    JSON.stringify({available,nativeBefore},null,2));
+  console.log('V187 CHARIZARD EQUIPPED:',JSON.stringify(available));
   const result={setup,previews:{flamethrower:first,fireblast:second},
    diagnostics:blast,browserErrors:errors,consoleErrors:log};
   fs.writeFileSync('fire187-test-report/RESULTADO.json',JSON.stringify(result,null,2));
