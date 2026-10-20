@@ -65,6 +65,8 @@ for(const item of manifest.records){
  // Historical Gust remains recorded as edited; its alias now resolves to saved Rajada.
  if(item.name==='Gust'&&item.status==='editado_legado')
   assert.equal(mark.status(item.name)?.status,'salvo');
+ else if(item.name==='Fire Blast'&&item.status==='editado_legado')
+  assert.equal(mark.status(item.name)?.status,'aprovado','V183 user approval supersedes historical edited mark');
  else assert.equal(mark.status(item.name)?.status,item.status);
 }
 const accepted=sandbox.skillMarkup({name:'Raio de Gelo'},0);
