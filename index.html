@@ -1193,6 +1193,7 @@ if(new URLSearchParams(location.search).get('flying145')!=='0'&&
 if(new URLSearchParams(location.search).get('flame172')!=='0'&&
    new URLSearchParams(location.search).get('fire178')!=='preview'&&
    new URLSearchParams(location.search).get('fire179')!=='preview'&&
+   new URLSearchParams(location.search).get('fire180')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v172-flamethrower-approved/runtime.js';
@@ -1278,6 +1279,7 @@ if(new URLSearchParams(location.search).get('fire178')==='preview'&&
 // ?fire179=preview has precedence over V178 and V172, old visuals are safe.
 // Flamethrower = overlapping orange flames; Fire Blast = concentrated fire + 5-tip star.
 if(new URLSearchParams(location.search).get('fire179')==='preview'&&
+   new URLSearchParams(location.search).get('fire180')!=='preview'&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v179-video-reference/runtime.js';
@@ -1287,6 +1289,21 @@ if(new URLSearchParams(location.search).get('fire179')==='preview'&&
   game=game.replace(fireSpriteAnchor,
     String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V179 video-matched preview unavailable; prior Fire versions preserved',error);}
+}
+
+// V180: only the two unapproved Fire moves, pixel-art 16-frame GPU battle preview.
+// ?fire180=preview overrides V179/V178/V172; normal URL and protected art stay untouched.
+// The original damage, timing, enemy AI and saved games remain controlled by BattleEngine.
+if(new URLSearchParams(location.search).get('fire180')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const file='effects/moves/v180-pixel-fire/runtime.js';
+  const response=await fetch(file+'?build=v180-fire-pixel-16frames',{cache:'no-store'});
+  if(!response.ok)throw Error('V180 Fire pixel module HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V180 battle injection anchor missing');
+  game=game.replace(fireSpriteAnchor,
+    String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V180 pixel preview unavailable; approved V172 remains unchanged',error);}
 }
 
 // The retired Atelier stays in GitHub history; it is not inside the game.
