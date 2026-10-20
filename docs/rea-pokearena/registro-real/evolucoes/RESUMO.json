@@ -1,0 +1,134 @@
+{
+  "generated": "2026-10-20T13:25:08.942Z",
+  "runUrl": "https://github.com/lulualcides-sys/Pok-mon-torre/actions/runs/39428271235",
+  "expectedAttempts": 420,
+  "recordedAttempts": 420,
+  "verifiedStages": 420,
+  "videoFiles": 420,
+  "evolvedStageAttemptVideos": 290,
+  "megaAttemptVideos": 30,
+  "uniqueMoveNamesSeen": 153,
+  "attemptedGroups": [
+    {
+      "group": "e0",
+      "status": "READ",
+      "indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "activeBundle": "src-77861e68e4",
+      "recorded": 65,
+      "videoCount": 65,
+      "errors": 0
+    },
+    {
+      "group": "e1",
+      "status": "READ",
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "activeBundle": "src-77861e68e4",
+      "recorded": 50,
+      "videoCount": 50,
+      "errors": 0
+    },
+    {
+      "group": "e2",
+      "status": "READ",
+      "indices": [
+        7,
+        8,
+        9
+      ],
+      "activeBundle": "src-77861e68e4",
+      "recorded": 45,
+      "videoCount": 45,
+      "errors": 0
+    },
+    {
+      "group": "e3",
+      "status": "READ",
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "activeBundle": "src-77861e68e4",
+      "recorded": 60,
+      "videoCount": 60,
+      "errors": 0
+    },
+    {
+      "group": "e4",
+      "status": "READ",
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "activeBundle": "src-77861e68e4",
+      "recorded": 50,
+      "videoCount": 50,
+      "errors": 0
+    },
+    {
+      "group": "e5",
+      "status": "READ",
+      "indices": [
+        17,
+        18,
+        19
+      ],
+      "activeBundle": "src-77861e68e4",
+      "recorded": 55,
+      "videoCount": 55,
+      "errors": 0
+    },
+    {
+      "group": "e6",
+      "status": "READ",
+      "indices": [
+        20,
+        21,
+        22
+      ],
+      "activeBundle": "src-77861e68e4",
+      "recorded": 45,
+      "videoCount": 45,
+      "errors": 0
+    },
+    {
+      "group": "e7",
+      "status": "READ",
+      "indices": [
+        23,
+        24,
+        25
+      ],
+      "activeBundle": "src-77861e68e4",
+      "recorded": 50,
+      "videoCount": 50,
+      "errors": 0
+    }
+  ],
+  "errors": 0,
+  "missingAttempts": 0,
+  "stageCounts": {
+    "0-false": 130,
+    "1-false": 130,
+    "2-false": 130,
+    "2-true": 30
+  },
+  "notes": [
+    "Video shows public client combat on a disposable local Training profile.",
+    "Successful recording is not proof every skill input triggered its intended attack.",
+    "The same move name may have different effects, scales, or damage across evolution stages.",
+    "Mega stages are distinct from the third regular stage and need separate evidence.",
+    "The original Poké Arena graphics and gameplay code are not redistributed as assets inside Pokémon Torre."
+  ]
+}
