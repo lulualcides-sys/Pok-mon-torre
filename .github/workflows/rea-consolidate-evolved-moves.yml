@@ -1,0 +1,71 @@
+name: REA - Salvar indice completo de evoluções e golpes
+on:
+  workflow_dispatch:
+  push:
+    branches: [rea-pokearena-all-visible-moves]
+    paths:
+      - .github/scripts/rea-consolidate-evolved-moves.cjs
+      - .github/workflows/rea-consolidate-evolved-moves.yml
+permissions:
+  contents: write
+  actions: read
+jobs:
+  consolidar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      SOURCE_RUN: '39428271235'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Aguardar o término dos oito grupos sem intervenção do usuário
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 100); do
+            STATE="$(gh api "/repos/$REPO/actions/runs/$SOURCE_RUN" --jq .status)"
+            echo "Pesquisa de evoluções: $STATE (tentativa $i)"
+            if [ "$STATE" = "completed" ]; then break; fi
+            sleep 20
+          done
+          test "$(gh api "/repos/$REPO/actions/runs/$SOURCE_RUN" --jq .status)" = "completed"
+      - name: Recuperar relatórios dos grupos, sem precisar das imagens completas
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evolution-artifacts
+          for group in e0 e1 e2 e3 e4 e5 e6 e7; do
+            mkdir -p "evolution-artifacts/$group"
+            echo "Procurando $group"
+            if gh run download "$SOURCE_RUN" --repo "$REPO" \
+              -n "rea-evolution-moves-$group" -D "evolution-artifacts/$group"; then
+              echo "Pacote $group recuperado"
+            else
+              echo "Pacote $group indisponível; será marcado como pendência"
+            fi
+          done
+      - name: Consolidar cada golpe e cada evolução em catálogo permanente
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check .github/scripts/rea-consolidate-evolved-moves.cjs
+          node .github/scripts/rea-consolidate-evolved-moves.cjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/rea-pokearena/registro-real/evolucoes/
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(rea): register captured evolution and Mega moves with honest coverage"
+            git pull --rebase origin rea-pokearena-all-visible-moves
+            git push origin HEAD:rea-pokearena-all-visible-moves
+          fi
+      - name: Guardar cópia do inventário permanente
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-all-evolution-complete-catalog
+          path: docs/rea-pokearena/registro-real/evolucoes/
+          retention-days: 90
