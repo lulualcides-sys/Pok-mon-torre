@@ -1,0 +1,91 @@
+name: REA - Auditar 420 videos das evolucoes
+on:
+  workflow_dispatch:
+  push:
+    branches: [rea-pokearena-all-visible-moves]
+    paths:
+      - .github/scripts/rea-audit-capture-quality.cjs
+      - .github/scripts/rea-merge-quality-audit.cjs
+      - .github/workflows/rea-audit-420-videos.yml
+permissions:
+  contents: write
+  actions: read
+jobs:
+  validar-quadros:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [e0, e1, e2, e3, e4, e5, e6, e7]
+    env:
+      GH_TOKEN: ${{ github.token }}
+      NODE_PATH: /tmp/rea-quality/node_modules
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Preparar leitor de quadros e MP4
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/rea-quality --no-save --no-package-lock --no-audit --no-fund pngjs@7.0.0
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
+          node --check .github/scripts/rea-audit-capture-quality.cjs
+      - name: Recuperar videos de evolucoes da captura ja concluida
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p payload
+          gh run download 39428271235 --repo "${{ github.repository }}" -n "rea-evolution-moves-${{ matrix.group }}" -D payload
+          test -s payload/rea-evolved-moves/MANIFEST.json
+      - name: Validar video, estagio e quadros reais sem alegar disparo confirmado
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/scripts/rea-audit-capture-quality.cjs
+      - name: Guardar auditoria por grupo
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: REA-QA-${{ matrix.group }}
+          path: rea-quality-output/
+          retention-days: 90
+  juntar-auditoria:
+    needs: validar-quadros
+    if: always()
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: REA-QA-*
+          path: quality-input/
+      - name: Registrar resumo auditado dos 420 vídeos
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check .github/scripts/rea-merge-quality-audit.cjs
+          node .github/scripts/rea-merge-quality-audit.cjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/rea-pokearena/registro-real/evolucoes/AUDITORIA-VIDEO*
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(rea): video integrity and motion triage for all 420 real capture sequences"
+            git pull --rebase origin rea-pokearena-all-visible-moves
+            git push origin HEAD:rea-pokearena-all-visible-moves
+          fi
+      - name: Preservar o indice
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rea-all-420-video-quality-index
+          path: docs/rea-pokearena/registro-real/evolucoes/AUDITORIA-VIDEO*
+          retention-days: 90
