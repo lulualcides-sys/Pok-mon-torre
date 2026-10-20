@@ -31,7 +31,7 @@ new vm.Script(src);
 assert.match(src,/SCALE_MODES\.NEAREST/);
 assert.doesNotMatch(src,/createElement\(|getContext\(|requestAnimationFrame\(|\.tint\s*=/);
 const html=fs.readFileSync('index.html','utf8');
-assert.match(html,/get\('fire183'\)==='preview'/);
+assert.match(html,/get\('fire183'\)!=='0'/);
 assert.match(html,/v183-daimonji\/runtime\.js/);
 class ImageMock{naturalWidth=768;naturalHeight=512;set src(x){this._src=x;this.onload?.()}}
 class Container{parent=null;children=[];addChild(x){x.parent=this;this.children.push(x);return x}destroy(){this.parent=null}}
@@ -61,7 +61,7 @@ function setup(search='',webgl=true){
  return {engine,battle,window,advance:n=>ms+=n,state:()=>window.PokemonTorreFireBlastV183?.diagnostics(),
  get native(){return native},get old(){return old}};
 }
-assert.equal(setup('').state(),undefined);
+assert.equal(setup('?fire183=0').state(),undefined);assert.equal(setup('').state().approved,true);
 assert.equal(setup('?fire183=preview&safe=1').state(),undefined);
 const p=setup('?fire183=preview');assert.equal(p.state().ready,true);
 p.engine.useMove(0);assert.equal(p.state().casts,1);

@@ -120,6 +120,11 @@ jobs:
           node --check effects/moves/v183-daimonji/runtime.js
           node tools/build-v183-daimonji.cjs
           node tests/v183-daimonji.test.cjs
+      - name: V184 Flame Wheel, Inferno, Ember e Eruption - 4 spritesheets reais LibreSprite
+        run: |
+          node --check tools/build-v184-four-fire.cjs
+          node --check effects/moves/v184-fire-four/runtime.js
+          bash tools/libresprite/build-v184-fire.sh
       - name: Exportar quatro spritesheets editaveis no LibreSprite V145
         run: bash tools/libresprite/build-v145-flying.sh
       - name: Testar quatro golpes V145 montados no PixiJS

@@ -1345,10 +1345,13 @@ if(new URLSearchParams(location.search).get('fire182')==='preview'&&
  }catch(error){console.warn('V182 frame preview unavailable; protected effects preserved',error);}
 }
 
-// V183: canonical Pokemon Fire Blast 大 daimonji, ORIGINAL 16-frame pixel art.
-// Test directly during combat. This ONLY replaces Fire Blast in opt-in preview.
-// V172 approved Flamethrower and V182 comparison are never modified.
-if(new URLSearchParams(location.search).get('fire183')==='preview'&&
+// V183 approved: Fire Blast daimonji 大; user approved on 19 Oct 2026.
+// Normal gameplay uses these 16 authentic pixel frames. ?fire183=0 rolls back.
+// Keep legacy previews V178–V181 isolated when explicitly selected.
+if(new URLSearchParams(location.search).get('fire183')!=='0'&&
+   (new URLSearchParams(location.search).get('fire183')==='preview'||
+    ['fire178','fire179','fire180','fire181'].every(key=>
+     new URLSearchParams(location.search).get(key)!=='preview'))&&
    new URLSearchParams(location.search).get('safe')!=='1'){
  try{
   const file='effects/moves/v183-daimonji/runtime.js';
@@ -1358,6 +1361,22 @@ if(new URLSearchParams(location.search).get('fire183')==='preview'&&
   game=game.replace(fireSpriteAnchor,
     String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
  }catch(error){console.warn('V183 Fire Blast not available, prior effects preserved',error);}
+}
+
+// V184: the four moves EQUIPPED on the user's Mewtwo, each separately animated.
+// Flame Wheel is a physical fire cloak/contact, NOT a projectile.
+// Inferno surrounds enemy, Ember launches small fire sprites, Eruption rises from ground.
+// Strictly opt-in ?fire184=preview. Previously approved sprites remain unchanged.
+if(new URLSearchParams(location.search).get('fire184')==='preview'&&
+   new URLSearchParams(location.search).get('safe')!=='1'){
+ try{
+  const file='effects/moves/v184-fire-four/runtime.js';
+  const response=await fetch(file+'?build=v184-four-original-pixel-fire',{cache:'no-store'});
+  if(!response.ok)throw Error('V184 fire sprites HTTP '+response.status);
+  if(!game.includes(fireSpriteAnchor))throw Error('V184 battle insertion marker missing');
+  game=game.replace(fireSpriteAnchor,
+   String.fromCharCode(10)+(await response.text())+String.fromCharCode(10)+fireSpriteAnchor);
+ }catch(error){console.warn('V184 Fire previews unavailable; accepted moves kept',error);}
 }
 
 // The retired Atelier stays in GitHub history; it is not inside the game.

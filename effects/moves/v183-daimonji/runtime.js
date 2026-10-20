@@ -1,17 +1,17 @@
 /* Pokemon Torre V183 — Fire Blast daimonji (大), 16 RGBA pixel-art frames.
- * Independent opt-in battle preview, PixiJS/WebGL only, approved V172 unchanged.
+ * User-approved default Fire Blast, PixiJS/WebGL only; ?fire183=0 rollback.
  * The engine owns HP, accuracy, cooldown and burn, never this visual renderer.
  */
 (()=>{'use strict';
 const query=new URLSearchParams(location.search);
-if(query.get('fire183')!=='preview'||query.get('safe')==='1'||
+if(query.get('fire183')==='0'||query.get('safe')==='1'||
  !window.PIXI||typeof BattleEngine!=='function'||window.PokemonTorreFireBlastV183?.installed)return;
 const P=window.PIXI,now=()=>performance.now(),clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const ease=t=>{t=clamp(t,0,1);return t*t*(3-2*t)};
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
 const isBlast=s=>['fireblast','explosaodefogo','rajadadefogo'].includes(norm(s));
 const W=192,H=128,FRAMES=16;
-const info={installed:true,approved:false,version:'183-daimonji',sprite:'v183-daimonji/sheet.png',
+const info={installed:true,approved:true,version:'183-daimonji',sprite:'v183-daimonji/sheet.png',
  frameSize:[W,H],frameCount:FRAMES,ready:false,casts:0,confirmedHits:0,framesRendered:0,
  legacySuppressed:0,gpuFallbacks:0,removed:0,errors:[]};
 const img=new Image();img.decoding='async';
@@ -122,6 +122,6 @@ BattleEngine.prototype.draw=function(){const result=previousDraw.apply(this,argu
 };
 const previousDestroy=BattleEngine.prototype.destroy;
 BattleEngine.prototype.destroy=function(){if(active?.e===this)cleanup();return previousDestroy.apply(this,arguments)};
-window.PokemonTorreFireBlastV183=Object.freeze({installed:true,approved:false,
+window.PokemonTorreFireBlastV183=Object.freeze({installed:true,approved:true,
  diagnostics:()=>({...info,active:active?{frame:active.drawn,hit:!!active.hitAt}:null})});
 })();
